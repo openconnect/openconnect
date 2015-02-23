@@ -939,6 +939,12 @@ int internal_parse_url(const char *url, char **res_proto, char **res_host,
 int do_https_request(struct openconnect_info *vpninfo, const char *method,
 		     const char *request_body_type, struct oc_text_buf *request_body,
 		     char **form_buf, int fetch_redirect);
+int do_https_request_head(struct openconnect_info *vpninfo, const char *method,
+		     const char *request_body_type,
+		     struct oc_text_buf *request_headers,
+		     struct oc_text_buf *request_body,
+		     char **form_buf, int fetch_redirect);
+
 int http_add_cookie(struct openconnect_info *vpninfo, const char *option,
 		    const char *value, int replace);
 int process_http_response(struct openconnect_info *vpninfo, int connect,
@@ -946,6 +952,11 @@ int process_http_response(struct openconnect_info *vpninfo, int connect,
 			  struct oc_text_buf *body);
 int handle_redirect(struct openconnect_info *vpninfo);
 void http_common_headers(struct openconnect_info *vpninfo, struct oc_text_buf *buf);
+
+int process_http_auth(struct openconnect_info *vpninfo);
+int gen_authorization_hdr(struct openconnect_info *vpninfo,
+			  struct http_auth_state *auth_states,
+			  struct oc_text_buf *buf);
 
 /* ntlm.c */
 int ntlm_authorization(struct openconnect_info *vpninfo, int proxy, struct http_auth_state *auth_state, struct oc_text_buf *buf);

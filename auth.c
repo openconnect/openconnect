@@ -1151,6 +1151,7 @@ static int check_response_type(struct openconnect_info *vpninfo, char *form_buf)
 	return 0;
 }
 
+
 /* Return value:
  *  < 0, on error
  *  > 0, no cookie (user cancel)
@@ -1241,6 +1242,20 @@ newgroup:
 			result = 1;
 			goto out;
 		}
+
+		/* If the server replied with 401 access denied try HTTP authentication */
+		if (result == -EPERM) {
+			result = process_http_auth(vpninfo);
+			if (result > 0) {
+				goto out;
+			} else if (result == 0) {
+				goto read_cookies;
+			} else {
+				openconnect_close_https(vpninfo, 0);
+				goto newgroup;
+			}
+		}
+
 		if (result == -EINVAL)
 			goto fail;
 		if (result < 0)
@@ -1392,6 +1407,7 @@ newgroup:
 		}
 	}
 
+ read_cookies:
 	/* A return value of 2 means the XML form indicated
 	   success. We _should_ have a cookie... */
 

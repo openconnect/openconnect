@@ -30,8 +30,38 @@
 
 #include "openconnect-internal.h"
 
+struct auth_method {
+	int state_index;
+	const char *name;
+	int (*authorization)(struct openconnect_info *, int, struct http_auth_state *, struct oc_text_buf *);
+	void (*cleanup)(struct openconnect_info *, int, struct http_auth_state *);
+};
+
 static int proxy_write(struct openconnect_info *vpninfo, char *buf, size_t len);
 static int proxy_read(struct openconnect_info *vpninfo, char *buf, size_t len);
+static int http_auth_hdrs(struct openconnect_info *vpninfo, char *hdr, char *val);
+static int basic_authorization(struct openconnect_info *vpninfo, int proxy,
+			       struct http_auth_state *auth_state,
+			       struct oc_text_buf *hdrbuf);
+static void clear_auth_state(struct openconnect_info *vpninfo, int proxy,
+			     struct auth_method *method, int reset);
+#if !defined(HAVE_GSSAPI) && !defined(_WIN32)
+static int no_gssapi_authorization(struct openconnect_info *vpninfo,
+				   struct http_auth_state *auth_state,
+				   struct oc_text_buf *hdrbuf);
+#endif
+
+struct auth_method auth_methods[] = {
+#if defined(HAVE_GSSAPI) || defined(_WIN32)
+	{ AUTH_TYPE_GSSAPI, "Negotiate", gssapi_authorization, cleanup_gssapi_auth },
+#endif
+	{ AUTH_TYPE_NTLM, "NTLM", ntlm_authorization, cleanup_ntlm_auth },
+	{ AUTH_TYPE_DIGEST, "Digest", digest_authorization, NULL },
+	{ AUTH_TYPE_BASIC, "Basic", basic_authorization, NULL },
+#if !defined(HAVE_GSSAPI) && !defined(_WIN32)
+	{ AUTH_TYPE_GSSAPI, "Negotiate", no_gssapi_authorization, NULL }
+#endif
+};
 
 #define MAX_BUF_LEN 131072
 #define BUF_CHUNK_SIZE 4096
@@ -337,6 +367,73 @@ int http_add_cookie(struct openconnect_info *vpninfo, const char *option,
 	return 0;
 }
 
+/* Return value:
+ *  < 0, on error
+ *  > 0, no cookie (user cancel)
+ *  = 0, obtained cookie
+ */
+int process_http_auth(struct openconnect_info *vpninfo)
+{
+	struct oc_text_buf *reqbuf;
+	int result;
+	char *form_buf = NULL;
+	int i;
+
+	vpninfo->http_close_during_auth = 0;
+
+	vpn_progress(vpninfo, PRG_INFO,
+		     _("Requesting HTTP authentication from %s:%d\n"),
+		     vpninfo->hostname, vpninfo->port);
+
+	do {
+		reqbuf = buf_alloc();
+
+		result = gen_authorization_hdr(vpninfo, vpninfo->http_auth, reqbuf);
+		if (result) {
+			buf_free(reqbuf);
+			return result;
+		}
+		/* Forget existing challenges */
+		for (i = 0; i < sizeof(auth_methods) / sizeof(auth_methods[0]); i++) {
+			clear_auth_state(vpninfo, 0, &auth_methods[i], 0);
+		}
+		buf_append(reqbuf, "\r\n");
+
+		if (buf_error(reqbuf))
+			return buf_free(reqbuf);
+
+		if (vpninfo->dump_http_traffic)
+			dump_buf(vpninfo, '>', reqbuf->data);
+
+		result = do_https_request_head(vpninfo, "GET", NULL, reqbuf, NULL, &form_buf, 0);
+		free(form_buf);
+		form_buf = NULL;
+
+		if (vpninfo->got_cancel_cmd) {
+			result = 1;
+			goto out;
+		}
+
+		if (result == -EPERM && vpninfo->http_close_during_auth)
+			return -EAGAIN;
+
+		if (result < 0 && result != -EPERM) {
+			vpn_progress(vpninfo, PRG_ERR,
+			     _("Sending headers failed: %d\n"), result);
+			goto out;
+		}
+	} while(result == -EPERM);
+
+	if (result >= 0)
+		return 0;
+
+	result = -EIO;
+ out:
+	vpn_progress(vpninfo, PRG_ERR,
+		     _("Authentication failed: %d\n"), result);
+	return result;
+}
+
 #define BODY_HTTP10 -1
 #define BODY_CHUNKED -2
 
@@ -351,7 +448,6 @@ int process_http_response(struct openconnect_info *vpninfo, int connect,
 	int i;
 
 	buf_truncate(body);
-
  cont:
 	if (vpninfo->ssl_gets(vpninfo, buf, sizeof(buf)) < 0) {
 		vpn_progress(vpninfo, PRG_ERR,
@@ -476,6 +572,7 @@ int process_http_response(struct openconnect_info *vpninfo, int connect,
 		if (header_cb)
 			header_cb(vpninfo, buf, colon);
 	}
+
 
 	/* Handle 'HTTP/1.1 100 Continue'. Not that we should ever see it */
 	if (result == 100)
@@ -794,6 +891,30 @@ int do_https_request(struct openconnect_info *vpninfo, const char *method,
 		     const char *request_body_type, struct oc_text_buf *request_body,
 		     char **form_buf, int fetch_redirect)
 {
+	return do_https_request_head(vpninfo, method, request_body_type,
+		NULL, request_body, form_buf, fetch_redirect);
+}
+
+/* Inputs:
+ *  method:             GET or POST
+ *  vpninfo->hostname:  Host DNS name
+ *  vpninfo->port:      TCP port, typically 443
+ *  vpninfo->urlpath:   Relative path, e.g. /+webvpn+/foo.html
+ *  request_body_type:  Content type for a POST (e.g. text/html).  Can be NULL.
+ *  request_headers:    Additional headers. Can be NULL
+ *  request_body:       POST content
+ *  form_buf:           Callee-allocated buffer for server content
+ *
+ * Return value:
+ *  < 0, on error
+ *  >=0, on success, indicating the length of the data in *form_buf
+ */
+int do_https_request_head(struct openconnect_info *vpninfo, const char *method,
+		     const char *request_body_type,
+		     struct oc_text_buf *request_headers,
+		     struct oc_text_buf *request_body,
+		     char **form_buf, int fetch_redirect)
+{
 	struct oc_text_buf *buf;
 	int result;
 	int rq_retry;
@@ -834,6 +955,10 @@ int do_https_request(struct openconnect_info *vpninfo, const char *method,
 
 		buf_append(buf, "Content-Type: %s\r\n", request_body_type);
 		buf_append(buf, "Content-Length: %d\r\n", (int)rlen);
+	}
+
+	if (request_headers && request_headers->buf_len > 0) {
+		buf_append(buf, "%s", request_headers->data);
 	}
 	buf_append(buf, "\r\n");
 
@@ -884,11 +1009,19 @@ int do_https_request(struct openconnect_info *vpninfo, const char *method,
 	if (result < 0)
 		goto out;
 
-	result = process_http_response(vpninfo, 0, NULL, buf);
+	result = process_http_response(vpninfo, 0, http_auth_hdrs, buf);
 	if (result < 0) {
 		/* We'll already have complained about whatever offended us */
 		goto out;
 	}
+
+	if (result == 401) {
+		if (vpninfo->http_close_during_auth)
+			return -EAGAIN;
+		result = -EPERM;
+		goto out;
+	}
+
 	if (vpninfo->dump_http_traffic && buf->pos)
 		dump_buf(vpninfo, '<', buf->data);
 
@@ -1441,36 +1574,24 @@ static int no_gssapi_authorization(struct openconnect_info *vpninfo,
 }
 #endif
 
-struct auth_method {
-	int state_index;
-	const char *name;
-	int (*authorization)(struct openconnect_info *, int, struct http_auth_state *, struct oc_text_buf *);
-	void (*cleanup)(struct openconnect_info *, int, struct http_auth_state *);
-} auth_methods[] = {
-#if defined(HAVE_GSSAPI) || defined(_WIN32)
-	{ AUTH_TYPE_GSSAPI, "Negotiate", gssapi_authorization, cleanup_gssapi_auth },
-#endif
-	{ AUTH_TYPE_NTLM, "NTLM", ntlm_authorization, cleanup_ntlm_auth },
-	{ AUTH_TYPE_DIGEST, "Digest", digest_authorization, NULL },
-	{ AUTH_TYPE_BASIC, "Basic", basic_authorization, NULL },
-#if !defined(HAVE_GSSAPI) && !defined(_WIN32)
-	{ AUTH_TYPE_GSSAPI, "Negotiate", no_gssapi_authorization, NULL }
-#endif
-};
-
 /* Generate Proxy-Authorization: header for request if appropriate */
-static int gen_authorization_hdr(struct openconnect_info *vpninfo, int proxy,
-				 struct oc_text_buf *buf)
+int gen_authorization_hdr(struct openconnect_info *vpninfo,
+			  struct http_auth_state *auth_states,
+			  struct oc_text_buf *buf)
 {
 	int ret;
 	int i;
+	int proxy;
+
+	if (auth_states == vpninfo->http_auth)
+		proxy = 0;
+	else
+		proxy = 1;
 
 	for (i = 0; i < sizeof(auth_methods) / sizeof(auth_methods[0]); i++) {
 		struct http_auth_state *auth_state;
-		if (proxy)
-			auth_state = &vpninfo->proxy_auth[auth_methods[i].state_index];
-		else
-			auth_state = &vpninfo->http_auth[auth_methods[i].state_index];
+		auth_state = &auth_states[auth_methods[i].state_index];
+
 		if (auth_state->state > AUTH_UNSEEN) {
 			ret = auth_methods[i].authorization(vpninfo, proxy, auth_state, buf);
 			if (ret == -EAGAIN || !ret)
@@ -1482,10 +1603,10 @@ static int gen_authorization_hdr(struct openconnect_info *vpninfo, int proxy,
 }
 
 /* Returns non-zero if it matched */
-static int handle_auth_proto(struct openconnect_info *vpninfo,
+static int handle_auth_proto(struct http_auth_state auth_methods[MAX_AUTH_TYPES],
 			     struct auth_method *method, char *hdr)
 {
-	struct http_auth_state *auth = &vpninfo->proxy_auth[method->state_index];
+	struct http_auth_state *auth = &auth_methods[method->state_index];
 	int l = strlen(method->name);
 
 	if (auth->state <= AUTH_FAILED)
@@ -1508,6 +1629,28 @@ static int handle_auth_proto(struct openconnect_info *vpninfo,
 	return 1;
 }
 
+static int http_auth_hdrs(struct openconnect_info *vpninfo, char *hdr, char *val)
+{
+	int i;
+
+	if (!strcasecmp(hdr, "Connection")) {
+		if (!strcasecmp(val, "close"))
+			vpninfo->http_close_during_auth = 1;
+		return 0;
+	}
+	if (strcasecmp(hdr, "WWW-Authenticate"))
+		return 0;
+
+	for (i = 0; i < sizeof(auth_methods) / sizeof(auth_methods[0]); i++) {
+		/* Return once we've found a match */
+		if (handle_auth_proto(vpninfo->http_auth, &auth_methods[i], val)) {
+			return 0;
+		}
+	}
+
+	return 0;
+}
+
 static int proxy_hdrs(struct openconnect_info *vpninfo, char *hdr, char *val)
 {
 	int i;
@@ -1524,7 +1667,7 @@ static int proxy_hdrs(struct openconnect_info *vpninfo, char *hdr, char *val)
 
 	for (i = 0; i < sizeof(auth_methods) / sizeof(auth_methods[0]); i++) {
 		/* Return once we've found a match */
-		if (handle_auth_proto(vpninfo, &auth_methods[i], val))
+		if (handle_auth_proto(vpninfo->proxy_auth, &auth_methods[i], val))
 			return 0;
 	}
 
@@ -1580,7 +1723,7 @@ static int process_http_proxy(struct openconnect_info *vpninfo)
 	if (auth) {
 		int i;
 
-		result = gen_authorization_hdr(vpninfo, 1, reqbuf);
+		result = gen_authorization_hdr(vpninfo, vpninfo->proxy_auth, reqbuf);
 		if (result) {
 			buf_free(reqbuf);
 			return result;
@@ -1748,6 +1891,7 @@ void http_common_headers(struct openconnect_info *vpninfo, struct oc_text_buf *b
 
 	buf_append(buf, "Host: %s\r\n", vpninfo->hostname);
 	buf_append(buf, "User-Agent: %s\r\n", vpninfo->useragent);
+	buf_append(buf, "X-Support-HTTP-Auth: true\r\n");
 
 	if (vpninfo->cookies) {
 		buf_append(buf, "Cookie: ");
