@@ -351,7 +351,6 @@ struct openconnect_info {
 	char *proxy_user;
 	char *proxy_pass;
 	int proxy_close_during_auth;
-	int http_close_during_auth;
 	struct http_auth_state http_auth[MAX_AUTH_TYPES];
 	struct http_auth_state proxy_auth[MAX_AUTH_TYPES];
 #ifdef HAVE_GSSAPI

@@ -33,6 +33,32 @@
 static int proxy_write(struct openconnect_info *vpninfo, char *buf, size_t len);
 static int proxy_read(struct openconnect_info *vpninfo, char *buf, size_t len);
 
+static int gen_authorization_hdr(struct openconnect_info *vpninfo, int proxy,
+				 struct oc_text_buf *buf);
+static int basic_authorization(struct openconnect_info *vpninfo, int proxy,
+			       struct http_auth_state *auth_state,
+			       struct oc_text_buf *hdrbuf);
+
+struct auth_method {
+	int state_index;
+	const char *name;
+	int (*authorization)(struct openconnect_info *, int, struct http_auth_state *, struct oc_text_buf *);
+	void (*cleanup)(struct openconnect_info *, int, struct http_auth_state *);
+} auth_methods[] = {
+#if defined(HAVE_GSSAPI) || defined(_WIN32)
+	{ AUTH_TYPE_GSSAPI, "Negotdiate", gssapi_authorization, cleanup_gssapi_auth },
+#endif
+	{ AUTH_TYPE_NTLM, "NTLM", ntlm_authorization, cleanup_ntlm_auth },
+	{ AUTH_TYPE_DIGEST, "Digest", digest_authorization, NULL },
+	{ AUTH_TYPE_BASIC, "Basic", basic_authorization, NULL },
+#if !defined(HAVE_GSSAPI) && !defined(_WIN32)
+	{ AUTH_TYPE_GSSAPI, "Negotiate", no_gssapi_authorization, NULL }
+#endif
+};
+static void clear_auth_state(struct openconnect_info *vpninfo, int proxy,
+			     struct auth_method *method, int reset);
+static int http_auth_hdrs(struct openconnect_info *vpninfo, char *hdr, char *val);
+
 #define MAX_BUF_LEN 131072
 #define BUF_CHUNK_SIZE 4096
 
@@ -798,6 +824,8 @@ int do_https_request(struct openconnect_info *vpninfo, const char *method,
 	int result;
 	int rq_retry;
 	int rlen, pad;
+	int auth = 0;
+	int i;
 
 	if (request_body_type && buf_error(request_body))
 		return buf_error(request_body);
@@ -823,6 +851,15 @@ int do_https_request(struct openconnect_info *vpninfo, const char *method,
 	buf_append(buf, "%s /%s HTTP/1.1\r\n", method, vpninfo->urlpath ?: "");
 	if (vpninfo->proto.add_http_headers)
 		vpninfo->proto.add_http_headers(vpninfo, buf);
+	if (auth) {
+		result = gen_authorization_hdr(vpninfo, 0, buf);
+		if (result)
+			goto out;
+
+		/* Forget existing challenges */
+		for (i = 0; i < sizeof(auth_methods) / sizeof(auth_methods[0]); i++)
+			clear_auth_state(vpninfo, 0, &auth_methods[i], 0);
+	}
 
 	if (request_body_type) {
 		rlen = request_body->pos;
@@ -864,12 +901,12 @@ int do_https_request(struct openconnect_info *vpninfo, const char *method,
 			vpn_progress(vpninfo, PRG_ERR,
 				     _("Failed to open HTTPS connection to %s\n"),
 				     vpninfo->hostname);
-			buf_free(buf);
 			/* We really don't want to return -EINVAL if we have
 			   failed to even connect to the server, because if
 			   we do that openconnect_obtain_cookie() might try
 			   again without XMLPOST... with the same result. */
-			return -EIO;
+			result = -EIO;
+			goto out;
 		}
 	}
 
@@ -884,7 +921,7 @@ int do_https_request(struct openconnect_info *vpninfo, const char *method,
 	if (result < 0)
 		goto out;
 
-	result = process_http_response(vpninfo, 0, NULL, buf);
+	result = process_http_response(vpninfo, 0, http_auth_hdrs, buf);
 	if (result < 0) {
 		/* We'll already have complained about whatever offended us */
 		goto out;
@@ -892,6 +929,10 @@ int do_https_request(struct openconnect_info *vpninfo, const char *method,
 	if (vpninfo->dump_http_traffic && buf->pos)
 		dump_buf(vpninfo, '<', buf->data);
 
+	if (result == 401) {
+		auth = 1;
+		goto redirected;
+	}
 	if (result != 200 && vpninfo->redirect_url) {
 		result = handle_redirect(vpninfo);
 		if (result == 0) {
@@ -920,6 +961,8 @@ int do_https_request(struct openconnect_info *vpninfo, const char *method,
 
  out:
 	buf_free(buf);
+	for (i = 0; i < sizeof(auth_methods) / sizeof(auth_methods[0]); i++)
+		clear_auth_state(vpninfo, 0, &auth_methods[i], 1);
 	return result;
 }
 
@@ -1441,23 +1484,6 @@ static int no_gssapi_authorization(struct openconnect_info *vpninfo,
 }
 #endif
 
-struct auth_method {
-	int state_index;
-	const char *name;
-	int (*authorization)(struct openconnect_info *, int, struct http_auth_state *, struct oc_text_buf *);
-	void (*cleanup)(struct openconnect_info *, int, struct http_auth_state *);
-} auth_methods[] = {
-#if defined(HAVE_GSSAPI) || defined(_WIN32)
-	{ AUTH_TYPE_GSSAPI, "Negotiate", gssapi_authorization, cleanup_gssapi_auth },
-#endif
-	{ AUTH_TYPE_NTLM, "NTLM", ntlm_authorization, cleanup_ntlm_auth },
-	{ AUTH_TYPE_DIGEST, "Digest", digest_authorization, NULL },
-	{ AUTH_TYPE_BASIC, "Basic", basic_authorization, NULL },
-#if !defined(HAVE_GSSAPI) && !defined(_WIN32)
-	{ AUTH_TYPE_GSSAPI, "Negotiate", no_gssapi_authorization, NULL }
-#endif
-};
-
 /* Generate Proxy-Authorization: header for request if appropriate */
 static int gen_authorization_hdr(struct openconnect_info *vpninfo, int proxy,
 				 struct oc_text_buf *buf)
@@ -1482,11 +1508,16 @@ static int gen_authorization_hdr(struct openconnect_info *vpninfo, int proxy,
 }
 
 /* Returns non-zero if it matched */
-static int handle_auth_proto(struct openconnect_info *vpninfo,
+static int handle_auth_proto(struct openconnect_info *vpninfo, int proxy,
 			     struct auth_method *method, char *hdr)
 {
-	struct http_auth_state *auth = &vpninfo->proxy_auth[method->state_index];
+	struct http_auth_state *auth;
 	int l = strlen(method->name);
+
+	if (proxy)
+		auth = &vpninfo->proxy_auth[method->state_index];
+	else
+		auth = &vpninfo->http_auth[method->state_index];
 
 	if (auth->state <= AUTH_FAILED)
 		return 0;
@@ -1524,7 +1555,23 @@ static int proxy_hdrs(struct openconnect_info *vpninfo, char *hdr, char *val)
 
 	for (i = 0; i < sizeof(auth_methods) / sizeof(auth_methods[0]); i++) {
 		/* Return once we've found a match */
-		if (handle_auth_proto(vpninfo, &auth_methods[i], val))
+		if (handle_auth_proto(vpninfo, 1, &auth_methods[i], val))
+			return 0;
+	}
+
+	return 0;
+}
+
+static int http_auth_hdrs(struct openconnect_info *vpninfo, char *hdr, char *val)
+{
+	int i;
+
+	if (strcasecmp(hdr, "WWW-Authenticate"))
+		return 0;
+
+	for (i = 0; i < sizeof(auth_methods) / sizeof(auth_methods[0]); i++) {
+		/* Return once we've found a match */
+		if (handle_auth_proto(vpninfo, 0, &auth_methods[i], val))
 			return 0;
 	}
 
