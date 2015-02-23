@@ -369,30 +369,34 @@ int http_add_cookie(struct openconnect_info *vpninfo, const char *option,
 
 /* Return value:
  *  < 0, on error
- *  > 0, no cookie (user cancel)
- *  = 0, obtained cookie
+ *  HTTP error code + body
  */
-int process_http_auth(struct openconnect_info *vpninfo)
+static int process_http_auth(struct openconnect_info *vpninfo, struct oc_text_buf *body)
 {
 	struct oc_text_buf *reqbuf;
 	int result;
-	char *form_buf = NULL;
 	int i;
 
 	vpninfo->http_close_during_auth = 0;
 
+	buf_truncate(body);
 	vpn_progress(vpninfo, PRG_INFO,
 		     _("Requesting HTTP authentication from %s:%d\n"),
 		     vpninfo->hostname, vpninfo->port);
 
 	do {
 		reqbuf = buf_alloc();
+		buf_append(reqbuf, "GET %s HTTP/1.1\r\n", vpninfo->urlpath?vpninfo->urlpath:"/");
+		buf_append(reqbuf, "Connection: keep-alive\r\n");
+		buf_append(reqbuf, "Accept-Encoding: identity\r\n");
+		http_common_headers(vpninfo, reqbuf);
 
 		result = gen_authorization_hdr(vpninfo, vpninfo->http_auth, reqbuf);
 		if (result) {
 			buf_free(reqbuf);
 			return result;
 		}
+
 		/* Forget existing challenges */
 		for (i = 0; i < sizeof(auth_methods) / sizeof(auth_methods[0]); i++) {
 			clear_auth_state(vpninfo, 0, &auth_methods[i], 0);
@@ -405,29 +409,39 @@ int process_http_auth(struct openconnect_info *vpninfo)
 		if (vpninfo->dump_http_traffic)
 			dump_buf(vpninfo, '>', reqbuf->data);
 
-		result = do_https_request_head(vpninfo, "GET", NULL, reqbuf, NULL, &form_buf, 0);
-		free(form_buf);
-		form_buf = NULL;
+		result = vpninfo->ssl_write(vpninfo, reqbuf->data, reqbuf->pos);
+		if (result < 0) {
+			buf_free(reqbuf);
+			vpn_progress(vpninfo, PRG_ERR,
+				     _("Sending proxy request failed: %s\n"),
+				     strerror(-result));
+			return result;
+		}
+		buf_free(reqbuf);
+
+		result = process_http_response(vpninfo, 0, http_auth_hdrs, body);
+		if (result < 0)
+			return -EINVAL;
 
 		if (vpninfo->got_cancel_cmd) {
-			result = 1;
+			result = -EINTR;
 			goto out;
 		}
 
-		if (result == -EPERM && vpninfo->http_close_during_auth)
-			return -EAGAIN;
+		/* If the server asked us to close the connection, do so */
+		if (result == 401 && vpninfo->http_close_during_auth)
+			return 401;
 
-		if (result < 0 && result != -EPERM) {
+		if (result == 200)
+			return 200;
+
+		if (result < 0) {
 			vpn_progress(vpninfo, PRG_ERR,
-			     _("Sending headers failed: %d\n"), result);
+			     _("Sending auth headers failed: %d\n"), result);
 			goto out;
 		}
-	} while(result == -EPERM);
+	} while(result == 401);
 
-	if (result >= 0)
-		return 0;
-
-	result = -EIO;
  out:
 	vpn_progress(vpninfo, PRG_ERR,
 		     _("Authentication failed: %d\n"), result);
@@ -891,30 +905,6 @@ int do_https_request(struct openconnect_info *vpninfo, const char *method,
 		     const char *request_body_type, struct oc_text_buf *request_body,
 		     char **form_buf, int fetch_redirect)
 {
-	return do_https_request_head(vpninfo, method, request_body_type,
-		NULL, request_body, form_buf, fetch_redirect);
-}
-
-/* Inputs:
- *  method:             GET or POST
- *  vpninfo->hostname:  Host DNS name
- *  vpninfo->port:      TCP port, typically 443
- *  vpninfo->urlpath:   Relative path, e.g. /+webvpn+/foo.html
- *  request_body_type:  Content type for a POST (e.g. text/html).  Can be NULL.
- *  request_headers:    Additional headers. Can be NULL
- *  request_body:       POST content
- *  form_buf:           Callee-allocated buffer for server content
- *
- * Return value:
- *  < 0, on error
- *  >=0, on success, indicating the length of the data in *form_buf
- */
-int do_https_request_head(struct openconnect_info *vpninfo, const char *method,
-		     const char *request_body_type,
-		     struct oc_text_buf *request_headers,
-		     struct oc_text_buf *request_body,
-		     char **form_buf, int fetch_redirect)
-{
 	struct oc_text_buf *buf;
 	int result;
 	int rq_retry;
@@ -957,9 +947,6 @@ int do_https_request_head(struct openconnect_info *vpninfo, const char *method,
 		buf_append(buf, "Content-Length: %d\r\n", (int)rlen);
 	}
 
-	if (request_headers && request_headers->buf_len > 0) {
-		buf_append(buf, "%s", request_headers->data);
-	}
 	buf_append(buf, "\r\n");
 
 	if (request_body_type)
@@ -1015,11 +1002,14 @@ int do_https_request_head(struct openconnect_info *vpninfo, const char *method,
 		goto out;
 	}
 
+	/* If the server replied with 401 access denied try HTTP authentication */
 	if (result == 401) {
 		if (vpninfo->http_close_during_auth)
 			return -EAGAIN;
-		result = -EPERM;
-		goto out;
+		result = process_http_auth(vpninfo, buf);
+		if (result < 0) {
+			goto out;
+		}
 	}
 
 	if (vpninfo->dump_http_traffic && buf->pos)
