@@ -909,11 +909,18 @@ int do_https_request(struct openconnect_info *vpninfo, const char *method,
 	int result;
 	int rq_retry;
 	int rlen, pad;
+	int max_redirects = 10;
 
 	if (request_body_type && buf_error(request_body))
 		return buf_error(request_body);
 
  redirected:
+
+	if (max_redirects-- <= 0) {
+		result = -EIO;
+		goto out;
+	}
+
 	vpninfo->redirect_type = REDIR_TYPE_NONE;
 
 	if (*form_buf) {
