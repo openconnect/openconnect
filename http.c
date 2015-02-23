@@ -34,7 +34,7 @@ struct auth_method {
 	int state_index;
 	const char *name;
 	int (*authorization)(struct openconnect_info *, int, struct http_auth_state *, struct oc_text_buf *);
-	void (*cleanup)(struct openconnect_info *, int, struct http_auth_state *);
+	void (*cleanup)(struct openconnect_info *, struct http_auth_state *);
 };
 
 static int proxy_write(struct openconnect_info *vpninfo, char *buf, size_t len);
@@ -43,7 +43,7 @@ static int http_auth_hdrs(struct openconnect_info *vpninfo, char *hdr, char *val
 static int basic_authorization(struct openconnect_info *vpninfo, int proxy,
 			       struct http_auth_state *auth_state,
 			       struct oc_text_buf *hdrbuf);
-static void clear_auth_state(struct openconnect_info *vpninfo, int proxy,
+static void clear_auth_state(struct openconnect_info *vpninfo, struct http_auth_state *auth_states,
 			     struct auth_method *method, int reset);
 #if !defined(HAVE_GSSAPI) && !defined(_WIN32)
 static int no_gssapi_authorization(struct openconnect_info *vpninfo,
@@ -399,7 +399,7 @@ static int process_http_auth(struct openconnect_info *vpninfo, struct oc_text_bu
 
 		/* Forget existing challenges */
 		for (i = 0; i < sizeof(auth_methods) / sizeof(auth_methods[0]); i++) {
-			clear_auth_state(vpninfo, 0, &auth_methods[i], 0);
+			clear_auth_state(vpninfo, vpninfo->http_auth, &auth_methods[i], 0);
 		}
 		buf_append(reqbuf, "\r\n");
 
@@ -1671,21 +1671,16 @@ static int proxy_hdrs(struct openconnect_info *vpninfo, char *hdr, char *val)
 	return 0;
 }
 
-static void clear_auth_state(struct openconnect_info *vpninfo, int proxy,
+static void clear_auth_state(struct openconnect_info *vpninfo, struct http_auth_state *auth_states,
 			     struct auth_method *method, int reset)
 {
-	struct http_auth_state *auth;
-	if (proxy)
-		auth = &vpninfo->proxy_auth[method->state_index];
-	else
-		auth = &vpninfo->http_auth[method->state_index];
-
+	struct http_auth_state *auth = &auth_states[method->state_index];
 	/* The 'reset' argument is set when we're connected successfully,
 	   to fully reset the state to allow another connection to start
 	   again. Otherwise, we need to remember which auth methods have
 	   been tried and should not be attempted again. */
 	if (reset && method->cleanup)
-		method->cleanup(vpninfo, proxy, auth);
+		method->cleanup(vpninfo, auth);
 
 	free(auth->challenge);
 	auth->challenge = NULL;
@@ -1727,7 +1722,7 @@ static int process_http_proxy(struct openconnect_info *vpninfo)
 		}
 		/* Forget existing challenges */
 		for (i = 0; i < sizeof(auth_methods) / sizeof(auth_methods[0]); i++)
-			clear_auth_state(vpninfo, 1, &auth_methods[i], 0);
+			clear_auth_state(vpninfo, vpninfo->proxy_auth, &auth_methods[i], 0);
 	}
 	buf_append(reqbuf, "\r\n");
 
@@ -1773,7 +1768,7 @@ void cleanup_proxy_auth(struct openconnect_info *vpninfo)
 	int i;
 
 	for (i = 0; i < sizeof(auth_methods) / sizeof(auth_methods[0]); i++)
-		clear_auth_state(vpninfo, 1, &auth_methods[i], 1);
+		clear_auth_state(vpninfo, vpninfo->proxy_auth, &auth_methods[i], 1);
 }
 
 int process_proxy(struct openconnect_info *vpninfo, int ssl_sock)
