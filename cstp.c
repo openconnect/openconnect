@@ -262,8 +262,18 @@ static int start_cstp_connection(struct openconnect_info *vpninfo)
 		buf_append(reqbuf, "X-CSTP-MTU: %d\r\n", mtu);
 	buf_append(reqbuf, "X-CSTP-Address-Type: %s\r\n",
 			       vpninfo->disable_ipv6 ? "IPv4" : "IPv6,IPv4");
-	if (!vpninfo->disable_ipv6)
+	/* Explicitly request the same IPv4 and IPv6 addresses on reconnect
+	 *
+	 * XX: It's not clear which Cisco servers attempt to follow specific
+	 * IP address requests from the X-CSTP-Address headers in the CONNECT
+	 * request; most seem to ignore it. */
+	if (old_addr)
+		buf_append(reqbuf, "X-CSTP-Address: %s\r\n", old_addr);
+	if (!vpninfo->disable_ipv6) {
 		buf_append(reqbuf, "X-CSTP-Full-IPv6-Capability: true\r\n");
+		if (old_addr6)
+			buf_append(reqbuf, "X-CSTP-Address: %s\r\n", old_addr6);
+	}
 #ifdef HAVE_DTLS
 	if (vpninfo->dtls_state != DTLS_DISABLED) {
 		/* The X-DTLS-Master-Secret is only used for the legacy protocol negotation
