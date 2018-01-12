@@ -514,15 +514,21 @@ static int gpst_parse_config_xml(struct openconnect_info *vpninfo, xmlNode *xml_
 				vpninfo->ip_info.domain = add_option(vpninfo, "search", &domains->data);
 			}
 			buf_free(domains);
-		} else if (xmlnode_is_named(xml_node, "access-routes")) {
+		} else if (xmlnode_is_named(xml_node, "access-routes") || xmlnode_is_named(xml_node, "exclude-access-routes")) {
 			for (member = xml_node->children; member; member=member->next) {
 				if (!xmlnode_get_val(member, "member", &s)) {
 					struct oc_split_include *inc = malloc(sizeof(*inc));
 					if (!inc)
 						continue;
-					inc->route = add_option(vpninfo, "split-include", &s);
-					inc->next = vpninfo->ip_info.split_includes;
-					vpninfo->ip_info.split_includes = inc;
+					if (xmlnode_is_named(xml_node, "access-routes")) {
+						inc->route = add_option(vpninfo, "split-include", &s);
+						inc->next = vpninfo->ip_info.split_includes;
+						vpninfo->ip_info.split_includes = inc;
+					} else {
+						inc->route = add_option(vpninfo, "split-exclude", &s);
+						inc->next = vpninfo->ip_info.split_excludes;
+						vpninfo->ip_info.split_excludes = inc;
+					}
 				}
 			}
 		} else if (xmlnode_is_named(xml_node, "ipsec")) {
