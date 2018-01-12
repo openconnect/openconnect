@@ -58,9 +58,9 @@ server. This shell script must output the HIP report to standard output and exit
              --authenticate --protocol=gp, which includes parameters
              --from the /ssl-vpn/login.esp response
 
-   --client-ip: IPv4 address allocated by the GlobalProtect VPN for
-                this client (included in /ssl-vpn/getconfig.esp
-                response)
+   --client-ip{,v6}: IPv4/6 addresses allocated by the GlobalProtect
+                     VPN for this client (included in
+                     /ssl-vpn/getconfig.esp response)
 
    --md5: The md5 digest to encode into this HIP report. All that
           really matters is that the value in the HIP report

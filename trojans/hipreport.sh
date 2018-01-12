@@ -8,9 +8,9 @@
 #             --authenticate --protocol=gp, which includes parameters
 #             from the /ssl-vpn/login.esp response
 #
-#   --client-ip: IPv4 address allocated by the GlobalProtect VPN for
-#                this client (included in /ssl-vpn/getconfig.esp
-#                response)
+#   --client-ip{,v6}: IPv4/6 addresses allocated by the GlobalProtect
+#                     VPN for this client (included in
+#                     /ssl-vpn/getconfig.esp response)
 #
 #   --md5: The md5 digest to encode into this HIP report. I'm not sure
 #          exactly what this is the md5 digest *of*, but all that
@@ -20,17 +20,19 @@
 # Read command line arguments into variables
 COOKIE=
 IP=
+IPv6=
 MD5=
 
 while [ "$1" ]; do
-    if [ "$1" = "--cookie" ];    then shift; COOKIE="$1"; fi
-    if [ "$1" = "--client-ip" ]; then shift; IP="$1"; fi
-    if [ "$1" = "--md5" ];       then shift; MD5="$1"; fi
+    if [ "$1" = "--cookie" ];      then shift; COOKIE="$1"; fi
+    if [ "$1" = "--client-ip" ];   then shift; IP="$1"; fi
+    if [ "$1" = "--client-ipv6" ]; then shift; IPV6="$1"; fi
+    if [ "$1" = "--md5" ];         then shift; MD5="$1"; fi
     shift
 done
 
-if [ -z "$COOKIE" -o -z "$IP" -o -z "$MD5" ]; then
-    echo "Parameters --cookie, --client-ip, and --md5 are required" >&2
+if [ -z "$COOKIE" -o -z "$MD5" -o -z "$IP$IPV6" ]; then
+    echo "Parameters --cookie, --md5, and --client-ip and/or --client-ipv6 are required" >&2
     exit 1;
 fi
 
@@ -58,7 +60,7 @@ cat <<EOF
 	<host-name>$COMPUTER</host-name>
 	<host-id>$HOSTID</host-id>
 	<ip-address>$IP</ip-address>
-	<ipv6-address></ipv6-address>
+	<ipv6-address>$IPV6</ipv6-address>
 	<generate-time>$NOW</generate-time>
 	<categories>
 		<entry name="host-info">
@@ -76,7 +78,7 @@ cat <<EOF
 						<entry name="$IP"/>
 					</ip-address>
 					<ipv6-address>
-						<entry name="dead::beef:dead:beef:dead"/>
+						<entry name="$IPV6"/>
 					</ipv6-address>
 				</entry>
 			</network-interface>

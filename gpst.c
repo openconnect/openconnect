@@ -561,12 +561,30 @@ static int gpst_parse_config_xml(struct openconnect_info *vpninfo, xmlNode *xml_
 #else
 			vpn_progress(vpninfo, PRG_DEBUG, _("Ignoring ESP keys since ESP support not available in this build\n"));
 #endif
+		} else if (xmlnode_is_named(xml_node, "need-tunnel")
+			   || xmlnode_is_named(xml_node, "bw-c2s")
+			   || xmlnode_is_named(xml_node, "bw-s2c")
+			   || xmlnode_is_named(xml_node, "default-gateway")
+			   || xmlnode_is_named(xml_node, "no-direct-access-to-local-network")
+			   || xmlnode_is_named(xml_node, "ip-address-preferred")
+			   || xmlnode_is_named(xml_node, "portal")
+			   || xmlnode_is_named(xml_node, "user")) {
+			/* XX: Do these have any potential value at all for routing configuration or diagnostics? */
+		} else if (xml_node->type == XML_ELEMENT_NODE) {
+			/* XX: Don't know what tags are used for IPv6 addresses and networks, since
+			 * we haven't yet seen a real GlobalProtect VPN with IPv6 internal addresses.
+			 */
+			free(s);
+			s = (char *)xmlNodeGetContent(xml_node);
+			if (strchr((char *)xml_node->name, '6'))
+				vpn_progress(vpninfo, PRG_ERR, _("Potential IPv6-related GlobalProtect config tag <%s>: %s\n"
+				                                 "This build does not support GlobalProtect IPv6 due to a lack of\n"
+				                                 "of information on how it is configured. Please report this\n"
+				                                 "to <openconnect-devel@lists.infradead.org>.\n"), xml_node->name, s);
+			else
+				vpn_progress(vpninfo, PRG_DEBUG, _("Unknown GlobalProtect config tag <%s>: %s\n"), xml_node->name, s);
 		}
 	}
-
-	/* No IPv6 support for SSL VPN:
-	 * https://live.paloaltonetworks.com/t5/Learning-Articles/IPv6-Support-on-the-Palo-Alto-Networks-Firewall/ta-p/52994 */
-	openconnect_disable_ipv6(vpninfo);
 
 	/* Set 10-second DPD/keepalive (same as Windows client) unless
 	 * overridden with --force-dpd */
@@ -585,12 +603,13 @@ static int gpst_get_config(struct openconnect_info *vpninfo)
 	struct oc_text_buf *request_body = buf_alloc();
 	struct oc_vpn_option *old_cstp_opts = vpninfo->cstp_options;
 	const char *old_addr = vpninfo->ip_info.addr, *old_netmask = vpninfo->ip_info.netmask;
+	const char *old_addr6 = vpninfo->ip_info.addr6, *old_netmask6 = vpninfo->ip_info.netmask6;
 	const char *request_body_type = "application/x-www-form-urlencoded";
 	const char *method = "POST";
 	char *xml_buf=NULL;
 
 	/* submit getconfig request */
-	buf_append(request_body, "client-type=1&protocol-version=p1&app-version=3.0.1-10");
+	buf_append(request_body, "client-type=1&protocol-version=p1&app-version=4.0.5-8");
 	if (!strcmp(vpninfo->platname, "mac-intel") || !strcmp(vpninfo->platname, "apple-ios"))
 		append_opt(request_body, "clientos", "Mac");
 	else if (!strcmp(vpninfo->platname, "linux-64") || !strcmp(vpninfo->platname, "android"))
@@ -600,9 +619,10 @@ static int gpst_get_config(struct openconnect_info *vpninfo)
 	append_opt(request_body, "os-version", vpninfo->platname);
 	append_opt(request_body, "hmac-algo", "sha1,md5");
 	append_opt(request_body, "enc-algo", "aes-128-cbc,aes-256-cbc");
-	if (old_addr) {
+	if (old_addr || old_addr6) {
 		append_opt(request_body, "preferred-ip", old_addr);
-		filter_opts(request_body, vpninfo->cookie, "preferred-ip", 0);
+		append_opt(request_body, "preferred-ipv6", old_addr6);
+		filter_opts(request_body, vpninfo->cookie, "preferred-ip,preferred-ipv6", 0);
 	} else
 		buf_append(request_body, "&%s", vpninfo->cookie);
 	if ((result = buf_error(request_body)))
@@ -638,7 +658,8 @@ static int gpst_get_config(struct openconnect_info *vpninfo)
 			     no_esp_reason ? "SSL tunnel. " : "ESP tunnel", no_esp_reason ? : "");
 		/* return -EINVAL; */
 	}
-	if (!vpninfo->ip_info.addr) {
+	if (!vpninfo->ip_info.addr && !vpninfo->ip_info.addr6 &&
+	    !vpninfo->ip_info.netmask6) {
 		vpn_progress(vpninfo, PRG_ERR,
 			     _("No IP address received. Aborting\n"));
 		result = -EINVAL;
@@ -660,6 +681,22 @@ static int gpst_get_config(struct openconnect_info *vpninfo)
 				     vpninfo->ip_info.netmask, old_netmask);
 			result = -EINVAL;
 			goto out;
+		}
+	}
+	if (old_addr6) {
+		if (strcmp(old_addr6, vpninfo->ip_info.addr6)) {
+			vpn_progress(vpninfo, PRG_ERR,
+				     _("Reconnect gave different IPv6 address (%s != %s)\n"),
+				     vpninfo->ip_info.addr6, old_addr6);
+			return -EINVAL;
+		}
+	}
+	if (old_netmask6) {
+		if (strcmp(old_netmask6, vpninfo->ip_info.netmask6)) {
+			vpn_progress(vpninfo, PRG_ERR,
+			             _("Reconnect gave different IPv6 netmask (%s != %s)\n"),
+			             vpninfo->ip_info.netmask6, old_netmask6);
+			return -EINVAL;
 		}
 	}
 
@@ -820,7 +857,10 @@ static int check_or_submit_hip_report(struct openconnect_info *vpninfo, const ch
 
 	/* cookie gives us these fields: authcookie, portal, user, domain, computer, and (maybe the unnecessary) preferred-ip */
 	buf_append(request_body, "client-role=global-protect-full&%s", vpninfo->cookie);
-	append_opt(request_body, "client-ip", vpninfo->ip_info.addr);
+	if (vpninfo->ip_info.addr)
+		append_opt(request_body, "client-ip", vpninfo->ip_info.addr);
+	if (vpninfo->ip_info.addr6)
+		append_opt(request_body, "client-ipv6", vpninfo->ip_info.addr6);
 	if (report) {
 		/* XML report contains many characters requiring URL-encoding (%xx) */
 		buf_ensure_space(request_body, strlen(report)*3);
@@ -932,8 +972,14 @@ static int run_hip_script(struct openconnect_info *vpninfo)
 		hip_argv[i++] = openconnect_utf8_to_legacy(vpninfo, vpninfo->csd_wrapper);
 		hip_argv[i++] = (char *)"--cookie";
 		hip_argv[i++] = vpninfo->cookie;
-		hip_argv[i++] = (char *)"--client-ip";
-		hip_argv[i++] = (char *)vpninfo->ip_info.addr;
+		if (vpninfo->ip_info.addr) {
+			hip_argv[i++] = (char *)"--client-ip";
+			hip_argv[i++] = (char *)vpninfo->ip_info.addr;
+		}
+		if (vpninfo->ip_info.addr6) {
+			hip_argv[i++] = (char *)"--client-ipv6";
+			hip_argv[i++] = (char *)vpninfo->ip_info.addr6;
+		}
 		hip_argv[i++] = (char *)"--md5";
 		hip_argv[i++] = vpninfo->csd_token;
 		hip_argv[i++] = NULL;
@@ -1090,9 +1136,10 @@ int gpst_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable)
 			}
 			continue;
 		case 0x0800:
+		case 0x86DD:
 			vpn_progress(vpninfo, PRG_TRACE,
-				     _("Received data packet of %d bytes\n"),
-				     payload_len);
+				     _("Received IPv%d data packet of %d bytes\n"),
+				     ethertype == 0x86DD ? 6 : 4, payload_len);
 			vpninfo->cstp_pkt->len = payload_len;
 			queue_packet(&vpninfo->incoming_queue, vpninfo->cstp_pkt);
 			vpninfo->cstp_pkt = NULL;
@@ -1193,16 +1240,19 @@ int gpst_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable)
 	       (vpninfo->current_ssl_pkt = dequeue_packet(&vpninfo->outgoing_queue))) {
 		struct pkt *this = vpninfo->current_ssl_pkt;
 
+		/* IPv4 or IPv6 EtherType */
+		int ethertype = this->len && (this->data[0] & 0xF0) == 0x60 ? 0x86DD : 0x0800;
+
 		/* store header */
 		store_be32(this->gpst.hdr, 0x1a2b3c4d);
-		store_be16(this->gpst.hdr + 4, 0x0800); /* IPv4 EtherType */
+		store_be16(this->gpst.hdr + 4, ethertype);
 		store_be16(this->gpst.hdr + 6, this->len);
 		store_le32(this->gpst.hdr + 8, 1);
 		store_le32(this->gpst.hdr + 12, 0);
 
 		vpn_progress(vpninfo, PRG_TRACE,
-			     _("Sending data packet of %d bytes\n"),
-			     this->len);
+			     _("Sending IPv%d data packet of %d bytes\n"),
+			     (ethertype == 0x86DD ? 6 : 4), this->len);
 
 		goto handle_outgoing;
 	}
@@ -1304,7 +1354,7 @@ int gpst_esp_catch_probe(struct openconnect_info *vpninfo, struct pkt *pkt)
 {
 	struct ip *iph = (void *)(pkt->data);
 
-	return ( pkt->len >= 21
+	return ( pkt->len >= 21 && iph->ip_v==4 /* IPv4 header */
 		 && iph->ip_p==1 /* IPv4 protocol field == ICMP */
 		 && iph->ip_src.s_addr == vpninfo->esp_magic /* source == magic address */
 		 && pkt->len >= (iph->ip_hl<<2) + ICMP_MINLEN + sizeof(magic_ping_payload) /* No short-packet segfaults */

@@ -489,6 +489,7 @@ static int gpst_login(struct openconnect_info *vpninfo, int portal, struct login
 		/* submit gateway login (ssl-vpn/login.esp) or portal config (global-protect/getconfig.esp) request */
 		buf_truncate(request_body);
 		buf_append(request_body, "jnlpReady=jnlpReady&ok=Login&direct=yes&clientVer=4100&prot=https:");
+		append_opt(request_body, "ipv6-support", vpninfo->disable_ipv6 ? "no" : "yes");
 		if (!strcmp(vpninfo->platname, "mac-intel") || !strcmp(vpninfo->platname, "apple-ios"))
 			append_opt(request_body, "clientos", "Mac");
 		else if (!strcmp(vpninfo->platname, "linux-64") || !strcmp(vpninfo->platname, "android"))
