@@ -1,7 +1,7 @@
 /*
  * OpenConnect (SSL + DTLS) VPN client
  *
- * Copyright © 2016-2017 Daniel Lenski
+ * Copyright © 2016-2018 Daniel Lenski
  *
  * Author: Dan Lenski <dlenski@gmail.com>
  *
@@ -24,7 +24,8 @@
 
 #include "openconnect-internal.h"
 
-void gpst_common_headers(struct openconnect_info *vpninfo, struct oc_text_buf *buf)
+void gpst_common_headers(struct openconnect_info *vpninfo,
+			 struct oc_text_buf *buf)
 {
 	char *orig_ua = vpninfo->useragent;
 	vpninfo->useragent = (char *)"PAN GlobalProtect";
@@ -159,8 +160,10 @@ static int parse_login_xml(struct openconnect_info *vpninfo, xmlNode *xml_node)
 		value = NULL;
 	}
 
-	vpninfo->cookie = cookie->data;
-	cookie->data = NULL;
+	if (!buf_error(cookie)) {
+		vpninfo->cookie = cookie->data;
+		cookie->data = NULL;
+	}
 	return buf_free(cookie);
 
 err_out:
@@ -195,9 +198,11 @@ static int parse_portal_xml(struct openconnect_info *vpninfo, xmlNode *xml_node)
 	opt->form.label = strdup(_("GATEWAY:"));
 	form->opts = (void *)opt;
 
-	/* The portal contains a ton of stuff, but basically none of it is useful to a VPN client
-	 * that wishes to give control to the client user, as opposed to the VPN administrator.
-	 * The exception is the list of gateways in policy/gateways/external/list
+	/*
+	 * The portal contains a ton of stuff, but basically none of it is
+	 * useful to a VPN client that wishes to give control to the client
+	 * user, as opposed to the VPN administrator.  The exception is the
+	 * list of gateways in policy/gateways/external/list
 	 */
 	if (xmlnode_is_named(xml_node, "policy")) {
 		for (x = xml_node->children, xml_node = NULL; x; x = x->next) {
