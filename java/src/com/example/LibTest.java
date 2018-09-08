@@ -250,6 +250,7 @@ public final class LibTest {
 
 		lib.setReportedOS("win");
 		lib.setLogLevel(lib.PRG_DEBUG);
+		lib.setVersionString("2.2.0133");
 		//lib.setTokenMode(LibOpenConnect.OC_TOKEN_MODE_STOKEN, null);
 		String csd_wrapper = "./csd-" + lib.getProtocol() + ".sh";
 		if (new File(csd_wrapper).exists()) {

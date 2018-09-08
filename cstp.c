@@ -179,7 +179,7 @@ static void append_mobile_headers(struct openconnect_info *vpninfo, struct oc_te
 {
 	if (vpninfo->mobile_platform_version) {
 		buf_append(buf, "X-AnyConnect-Identifier-ClientVersion: %s\r\n",
-			   openconnect_version_str);
+			   vpninfo->version_string ? : openconnect_version_str);
 		buf_append(buf, "X-AnyConnect-Identifier-Platform: %s\r\n",
 			   vpninfo->platname);
 		buf_append(buf, "X-AnyConnect-Identifier-PlatformVersion: %s\r\n",

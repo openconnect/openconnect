@@ -131,6 +131,7 @@ public abstract class LibOpenConnect {
 	public synchronized native int setHTTPProxy(String proxy);
 	public synchronized native void setXMLSHA1(String hash);
 	public synchronized native void setHostname(String hostname);
+	public synchronized native void setVersionString(String version);
 	public synchronized native void setUrlpath(String urlpath);
 	public synchronized native void setLocalName(String localName);
 	public synchronized native void setCAFile(String caFile);

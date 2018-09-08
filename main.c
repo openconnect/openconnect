@@ -188,6 +188,7 @@ enum {
 	OPT_LOCAL_HOSTNAME,
 	OPT_PROTOCOL,
 	OPT_PASSTOS,
+	OPT_VERSION,
 };
 
 #ifdef __sun__
@@ -253,6 +254,7 @@ static const struct option long_options[] = {
 	OPTION("resolve", 1, OPT_RESOLVE),
 	OPTION("key-password-from-fsid", 0, OPT_KEY_PASSWORD_FROM_FSID),
 	OPTION("useragent", 1, OPT_USERAGENT),
+	OPTION("version-string", 1, OPT_VERSION),
 	OPTION("local-hostname", 1, OPT_LOCAL_HOSTNAME),
 	OPTION("disable-ipv6", 0, OPT_DISABLE_IPV6),
 	OPTION("no-proxy", 0, OPT_NO_PROXY),
@@ -879,6 +881,8 @@ static void usage(void)
 	printf("      --useragent=STRING          %s\n", _("HTTP header User-Agent: field"));
 	printf("      --local-hostname=STRING     %s\n", _("Local hostname to advertise to server"));
 	printf("      --os=STRING                 %s\n", _("OS type (linux,linux-64,win,...) to report"));
+	printf("      --version-string=STRING     %s\n", _("reported version string during authentication"));
+	printf("                                  (%s %s)\n", _("default:"), openconnect_version_str);
 
 #ifndef _WIN32
 	printf("\n%s:\n", _("Trojan binary (CSD) execution"));
@@ -1419,6 +1423,10 @@ int main(int argc, char **argv)
 		case OPT_USERAGENT:
 			free(vpninfo->useragent);
 			vpninfo->useragent = dup_config_arg();
+			break;
+		case OPT_VERSION:
+			free(vpninfo->version_string);
+			vpninfo->version_string = dup_config_arg();
 			break;
 		case OPT_LOCAL_HOSTNAME:
 			openconnect_set_localname(vpninfo, config_arg);

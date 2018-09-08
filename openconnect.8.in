@@ -64,6 +64,7 @@ openconnect \- Multi-protocol VPN client, for Cisco AnyConnect VPNs and others
 .OP \-\-resolve host:ip
 .OP \-\-servercert sha1
 .OP \-\-useragent string
+.OP \-\-version\-string string
 .OP \-\-local-hostname string
 .OP \-\-os string
 .B [https://]\fIserver\fB[:\fIport\fB][/\fIgroup\fB]
@@ -503,6 +504,12 @@ Use
 .I STRING
 as 'User\-Agent:' field value in HTTP header.
 (e.g. \-\-useragent 'Cisco AnyConnect VPN Agent for Windows 2.2.0133')
+.TP
+.B \-\-version\-string=STRING
+Use
+.I STRING
+as the software version reported to the head end.
+(e.g. \-\-version\-string '2.2.0133')
 .TP
 .B \-\-local-hostname=STRING
 Use

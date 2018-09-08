@@ -728,7 +728,8 @@ static xmlDocPtr xmlpost_new_query(struct openconnect_info *vpninfo, const char 
 		goto bad;
 	xmlDocSetRootElement(doc, root);
 
-	node = xmlNewTextChild(root, NULL, XCAST("version"), XCAST(openconnect_version_str));
+	node = xmlNewTextChild(root, NULL, XCAST("version"),
+			       XCAST(vpninfo->version_string ? : openconnect_version_str));
 	if (!node)
 		goto bad;
 	if (!xmlNewProp(node, XCAST("who"), XCAST("vpn")))

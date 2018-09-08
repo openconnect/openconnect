@@ -100,6 +100,7 @@ OPENCONNECT_5_5 {
 	openconnect_free_supported_protocols;
 	openconnect_has_tss2_blob_support;
 	openconnect_set_key_password;
+	openconnect_set_version_string;
 } OPENCONNECT_5_4;
 
 OPENCONNECT_PRIVATE {

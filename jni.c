@@ -1297,6 +1297,14 @@ JNIEXPORT void JNICALL Java_org_infradead_libopenconnect_LibOpenConnect_setHostn
 	SET_STRING_END();
 }
 
+JNIEXPORT void JNICALL Java_org_infradead_libopenconnect_LibOpenConnect_setVersionString(
+	JNIEnv *jenv, jobject jobj, jstring jarg)
+{
+	SET_STRING_START()
+	openconnect_set_version_string(ctx->vpninfo, arg);
+	SET_STRING_END();
+}
+
 JNIEXPORT void JNICALL Java_org_infradead_libopenconnect_LibOpenConnect_setUrlpath(
 	JNIEnv *jenv, jobject jobj, jstring jarg)
 {

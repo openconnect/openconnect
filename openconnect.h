@@ -37,6 +37,7 @@ extern "C" {
 
 /*
  * API version 5.5:
+ *  - add openconnect_set_version_string()
  *  - add openconnect_set_key_password()
  *  - Add openconnect_has_tss2_blob_support()
  *  - Add openconnect_get_supported_protocols()
@@ -508,6 +509,8 @@ void openconnect_set_xmlpost(struct openconnect_info *, int enable);
    trojan binary. */
 int openconnect_set_reported_os(struct openconnect_info *, const char *os);
 
+int openconnect_set_version_string(struct openconnect_info *vpninfo,
+				   const char *version_string);
 int openconnect_set_mobile_info(struct openconnect_info *vpninfo,
 				const char *mobile_platform_version,
 				const char *mobile_device_type,
