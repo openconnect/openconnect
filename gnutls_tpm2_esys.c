@@ -1,0 +1,380 @@
+/*******************************************************************************
+ * Copyright 2017-2018, Fraunhofer SIT sponsored by Infineon Technologies AG
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright notice,
+ * this list of conditions and the following disclaimer.
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ * this list of conditions and the following disclaimer in the documentation
+ * and/or other materials provided with the distribution.
+ *
+ * 3. Neither the name of tpm2-tss-engine nor the names of its contributors
+ * may be used to endorse or promote products derived from this software
+ * without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+ * THE POSSIBILITY OF SUCH DAMAGE.
+ ******************************************************************************/
+
+#include "config.h"
+
+#include "openconnect-internal.h"
+#include "gnutls.h"
+
+#ifdef HAVE_TSS2
+
+#include <stdio.h>
+#include <string.h>
+
+#include <tss2/tss2_mu.h>
+#include <tss2/tss2_esys.h>
+
+struct oc_tpm2_ctx {
+	TPM2B_DIGEST userauth;
+	TPM2B_PUBLIC pub;
+	TPM2B_PRIVATE priv;
+	TPM2B_DIGEST ownerauth;
+};
+
+static TPM2B_PUBLIC primaryTemplate = {
+	.publicArea = {
+		.type = TPM2_ALG_ECC,
+		.nameAlg = TPM2_ALG_SHA256,
+		.objectAttributes = (TPMA_OBJECT_USERWITHAUTH |
+				     TPMA_OBJECT_RESTRICTED |
+				     TPMA_OBJECT_DECRYPT |
+				     TPMA_OBJECT_NODA |
+				     TPMA_OBJECT_SENSITIVEDATAORIGIN),
+		.authPolicy = {
+			.size = 0,
+		},
+		.parameters.eccDetail = {
+			.symmetric = {
+				.algorithm = TPM2_ALG_AES,
+				.keyBits.aes = 128,
+				.mode.aes = TPM2_ALG_CFB,
+			},
+			.scheme = {
+				.scheme = TPM2_ALG_NULL,
+				.details = {}
+			},
+			.curveID = TPM2_ECC_NIST_P256,
+			.kdf = {
+				.scheme = TPM2_ALG_NULL,
+				.details = {}
+			},
+		},
+		.unique.ecc = {
+			.x.size = 0,
+			.y.size = 0
+		}
+	}
+};
+
+static TPM2B_SENSITIVE_CREATE primarySensitive = {
+	.sensitive = {
+		.userAuth = {
+			.size = 0,
+		},
+		.data = {
+			.size = 0,
+		}
+	}
+};
+static TPM2B_DATA allOutsideInfo = {
+	.size = 0,
+};
+static TPML_PCR_SELECTION allCreationPCR = {
+	.count = 0,
+};
+
+
+/** Initialize the ESYS TPM connection and primary key
+ *
+ * Establish a connection with the TPM using ESYS libraries and create a primary
+ * key under the owner hierarchy.
+ * @param ctx The resulting ESYS context.
+ * @param primaryHandle The resulting handle for the primary key.
+ * @retval TSS2_RC_SUCCESS on success
+ * @retval TSS2_RCs according to the error
+ */
+static TSS2_RC init_tpm2_primary(struct openconnect_info *vpninfo,
+				 ESYS_CONTEXT **ctx, ESYS_TR *primaryHandle)
+{
+	TSS2_RC r;
+	*primaryHandle = ESYS_TR_NONE;
+
+	vpn_progress(vpninfo, PRG_DEBUG,
+		     _("Establishing connection with TPM.\n"));
+
+	r = Esys_Initialize(ctx, NULL, NULL);
+	if (r) {
+		vpn_progress(vpninfo, PRG_ERR,
+			     _("TPM2 Esys_Initialize failed: 0x%x\n"),
+			     r);
+		goto error;
+	}
+
+	r = Esys_Startup(*ctx, TPM2_SU_CLEAR);
+	if (r == TPM2_RC_INITIALIZE) {
+		vpn_progress(vpninfo, PRG_DEBUG,
+			     _("TPM2 was already started up thus false positive failing in tpm2tss log.\n"));
+	} else if (r) {
+		vpn_progress(vpninfo, PRG_ERR,
+			     _("TPM2 Esys_Startup failed: 0x%x\n"),
+			     r);
+		goto error;
+	}
+
+	vpn_progress(vpninfo, PRG_DEBUG, _("Creating primary key under owner.\n"));
+
+	r = Esys_TR_SetAuth(*ctx, ESYS_TR_RH_OWNER, &vpninfo->tpm2->ownerauth);
+	if (r) {
+		vpn_progress(vpninfo, PRG_ERR,
+			     _("TPM2 Esys_TR_SetAuth failed: 0x%x\n"),
+			     r);
+		goto error;
+	}
+
+	r = Esys_CreatePrimary(*ctx, ESYS_TR_RH_OWNER,
+			       ESYS_TR_PASSWORD, ESYS_TR_NONE, ESYS_TR_NONE,
+			       &primarySensitive, &primaryTemplate,
+			       &allOutsideInfo, &allCreationPCR,
+			       primaryHandle, NULL, NULL, NULL, NULL);
+	if (r == 0x000009a2) {
+		vpn_progress(vpninfo, PRG_DEBUG,
+			     _("TPM2 Esys_CreatePrimary owner auth failed\n"));
+		/* XXX: Prompt and retry */
+		goto error;
+	} else if (r) {
+		vpn_progress(vpninfo, PRG_ERR,
+			     _("TPM2 Esys_CreatePrimary failed: 0x%x\n"),
+			     r);
+		goto error;
+	}
+
+	return TSS2_RC_SUCCESS;
+ error:
+	if (*primaryHandle != ESYS_TR_NONE)
+		Esys_FlushContext(*ctx, *primaryHandle);
+	*primaryHandle = ESYS_TR_NONE;
+
+	Esys_Finalize(ctx);
+	return r;
+}
+
+/** Initialize the ESYS TPM connection and load the key
+ *
+ * Establish a connection with the TPM using ESYS libraries, create a primary
+ * key under the owner hierarchy and then load the TPM key and set its auth
+ * value.
+ * @param ctx The resulting ESYS context.
+ * @param keyHandle The resulting handle for the key key.
+ * @param tpm2Data The key data, owner auth and key auth to be used
+ * @retval TSS2_RC_SUCCESS on success
+ * @retval TSS2_RCs according to the error
+ */
+static TSS2_RC init_tpm2_key(ESYS_CONTEXT **ctx, ESYS_TR *keyHandle,
+			     struct openconnect_info *vpninfo)
+{
+	TSS2_RC r;
+	ESYS_TR primaryHandle = ESYS_TR_NONE;
+	*keyHandle = ESYS_TR_NONE;
+
+	r = init_tpm2_primary(vpninfo, ctx, &primaryHandle);
+	if (r)
+		goto error;
+
+	vpn_progress(vpninfo, PRG_DEBUG, _("Loading TPM2 key blob.\n"));
+
+	r = Esys_Load(*ctx, primaryHandle,
+		      ESYS_TR_PASSWORD, ESYS_TR_NONE, ESYS_TR_NONE,
+		      &vpninfo->tpm2->priv, &vpninfo->tpm2->pub,
+		      keyHandle);
+	if (r) {
+		vpn_progress(vpninfo, PRG_ERR,
+			     _("TPM2 Esys_Load failed: 0x%x\n"),
+			     r);
+		goto error;
+	}
+
+	r = Esys_FlushContext(*ctx, primaryHandle);
+	if (r) {
+		vpn_progress(vpninfo, PRG_ERR,
+			     _("TPM2 Esys_FlushContext failed: 0x%x\n"),
+			     r);
+		goto error;
+	}
+	primaryHandle = ESYS_TR_NONE;
+
+	r = Esys_TR_SetAuth(*ctx, *keyHandle, &vpninfo->tpm2->userauth);
+	if (r) {
+		vpn_progress(vpninfo, PRG_ERR,
+			     _("TPM2 Esys_TR_SetAuth failed: 0x%x\n"),
+			     r);
+		goto error;
+	}
+
+	return TSS2_RC_SUCCESS;
+ error:
+	if (primaryHandle != ESYS_TR_NONE)
+		Esys_FlushContext(*ctx, primaryHandle);
+	if (*keyHandle != ESYS_TR_NONE)
+		Esys_FlushContext(*ctx, *keyHandle);
+	*keyHandle = ESYS_TR_NONE;
+
+	Esys_Finalize(ctx);
+	return r;
+}
+
+#define PKCS1_PAD_OVERHEAD 11
+
+/* Signing function for TPM privkeys, set with gnutls_privkey_import_ext() */
+static int tpm2_rsa_sign_fn(gnutls_privkey_t key, void *_vpninfo,
+			    const gnutls_datum_t *data, gnutls_datum_t *sig)
+{
+	struct openconnect_info *vpninfo = _vpninfo;
+	int ret = GNUTLS_E_PK_SIGN_FAILED;
+	ESYS_CONTEXT *ectx = NULL;
+	TPM2B_PUBLIC_KEY_RSA digest, *tsig = NULL;
+	TPM2B_DATA label = { .size = 0 };
+	TPMT_RSA_DECRYPT inScheme = { .scheme = TPM2_ALG_NULL };
+	ESYS_TR key_handle = ESYS_TR_NONE;
+	TSS2_RC r;
+
+	vpn_progress(vpninfo, PRG_DEBUG,
+		     _("TPM2 sign function called for %d bytes.\n"),
+		     data->size);
+
+	digest.size = vpninfo->tpm2->pub.publicArea.unique.rsa.size;
+
+	if (data->size + PKCS1_PAD_OVERHEAD > digest.size) {
+		vpn_progress(vpninfo, PRG_ERR,
+			     _("TPM2 digest too large: %d > %d\n"),
+			     data->size, digest.size - PKCS1_PAD_OVERHEAD);
+		return GNUTLS_E_PK_SIGN_FAILED;
+	}
+
+	/* PKCS#1 padding */
+	digest.buffer[0] = 0;
+	digest.buffer[1] = 1;
+	memset(digest.buffer + 2, 0xff, digest.size - data->size - 3);
+	digest.buffer[digest.size - data->size - 1] = 0;
+	memcpy(digest.buffer + digest.size - data->size, data->data, data->size);
+
+	if (init_tpm2_key(&ectx, &key_handle, vpninfo))
+		goto out;
+
+	r = Esys_RSA_Decrypt(ectx, key_handle,
+			     ESYS_TR_PASSWORD, ESYS_TR_NONE, ESYS_TR_NONE,
+			     &digest, &inScheme, &label, &tsig);
+	if (r) {
+		vpn_progress(vpninfo, PRG_ERR,
+			     _("TPM2 failed to generate RSA signature: %d\n"),
+			     r);
+		goto out;
+	}
+
+
+	sig->data = malloc(tsig->size);
+	if (!sig->data)
+		goto out;
+
+	memcpy(sig->data, tsig->buffer, tsig->size);
+	sig->size = tsig->size;
+
+	ret = 0;
+ out:
+	if (tsig)
+		free(tsig);
+
+	if (key_handle != ESYS_TR_NONE)
+		Esys_FlushContext(ectx, key_handle);
+
+	if (ectx)
+		Esys_Finalize(&ectx);
+
+	return ret;
+}
+
+
+int install_tpm2_key(struct openconnect_info *vpninfo, gnutls_privkey_t *pkey, gnutls_datum_t *pkey_sig,
+		     unsigned int parent, int emptyauth, gnutls_datum_t *privdata, gnutls_datum_t *pubdata)
+{
+	TSS2_RC r;
+
+	if (parent != 0x40000001) {
+		vpn_progress(vpninfo, PRG_ERR,
+			     _("Cannot use TPM2 key with non-default parent 0x%x\n"),
+			     parent);
+		return -EINVAL;
+	};
+
+	if (!emptyauth) {
+		vpn_progress(vpninfo, PRG_ERR,
+			     _("Cannot use TPM2 key with authentication\n"));
+		return -EINVAL;
+	}
+
+	vpninfo->tpm2 = calloc(1, sizeof(*vpninfo->tpm2));
+	if (!vpninfo->tpm2)
+		return -ENOMEM;
+
+	r = Tss2_MU_TPM2B_PRIVATE_Unmarshal(privdata->data, privdata->size, NULL,
+					    &vpninfo->tpm2->priv);
+	if (r) {
+		vpn_progress(vpninfo, PRG_ERR,
+			     _("Failed to import RPM2 private key data: %d\n"),
+			     r);
+	err_out:
+		release_tpm2_ctx(vpninfo);
+		return -EINVAL;
+	}
+
+	r = Tss2_MU_TPM2B_PUBLIC_Unmarshal(pubdata->data, pubdata->size, NULL,
+					   &vpninfo->tpm2->pub);
+	if (r) {
+		vpn_progress(vpninfo, PRG_ERR,
+			     _("Failed to import RPM2 private key data: %d\n"),
+			     r);
+		goto err_out;
+	}
+
+	if (vpninfo->tpm2->pub.publicArea.type != TPM2_ALG_RSA) {
+		vpn_progress(vpninfo, PRG_ERR,
+			     _("Unsupported non-RSA TPM2 key type %d\n"),
+			     vpninfo->tpm2->pub.publicArea.type);
+		goto err_out;
+	}
+
+	gnutls_privkey_init(pkey);
+	/* This would be nicer if there was a destructor callback. I could
+	   allocate a data structure with the TPM handles and the vpninfo
+	   pointer, and destroy that properly when the key is destroyed. */
+	gnutls_privkey_import_ext(*pkey, GNUTLS_PK_RSA, vpninfo, tpm2_rsa_sign_fn, NULL, 0);
+
+	return 0;
+}
+
+
+void release_tpm2_ctx(struct openconnect_info *vpninfo)
+{
+	if (vpninfo->tpm2)
+		free(vpninfo->tpm2);
+	vpninfo->tpm2 = NULL;
+}
+
+#endif /* HAVE_TSS2 */

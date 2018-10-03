@@ -483,24 +483,12 @@ case "$ssl_library" in
 	LIBS="$oldlibs"
 	CFLAGS="$oldcflags"
 
-	tss2lib=
-	AC_CHECK_LIB([tss], [TSS_Create], [tss2inc=tss2
-					   tss2lib=tss],
-		     AC_CHECK_LIB([TSS_Create], [ibmtss], [tss2inc=ibmtss
-							   tss2lib=ibmtss], []))
-	if test "$tss2lib" != ""; then
-	    PKG_CHECK_MODULES(TASN1, libtasn1, [], [tss2lib=])
-	fi
-	if test "$tss2lib" != ""; then
-	    AC_CHECK_HEADER($tss2inc/tss.h,
-			    [AC_DEFINE_UNQUOTED(HAVE_TSS2, $tss2inc, [TSS2 library])
-			     AC_SUBST(TSS2_LIBS, [-l$tss2lib])], [])
-	fi
+	PKG_CHECK_MODULES(TPM2, [libtasn1 tss2-esys], [AC_DEFINE(HAVE_TSS2, 1, [Have TSS2])], [:])
 
 	AC_DEFINE(OPENCONNECT_GNUTLS, 1, [Using GnuTLS])
 	AC_SUBST(SSL_PC, [gnutls])
-	AC_SUBST(SSL_LIBS, ['$(GNUTLS_LIBS) $(TASN1_LIBS) $(TSS2_LIBS)'])
-	AC_SUBST(SSL_CFLAGS, ['$(GNUTLS_CFLAGS) $(TASN1_CFLAGS)'])
+	AC_SUBST(SSL_LIBS, ['$(GNUTLS_LIBS) $(TPM2_LIBS)'])
+	AC_SUBST(SSL_CFLAGS, ['$(GNUTLS_CFLAGS) $(TPM2_CFLAGS)'])
 	;;
 
     *)

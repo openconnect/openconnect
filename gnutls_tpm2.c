@@ -26,12 +26,9 @@
 #include "gnutls.h"
 
 #ifdef HAVE_TSS2
-#define TSSINCLUDE(x) < HAVE_TSS2/x >
-#include TSSINCLUDE(tss.h)
 
-struct oc_tpm2_ctx {
-};
 #include <libtasn1.h>
+
 
 const asn1_static_node tpmkey_asn1_tab[] = {
   { "TPMKey", 536875024, NULL },
@@ -48,16 +45,38 @@ const asn1_static_node tpmkey_asn1_tab[] = {
   { NULL, 0, NULL }
 };
 
+
+static int decode_data(ASN1_TYPE n, gnutls_datum_t *r)
+{
+	ASN1_DATA_NODE d;
+	int len, lenlen;
+
+	if (!n)
+		return -EINVAL;
+
+	if (asn1_read_node_value(n, &d) != ASN1_SUCCESS)
+		return -EINVAL;
+
+	len = asn1_get_length_der(d.value, d.value_len, &lenlen);
+	if (len < 0)
+		return -EINVAL;
+
+	r->data = (unsigned char *)d.value + lenlen;
+	r->size = len;
+
+	return 0;
+}
+
 int load_tpm2_key(struct openconnect_info *vpninfo, gnutls_datum_t *fdata,
 		  gnutls_privkey_t *pkey, gnutls_datum_t *pkey_sig)
 {
-	gnutls_datum_t asn1;
-	int err;
+	gnutls_datum_t asn1, pubdata, privdata;
 	ASN1_TYPE tpmkey_def = ASN1_TYPE_EMPTY, tpmkey = ASN1_TYPE_EMPTY;
 	char value_buf[16];
 	int value_buflen;
 	int emptyauth = 0;
 	unsigned int parent;
+	int err, ret = -EINVAL;
 
 	err = gnutls_pem_base64_decode_alloc("TSS2 KEY BLOB", fdata, &asn1);
 	if (err) {
@@ -83,7 +102,6 @@ int load_tpm2_key(struct openconnect_info *vpninfo, gnutls_datum_t *fdata,
 			     asn1_strerror(err));
 		goto out_tpmkey;
 	}
-	asn1_print_structure(stdout, tpmkey, "", ASN1_PRINT_ALL);
 
 	value_buflen = sizeof(value_buf);
 	err = asn1_read_value(tpmkey, "type", value_buf, &value_buflen);
@@ -109,7 +127,7 @@ int load_tpm2_key(struct openconnect_info *vpninfo, gnutls_datum_t *fdata,
 	value_buflen = 4;
 	err = asn1_read_value(tpmkey, "parent", value_buf, &value_buflen);
 	if (err == ASN1_ELEMENT_NOT_FOUND)
-		parent = TPM_RH_OWNER;
+		parent = 0x40000001; // RH_OWNER
 	else if (err != ASN1_SUCCESS) {
 		vpn_progress(vpninfo, PRG_ERR,
 			     _("Failed to parse TPM2 key parent: %s\n"),
@@ -122,25 +140,32 @@ int load_tpm2_key(struct openconnect_info *vpninfo, gnutls_datum_t *fdata,
 		for (i = 0; i < value_buflen; i++)
 			parent |= value_buf[value_buflen - i - 1] << (8 * i);
 	}
+
+	if (decode_data(asn1_find_node(tpmkey, "pubkey"), &pubdata) < 0) {
+		vpn_progress(vpninfo, PRG_ERR,
+			     _("Failed to parse TPM2 pubkey element\n"));
+		goto out_tpmkey;
+	}
+	if (decode_data(asn1_find_node(tpmkey, "privkey"), &privdata) < 0) {
+		vpn_progress(vpninfo, PRG_ERR,
+			     _("Failed to parse TPM2 privkey element\n"));
+		goto out_tpmkey;
+	}
+
 	vpn_progress(vpninfo, PRG_DEBUG,
 		     _("Parsed TPM2 key with parent %x, emptyauth %d\n"),
 		     parent, emptyauth);
 
-	vpn_progress(vpninfo, PRG_ERR,
-		     _("TPM2 not really implemented yet\n"));
+	/* Now we've extracted what we need from the ASN.1, invoke the
+	 * actual TPM2 code (whichever implementation we end up with */
+	ret = install_tpm2_key(vpninfo, pkey, pkey_sig, parent, emptyauth, &privdata, &pubdata);
 
  out_tpmkey:
 	asn1_delete_structure(&tpmkey);
 	asn1_delete_structure(&tpmkey_def);
  out_asn1:
 	free(asn1.data);
-	return -EINVAL;
+	return ret;
 }
 
-void release_tpm2_ctx(struct openconnect_info *vpninfo)
-{
-	if (vpninfo->tpm2)
-		free(vpninfo->tpm2);
-	vpninfo->tpm2 = NULL;
-}
 #endif /* HAVE_TSS2 */
