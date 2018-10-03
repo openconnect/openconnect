@@ -484,17 +484,23 @@ case "$ssl_library" in
 	CFLAGS="$oldcflags"
 
 	tss2lib=
-	AC_MSG_CHECKING([for tss2 library])
-	AC_CHECK_LIB([tss], [TSS_Create], [tss2lib=tss2],
-				   AC_CHECK_LIB([TSS_Create], [ibmtss], [tss2lib=ibmtss], []))
-	if test "%tss2lib" != ""; then
-	    AC_CHECK_HEADER($tss2lib/tss.h, AC_DEFINE_UNQUOTED(HAVE_TSS2, $tss2lib, [TSS2 library]), [])
+	AC_CHECK_LIB([tss], [TSS_Create], [tss2inc=tss2
+					   tss2lib=tss],
+		     AC_CHECK_LIB([TSS_Create], [ibmtss], [tss2inc=ibmtss
+							   tss2lib=ibmtss], []))
+	if test "$tss2lib" != ""; then
+	    PKG_CHECK_MODULES(TASN1, libtasn1, [], [tss2lib=])
+	fi
+	if test "$tss2lib" != ""; then
+	    AC_CHECK_HEADER($tss2inc/tss.h,
+			    [AC_DEFINE_UNQUOTED(HAVE_TSS2, $tss2inc, [TSS2 library])
+			     AC_SUBST(TSS2_LIBS, [-l$tss2lib])], [])
 	fi
 
 	AC_DEFINE(OPENCONNECT_GNUTLS, 1, [Using GnuTLS])
 	AC_SUBST(SSL_PC, [gnutls])
-	AC_SUBST(SSL_LIBS, ['$(GNUTLS_LIBS)'])
-	AC_SUBST(SSL_CFLAGS, ['$(GNUTLS_CFLAGS)'])
+	AC_SUBST(SSL_LIBS, ['$(GNUTLS_LIBS) $(TASN1_LIBS) $(TSS2_LIBS)'])
+	AC_SUBST(SSL_CFLAGS, ['$(GNUTLS_CFLAGS) $(TASN1_CFLAGS)'])
 	;;
 
     *)
