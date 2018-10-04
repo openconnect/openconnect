@@ -478,6 +478,18 @@ static int tpm2_ec_sign_fn(gnutls_privkey_t key, void *_vpninfo,
 	return ret;
 }
 
+#if GNUTLS_VERSION_NUMBER >= 0x030100
+static int ec_key_info(gnutls_privkey_t key, unsigned int flags, void *_vpninfo)
+{
+	if (flags & GNUTLS_PRIVKEY_INFO_PK_ALGO)
+		return GNUTLS_PK_EC;
+
+	if (flags & GNUTLS_PRIVKEY_INFO_SIGN_ALGO)
+		return GNUTLS_SIGN_ECDSA_SHA256;
+
+	return -1;
+}
+#endif
 
 int install_tpm2_key(struct openconnect_info *vpninfo, gnutls_privkey_t *pkey, gnutls_datum_t *pkey_sig,
 		     unsigned int parent, int emptyauth, gnutls_datum_t *privdata, gnutls_datum_t *pubdata)
@@ -525,7 +537,11 @@ int install_tpm2_key(struct openconnect_info *vpninfo, gnutls_privkey_t *pkey, g
 		break;
 
 	case TPM2_ALG_ECC:
+#if GNUTLS_VERSION_NUMBER >= 0x030100
+		gnutls_privkey_import_ext3(*pkey, vpninfo, tpm2_ec_sign_fn, NULL, NULL, ec_key_info, 0);
+#else
 		gnutls_privkey_import_ext(*pkey, GNUTLS_PK_EC, vpninfo, tpm2_ec_sign_fn, NULL, 0);
+#endif
 		break;
 
 	default:
