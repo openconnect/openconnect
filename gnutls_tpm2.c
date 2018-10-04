@@ -119,7 +119,7 @@ int load_tpm2_key(struct openconnect_info *vpninfo, gnutls_datum_t *fdata,
 	}
 
 	value_buflen = sizeof(value_buf);
-	if (!asn1_read_value(tpmkey, "emptyAuth", value_buf, &value_buflen) ||
+	if (!asn1_read_value(tpmkey, "emptyAuth", value_buf, &value_buflen) &&
 	    !strcmp(value_buf, "TRUE"))
 		emptyauth = 1;
 

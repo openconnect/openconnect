@@ -418,7 +418,7 @@ static int tpm2_ec_sign_fn(gnutls_privkey_t key, void *_vpninfo,
 		      &tsig);
 	if (r == 0x9a2) {
 		vpn_progress(vpninfo, PRG_DEBUG,
-			     _("TPM2 Esys_RSA_Decrypt auth failed\n"));
+			     _("TPM2 Esys_Sign auth failed\n"));
 		vpninfo->tpm2->need_userauth = 1;
 		goto reauth;
 	}
@@ -491,12 +491,6 @@ int install_tpm2_key(struct openconnect_info *vpninfo, gnutls_privkey_t *pkey, g
 		return -EINVAL;
 	};
 
-	if (!emptyauth) {
-		vpn_progress(vpninfo, PRG_ERR,
-			     _("Cannot use TPM2 key with authentication\n"));
-		return -EINVAL;
-	}
-
 	vpninfo->tpm2 = calloc(1, sizeof(*vpninfo->tpm2));
 	if (!vpninfo->tpm2)
 		return -ENOMEM;
@@ -520,6 +514,8 @@ int install_tpm2_key(struct openconnect_info *vpninfo, gnutls_privkey_t *pkey, g
 			     r);
 		goto err_out;
 	}
+
+	vpninfo->tpm2->need_userauth = !emptyauth;
 
 	gnutls_privkey_init(pkey);
 
