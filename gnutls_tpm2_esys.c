@@ -307,7 +307,7 @@ static int tpm2_rsa_sign_fn(gnutls_privkey_t key, void *_vpninfo,
 	TSS2_RC r;
 
 	vpn_progress(vpninfo, PRG_DEBUG,
-		     _("TPM2 sign function called for %d bytes.\n"),
+		     _("TPM2 RSA sign function called for %d bytes.\n"),
 		     data->size);
 
 	digest.size = vpninfo->tpm2->pub.publicArea.unique.rsa.size;
@@ -369,6 +369,115 @@ static int tpm2_rsa_sign_fn(gnutls_privkey_t key, void *_vpninfo,
 	return ret;
 }
 
+/* Signing function for TPM privkeys, set with gnutls_privkey_import_ext() */
+static int tpm2_ec_sign_fn(gnutls_privkey_t key, void *_vpninfo,
+			   const gnutls_datum_t *data, gnutls_datum_t *sig)
+{
+	struct openconnect_info *vpninfo = _vpninfo;
+	int ret = GNUTLS_E_PK_SIGN_FAILED;
+	ESYS_CONTEXT *ectx = NULL;
+	TPM2B_DIGEST digest;
+	TPMT_SIGNATURE *tsig = NULL;
+	ESYS_TR key_handle = ESYS_TR_NONE;
+	TSS2_RC r;
+	TPMT_TK_HASHCHECK validation = { .tag = TPM2_ST_HASHCHECK,
+					 .hierarchy = TPM2_RH_NULL,
+					 .digest.size = 0 };
+	TPMT_SIG_SCHEME inScheme = { .scheme = TPM2_ALG_ECDSA };
+	struct oc_text_buf *sig_der = NULL;
+	unsigned char derlen;
+
+	vpn_progress(vpninfo, PRG_DEBUG,
+		     _("TPM2 EC sign function called for %d bytes.\n"),
+		     data->size);
+
+	switch (data->size) {
+	case 20: inScheme.details.ecdsa.hashAlg = TPM2_ALG_SHA1;   break;
+	case 32: inScheme.details.ecdsa.hashAlg = TPM2_ALG_SHA256; break;
+	case 48: inScheme.details.ecdsa.hashAlg = TPM2_ALG_SHA384; break;
+	case 64: inScheme.details.ecdsa.hashAlg = TPM2_ALG_SHA512; break;
+	default:
+		vpn_progress(vpninfo, PRG_ERR,
+			     _("Unknown TPM2 EC digest size %d\n"),
+			     data->size);
+		return GNUTLS_E_PK_SIGN_FAILED;
+	}
+
+	memcpy(digest.buffer, data->data, data->size);
+	digest.size = data->size;
+
+	if (init_tpm2_key(&ectx, &key_handle, vpninfo))
+		goto out;
+ reauth:
+	if (auth_tpm2_key(vpninfo, ectx, key_handle))
+		goto out;
+
+	r = Esys_Sign(ectx, key_handle,
+		      ESYS_TR_PASSWORD, ESYS_TR_NONE, ESYS_TR_NONE,
+		      &digest, &inScheme, &validation,
+		      &tsig);
+	if (r == 0x9a2) {
+		vpn_progress(vpninfo, PRG_DEBUG,
+			     _("TPM2 Esys_RSA_Decrypt auth failed\n"));
+		vpninfo->tpm2->need_userauth = 1;
+		goto reauth;
+	}
+	if (r) {
+		vpn_progress(vpninfo, PRG_ERR,
+			     _("TPM2 failed to generate RSA signature: 0x%x\n"),
+			     r);
+		goto out;
+	}
+
+	/*
+	 * Create the DER-encoded SEQUENCE containing R and S:
+	 *
+	 *	DSASignatureValue ::= SEQUENCE {
+	 *	  r                   INTEGER,
+	 *	  s                   INTEGER
+	 *	}
+	 */
+	sig_der = buf_alloc();
+	buf_append_bytes(sig_der, "\x30\x80", 2); // SEQUENCE, indeterminate length
+	buf_append_bytes(sig_der, "\x02", 1); // INTEGER
+	derlen = tsig->signature.ecdsa.signatureR.size;
+	buf_append_bytes(sig_der, &derlen, 1);
+	buf_append_bytes(sig_der, tsig->signature.ecdsa.signatureR.buffer, tsig->signature.ecdsa.signatureR.size);
+
+	buf_append_bytes(sig_der, "\x02", 1); // INTEGER
+	derlen = tsig->signature.ecdsa.signatureS.size;
+	buf_append_bytes(sig_der, &derlen, 1);
+	buf_append_bytes(sig_der, tsig->signature.ecdsa.signatureS.buffer, tsig->signature.ecdsa.signatureS.size);
+
+	/* If the length actually fits in one byte (which it should), do
+	 * it that way.  Else, leave it indeterminate and add two
+	 * end-of-contents octets to mark the end of the SEQUENCE. */
+	if (!buf_error(sig_der) && sig_der->pos <= 0x80)
+		sig_der->data[1] = sig_der->pos - 2;
+	else {
+		buf_append_bytes(sig_der, "\0\0", 2);
+		if (buf_error(sig_der))
+			goto out;
+	}
+
+	sig->data = (void *)sig_der->data;
+	sig->size = sig_der->pos;
+	sig_der->data = NULL;
+
+	ret = 0;
+ out:
+	buf_free(sig_der);
+	free(tsig);
+
+	if (key_handle != ESYS_TR_NONE)
+		Esys_FlushContext(ectx, key_handle);
+
+	if (ectx)
+		Esys_Finalize(&ectx);
+
+	return ret;
+}
+
 
 int install_tpm2_key(struct openconnect_info *vpninfo, gnutls_privkey_t *pkey, gnutls_datum_t *pkey_sig,
 		     unsigned int parent, int emptyauth, gnutls_datum_t *privdata, gnutls_datum_t *pubdata)
@@ -412,18 +521,25 @@ int install_tpm2_key(struct openconnect_info *vpninfo, gnutls_privkey_t *pkey, g
 		goto err_out;
 	}
 
-	if (vpninfo->tpm2->pub.publicArea.type != TPM2_ALG_RSA) {
+	gnutls_privkey_init(pkey);
+
+	switch(vpninfo->tpm2->pub.publicArea.type) {
+	case TPM2_ALG_RSA:
+		gnutls_privkey_import_ext(*pkey, GNUTLS_PK_RSA, vpninfo, tpm2_rsa_sign_fn, NULL, 0);
+		break;
+
+	case TPM2_ALG_ECC:
+		gnutls_privkey_import_ext(*pkey, GNUTLS_PK_EC, vpninfo, tpm2_ec_sign_fn, NULL, 0);
+		break;
+
+	default:
 		vpn_progress(vpninfo, PRG_ERR,
-			     _("Unsupported non-RSA TPM2 key type %d\n"),
+			     _("Unsupported TPM2 key type %d\n"),
 			     vpninfo->tpm2->pub.publicArea.type);
+		gnutls_privkey_deinit(*pkey);
+		*pkey = NULL;
 		goto err_out;
 	}
-
-	gnutls_privkey_init(pkey);
-	/* This would be nicer if there was a destructor callback. I could
-	   allocate a data structure with the TPM handles and the vpninfo
-	   pointer, and destroy that properly when the key is destroyed. */
-	gnutls_privkey_import_ext(*pkey, GNUTLS_PK_RSA, vpninfo, tpm2_rsa_sign_fn, NULL, 0);
 
 	return 0;
 }
