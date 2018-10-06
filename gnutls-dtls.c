@@ -194,6 +194,18 @@ static int start_dtls_psk_handshake(struct openconnect_info *vpninfo, int dtls_f
 		goto fail;
 	}
 
+	/* set our session identifier match the application ID; we do that in addition
+	 * to the extension which contains the same information in order to deprecate
+	 * the latter. The reason is that the session ID field is a field not used
+	 * with TLS1.3 (and DTLS1.3), and as such we can rely on it being available to
+	 * us, while avoiding a custom extension which requires standardization.
+	 */
+	if (vpninfo->dtls_app_id_size > 0) {
+		gnutls_datum_t id = {vpninfo->dtls_app_id, vpninfo->dtls_app_id_size};
+
+		gnutls_session_set_id(dtls_ssl, &id);
+	}
+
 	gnutls_transport_set_ptr(dtls_ssl,
 				 (gnutls_transport_ptr_t)(intptr_t)dtls_fd);
 

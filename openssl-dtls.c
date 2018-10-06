@@ -187,22 +187,38 @@ static void buf_append_OCTET_STRING(struct oc_text_buf *buf, void *data, int len
 }
 
 static SSL_SESSION *generate_dtls_session(struct openconnect_info *vpninfo,
-					  int dtlsver, const SSL_CIPHER *cipher)
+					  int dtlsver, const SSL_CIPHER *cipher,
+					  unsigned rnd_key)
 {
 	struct oc_text_buf *buf = buf_alloc();
 	SSL_SESSION *dtls_session;
 	const unsigned char *asn;
 	uint16_t cid;
+	uint8_t rnd_secret[TLS_MASTER_KEY_SIZE];
 
 	buf_append_bytes(buf, "\x30\x80", 2); // SEQUENCE, indeterminate length
 	buf_append_INTEGER(buf, 1 /* SSL_SESSION_ASN1_VERSION */);
 	buf_append_INTEGER(buf, dtlsver);
 	store_be16(&cid, SSL_CIPHER_get_id(cipher) & 0xffff);
 	buf_append_OCTET_STRING(buf, &cid, 2);
-	buf_append_OCTET_STRING(buf, vpninfo->dtls_session_id,
-				sizeof(vpninfo->dtls_session_id));
-	buf_append_OCTET_STRING(buf, vpninfo->dtls_secret,
-				sizeof(vpninfo->dtls_secret));
+	if (rnd_key) {
+		buf_append_OCTET_STRING(buf, vpninfo->dtls_app_id,
+					vpninfo->dtls_app_id_size);
+
+		if (openconnect_random(rnd_secret, sizeof(rnd_secret))) {
+			vpn_progress(vpninfo, PRG_ERR,
+				     _("Failed to generate random key\n"));
+			buf_free(buf);
+			return NULL;
+		}
+		buf_append_OCTET_STRING(buf, rnd_secret, sizeof(rnd_secret));
+	} else {
+		buf_append_OCTET_STRING(buf, vpninfo->dtls_session_id,
+					sizeof(vpninfo->dtls_session_id));
+
+		buf_append_OCTET_STRING(buf, vpninfo->dtls_secret,
+					sizeof(vpninfo->dtls_secret));
+	}
 	/* If the length actually fits in one byte (which it should), do
 	 * it that way.  Else, leave it indeterminate and add two
 	 * end-of-contents octets to mark the end of the SEQUENCE. */
@@ -233,9 +249,11 @@ static SSL_SESSION *generate_dtls_session(struct openconnect_info *vpninfo,
 }
 #else /* OpenSSL before 1.1 */
 static SSL_SESSION *generate_dtls_session(struct openconnect_info *vpninfo,
-					  int dtlsver, const SSL_CIPHER *cipher)
+					  int dtlsver, const SSL_CIPHER *cipher,
+					  unsigned rnd_key)
 {
 	SSL_SESSION *dtls_session = SSL_SESSION_new();
+
 	if (!dtls_session) {
 		vpn_progress(vpninfo, PRG_ERR,
 			     _("Initialise DTLSv1 session failed\n"));
@@ -243,13 +261,33 @@ static SSL_SESSION *generate_dtls_session(struct openconnect_info *vpninfo,
 	}
 
 	dtls_session->ssl_version = dtlsver;
-	dtls_session->master_key_length = sizeof(vpninfo->dtls_secret);
-	memcpy(dtls_session->master_key, vpninfo->dtls_secret,
-	       sizeof(vpninfo->dtls_secret));
+	dtls_session->master_key_length = TLS_MASTER_KEY_SIZE;
 
-	dtls_session->session_id_length = sizeof(vpninfo->dtls_session_id);
-	memcpy(dtls_session->session_id, vpninfo->dtls_session_id,
-	       sizeof(vpninfo->dtls_session_id));
+	if (rnd_key) {
+		if (openconnect_random(dtls_session->master_key, TLS_MASTER_KEY_SIZE)) {
+			vpn_progress(vpninfo, PRG_ERR,
+				     _("Failed to generate random key\n"));
+			return NULL;
+		}
+
+		if (vpninfo->dtls_app_id_size > sizeof(dtls_session->session_id)) {
+			vpn_progress(vpninfo, PRG_ERR,
+				     _("Too large application ID size\n"));
+			return NULL;
+		}
+
+		dtls_session->session_id_length = vpninfo->dtls_app_id_size;
+		memcpy(dtls_session->session_id, vpninfo->dtls_app_id,
+		       vpninfo->dtls_app_id_size);
+	} else {
+		memcpy(dtls_session->master_key, vpninfo->dtls_secret,
+		       sizeof(vpninfo->dtls_secret));
+
+		dtls_session->session_id_length = sizeof(vpninfo->dtls_session_id);
+		memcpy(dtls_session->session_id, vpninfo->dtls_session_id,
+		       sizeof(vpninfo->dtls_session_id));
+	}
+
 
 	dtls_session->cipher = (SSL_CIPHER *)cipher;
 	dtls_session->cipher_id = cipher->id;
@@ -308,6 +346,13 @@ static int pskident_parse(SSL *s, unsigned int ext_type, const unsigned char *in
 	return 1;
 }
 
+#endif
+
+#if OPENSSL_VERSION_NUMBER < 0x10002000L
+static const SSL_CIPHER *SSL_CIPHER_find(SSL *ssl, const unsigned char *ptr)
+{
+    return ssl->method->get_cipher_by_char(ptr);
+}
 #endif
 
 int start_dtls_handshake(struct openconnect_info *vpninfo, int dtls_fd)
@@ -391,6 +436,7 @@ int start_dtls_handshake(struct openconnect_info *vpninfo, int dtls_fd)
 						      pskident_parse, vpninfo);
 			/* For SSL_CTX_set_cipher_list() */
 			cipher = "PSK";
+
 #endif
 		}
 		/* If we don't readahead, then we do short reads and throw
@@ -411,6 +457,7 @@ int start_dtls_handshake(struct openconnect_info *vpninfo, int dtls_fd)
 	SSL_set_connect_state(dtls_ssl);
 	SSL_set_app_data(dtls_ssl, vpninfo);
 
+
 	if (dtlsver) {
 		ciphers = SSL_get_ciphers(dtls_ssl);
 		if (dtlsver != 0 && sk_SSL_CIPHER_num(ciphers) != 1) {
@@ -424,7 +471,7 @@ int start_dtls_handshake(struct openconnect_info *vpninfo, int dtls_fd)
 
 		/* We're going to "resume" a session which never existed. Fake it... */
 		dtls_session = generate_dtls_session(vpninfo, dtlsver,
-						     sk_SSL_CIPHER_value(ciphers, 0));
+						     sk_SSL_CIPHER_value(ciphers, 0), 0);
 		if (!dtls_session) {
 			SSL_CTX_free(vpninfo->dtls_ctx);
 			SSL_free(dtls_ssl);
@@ -433,7 +480,6 @@ int start_dtls_handshake(struct openconnect_info *vpninfo, int dtls_fd)
 			return -EINVAL;
 		}
 
-		/* Add the generated session to the SSL */
 		if (!SSL_set_session(dtls_ssl, dtls_session)) {
 			vpn_progress(vpninfo, PRG_ERR,
 				     _("SSL_set_session() failed with old protocol version 0x%x\n"
@@ -448,10 +494,39 @@ int start_dtls_handshake(struct openconnect_info *vpninfo, int dtls_fd)
 			SSL_SESSION_free(dtls_session);
 			return -EINVAL;
 		}
+		/* We don't need our own refcount on it any more */
+		SSL_SESSION_free(dtls_session);
 
+	} else if (vpninfo->dtls_app_id_size > 0) {
+		const uint8_t cs[2] = {0x00, 0x2F}; /* RSA-AES-128 */
+		/* we generate a session with a random key which cannot be resumed;
+		 * we want to set the client identifier we received from the server
+		 * as a session ID. */
+		dtls_session = generate_dtls_session(vpninfo, DTLS1_VERSION,
+						     SSL_CIPHER_find(dtls_ssl, cs),
+						     1);
+		if (!dtls_session) {
+			SSL_CTX_free(vpninfo->dtls_ctx);
+			SSL_free(dtls_ssl);
+			vpninfo->dtls_ctx = NULL;
+			vpninfo->dtls_attempt_period = 0;
+			return -EINVAL;
+		}
+	
+		if (!SSL_set_session(dtls_ssl, dtls_session)) {
+			vpn_progress(vpninfo, PRG_ERR,
+				     _("SSL_set_session() failed\n"));
+			SSL_CTX_free(vpninfo->dtls_ctx);
+			SSL_free(dtls_ssl);
+			vpninfo->dtls_ctx = NULL;
+			vpninfo->dtls_attempt_period = 0;
+			SSL_SESSION_free(dtls_session);
+			return -EINVAL;
+		}
 		/* We don't need our own refcount on it any more */
 		SSL_SESSION_free(dtls_session);
 	}
+
 
 	dtls_bio = BIO_new_socket(dtls_fd, BIO_NOCLOSE);
 	/* Set non-blocking */

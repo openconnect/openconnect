@@ -197,6 +197,8 @@ struct oc_text_buf {
 	int error;
 };
 
+#define TLS_MASTER_KEY_SIZE 48
+
 #define RECONNECT_INTERVAL_MIN	10
 #define RECONNECT_INTERVAL_MAX	100
 
@@ -551,7 +553,7 @@ struct openconnect_info {
 	int dtls_need_reconnect;
 	struct keepalive_info dtls_times;
 	unsigned char dtls_session_id[32];
-	unsigned char dtls_secret[48];
+	unsigned char dtls_secret[TLS_MASTER_KEY_SIZE];
 	unsigned char dtls_app_id[32];
 	unsigned dtls_app_id_size;
 
