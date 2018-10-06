@@ -313,39 +313,6 @@ static unsigned int psk_callback(SSL *ssl, const char *hint, char *identity,
 	return PSK_KEY_SIZE;
 }
 
-static int pskident_add(SSL *s, unsigned int ext_type, const unsigned char **out, size_t *outlen,
-			int *al, void *add_arg)
-{
-	struct openconnect_info *vpninfo = add_arg;
-	unsigned char *buf;
-
-	buf = malloc(vpninfo->dtls_app_id_size + 1);
-	if (!buf) {
-		vpn_progress(vpninfo, PRG_ERR,
-			     _("Failed to create app-identity extension for OpenSSL\n"));
-		return 0;
-	}
-
-	buf[0] = vpninfo->dtls_app_id_size;
-	memcpy(&buf[1], vpninfo->dtls_app_id, vpninfo->dtls_app_id_size);
-
-	*out = buf;
-	*outlen = vpninfo->dtls_app_id_size + 1;
-
-	return 1;
-}
-
-static void pskident_free(SSL *s, unsigned int ext_type, const unsigned char *out, void *add_arg)
-{
-	free((void *)out);
-}
-
-static int pskident_parse(SSL *s, unsigned int ext_type, const unsigned char *in, size_t inlen,
-			  int *al, void *parse_arg)
-{
-	return 1;
-}
-
 #endif
 
 #if OPENSSL_VERSION_NUMBER < 0x10002000L
@@ -431,9 +398,6 @@ int start_dtls_handshake(struct openconnect_info *vpninfo, int dtls_fd)
 				vpninfo->dtls_attempt_period = 0;
 				return -EINVAL;
 			}
-			SSL_CTX_add_client_custom_ext(vpninfo->dtls_ctx, DTLS_APP_ID_EXT,
-						      pskident_add, pskident_free, vpninfo,
-						      pskident_parse, vpninfo);
 			/* For SSL_CTX_set_cipher_list() */
 			cipher = "PSK";
 
