@@ -958,6 +958,22 @@ AM_CONDITIONAL(BUILD_WWW, [test "${build_www}" = "yes"])
 PKG_CHECK_MODULES([CWRAP], [uid_wrapper, socket_wrapper], have_cwrap=yes, have_cwrap=no)
 AM_CONDITIONAL(HAVE_CWRAP, test "x$have_cwrap" != xno)
 
+have_netns=no
+AC_PATH_PROG(NUTTCP, nuttcp)
+if test -n "$ac_cv_path_NUTTCP"; then
+    AC_PATH_PROG(IP, ip, [], $PATH:/sbin:/usr/sbin)
+    if test -n "$ac_cv_path_IP"; then
+	AC_MSG_CHECKING([For network namespaces])
+	NETNS=openconnect-configure-test-$$
+	if ip netns add $NETNS >/dev/null 2>/dev/null; then
+	    ip netns delete $NETNS
+	    have_netns=yes
+	fi
+	AC_MSG_RESULT($have_netns)
+    fi
+fi
+AM_CONDITIONAL(HAVE_NETNS, test "x$have_netns" != xno)
+
 AC_SUBST([CONFIG_STATUS_DEPENDENCIES],
 	 ['$(top_srcdir)/po/LINGUAS \
 	   $(top_srcdir)/openconnect.h \
@@ -1025,6 +1041,7 @@ SUMMARY([LZ4 compression], [$lz4_pkg])
 SUMMARY([Java bindings], [$with_java])
 SUMMARY([Build docs], [$build_www])
 SUMMARY([Unit tests], [$have_cwrap])
+SUMMARY([Net namespace tests], [$have_netns])
 
 if test "$ssl_library" = "OpenSSL"; then
     AC_MSG_WARN([[

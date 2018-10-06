@@ -11,7 +11,7 @@ CentOS7/GnuTLS:
     'pkgconfig(libproxy-1.0)' 'pkgconfig(liboath)' 'pkgconfig(stoken)'
     ocserv softhsm 'pkgconfig(uid_wrapper)' 'pkgconfig(socket_wrapper)'
     vpnc-script 'pkgconfig(libpskc)' 'pkgconfig(libpcsclite)' tss2-devel
-    java-devel-openjdk
+    java-devel-openjdk iproute iputils nuttcp
   - ./autogen.sh
   - ./configure --with-java CFLAGS=-g
   - make -j4
@@ -38,7 +38,7 @@ CentOS7/OpenSSL:
     'pkgconfig(libproxy-1.0)' 'pkgconfig(liboath)' 'pkgconfig(stoken)'
     ocserv softhsm 'pkgconfig(uid_wrapper)' 'pkgconfig(socket_wrapper)'
     vpnc-script 'pkgconfig(libpskc)' 'pkgconfig(libpcsclite)'
-    java-devel-openjdk 'pkgconfig(libp11)'
+    java-devel-openjdk 'pkgconfig(libp11)' iproute iputils nuttcp
   - ./autogen.sh
   - ./configure --without-gnutls --with-openssl --with-java --without-openssl-version-check --enable-dtls-xfail --disable-dsa-tests CFLAGS=-g
   - make -j4
@@ -69,6 +69,7 @@ CentOS6/OpenSSL:
     ocserv softhsm 'pkgconfig(uid_wrapper)' 'pkgconfig(socket_wrapper)'
     vpnc-script 'pkgconfig(libpskc)' 'pkgconfig(libpcsclite)'
     java-devel-openjdk vpnc 'pkgconfig(libp11)' 'pkgconfig(p11-kit-1)'
+    iproute iputils nuttcp
   - ./autogen.sh
   - ./configure --with-java --without-openssl-version-check --enable-dtls-xfail CFLAGS=-g
   - make -j4
@@ -93,7 +94,7 @@ Fedora/GnuTLS:
     'pkgconfig(libproxy-1.0)' 'pkgconfig(liboath)' 'pkgconfig(stoken)'
     ocserv softhsm 'pkgconfig(uid_wrapper)' 'pkgconfig(socket_wrapper)'
     vpnc-script 'pkgconfig(libpskc)' 'pkgconfig(libpcsclite)' tss2-devel
-    java-devel-openjdk glibc-langpack-cs
+    java-devel-openjdk glibc-langpack-cs iproute iputils nuttcp
   - ./autogen.sh
   - ./configure --with-java --disable-dsa-tests CFLAGS=-g
   - make -j4
@@ -117,7 +118,7 @@ Fedora/GnuTLS/clang:
     'pkgconfig(libproxy-1.0)' 'pkgconfig(liboath)' 'pkgconfig(stoken)'
     ocserv softhsm 'pkgconfig(uid_wrapper)' 'pkgconfig(socket_wrapper)'
     vpnc-script 'pkgconfig(libpskc)' 'pkgconfig(libpcsclite)' tss2-devel
-    java-devel-openjdk clang glibc-langpack-cs
+    java-devel-openjdk clang glibc-langpack-cs iproute iputils nuttcp
   - ./autogen.sh
   - ./configure --with-java --disable-dsa-tests CC=clang CFLAGS=-g
   - make -j4
@@ -141,7 +142,7 @@ Fedora/OpenSSL:
     'pkgconfig(libproxy-1.0)' 'pkgconfig(liboath)' 'pkgconfig(stoken)'
     ocserv softhsm 'pkgconfig(uid_wrapper)' 'pkgconfig(socket_wrapper)'
     vpnc-script 'pkgconfig(libpskc)' 'pkgconfig(libpcsclite)'
-    java-devel-openjdk glibc-langpack-cs
+    java-devel-openjdk glibc-langpack-cs iproute iputils nuttcp
 # Re-enable DSA since we test it
   - update-crypto-policies --set LEGACY
   - ./autogen.sh
@@ -167,7 +168,7 @@ Fedora/OpenSSL/clang:
     'pkgconfig(libproxy-1.0)' 'pkgconfig(liboath)' 'pkgconfig(stoken)'
     ocserv softhsm 'pkgconfig(uid_wrapper)' 'pkgconfig(socket_wrapper)'
     vpnc-script 'pkgconfig(libpskc)' 'pkgconfig(libpcsclite)'
-    java-devel-openjdk clang glibc-langpack-cs
+    java-devel-openjdk clang glibc-langpack-cs iproute iputils nuttcp
 # Re-enable DSA since we test it
   - update-crypto-policies --set LEGACY
   - ./autogen.sh
@@ -189,7 +190,7 @@ MinGW32/GnuTLS:
   - dnf update -y
   - dnf install -y git autoconf automake libtool python gettext make
     mingw32-gnutls mingw32-openssl mingw32-libxml2 mingw32-zlib
-    mingw32-gcc wine.i686 make
+    mingw32-gcc wine.i686 make iproute iputils nuttcp
   - mount -t binfmt_misc binfmt_misc /proc/sys/fs/binfmt_misc
   - echo ':DOSWin:M::MZ::/usr/bin/wine:' > /proc/sys/fs/binfmt_misc/register
   - ./autogen.sh
@@ -211,7 +212,7 @@ MinGW32/OpenSSL:
   - dnf update -y
   - dnf install -y git autoconf automake libtool python gettext make
     mingw32-gnutls mingw32-openssl mingw32-libxml2 mingw32-zlib
-    mingw32-gcc wine.i686 make
+    mingw32-gcc wine.i686 make iproute iputils nuttcp
   - mount -t binfmt_misc binfmt_misc /proc/sys/fs/binfmt_misc
   - echo ':DOSWin:M::MZ::/usr/bin/wine:' > /proc/sys/fs/binfmt_misc/register
   - ./autogen.sh
@@ -233,7 +234,7 @@ MinGW64/GnuTLS:
   - dnf update -y
   - dnf install -y git autoconf automake libtool python gettext make
     mingw64-gnutls mingw64-openssl mingw64-libxml2 mingw64-zlib
-    mingw64-gcc wine.i686 make
+    mingw64-gcc wine.i686 make iproute iputils nuttcp
   - mount -t binfmt_misc binfmt_misc /proc/sys/fs/binfmt_misc
   - echo ':DOSWin:M::MZ::/usr/bin/wine:' > /proc/sys/fs/binfmt_misc/register
   - ./autogen.sh
@@ -255,7 +256,7 @@ MinGW64/OpenSSL:
   - dnf update -y
   - dnf install -y git autoconf automake libtool python gettext make
     mingw64-gnutls mingw64-openssl mingw64-libxml2 mingw64-zlib
-    mingw64-gcc wine.x86_64 make
+    mingw64-gcc wine.x86_64 make iproute iputils nuttcp
   - mount -t binfmt_misc binfmt_misc /proc/sys/fs/binfmt_misc
   - echo ':DOSWin:M::MZ::/usr/bin/wine:' > /proc/sys/fs/binfmt_misc/register
   - ./autogen.sh

@@ -26,6 +26,7 @@ fi
 
 OCSERV=/usr/sbin/ocserv
 
+top_builddir=${top_builddir:-..}
 SOCKDIR="./sockwrap.$$.tmp"
 mkdir -p $SOCKDIR
 export SOCKET_WRAPPER_DIR=$SOCKDIR
@@ -35,6 +36,24 @@ OPENCONNECT="${top_builddir}/openconnect"
 
 certdir="${srcdir}/certs"
 confdir="${srcdir}/configs"
+
+update_config() {
+	file=$1
+	username=$(whoami)
+	group=$(groups|cut -f 1 -d ' ')
+	cp "${srcdir}/configs/${file}" "$file.$$.tmp"
+	sed -i -e 's|@USERNAME@|'${username}'|g' "$file.$$.tmp" \
+	       -e 's|@GROUP@|'${group}'|g' "$file.$$.tmp" \
+	       -e 's|@SRCDIR@|'${srcdir}'|g' "$file.$$.tmp" \
+	       -e 's|@OTP_FILE@|'${OTP_FILE}'|g' "$file.$$.tmp" \
+	       -e 's|@CRLNAME@|'${CRLNAME}'|g' "$file.$$.tmp" \
+	       -e 's|@PORT@|'${PORT}'|g' "$file.$$.tmp" \
+	       -e 's|@ADDRESS@|'${ADDRESS}'|g' "$file.$$.tmp" \
+	       -e 's|@VPNNET@|'${VPNNET}'|g' "$file.$$.tmp" \
+	       -e 's|@VPNNET6@|'${VPNNET6}'|g' "$file.$$.tmp" \
+	       -e 's|@OCCTL_SOCKET@|'${OCCTL_SOCKET}'|g' "$file.$$.tmp"
+	CONFIG="$file.$$.tmp"
+}
 
 launch_simple_sr_server() {
        LD_PRELOAD=libsocket_wrapper.so:libuid_wrapper.so UID_WRAPPER=1 UID_WRAPPER_ROOT=1 $OCSERV $* &
