@@ -417,6 +417,12 @@ static int parse_auth_node(struct openconnect_info *vpninfo, xmlNode *xml_node,
 		} else if (!vpninfo->csd_scriptname && xmlnode_is_named(xml_node, "csd")) {
 			xmlnode_get_prop(xml_node, "token", &vpninfo->csd_token);
 			xmlnode_get_prop(xml_node, "ticket", &vpninfo->csd_ticket);
+		} else if (xmlnode_is_named(xml_node, "authentication-complete")) {
+			/* Ick. Since struct oc_auth_form is public there's no
+			 * simple way to add a flag to it. So let's abuse the
+			 * auth_id string instead. */
+			free(form->auth_id);
+			form->auth_id = strdup("openconnect_authentication_complete");
 		}
 		/* For Windows, vpninfo->csd_xmltag will be "csd" and there are *two* <csd>
 		   nodes; one with token/ticket and one with the URLs. Process them both
@@ -648,6 +654,8 @@ static int handle_auth_form(struct openconnect_info *vpninfo, struct oc_auth_for
 			vpn_progress(vpninfo, PRG_INFO, "%s\n", form->message);
 		if (form->error)
 			vpn_progress(vpninfo, PRG_ERR, "%s\n", form->error);
+		if (!strcmp(form->auth_id, "openconnect_authentication_complete"))
+			goto justpost;
 		return -EPERM;
 	}
 
@@ -662,7 +670,7 @@ static int handle_auth_form(struct openconnect_info *vpninfo, struct oc_auth_for
 		vpninfo->token_bypassed = 1;
 		return ret;
 	}
-
+ justpost:
 	ret = vpninfo->xmlpost ?
 	      xmlpost_append_form_opts(vpninfo, form, request_body) :
 	      append_form_opts(vpninfo, form, request_body);
