@@ -655,6 +655,13 @@ void openconnect_set_cert_expiry_warning(struct openconnect_info *vpninfo,
 	vpninfo->cert_expire_warning = seconds;
 }
 
+int openconnect_set_key_password(struct openconnect_info *vpninfo, const char *pass)
+{
+	STRDUP(vpninfo->cert_password, pass);
+
+	return 0;
+}
+
 void openconnect_set_pfs(struct openconnect_info *vpninfo, unsigned val)
 {
 	vpninfo->pfs = val;

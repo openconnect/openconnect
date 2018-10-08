@@ -37,6 +37,7 @@ extern "C" {
 
 /*
  * API version 5.5:
+ *  - add openconnect_set_key_password()
  *  - Add openconnect_has_tss2_blob_support()
  *  - Add openconnect_get_supported_protocols()
  *  - Add openconnect_free_supported_protocols()
@@ -513,6 +514,7 @@ int openconnect_set_mobile_info(struct openconnect_info *vpninfo,
 				const char *mobile_device_uniqueid);
 int openconnect_set_client_cert(struct openconnect_info *, const char *cert,
 				const char *sslkey);
+int openconnect_set_key_password(struct openconnect_info *vpninfo, const char *pass);
 const char *openconnect_get_ifname(struct openconnect_info *);
 void openconnect_set_reqmtu(struct openconnect_info *, int reqmtu);
 void openconnect_set_dpd(struct openconnect_info *, int min_seconds);
