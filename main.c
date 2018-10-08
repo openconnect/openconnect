@@ -592,6 +592,10 @@ static void print_build_opts(void)
 		printf("%sTPM", sep);
 		sep = comma;
 	}
+	if (openconnect_has_tss2_blob_support()) {
+		printf("%sTPMv2", sep);
+		sep = comma;
+	}
 #if defined(OPENCONNECT_OPENSSL) && defined(HAVE_ENGINE)
 	else {
 		printf("%sTPM (%s)", sep, _("OpenSSL ENGINE not present"));

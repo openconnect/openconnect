@@ -37,6 +37,7 @@ extern "C" {
 
 /*
  * API version 5.5:
+ *  - Add openconnect_has_tss2_blob_support()
  *  - Add openconnect_get_supported_protocols()
  *  - Add openconnect_free_supported_protocols()
  *  - Add openconnect_get_protocol()
@@ -654,9 +655,9 @@ void openconnect_set_stats_handler(struct openconnect_info *vpninfo,
 int openconnect_has_pkcs11_support(void);
 
 /* The OpenSSL TPM ENGINE stores keys in a PEM file labelled with the string
-   -----BEGIN TSS KEY BLOB-----. GnuTLS may learn to support this format too,
-   in the near future. */
+   -----BEGIN TSS KEY BLOB-----. */
 int openconnect_has_tss_blob_support(void);
+int openconnect_has_tss2_blob_support(void);
 
 /* Software token capabilities. */
 int openconnect_has_stoken_support(void);

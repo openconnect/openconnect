@@ -925,6 +925,12 @@ JNIEXPORT jboolean JNICALL Java_org_infradead_libopenconnect_LibOpenConnect_hasT
 	return openconnect_has_tss_blob_support();
 }
 
+JNIEXPORT jboolean JNICALL Java_org_infradead_libopenconnect_LibOpenConnect_hasTSS2BlobSupport(
+	JNIEnv *jenv, jclass jcls)
+{
+	return openconnect_has_tss2_blob_support();
+}
+
 JNIEXPORT jboolean JNICALL Java_org_infradead_libopenconnect_LibOpenConnect_hasStokenSupport(
 	JNIEnv *jenv, jclass jcls)
 {

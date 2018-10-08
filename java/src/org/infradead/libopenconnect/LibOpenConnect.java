@@ -176,6 +176,7 @@ public abstract class LibOpenConnect {
 	public static native String getVersion();
 	public static native boolean hasPKCS11Support();
 	public static native boolean hasTSSBlobSupport();
+	public static native boolean hasTSS2BlobSupport();
 	public static native boolean hasStokenSupport();
 	public static native boolean hasOATHSupport();
 	public static native boolean hasYubiOATHSupport();

@@ -232,6 +232,7 @@ public final class LibTest {
 		System.out.println("OpenConnect version: " + lib.getVersion());
 		System.out.println("  PKCS=" + lib.hasPKCS11Support() +
 				   ", TSS=" + lib.hasTSSBlobSupport() +
+				   ", TSS2=" + lib.hasTSS2BlobSupport() +
 				   ", STOKEN=" + lib.hasStokenSupport() +
 				   ", OATH=" + lib.hasOATHSupport() +
 				   ", YUBIOATH=" + lib.hasYubiOATHSupport());
