@@ -13,7 +13,7 @@
 It has since been ported to support the Juniper SSL VPN (which is now known as <a href="https://www.pulsesecure.net/products/connect-secure/">Pulse Connect Secure</a>),
 and to the <a href="https://www.paloaltonetworks.com/features/vpn">Palo Alto Networks GlobalProtect SSL VPN</a>.</p>
 
-<p>OpenConnect is released under the GNU Lesser Public License, version 2.1.</p>
+<p>OpenConnect is released under the <a href="licence.html">GNU Lesser Public License, version 2.1</a>.</p>
 
 <p>Like <a href="http://www.unix-ag.uni-kl.de/~massar/vpnc/">vpnc</a>,
 OpenConnect is not officially supported by, or associated in any way

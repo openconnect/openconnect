@@ -16,18 +16,20 @@ typical PKCS#11 keys, the key is encrypted by the TPM and handed back
 to the user to be saved in a PEM file. Only the same TPM can decrypt
 the file, and use the private key.</p>
 
-<p>Use of TPM-wrapped keys is entirely transparent with GnuTLS. If built with
-TPM support, OpenConnect will automatically use the TPM when presented with
-an approprate PEM file with a TPM-wrapped key.</p>
-<p>For OpenSSL, the appropriate TPM ENGINE must be installed correctly on the system,
-and OpenConnect will load and use it automatically when appropriate.
+<p>Use of TPM-wrapped keys is intended to be entirely
+transparent. OpenConnect will automatically use the TPM when presented
+with an appropriate PEM file with a TPM-wrapped key.</p>
+
+<p>When OpenConnect is built with OpenSSL, the appropriate TPM ENGINE
+must be installed correctly on the system, and OpenConnect will load
+and use it automatically when appropriate.
 </p>
+<p>For GnuTLS builds of OpenConnect, it needs to have been built with
+the appropriate TPM (v1 or v2) support built-in.</p>
 
 <h2>TPM v1</h2>
 
-<p>TPM v1 wrapped keys are supported with both OpenSSL and GnuTLS builds of OpenConnect.
-
-These keys appear in the form of a PEM file marked with the tag:
+<p>TPM v1 wrapped keys appear in the form of a PEM file marked with the tag:
 <pre>-----BEGIN TSS KEY BLOB-----</pre>
 These files can be created by the <tt>create_tpm_key</tt> tool which is
 part of the
@@ -45,7 +47,7 @@ The <a href="https://github.com/tpm2-software/tpm2-tss-engine">tpm2-tss-engine</
 
 Both of these OpenSSL engines can be used by OpenConnect if they are installed.</p>
 
-<p>GnuTLS support for TPM v2 has not yet been implemented but is being worked on.</p>
+<p>The GnuTLS build of OpenConnect supports the former variant, when built with the <tt>libtasn1</tt> and <tt>tss2-esys</tt> libraries.</p>
 
 <INCLUDE file="inc/footer.tmpl" />
 </PAGE>

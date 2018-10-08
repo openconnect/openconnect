@@ -5,7 +5,7 @@ CONV 	= "$(srcdir)/html.py"
 
 FTR_PAGES = csd.html charset.html token.html pkcs11.html tpm.html features.html gui.html nonroot.html hip.html
 START_PAGES = building.html connecting.html manual.html vpnc-script.html 
-INDEX_PAGES = changelog.html download.html index.html packages.html platforms.html
+INDEX_PAGES = changelog.html download.html index.html packages.html platforms.html licence.html
 PROTO_PAGES = anyconnect.html juniper.html globalprotect.html
 TOPLEVEL_PAGES = contribute.html mail.html
 
