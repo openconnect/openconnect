@@ -313,8 +313,9 @@ static int auth_tpm2_key(struct openconnect_info *vpninfo, ESYS_CONTEXT *ctx, ES
 #define PKCS1_PAD_OVERHEAD 11
 
 /* Signing function for TPM privkeys, set with gnutls_privkey_import_ext() */
-static int tpm2_rsa_sign_fn(gnutls_privkey_t key, void *_vpninfo,
-			    const gnutls_datum_t *data, gnutls_datum_t *sig)
+static int tpm2_rsa_sign_hash_fn(gnutls_privkey_t key, gnutls_sign_algorithm_t algo,
+				 void *_vpninfo, unsigned int flags,
+				 const gnutls_datum_t *data, gnutls_datum_t *sig)
 {
 	struct openconnect_info *vpninfo = _vpninfo;
 	int ret = GNUTLS_E_PK_SIGN_FAILED;
@@ -389,8 +390,9 @@ static int tpm2_rsa_sign_fn(gnutls_privkey_t key, void *_vpninfo,
 }
 
 /* Signing function for TPM privkeys, set with gnutls_privkey_import_ext() */
-static int tpm2_ec_sign_fn(gnutls_privkey_t key, void *_vpninfo,
-			   const gnutls_datum_t *data, gnutls_datum_t *sig)
+static int tpm2_ec_sign_hash_fn(gnutls_privkey_t key, gnutls_sign_algorithm_t algo,
+				void *_vpninfo, unsigned int flags,
+				const gnutls_datum_t *data, gnutls_datum_t *sig)
 {
 	struct openconnect_info *vpninfo = _vpninfo;
 	int ret = GNUTLS_E_PK_SIGN_FAILED;
@@ -410,11 +412,11 @@ static int tpm2_ec_sign_fn(gnutls_privkey_t key, void *_vpninfo,
 		     _("TPM2 EC sign function called for %d bytes.\n"),
 		     data->size);
 
-	switch (data->size) {
-	case 20: inScheme.details.ecdsa.hashAlg = TPM2_ALG_SHA1;   break;
-	case 32: inScheme.details.ecdsa.hashAlg = TPM2_ALG_SHA256; break;
-	case 48: inScheme.details.ecdsa.hashAlg = TPM2_ALG_SHA384; break;
-	case 64: inScheme.details.ecdsa.hashAlg = TPM2_ALG_SHA512; break;
+	switch (algo) {
+	case GNUTLS_SIGN_ECDSA_SHA1:   inScheme.details.ecdsa.hashAlg = TPM2_ALG_SHA1;   break;
+	case GNUTLS_SIGN_ECDSA_SHA256: inScheme.details.ecdsa.hashAlg = TPM2_ALG_SHA256; break;
+	case GNUTLS_SIGN_ECDSA_SHA384: inScheme.details.ecdsa.hashAlg = TPM2_ALG_SHA384; break;
+	case GNUTLS_SIGN_ECDSA_SHA512: inScheme.details.ecdsa.hashAlg = TPM2_ALG_SHA512; break;
 	default:
 		vpn_progress(vpninfo, PRG_ERR,
 			     _("Unknown TPM2 EC digest size %d\n"),
@@ -497,11 +499,83 @@ static int tpm2_ec_sign_fn(gnutls_privkey_t key, void *_vpninfo,
 	return ret;
 }
 
-#if GNUTLS_VERSION_NUMBER >= 0x030100
+#if GNUTLS_VERSION_NUMBER < 0x030600
+static int tpm2_rsa_sign_fn(gnutls_privkey_t key, void *_vpninfo,
+			    const gnutls_datum_t *data, gnutls_datum_t *sig)
+{
+	return tpm2_rsa_sign_hash_fn(key, GNUTLS_SIGN_UNKNOWN, _vpninfo, 0, data, sig);
+}
+
+
+static int tpm2_ec_sign_fn(gnutls_privkey_t key, void *_vpninfo,
+			   const gnutls_datum_t *data, gnutls_datum_t *sig)
+{
+	struct openconnect_info *vpninfo = _vpninfo;
+	gnutls_sign_algorithm_t algo;
+
+	switch (data->size) {
+	case 20: algo = GNUTLS_SIGN_ECDSA_SHA1; break;
+	case 32: algo = GNUTLS_SIGN_ECDSA_SHA256; break;
+	case 48: algo = GNUTLS_SIGN_ECDSA_SHA384; break;
+	case 64: algo = GNUTLS_SIGN_ECDSA_SHA512; break;
+	default:
+		vpn_progress(vpninfo, PRG_ERR,
+			     _("Unknown TPM2 EC digest size %d\n"),
+			     data->size);
+		return GNUTLS_E_PK_SIGN_FAILED;
+	}
+
+	return tpm2_ec_sign_hash_fn(key, algo, vpninfo, 0, data, sig);
+}
+#endif
+
+#if GNUTLS_VERSION_NUMBER >= 0x030600
+static int rsa_key_info(gnutls_privkey_t key, unsigned int flags, void *_vpninfo)
+{
+	if (flags & GNUTLS_PRIVKEY_INFO_PK_ALGO)
+		return GNUTLS_PK_RSA;
+
+	if (flags & GNUTLS_PRIVKEY_INFO_HAVE_SIGN_ALGO) {
+		gnutls_sign_algorithm_t algo = GNUTLS_FLAGS_TO_SIGN_ALGO(flags);
+		switch (algo) {
+		case GNUTLS_SIGN_RSA_RAW:
+		case GNUTLS_SIGN_RSA_SHA1:
+		case GNUTLS_SIGN_RSA_SHA256:
+		case GNUTLS_SIGN_RSA_SHA384:
+		case GNUTLS_SIGN_RSA_SHA512:
+			return 1;
+
+		default:
+			return 0;
+		}
+	}
+
+	if (flags & GNUTLS_PRIVKEY_INFO_SIGN_ALGO)
+		return GNUTLS_SIGN_RSA_RAW;
+
+	return -1;
+}
+#endif
+
+#if GNUTLS_VERSION_NUMBER >= 0x030400
 static int ec_key_info(gnutls_privkey_t key, unsigned int flags, void *_vpninfo)
 {
 	if (flags & GNUTLS_PRIVKEY_INFO_PK_ALGO)
 		return GNUTLS_PK_EC;
+
+#ifdef GNUTLS_PRIVKEY_INFO_HAVE_SIGN_ALGO
+	if (flags & GNUTLS_PRIVKEY_INFO_HAVE_SIGN_ALGO) {
+		gnutls_sign_algorithm_t algo = GNUTLS_FLAGS_TO_SIGN_ALGO(flags);
+		switch (algo) {
+		case GNUTLS_SIGN_ECDSA_SHA1:
+		case GNUTLS_SIGN_ECDSA_SHA256:
+			return 1;
+
+		default:
+			return 0;
+		}
+	}
+#endif
 
 	if (flags & GNUTLS_PRIVKEY_INFO_SIGN_ALGO)
 		return GNUTLS_SIGN_ECDSA_SHA256;
@@ -552,11 +626,17 @@ int install_tpm2_key(struct openconnect_info *vpninfo, gnutls_privkey_t *pkey, g
 
 	switch(vpninfo->tpm2->pub.publicArea.type) {
 	case TPM2_ALG_RSA:
+#if GNUTLS_VERSION_NUMBER >= 0x030600
+		gnutls_privkey_import_ext4(*pkey, vpninfo, NULL, tpm2_rsa_sign_hash_fn, NULL, NULL, rsa_key_info, 0);
+#else
 		gnutls_privkey_import_ext(*pkey, GNUTLS_PK_RSA, vpninfo, tpm2_rsa_sign_fn, NULL, 0);
+#endif
 		break;
 
 	case TPM2_ALG_ECC:
-#if GNUTLS_VERSION_NUMBER >= 0x030100
+#if GNUTLS_VERSION_NUMBER >= 0x030600
+		gnutls_privkey_import_ext4(*pkey, vpninfo, NULL, tpm2_ec_sign_hash_fn, NULL, NULL, ec_key_info, 0);
+#elif GNUTLS_VERSION_NUMBER >= 0x030400
 		gnutls_privkey_import_ext3(*pkey, vpninfo, tpm2_ec_sign_fn, NULL, NULL, ec_key_info, 0);
 #else
 		gnutls_privkey_import_ext(*pkey, GNUTLS_PK_EC, vpninfo, tpm2_ec_sign_fn, NULL, 0);
