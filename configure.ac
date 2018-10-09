@@ -357,6 +357,7 @@ if test -n "$default_gnutls_priority"; then
    AC_DEFINE_UNQUOTED([DEFAULT_PRIO], ["$default_gnutls_priority"], [The GnuTLS priority string])
 fi
 
+tss2lib=
 case "$ssl_library" in
     OpenSSL)
 	oldLIBS="${LIBS}"
@@ -483,7 +484,29 @@ case "$ssl_library" in
 	LIBS="$oldlibs"
 	CFLAGS="$oldcflags"
 
-	PKG_CHECK_MODULES(TPM2, [libtasn1 tss2-esys], [AC_DEFINE(HAVE_TSS2, 1, [Have TSS2])], [:])
+	PKG_CHECK_MODULES(TASN1, [libtasn1], [have_tasn1=yes], [have_tasn1=no])
+	if test "$have_tasn1" = "yes"; then
+	   PKG_CHECK_MODULES(TSS2_ESYS, [tss2-esys],
+			     [AC_DEFINE(HAVE_TSS2, 1, [Have TSS2])
+			      AC_SUBST(TPM2_CFLAGS, ['$(TASN1_CFLAGS) $(TSS2_ESYS_CFLAGS)'])
+			      AC_SUBST(TPM2_LIBS, ['$(TASN1_LIBS) $(TSS2_ESYS_LIBS)'])
+			      tss2lib=tss2-esys],
+			     [:])
+	   if test "$tss2lib" = "xxNOTIMPLEMENTEDYETxx"; then
+	       AC_CHECK_LIB([tss], [TSS_Create], [tss2inc=tss2
+						  tss2lib=tss],
+			    AC_CHECK_LIB([ibmtss], [TSS_Create], [tss2inc=ibmtss
+								  tss2lib=ibmtss], []))
+	       if test "$tss2lib" != ""; then
+		   AC_CHECK_HEADER($tss2inc/tss.h,
+				   [AC_DEFINE_UNQUOTED(HAVE_TSS2, $tss2inc, [TSS2 library])
+				    AC_SUBST(TSS2_LIBS, [-l$tss2lib])
+				    AC_SUBST(TPM2_CFLAGS, ['$(TASN1_CFLAGS)'])
+				    AC_SUBST(TPM2_LIBS, ['$(TASN1_LIBS) $(TSS2_LIBS)'])],
+				   [tss2lib=])
+	       fi
+	   fi
+	fi
 
 	AC_DEFINE(OPENCONNECT_GNUTLS, 1, [Using GnuTLS])
 	AC_SUBST(SSL_PC, [gnutls])
@@ -496,6 +519,9 @@ case "$ssl_library" in
 	AC_MSG_ERROR([No SSL library selected])
 	;;
 esac
+
+AM_CONDITIONAL(OPENCONNECT_TSS2_ESYS, [ test "$tss2lib" = "tss2-esys" ])
+AM_CONDITIONAL(OPENCONNECT_TSS2_IBM, [ test "$tss2lib" = "ibmtss" -o "$tss2lib" = "tss" ])
 
 test_pkcs11=
 if test "$pkcs11_support" != ""; then

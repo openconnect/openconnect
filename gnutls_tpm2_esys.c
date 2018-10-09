@@ -53,8 +53,6 @@
 #include "openconnect-internal.h"
 #include "gnutls.h"
 
-#ifdef HAVE_TSS2
-
 #include <stdio.h>
 #include <string.h>
 
@@ -521,5 +519,3 @@ void release_tpm2_ctx(struct openconnect_info *vpninfo)
 		free(vpninfo->tpm2);
 	vpninfo->tpm2 = NULL;
 }
-
-#endif /* HAVE_TSS2 */
