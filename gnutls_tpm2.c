@@ -168,4 +168,60 @@ int load_tpm2_key(struct openconnect_info *vpninfo, gnutls_datum_t *fdata,
 	return ret;
 }
 
+#if GNUTLS_VERSION_NUMBER < 0x030600
+static void append_bignum(struct oc_text_buf *sig_der, const gnutls_datum_t *d)
+{
+	unsigned char derlen[2];
+
+	buf_append_bytes(sig_der, "\x02", 1); // INTEGER
+	derlen[0] = d->size;
+	/* If it might be interpreted as negative, prepend a zero */
+	if (d->data[0] >= 0x80) {
+		derlen[0]++;
+		derlen[1] = 0;
+		buf_append_bytes(sig_der, derlen, 2);
+	} else {
+		buf_append_bytes(sig_der, derlen, 1);
+	}
+	buf_append_bytes(sig_der, d->data, d->size);
+}
+
+int oc_gnutls_encode_rs_value(gnutls_datum_t *sig, const gnutls_datum_t *sig_r,
+			      const gnutls_datum_t *sig_s)
+{
+	struct oc_text_buf *sig_der = NULL;
+	/*
+	 * Create the DER-encoded SEQUENCE containing R and S:
+	 *
+	 *	DSASignatureValue ::= SEQUENCE {
+	 *	  r                   INTEGER,
+	 *	  s                   INTEGER
+	 *	}
+	 */
+
+	sig_der = buf_alloc();
+	buf_append_bytes(sig_der, "\x30\x80", 2); // SEQUENCE, indeterminate length
+
+	append_bignum(sig_der, sig_r);
+	append_bignum(sig_der, sig_s);
+
+	/* If the length actually fits in one byte (which it should), do
+	 * it that way.  Else, leave it indeterminate and add two
+	 * end-of-contents octets to mark the end of the SEQUENCE. */
+	if (!buf_error(sig_der) && sig_der->pos <= 0x80)
+		sig_der->data[1] = sig_der->pos - 2;
+	else {
+		buf_append_bytes(sig_der, "\0\0", 2);
+		if (buf_error(sig_der))
+			goto out;
+	}
+
+	sig->data = (void *)sig_der->data;
+	sig->size = sig_der->pos;
+	sig_der->data = NULL;
+ out:
+	return buf_free(sig_der);
+}
+#endif /* GnuTLS < 3.6.0 */
+
 #endif /* HAVE_TSS2 */

@@ -405,8 +405,7 @@ static int tpm2_ec_sign_hash_fn(gnutls_privkey_t key, gnutls_sign_algorithm_t al
 					 .hierarchy = TPM2_RH_NULL,
 					 .digest.size = 0 };
 	TPMT_SIG_SCHEME inScheme = { .scheme = TPM2_ALG_ECDSA };
-	struct oc_text_buf *sig_der = NULL;
-	unsigned char derlen;
+	gnutls_datum_t sig_r, sig_s;
 
 	vpn_progress(vpninfo, PRG_DEBUG,
 		     _("TPM2 EC sign function called for %d bytes.\n"),
@@ -450,44 +449,13 @@ static int tpm2_ec_sign_hash_fn(gnutls_privkey_t key, gnutls_sign_algorithm_t al
 		goto out;
 	}
 
-	/*
-	 * Create the DER-encoded SEQUENCE containing R and S:
-	 *
-	 *	DSASignatureValue ::= SEQUENCE {
-	 *	  r                   INTEGER,
-	 *	  s                   INTEGER
-	 *	}
-	 */
-	sig_der = buf_alloc();
-	buf_append_bytes(sig_der, "\x30\x80", 2); // SEQUENCE, indeterminate length
-	buf_append_bytes(sig_der, "\x02", 1); // INTEGER
-	derlen = tsig->signature.ecdsa.signatureR.size;
-	buf_append_bytes(sig_der, &derlen, 1);
-	buf_append_bytes(sig_der, tsig->signature.ecdsa.signatureR.buffer, tsig->signature.ecdsa.signatureR.size);
+	sig_r.data = tsig->signature.ecdsa.signatureR.buffer;
+	sig_r.size = tsig->signature.ecdsa.signatureR.size;
+	sig_s.data = tsig->signature.ecdsa.signatureS.buffer;
+	sig_s.size = tsig->signature.ecdsa.signatureS.size;
 
-	buf_append_bytes(sig_der, "\x02", 1); // INTEGER
-	derlen = tsig->signature.ecdsa.signatureS.size;
-	buf_append_bytes(sig_der, &derlen, 1);
-	buf_append_bytes(sig_der, tsig->signature.ecdsa.signatureS.buffer, tsig->signature.ecdsa.signatureS.size);
-
-	/* If the length actually fits in one byte (which it should), do
-	 * it that way.  Else, leave it indeterminate and add two
-	 * end-of-contents octets to mark the end of the SEQUENCE. */
-	if (!buf_error(sig_der) && sig_der->pos <= 0x80)
-		sig_der->data[1] = sig_der->pos - 2;
-	else {
-		buf_append_bytes(sig_der, "\0\0", 2);
-		if (buf_error(sig_der))
-			goto out;
-	}
-
-	sig->data = (void *)sig_der->data;
-	sig->size = sig_der->pos;
-	sig_der->data = NULL;
-
-	ret = 0;
+	ret = gnutls_encode_rs_value(sig, &sig_r, &sig_s);
  out:
-	buf_free(sig_der);
 	free(tsig);
 
 	if (key_handle != ESYS_TR_NONE)
