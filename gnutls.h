@@ -34,6 +34,13 @@ void release_tpm2_ctx(struct openconnect_info *info);
 int install_tpm2_key(struct openconnect_info *vpninfo, gnutls_privkey_t *pkey, gnutls_datum_t *pkey_sig,
 		     unsigned int parent, int emptyauth, gnutls_datum_t *privdata, gnutls_datum_t *pubdata);
 
+int tpm2_rsa_sign_hash_fn(gnutls_privkey_t key, gnutls_sign_algorithm_t algo,
+			  void *_vpninfo, unsigned int flags,
+			  const gnutls_datum_t *data, gnutls_datum_t *sig);
+int tpm2_ec_sign_hash_fn(gnutls_privkey_t key, gnutls_sign_algorithm_t algo,
+			 void *_vpninfo, unsigned int flags,
+			 const gnutls_datum_t *data, gnutls_datum_t *sig);
+
 /* GnuTLS 3.6.0+ provides this. We have our own for older GnuTLS. There is
  * also _gnutls_encode_ber_rs_raw() in some older versions, but there were
  * zero-padding bugs in that, and some of the... less diligently maintained
