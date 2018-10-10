@@ -47,7 +47,7 @@ The <a href="https://github.com/tpm2-software/tpm2-tss-engine">tpm2-tss-engine</
 
 Both of these OpenSSL engines can be used by OpenConnect if they are installed.</p>
 
-<p>The GnuTLS build of OpenConnect supports the former variant, when built with the <tt>libtasn1</tt> and <tt>tss2-esys</tt> libraries.</p>
+<p>The GnuTLS build of OpenConnect supports the former variant, when built with <tt>libtasn1</tt> and either <tt>tss2-esys</tt> or IBM TSS 2.0 libraries.</p>
 
 <INCLUDE file="inc/footer.tmpl" />
 </PAGE>

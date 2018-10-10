@@ -492,7 +492,7 @@ case "$ssl_library" in
 			      AC_SUBST(TPM2_LIBS, ['$(TASN1_LIBS) $(TSS2_ESYS_LIBS)'])
 			      tss2lib=tss2-esys],
 			     [:])
-	   if test "$tss2lib" = "xxNOTIMPLEMENTEDYETxx"; then
+	   if test "$tss2lib" = ""; then
 	       AC_CHECK_LIB([tss], [TSS_Create], [tss2inc=tss2
 						  tss2lib=tss],
 			    AC_CHECK_LIB([ibmtss], [TSS_Create], [tss2inc=ibmtss

@@ -510,7 +510,7 @@ int install_tpm2_key(struct openconnect_info *vpninfo, gnutls_privkey_t *pkey, g
 					   &vpninfo->tpm2->pub);
 	if (r) {
 		vpn_progress(vpninfo, PRG_ERR,
-			     _("Failed to import TPM2 private key data: 0x%x\n"),
+			     _("Failed to import TPM2 public key data: 0x%x\n"),
 			     r);
 		goto err_out;
 	}
