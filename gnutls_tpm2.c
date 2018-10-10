@@ -207,22 +207,31 @@ int load_tpm2_key(struct openconnect_info *vpninfo, gnutls_datum_t *fdata,
 	    !strcmp(value_buf, "TRUE"))
 		emptyauth = 1;
 
-	memset(value_buf, 0, 4);
-	value_buflen = 4;
+	memset(value_buf, 0, 5);
+	value_buflen = 5;
 	err = asn1_read_value(tpmkey, "parent", value_buf, &value_buflen);
 	if (err == ASN1_ELEMENT_NOT_FOUND)
 		parent = 0x40000001; // RH_OWNER
 	else if (err != ASN1_SUCCESS) {
+	badparent:
 		vpn_progress(vpninfo, PRG_ERR,
 			     _("Failed to parse TPM2 key parent: %s\n"),
 			     asn1_strerror(err));
 		goto out_tpmkey;
 	} else {
-		int i;
+		int i = 0;
 		parent = 0;
 
-		for (i = 0; i < value_buflen; i++)
-			parent |= value_buf[value_buflen - i - 1] << (8 * i);
+		if (value_buflen == 5) {
+			if (value_buf[0])
+				goto badparent;
+			/* Skip the leading zero */
+			i++;
+		}
+		for ( ; i < value_buflen; i++) {
+			parent <<= 8;
+			parent |= value_buf[i];
+		}
 	}
 
 	if (decode_data(asn1_find_node(tpmkey, "pubkey"), &pubdata) < 0) {
