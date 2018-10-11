@@ -355,8 +355,6 @@ static void tpm2_unload_key(TSS_CONTEXT *tssContext, TPM_HANDLE key)
 	TSS_Delete(tssContext);
 }
 
-#define PKCS1_PAD_OVERHEAD 11
-
 int tpm2_rsa_sign_hash_fn(gnutls_privkey_t key, gnutls_sign_algorithm_t algo,
 			  void *_vpninfo, unsigned int flags,
 			  const gnutls_datum_t *data, gnutls_datum_t *sig)
@@ -376,19 +374,8 @@ int tpm2_rsa_sign_hash_fn(gnutls_privkey_t key, gnutls_sign_algorithm_t algo,
 
 	in.cipherText.t.size = vpninfo->tpm2->pub.publicArea.unique.rsa.t.size;
 
-	if (data->size + PKCS1_PAD_OVERHEAD > in.cipherText.t.size) {
-		vpn_progress(vpninfo, PRG_ERR,
-			     _("TPM2 digest too large: %d > %d\n"),
-			     data->size, in.cipherText.t.size - PKCS1_PAD_OVERHEAD);
+	if (oc_pkcs1_pad(vpninfo, in.cipherText.t.buffer, in.cipherText.t.size, data))
 		return GNUTLS_E_PK_SIGN_FAILED;
-	}
-
-	/* PKCS#1 padding */
-	in.cipherText.t.buffer[0] = 0;
-	in.cipherText.t.buffer[1] = 1;
-	memset(in.cipherText.t.buffer + 2, 0xff, in.cipherText.t.size - data->size - 3);
-	in.cipherText.t.buffer[in.cipherText.t.size - data->size - 1] = 0;
-	memcpy(in.cipherText.t.buffer + in.cipherText.t.size - data->size, data->data, data->size);
 
 	in.inScheme.scheme = TPM_ALG_NULL;
 	in.keyHandle = tpm2_load_key(vpninfo, &tssContext);

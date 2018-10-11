@@ -342,4 +342,24 @@ int oc_gnutls_encode_rs_value(gnutls_datum_t *sig, const gnutls_datum_t *sig_r,
 }
 #endif /* GnuTLS < 3.6.0 */
 
+/* EMSA-PKCS1-v1_5 padding in accordance with RFC3447 §9.2 */
+#define PKCS1_PAD_OVERHEAD 11
+int oc_pkcs1_pad(struct openconnect_info *vpninfo,
+		 unsigned char *buf, int size, const gnutls_datum_t *data)
+{
+	if (data->size + PKCS1_PAD_OVERHEAD > size) {
+		vpn_progress(vpninfo, PRG_ERR,
+			     _("TPM2 digest too large: %d > %d\n"),
+			     data->size, size - PKCS1_PAD_OVERHEAD);
+		return GNUTLS_E_PK_SIGN_FAILED;
+	}
+
+	buf[0] = 0;
+	buf[1] = 1;
+	memset(buf + 2, 0xff, size - data->size - 3);
+	buf[size - data->size - 1] = 0;
+	memcpy(buf + size - data->size, data->data, data->size);
+
+	return 0;
+}
 #endif /* HAVE_TSS2 */

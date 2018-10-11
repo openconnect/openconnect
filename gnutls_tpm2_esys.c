@@ -323,8 +323,6 @@ static int auth_tpm2_key(struct openconnect_info *vpninfo, ESYS_CONTEXT *ctx, ES
 	return 0;
 }
 
-#define PKCS1_PAD_OVERHEAD 11
-
 int tpm2_rsa_sign_hash_fn(gnutls_privkey_t key, gnutls_sign_algorithm_t algo,
 			  void *_vpninfo, unsigned int flags,
 			  const gnutls_datum_t *data, gnutls_datum_t *sig)
@@ -344,19 +342,8 @@ int tpm2_rsa_sign_hash_fn(gnutls_privkey_t key, gnutls_sign_algorithm_t algo,
 
 	digest.size = vpninfo->tpm2->pub.publicArea.unique.rsa.size;
 
-	if (data->size + PKCS1_PAD_OVERHEAD > digest.size) {
-		vpn_progress(vpninfo, PRG_ERR,
-			     _("TPM2 digest too large: %d > %d\n"),
-			     data->size, digest.size - PKCS1_PAD_OVERHEAD);
+	if (oc_pkcs1_pad(vpninfo, digest.buffer, digest.size, data))
 		return GNUTLS_E_PK_SIGN_FAILED;
-	}
-
-	/* PKCS#1 padding */
-	digest.buffer[0] = 0;
-	digest.buffer[1] = 1;
-	memset(digest.buffer + 2, 0xff, digest.size - data->size - 3);
-	digest.buffer[digest.size - data->size - 1] = 0;
-	memcpy(digest.buffer + digest.size - data->size, data->data, data->size);
 
 	if (init_tpm2_key(&ectx, &key_handle, vpninfo))
 		goto out;
