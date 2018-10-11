@@ -10,7 +10,7 @@ CentOS7/GnuTLS:
     'pkgconfig(gnutls)' trousers-devel 'pkgconfig(libpcsclite)'
     'pkgconfig(libproxy-1.0)' 'pkgconfig(liboath)' 'pkgconfig(stoken)'
     ocserv softhsm 'pkgconfig(uid_wrapper)' 'pkgconfig(socket_wrapper)'
-    vpnc-script 'pkgconfig(libpskc)' 'pkgconfig(libpcsclite)'
+    vpnc-script 'pkgconfig(libpskc)' 'pkgconfig(libpcsclite)' tss2-devel
     java-devel-openjdk
   - ./autogen.sh
   - ./configure --with-java CFLAGS=-g
@@ -92,7 +92,7 @@ Fedora/GnuTLS:
     'pkgconfig(gnutls)' trousers-devel 'pkgconfig(libpcsclite)'
     'pkgconfig(libproxy-1.0)' 'pkgconfig(liboath)' 'pkgconfig(stoken)'
     ocserv softhsm 'pkgconfig(uid_wrapper)' 'pkgconfig(socket_wrapper)'
-    vpnc-script 'pkgconfig(libpskc)' 'pkgconfig(libpcsclite)'
+    vpnc-script 'pkgconfig(libpskc)' 'pkgconfig(libpcsclite)' tss2-devel
     java-devel-openjdk glibc-langpack-cs
   - ./autogen.sh
   - ./configure --with-java --disable-dsa-tests CFLAGS=-g
@@ -116,7 +116,7 @@ Fedora/GnuTLS/clang:
     'pkgconfig(gnutls)' trousers-devel 'pkgconfig(libpcsclite)'
     'pkgconfig(libproxy-1.0)' 'pkgconfig(liboath)' 'pkgconfig(stoken)'
     ocserv softhsm 'pkgconfig(uid_wrapper)' 'pkgconfig(socket_wrapper)'
-    vpnc-script 'pkgconfig(libpskc)' 'pkgconfig(libpcsclite)'
+    vpnc-script 'pkgconfig(libpskc)' 'pkgconfig(libpcsclite)' tss2-devel
     java-devel-openjdk clang glibc-langpack-cs
   - ./autogen.sh
   - ./configure --with-java --disable-dsa-tests CC=clang CFLAGS=-g
