@@ -215,6 +215,8 @@ static TPM_RC tpm2_load_srk(TSS_CONTEXT *tssContext, TPM_HANDLE *h,
 	in.inPublic.publicArea.type = TPM_ALG_ECC;
 	in.inPublic.publicArea.nameAlg = TPM_ALG_SHA256;
 	in.inPublic.publicArea.objectAttributes.val =
+		TPMA_OBJECT_FIXEDPARENT |
+		TPMA_OBJECT_FIXEDTPM |
 		TPMA_OBJECT_NODA |
 		TPMA_OBJECT_SENSITIVEDATAORIGIN |
 		TPMA_OBJECT_USERWITHAUTH |

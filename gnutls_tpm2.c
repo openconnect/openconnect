@@ -29,7 +29,15 @@
 
 #include <libtasn1.h>
 
-
+/*
+ * TPMKey ::= SEQUENCE {
+ *	type		OBJECT IDENTIFIER,
+ *	emptyAuth	[0] EXPLICIT BOOLEAN OPTIONAL,
+ *	parent		INTEGER,
+ *	pubkey		OCTET STRING,
+ *	privkey		OCTET STRING
+ * }
+ */
 const asn1_static_node tpmkey_asn1_tab[] = {
   { "TPMKey", 536875024, NULL },
   { NULL, 1073741836, NULL },
@@ -37,13 +45,12 @@ const asn1_static_node tpmkey_asn1_tab[] = {
   { "type", 1073741836, NULL },
   { "emptyAuth", 1610637316, NULL },
   { NULL, 2056, "0"},
-  { "parent", 1610637315, NULL },
-  { NULL, 2056, "1"},
-  { "pubkey", 1610637319, NULL },
-  { NULL, 2056, "2"},
+  { "parent", 1073741827, NULL },
+  { "pubkey", 1073741831, NULL },
   { "privkey", 7, NULL },
   { NULL, 0, NULL }
 };
+
 
 #if GNUTLS_VERSION_NUMBER < 0x030600
 static int tpm2_rsa_sign_fn(gnutls_privkey_t key, void *_vpninfo,
@@ -162,7 +169,7 @@ int load_tpm2_key(struct openconnect_info *vpninfo, gnutls_datum_t *fdata,
 	unsigned int parent;
 	int err, ret = -EINVAL;
 
-	err = gnutls_pem_base64_decode_alloc("TSS2 KEY BLOB", fdata, &asn1);
+	err = gnutls_pem_base64_decode_alloc("TSS2 PRIVATE KEY", fdata, &asn1);
 	if (err) {
 		vpn_progress(vpninfo, PRG_ERR,
 			     _("Error decoding TSS2 key blob: %s\n"),
@@ -184,21 +191,6 @@ int load_tpm2_key(struct openconnect_info *vpninfo, gnutls_datum_t *fdata,
 		vpn_progress(vpninfo, PRG_ERR,
 			     _("Failed to decode TPM2 key ASN.1: %s\n"),
 			     asn1_strerror(err));
-		goto out_tpmkey;
-	}
-
-	value_buflen = sizeof(value_buf);
-	err = asn1_read_value(tpmkey, "type", value_buf, &value_buflen);
-	if (err != ASN1_SUCCESS) {
-		vpn_progress(vpninfo, PRG_ERR,
-			     _("Failed to identify type of TPM2 key: %s\n"),
-			     asn1_strerror(err));
-		goto out_tpmkey;
-	}
-	if (strcmp(value_buf, "2.23.133.10.2")) {
-		vpn_progress(vpninfo, PRG_ERR,
-			     _("Unsupported TPM2 key OID: %s\n"),
-			     value_buf);
 		goto out_tpmkey;
 	}
 
