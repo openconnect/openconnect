@@ -179,14 +179,9 @@ static void tpm2_flush_handle(TSS_CONTEXT *tssContext, TPM_HANDLE h)
 		    TPM_RH_NULL, NULL, 0);
 }
 
-static void tpm2_flush_srk(TSS_CONTEXT *tssContext, TPM_HANDLE hSRK)
-{
-	/* only flush if it's a volatile key which we must have created */
-	if ((hSRK & 0xFF000000) == 0x80000000)
-		tpm2_flush_handle(tssContext, hSRK);
-}
 
-
+#define parent_is_generated(parent) ((parent) >> HR_SHIFT == TPM_HT_PERMANENT)
+#define parent_is_persistent(parent) ((parent) >> HR_SHIFT == TPM_HT_PERSISTENT)
 
 static TPM_RC tpm2_load_srk(TSS_CONTEXT *tssContext, TPM_HANDLE *h,
 			    const char *auth, TPM_HANDLE hierarchy,
@@ -285,7 +280,7 @@ static TPM_HANDLE tpm2_load_key(struct openconnect_info *vpninfo, TSS_CONTEXT **
 	memset(&in, 0, sizeof(in));
 	memset(&out, 0, sizeof(out));
 
-	if (vpninfo->tpm2->parent >> HR_SHIFT == TPM_HT_PERSISTENT) {
+	if (parent_is_persistent(vpninfo->tpm2->parent)) {
 		if (!pass) {
 			TPMT_PUBLIC pub;
 			rc = tpm2_readpublic(tssContext, vpninfo->tpm2->parent, &pub);
@@ -344,7 +339,8 @@ static TPM_HANDLE tpm2_load_key(struct openconnect_info *vpninfo, TSS_CONTEXT **
 		key = out.objectHandle;
 
  out_flush_srk:
-	tpm2_flush_srk(tssContext, in.parentHandle);
+	if (parent_is_generated(vpninfo->tpm2->parent))
+		tpm2_flush_handle(tssContext, in.parentHandle);
  out:
 	vpninfo->tpm2->parent_pass = pass;
 	if (!key)
@@ -522,7 +518,7 @@ int install_tpm2_key(struct openconnect_info *vpninfo, gnutls_privkey_t *pkey, g
 	BYTE *der;
 	INT32 dersize;
 
-	if (parent >> HR_SHIFT != TPM_HT_PERSISTENT &&
+	if (!parent_is_persistent(parent) &&
 	    parent != TPM_RH_OWNER && parent != TPM_RH_NULL &&
 	    parent != TPM_RH_ENDORSEMENT && parent != TPM_RH_PLATFORM) {
 		vpn_progress(vpninfo, PRG_ERR,

@@ -229,7 +229,8 @@ static int init_tpm2_primary(struct openconnect_info *vpninfo,
 	return 0;
 }
 
-#define parent_is_generated(vpninfo) (vpninfo->tpm2->parent >> TPM2_HR_SHIFT == TPM2_HT_PERMANENT)
+#define parent_is_generated(parent) ((parent) >> TPM2_HR_SHIFT == TPM2_HT_PERMANENT)
+#define parent_is_persistent(parent) ((parent) >> TPM2_HR_SHIFT == TPM2_HT_PERSISTENT)
 
 static int init_tpm2_key(ESYS_CONTEXT **ctx, ESYS_TR *keyHandle,
 			 struct openconnect_info *vpninfo)
@@ -261,7 +262,7 @@ static int init_tpm2_key(ESYS_CONTEXT **ctx, ESYS_TR *keyHandle,
 		goto error;
 	}
 
-	if (parent_is_generated(vpninfo)) {
+	if (parent_is_generated(vpninfo->tpm2->parent)) {
 		if (init_tpm2_primary(vpninfo, *ctx, &parentHandle))
 			goto error;
 	} else {
@@ -322,7 +323,7 @@ static int init_tpm2_key(ESYS_CONTEXT **ctx, ESYS_TR *keyHandle,
 		goto error;
 	}
 
-	if (parent_is_generated(vpninfo)) {
+	if (parent_is_generated(vpninfo->tpm2->parent)) {
 		r = Esys_FlushContext(*ctx, parentHandle);
 		if (r) {
 			vpn_progress(vpninfo, PRG_ERR,
@@ -334,7 +335,7 @@ static int init_tpm2_key(ESYS_CONTEXT **ctx, ESYS_TR *keyHandle,
 
 	return 0;
  error:
-	if (parent_is_generated(vpninfo) && parentHandle != ESYS_TR_NONE)
+	if (parent_is_generated(vpninfo->tpm2->parent) && parentHandle != ESYS_TR_NONE)
 		Esys_FlushContext(*ctx, parentHandle);
 	if (*keyHandle != ESYS_TR_NONE)
 		Esys_FlushContext(*ctx, *keyHandle);
@@ -521,7 +522,7 @@ int install_tpm2_key(struct openconnect_info *vpninfo, gnutls_privkey_t *pkey, g
 {
 	TSS2_RC r;
 
-	if (parent >> TPM2_HR_SHIFT != TPM2_HT_PERSISTENT &&
+	if (!parent_is_persistent(parent) &&
 	    parent != TPM2_RH_OWNER && parent != TPM2_RH_NULL &&
 	    parent != TPM2_RH_ENDORSEMENT && parent != TPM2_RH_PLATFORM) {
 		vpn_progress(vpninfo, PRG_ERR,
