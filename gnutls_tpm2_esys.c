@@ -236,6 +236,18 @@ static int init_tpm2_key(ESYS_CONTEXT **ctx, ESYS_TR *keyHandle,
 				     vpninfo->tpm2->parent, r);
 			goto error;
 		}
+		/* If we don't already have a password, check the NODA flag on the parent
+		 * and demand one if DA protection is enabled (since that strongly implies
+		 * there is a non-empty password). */
+		if (!vpninfo->tpm2->ownerauth.size) {
+			TPM2B_PUBLIC *pub = NULL;
+
+			r = Esys_ReadPublic(*ctx, parentHandle, ESYS_TR_NONE, ESYS_TR_NONE, ESYS_TR_NONE,
+					    &pub, NULL, NULL);
+			if (!r && !(pub->publicArea.objectAttributes & TPMA_OBJECT_NODA))
+				vpninfo->tpm2->need_ownerauth = 1;
+			free(pub);
+		}
 	reauth:
 		if (vpninfo->tpm2->need_ownerauth) {
 			char *pass = NULL;
