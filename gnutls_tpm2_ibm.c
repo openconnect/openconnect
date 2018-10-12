@@ -53,17 +53,18 @@ static void free_pass(char **p)
 	free(*p);
 }
 
-static void tpm2_error(TPM_RC rc, const char *reason)
+static void tpm2_error(struct openconnect_info *vpninfo, TPM_RC rc, const char *reason)
 {
-	const char *msg, *submsg, *num;
+	const char *msg = NULL, *submsg = NULL, *num = NULL;
 
-	fprintf(stderr, "%s failed with %d\n", reason, rc);
 	TSS_ResponseCode_toString(&msg, &submsg, &num, rc);
-	fprintf(stderr, "%s%s%s\n", msg, submsg, num);
+	vpn_progress(vpninfo, PRG_ERR,
+		     _("TPM2 operation %s failed (%d): %s%s%s\n"),
+		     reason, rc, msg, submsg, num);
 }
 
-static TPM_RC tpm2_readpublic(TSS_CONTEXT *tssContext, TPM_HANDLE handle,
-			      TPMT_PUBLIC *pub)
+static TPM_RC tpm2_readpublic(struct openconnect_info *vpninfo, TSS_CONTEXT *tssContext,
+			      TPM_HANDLE handle, TPMT_PUBLIC *pub)
 {
 	ReadPublic_In rin;
 	ReadPublic_Out rout;
@@ -77,7 +78,7 @@ static TPM_RC tpm2_readpublic(TSS_CONTEXT *tssContext, TPM_HANDLE handle,
 			  TPM_CC_ReadPublic,
 			  TPM_RH_NULL, NULL, 0);
 	if (rc) {
-		tpm2_error(rc, "TPM2_ReadPublic");
+		tpm2_error(vpninfo, rc, "TPM2_ReadPublic");
 		return rc;
 	}
 	if (pub)
@@ -86,8 +87,8 @@ static TPM_RC tpm2_readpublic(TSS_CONTEXT *tssContext, TPM_HANDLE handle,
 	return rc;
 }
 
-static TPM_RC tpm2_get_session_handle(TSS_CONTEXT *tssContext, TPM_HANDLE *handle,
-				      TPM_HANDLE bind, const char *auth,
+static TPM_RC tpm2_get_session_handle(struct openconnect_info *vpninfo, TSS_CONTEXT *tssContext,
+				      TPM_HANDLE *handle, TPM_HANDLE bind, const char *auth,
 				      TPM_HANDLE salt_key)
 {
 	TPM_RC rc;
@@ -110,7 +111,7 @@ static TPM_RC tpm2_get_session_handle(TSS_CONTEXT *tssContext, TPM_HANDLE *handl
 		 * access to the public part.  It does this by keeping
 		 * key files, but request the public part just to make
 		 * sure*/
-		tpm2_readpublic(tssContext, salt_key,  NULL);
+		tpm2_readpublic(vpninfo, tssContext, salt_key,  NULL);
 		/* don't care what rout returns, the purpose of the
 		 * operation was to get the public key parameters into
 		 * the tss so it can construct the salt */
@@ -123,7 +124,7 @@ static TPM_RC tpm2_get_session_handle(TSS_CONTEXT *tssContext, TPM_HANDLE *handl
 			 TPM_CC_StartAuthSession,
 			 TPM_RH_NULL, NULL, 0);
 	if (rc) {
-		tpm2_error(rc, "TPM2_StartAuthSession");
+		tpm2_error(vpninfo, rc, "TPM2_StartAuthSession");
 		return rc;
 	}
 
@@ -140,7 +141,7 @@ static void tpm2_flush_handle(TSS_CONTEXT *tssContext, TPM_HANDLE h)
 		return;
 
 	in.flushHandle = h;
-	TSS_Execute(tssContext, NULL, 
+	TSS_Execute(tssContext, NULL,
 		    (COMMAND_PARAMETERS *)&in,
 		    NULL,
 		    TPM_CC_FlushContext,
@@ -151,8 +152,8 @@ static void tpm2_flush_handle(TSS_CONTEXT *tssContext, TPM_HANDLE h)
 #define parent_is_generated(parent) ((parent) >> HR_SHIFT == TPM_HT_PERMANENT)
 #define parent_is_persistent(parent) ((parent) >> HR_SHIFT == TPM_HT_PERSISTENT)
 
-static TPM_RC tpm2_load_srk(TSS_CONTEXT *tssContext, TPM_HANDLE *h,
-			    const char *auth, TPM_HANDLE hierarchy,
+static TPM_RC tpm2_load_srk(struct openconnect_info *vpninfo, TSS_CONTEXT *tssContext,
+			    TPM_HANDLE *h, const char *auth, TPM_HANDLE hierarchy,
 			    int legacy_srk)
 {
 	TPM_RC rc;
@@ -202,7 +203,7 @@ static TPM_RC tpm2_load_srk(TSS_CONTEXT *tssContext, TPM_HANDLE *h,
 
 	/* use a bound session here because we have no known key objects
 	 * to encrypt a salt to */
-	rc = tpm2_get_session_handle(tssContext, &session, hierarchy, auth, 0);
+	rc = tpm2_get_session_handle(vpninfo, tssContext, &session, hierarchy, auth, 0);
 	if (rc)
 		return rc;
 
@@ -215,7 +216,7 @@ static TPM_RC tpm2_load_srk(TSS_CONTEXT *tssContext, TPM_HANDLE *h,
 			 TPM_RH_NULL, NULL, 0);
 
 	if (rc) {
-		tpm2_error(rc, "TSS_CreatePrimary");
+		tpm2_error(vpninfo, rc, "TSS_CreatePrimary");
 		tpm2_flush_handle(tssContext, session);
 		return rc;
 	}
@@ -241,7 +242,7 @@ static TPM_HANDLE tpm2_load_key(struct openconnect_info *vpninfo, TSS_CONTEXT **
 
 	rc = TSS_Create(&tssContext);
 	if (rc) {
-		tpm2_error(rc, "TSS_Create");
+		tpm2_error(vpninfo, rc, "TSS_Create");
 		return 0;
 	}
 
@@ -251,7 +252,7 @@ static TPM_HANDLE tpm2_load_key(struct openconnect_info *vpninfo, TSS_CONTEXT **
 	if (parent_is_persistent(vpninfo->tpm2->parent)) {
 		if (!pass) {
 			TPMT_PUBLIC pub;
-			rc = tpm2_readpublic(tssContext, vpninfo->tpm2->parent, &pub);
+			rc = tpm2_readpublic(vpninfo, tssContext, vpninfo->tpm2->parent, &pub);
 			if (rc)
 				goto out;
 
@@ -262,7 +263,7 @@ static TPM_HANDLE tpm2_load_key(struct openconnect_info *vpninfo, TSS_CONTEXT **
 		in.parentHandle = vpninfo->tpm2->parent;
 	} else {
 	reauth_srk:
-		rc = tpm2_load_srk(tssContext, &in.parentHandle, pass, vpninfo->tpm2->parent, vpninfo->tpm2->legacy_srk);
+		rc = tpm2_load_srk(vpninfo, tssContext, &in.parentHandle, pass, vpninfo->tpm2->parent, vpninfo->tpm2->legacy_srk);
 		if (rc == KEY_AUTH_FAILED) {
 			free_pass(&pass);
 			if (!request_passphrase(vpninfo, "openconnect_tpm2_hierarchy", &pass,
@@ -273,7 +274,7 @@ static TPM_HANDLE tpm2_load_key(struct openconnect_info *vpninfo, TSS_CONTEXT **
 		if (rc)
 			goto out;
 	}
-	rc = tpm2_get_session_handle(tssContext, &session, 0, NULL, in.parentHandle);
+	rc = tpm2_get_session_handle(vpninfo, tssContext, &session, 0, NULL, in.parentHandle);
 	if (rc)
 		goto out_flush_srk;
 
@@ -299,7 +300,7 @@ static TPM_HANDLE tpm2_load_key(struct openconnect_info *vpninfo, TSS_CONTEXT **
 		goto reauth_parent;
 	}
 	if (rc) {
-		tpm2_error(rc, "TPM2_Load");
+		tpm2_error(vpninfo, rc, "TPM2_Load");
 		tpm2_flush_handle(tssContext, session);
 	}
 	else
@@ -352,7 +353,7 @@ int tpm2_rsa_sign_hash_fn(gnutls_privkey_t key, gnutls_sign_algorithm_t algo,
 	if (!in.keyHandle)
 		return GNUTLS_E_PK_SIGN_FAILED;
 
-	rc = tpm2_get_session_handle(tssContext, &authHandle, 0, NULL, 0);
+	rc = tpm2_get_session_handle(vpninfo, tssContext, &authHandle, 0, NULL, 0);
 	if (rc)
 		goto out;
 
@@ -371,7 +372,7 @@ int tpm2_rsa_sign_hash_fn(gnutls_privkey_t key, gnutls_sign_algorithm_t algo,
 			goto reauth;
 	}
 	if (rc) {
-		tpm2_error(rc, "TPM2_RSA_Decrypt");
+		tpm2_error(vpninfo, rc, "TPM2_RSA_Decrypt");
 		/* failure means auth handle is not flushed */
 		tpm2_flush_handle(tssContext, authHandle);
 		goto out;
@@ -439,7 +440,7 @@ int tpm2_ec_sign_hash_fn(gnutls_privkey_t key, gnutls_sign_algorithm_t algo,
 	if (!in.keyHandle)
 		return GNUTLS_E_PK_SIGN_FAILED;
 
-	rc = tpm2_get_session_handle(tssContext, &authHandle, 0, NULL, 0);
+	rc = tpm2_get_session_handle(vpninfo, tssContext, &authHandle, 0, NULL, 0);
 	if (rc)
 		goto out;
 
@@ -458,7 +459,7 @@ int tpm2_ec_sign_hash_fn(gnutls_privkey_t key, gnutls_sign_algorithm_t algo,
 			goto reauth;
 	}
 	if (rc) {
-		tpm2_error(rc, "TPM2_Sign");
+		tpm2_error(vpninfo, rc, "TPM2_Sign");
 		tpm2_flush_handle(tssContext, authHandle);
 		goto out;
 	}
