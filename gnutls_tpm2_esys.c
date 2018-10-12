@@ -66,6 +66,7 @@ struct oc_tpm2_ctx {
 	TPM2B_DIGEST ownerauth;
 	unsigned int need_userauth:1;
 	unsigned int need_ownerauth:1;
+	unsigned int legacy_srk:1;
 	unsigned int parent;
 };
 
@@ -78,6 +79,41 @@ static TPM2B_PUBLIC primaryTemplate = {
 				     TPMA_OBJECT_DECRYPT |
 				     TPMA_OBJECT_FIXEDTPM |
 				     TPMA_OBJECT_FIXEDPARENT |
+				     TPMA_OBJECT_NODA |
+				     TPMA_OBJECT_SENSITIVEDATAORIGIN),
+		.authPolicy = {
+			.size = 0,
+		},
+		.parameters.eccDetail = {
+			.symmetric = {
+				.algorithm = TPM2_ALG_AES,
+				.keyBits.aes = 128,
+				.mode.aes = TPM2_ALG_CFB,
+			},
+			.scheme = {
+				.scheme = TPM2_ALG_NULL,
+				.details = {}
+			},
+			.curveID = TPM2_ECC_NIST_P256,
+			.kdf = {
+				.scheme = TPM2_ALG_NULL,
+				.details = {}
+			},
+		},
+		.unique.ecc = {
+			.x.size = 0,
+			.y.size = 0
+		}
+	}
+};
+
+static TPM2B_PUBLIC primaryTemplate_legacy = {
+	.publicArea = {
+		.type = TPM2_ALG_ECC,
+		.nameAlg = TPM2_ALG_SHA256,
+		.objectAttributes = (TPMA_OBJECT_USERWITHAUTH |
+				     TPMA_OBJECT_RESTRICTED |
+				     TPMA_OBJECT_DECRYPT |
 				     TPMA_OBJECT_NODA |
 				     TPMA_OBJECT_SENSITIVEDATAORIGIN),
 		.authPolicy = {
@@ -175,7 +211,8 @@ static int init_tpm2_primary(struct openconnect_info *vpninfo,
 	}
 	r = Esys_CreatePrimary(ctx, hierarchy,
 			       ESYS_TR_PASSWORD, ESYS_TR_NONE, ESYS_TR_NONE,
-			       &primarySensitive, &primaryTemplate,
+			       &primarySensitive,
+			       vpninfo->tpm2->legacy_srk ? &primaryTemplate_legacy : &primaryTemplate,
 			       &allOutsideInfo, &allCreationPCR,
 			       primaryHandle, NULL, NULL, NULL, NULL);
 	if (r == KEY_AUTH_FAILED) {
@@ -480,7 +517,7 @@ int tpm2_ec_sign_hash_fn(gnutls_privkey_t key, gnutls_sign_algorithm_t algo,
 }
 
 int install_tpm2_key(struct openconnect_info *vpninfo, gnutls_privkey_t *pkey, gnutls_datum_t *pkey_sig,
-		     unsigned int parent, int emptyauth, gnutls_datum_t *privdata, gnutls_datum_t *pubdata)
+		     unsigned int parent, int emptyauth, int legacy, gnutls_datum_t *privdata, gnutls_datum_t *pubdata)
 {
 	TSS2_RC r;
 
@@ -517,6 +554,7 @@ int install_tpm2_key(struct openconnect_info *vpninfo, gnutls_privkey_t *pkey, g
 	}
 
 	vpninfo->tpm2->need_userauth = !emptyauth;
+	vpninfo->tpm2->legacy_srk = legacy;
 
 	switch(vpninfo->tpm2->pub.publicArea.type) {
 	case TPM2_ALG_RSA: return GNUTLS_PK_RSA;

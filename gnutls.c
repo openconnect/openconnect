@@ -1320,7 +1320,8 @@ static int load_certificate(struct openconnect_info *vpninfo)
 	}
 
 	/* Is it a PEM file with a TPM key blob? */
-	if (strstr((char *)fdata.data, "-----BEGIN TSS2 PRIVATE KEY-----")) {
+	if (strstr((char *)fdata.data, "-----BEGIN TSS2 PRIVATE KEY-----") ||
+	    strstr((char *)fdata.data, "-----BEGIN TSS2 KEY BLOB-----")) {
 #ifndef HAVE_TSS2
 		vpn_progress(vpninfo, PRG_ERR,
 			     _("This version of OpenConnect was built without TPM2 support\n"));

@@ -32,7 +32,8 @@ int load_tpm2_key(struct openconnect_info *vpninfo, gnutls_datum_t *fdata,
 		 gnutls_privkey_t *pkey, gnutls_datum_t *pkey_sig);
 void release_tpm2_ctx(struct openconnect_info *info);
 int install_tpm2_key(struct openconnect_info *vpninfo, gnutls_privkey_t *pkey, gnutls_datum_t *pkey_sig,
-		     unsigned int parent, int emptyauth, gnutls_datum_t *privdata, gnutls_datum_t *pubdata);
+		     unsigned int parent, int emptyauth, int legacy,
+		     gnutls_datum_t *privdata, gnutls_datum_t *pubdata);
 
 int tpm2_rsa_sign_hash_fn(gnutls_privkey_t key, gnutls_sign_algorithm_t algo,
 			  void *_vpninfo, unsigned int flags,

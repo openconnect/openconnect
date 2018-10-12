@@ -51,6 +51,21 @@ const asn1_static_node tpmkey_asn1_tab[] = {
   { NULL, 0, NULL }
 };
 
+const asn1_static_node tpmkey_asn1_tab_old[] = {
+  { "TPMKey", 536875024, NULL },
+  { NULL, 1073741836, NULL },
+  { "TPMKey", 536870917, NULL },
+  { "type", 1073741836, NULL },
+  { "emptyAuth", 1610637316, NULL },
+  { NULL, 2056, "0"},
+  { "parent", 1610637315, NULL },
+  { NULL, 2056, "1"},
+  { "pubkey", 1610637319, NULL },
+  { NULL, 2056, "2"},
+  { "privkey", 7, NULL },
+  { NULL, 0, NULL }
+};
+
 
 #if GNUTLS_VERSION_NUMBER < 0x030600
 static int tpm2_rsa_sign_fn(gnutls_privkey_t key, void *_vpninfo,
@@ -168,16 +183,22 @@ int load_tpm2_key(struct openconnect_info *vpninfo, gnutls_datum_t *fdata,
 	int emptyauth = 0;
 	unsigned int parent;
 	int err, ret = -EINVAL;
+	const asn1_static_node *asn1tab;
 
 	err = gnutls_pem_base64_decode_alloc("TSS2 PRIVATE KEY", fdata, &asn1);
-	if (err) {
-		vpn_progress(vpninfo, PRG_ERR,
-			     _("Error decoding TSS2 key blob: %s\n"),
-			     gnutls_strerror(err));
-		return -EINVAL;
+	if (!err) {
+		asn1tab = tpmkey_asn1_tab;
+	} else {
+		if (gnutls_pem_base64_decode_alloc("TSS2 KEY BLOB", fdata, &asn1)) {
+			/* Report the first error */
+			vpn_progress(vpninfo, PRG_ERR,
+				     _("Error decoding TSS2 key blob: %s\n"),
+				     gnutls_strerror(err));
+			return -EINVAL;
+		}
+		asn1tab = tpmkey_asn1_tab_old;
 	}
-
-	err = asn1_array2tree(tpmkey_asn1_tab, &tpmkey_def, NULL);
+	err = asn1_array2tree(asn1tab, &tpmkey_def, NULL);
 	if (err != ASN1_SUCCESS) {
 		vpn_progress(vpninfo, PRG_ERR,
 			     _("Failed to create ASN.1 type for TPM2: %s\n"),
@@ -243,7 +264,8 @@ int load_tpm2_key(struct openconnect_info *vpninfo, gnutls_datum_t *fdata,
 
 	/* Now we've extracted what we need from the ASN.1, invoke the
 	 * actual TPM2 code (whichever implementation we end up with */
-	ret = install_tpm2_key(vpninfo, pkey, pkey_sig, parent, emptyauth, &privdata, &pubdata);
+	ret = install_tpm2_key(vpninfo, pkey, pkey_sig, parent, emptyauth,
+			       asn1tab == tpmkey_asn1_tab_old, &privdata, &pubdata);
 	if (ret < 0)
 		goto out_tpmkey;
 

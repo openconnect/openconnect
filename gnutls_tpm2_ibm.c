@@ -40,6 +40,7 @@ struct oc_tpm2_ctx {
 	TPM2B_PRIVATE priv;
 	char *parent_pass, *key_pass;
 	unsigned int need_userauth:1;
+	unsigned int legacy_srk:1;
 	unsigned int parent;
 };
 
@@ -188,7 +189,8 @@ static void tpm2_flush_srk(TSS_CONTEXT *tssContext, TPM_HANDLE hSRK)
 
 
 static TPM_RC tpm2_load_srk(TSS_CONTEXT *tssContext, TPM_HANDLE *h,
-			    const char *auth, TPM_HANDLE hierarchy)
+			    const char *auth, TPM_HANDLE hierarchy,
+			    int legacy_srk)
 {
 	TPM_RC rc;
 	CreatePrimary_In in;
@@ -215,13 +217,15 @@ static TPM_RC tpm2_load_srk(TSS_CONTEXT *tssContext, TPM_HANDLE *h,
 	in.inPublic.publicArea.type = TPM_ALG_ECC;
 	in.inPublic.publicArea.nameAlg = TPM_ALG_SHA256;
 	in.inPublic.publicArea.objectAttributes.val =
-		TPMA_OBJECT_FIXEDPARENT |
-		TPMA_OBJECT_FIXEDTPM |
 		TPMA_OBJECT_NODA |
 		TPMA_OBJECT_SENSITIVEDATAORIGIN |
 		TPMA_OBJECT_USERWITHAUTH |
 		TPMA_OBJECT_DECRYPT |
 		TPMA_OBJECT_RESTRICTED;
+	if (!legacy_srk)
+		in.inPublic.publicArea.objectAttributes.val |=
+			TPMA_OBJECT_FIXEDPARENT | TPMA_OBJECT_FIXEDTPM;
+
 	in.inPublic.publicArea.parameters.eccDetail.symmetric.algorithm = TPM_ALG_AES;
 	in.inPublic.publicArea.parameters.eccDetail.symmetric.keyBits.aes = 128;
 	in.inPublic.publicArea.parameters.eccDetail.symmetric.mode.aes = TPM_ALG_CFB;
@@ -295,7 +299,7 @@ static TPM_HANDLE tpm2_load_key(struct openconnect_info *vpninfo, TSS_CONTEXT **
 		in.parentHandle = vpninfo->tpm2->parent;
 	} else {
 	reauth_srk:
-		rc = tpm2_load_srk(tssContext, &in.parentHandle, pass, vpninfo->tpm2->parent);
+		rc = tpm2_load_srk(tssContext, &in.parentHandle, pass, vpninfo->tpm2->parent, vpninfo->tpm2->legacy_srk);
 		if (rc == KEY_AUTH_FAILED) {
 			free_pass(&pass);
 			if (!request_passphrase(vpninfo, "openconnect_tpm2_hierarchy", &pass,
@@ -511,7 +515,8 @@ int tpm2_ec_sign_hash_fn(gnutls_privkey_t key, gnutls_sign_algorithm_t algo,
 }
 
 int install_tpm2_key(struct openconnect_info *vpninfo, gnutls_privkey_t *pkey, gnutls_datum_t *pkey_sig,
-		     unsigned int parent, int emptyauth, gnutls_datum_t *privdata, gnutls_datum_t *pubdata)
+		     unsigned int parent, int emptyauth, int legacy,
+		     gnutls_datum_t *privdata, gnutls_datum_t *pubdata)
 {
 	TPM_RC rc;
 	BYTE *der;
@@ -531,6 +536,7 @@ int install_tpm2_key(struct openconnect_info *vpninfo, gnutls_privkey_t *pkey, g
 
 	vpninfo->tpm2->parent = parent;
 	vpninfo->tpm2->need_userauth = !emptyauth;
+	vpninfo->tpm2->legacy_srk = legacy;
 
 	der = privdata->data;
 	dersize = privdata->size;
