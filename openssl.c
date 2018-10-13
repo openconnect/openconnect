@@ -592,6 +592,10 @@ static int load_tpm_certificate(struct openconnect_info *vpninfo,
 	ENGINE_load_builtin_engines();
 
 	e = ENGINE_by_id(engine);
+	if (!e && !strcmp(engine, "tpm2")) {
+		ERR_clear_error();
+		e = ENGINE_by_id("tpm2tss");
+	}
 	if (!e) {
 		vpn_progress(vpninfo, PRG_ERR, _("Can't load TPM engine.\n"));
 		openconnect_report_ssl_errors(vpninfo);
