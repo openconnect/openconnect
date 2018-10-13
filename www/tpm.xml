@@ -38,16 +38,25 @@ TPM ENGINE</a> or the <a href="https://www.gnutls.org/manual/html_node/tpmtool-I
 
 <h2>TPM v2</h2>
 
-<p>There are, unfortunately, two incompatible ENGINE implementations available for TPM v2 with OpenSSL.
+<p>As from the 8.0 release, OpenConnect supports TPM v2 wrapped keys.
+These have the PEM tag:
+<pre>-----BEGIN TSS2 PRIVATE KEY-----</pre>
 
-For <a href="https://git.kernel.org/pub/scm/linux/kernel/git/jejb/openssl_tpm2_engine.git/">openssl_tpm2_engine</a> the PEM file has the tag:
-<pre>-----BEGIN TSS2 KEY BLOB-----</pre>
-The <a href="https://github.com/tpm2-software/tpm2-tss-engine">tpm2-tss-engine</a> uses a different PEM tag:
-<pre>-----BEGIN TSS PRIVKEY BLOB v1-----</pre>
+There are two ENGINE implementations for TPM v2 with OpenSSL,
+based on different TSS libraries.</p>
 
-Both of these OpenSSL engines can be used by OpenConnect if they are installed.</p>
+<p><a href="https://git.kernel.org/pub/scm/linux/kernel/git/jejb/openssl_tpm2_engine.git/"><tt>openssl_tpm2_engine</tt></a> is based on <a href="http://sourceforge.net/projects/ibmtpm20tss/">IBM's TPM 2.0 TSS</a>, while
+<a href="https://github.com/tpm2-software/tpm2-tss-engine"><tt>tss2-tss-engine</tt></a> uses the
+<a href="https://github.com/tpm2-software/tpm2-tss">Intel/TCG stack</a>. OpenConnect can use
+either ENGINE.</p>
 
-<p>The GnuTLS build of OpenConnect supports the former variant, when built with <tt>libtasn1</tt> and either <tt>tss2-esys</tt> or IBM TSS 2.0 libraries.</p>
+
+<p>The GnuTLS build of OpenConnect can use either TSS library.</p>
+
+<p>Older keys from <tt>openssl_tpm2_engine</tt> may have the tag:
+<pre>-----BEGIN TSS2 KEY BLOB-----</pre></p>
+
+This format is also supported by the GnuTLS builds of OpenConnect.
 
 <INCLUDE file="inc/footer.tmpl" />
 </PAGE>
