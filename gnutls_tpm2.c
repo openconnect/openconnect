@@ -66,6 +66,8 @@ const asn1_static_node tpmkey_asn1_tab_old[] = {
   { NULL, 0, NULL }
 };
 
+static const char OID_legacy_loadableKey[] = "2.23.133.10.2";
+static const char OID_loadableKey[] =        "2.23.133.10.1.3";
 
 #if GNUTLS_VERSION_NUMBER < 0x030600
 static int tpm2_rsa_sign_fn(gnutls_privkey_t key, void *_vpninfo,
@@ -178,6 +180,7 @@ int load_tpm2_key(struct openconnect_info *vpninfo, gnutls_datum_t *fdata,
 {
 	gnutls_datum_t asn1, pubdata, privdata;
 	ASN1_TYPE tpmkey_def = ASN1_TYPE_EMPTY, tpmkey = ASN1_TYPE_EMPTY;
+	const char *oid = NULL;
 	char value_buf[16];
 	int value_buflen;
 	int emptyauth = 0;
@@ -188,6 +191,7 @@ int load_tpm2_key(struct openconnect_info *vpninfo, gnutls_datum_t *fdata,
 	err = gnutls_pem_base64_decode_alloc("TSS2 PRIVATE KEY", fdata, &asn1);
 	if (!err) {
 		asn1tab = tpmkey_asn1_tab;
+		oid = OID_loadableKey;
 	} else {
 		if (gnutls_pem_base64_decode_alloc("TSS2 KEY BLOB", fdata, &asn1)) {
 			/* Report the first error */
@@ -197,6 +201,7 @@ int load_tpm2_key(struct openconnect_info *vpninfo, gnutls_datum_t *fdata,
 			return -EINVAL;
 		}
 		asn1tab = tpmkey_asn1_tab_old;
+		oid = OID_legacy_loadableKey;
 	}
 	err = asn1_array2tree(asn1tab, &tpmkey_def, NULL);
 	if (err != ASN1_SUCCESS) {
@@ -212,6 +217,20 @@ int load_tpm2_key(struct openconnect_info *vpninfo, gnutls_datum_t *fdata,
 		vpn_progress(vpninfo, PRG_ERR,
 			     _("Failed to decode TPM2 key ASN.1: %s\n"),
 			     asn1_strerror(err));
+		goto out_tpmkey;
+	}
+
+	value_buflen = sizeof(value_buf);
+	if (asn1_read_value(tpmkey, "type", value_buf, &value_buflen)) {
+		vpn_progress(vpninfo, PRG_ERR,
+			     _("Failed to parse TPM2 key type OID: %s\n"),
+			     asn1_strerror(err));
+		goto out_tpmkey;
+	}
+	if (strncmp(value_buf, oid, value_buflen)) {
+		vpn_progress(vpninfo, PRG_ERR,
+			     _("TPM2 key has unknown type OID %s not %s\n"),
+			     value_buf, oid);
 		goto out_tpmkey;
 	}
 
