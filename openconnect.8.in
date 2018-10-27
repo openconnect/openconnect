@@ -547,7 +547,7 @@ if this code is not executable on the local machine.
 .SH SIGNALS
 In the data phase of the connection, the following signals are handled:
 .TP
-.B SIGINT
+.B SIGINT / SIGTERM
 performs a clean shutdown by logging the session off, disconnecting from the
 gateway, and running the vpnc\-script to restore the network configuration.
 .TP
@@ -560,8 +560,6 @@ session off; this allows for reconnection later using
 forces an immediate disconnection and reconnection; this can be used to
 quickly recover from LAN IP address changes.
 .TP
-.B SIGTERM
-exits immediately without logging off or running vpnc\-script.
 .SH LIMITATIONS
 Note that although IPv6 has been tested on all platforms on which
 .B openconnect

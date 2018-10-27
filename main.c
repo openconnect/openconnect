@@ -725,6 +725,7 @@ static void handle_signal(int sig)
 	char cmd;
 
 	switch (sig) {
+	case SIGTERM:
 	case SIGINT:
 		cmd = OC_CMD_CANCEL;
 		break;
@@ -1538,6 +1539,7 @@ int main(int argc, char **argv)
 	memset(&sa, 0, sizeof(sa));
 
 	sa.sa_handler = handle_signal;
+	sigaction(SIGTERM, &sa, NULL);
 	sigaction(SIGINT, &sa, NULL);
 	sigaction(SIGHUP, &sa, NULL);
 	sigaction(SIGUSR2, &sa, NULL);
@@ -1693,7 +1695,7 @@ int main(int argc, char **argv)
 		ret = 1;
 		break;
 	case -EINTR:
-		vpn_progress(vpninfo, PRG_INFO, _("User cancelled (SIGINT); exiting.\n"));
+		vpn_progress(vpninfo, PRG_INFO, _("User cancelled (SIGINT/SIGTERM); exiting.\n"));
 		ret = 0;
 		break;
 	case -ECONNABORTED:

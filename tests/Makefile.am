@@ -38,12 +38,12 @@ EXTRA_DIST = certs/ca.pem certs/ca-key.pem certs/user-cert.pem $(USER_KEYS) $(US
 	certs/server-cert.pem certs/server-key.pem configs/test1.passwd \
 	common.sh configs/test-user-cert.config configs/test-user-pass.config \
 	configs/user-cert.prm softhsm2.conf.in softhsm ns.sh configs/test-dtls-psk.config \
-	scripts/vpnc-script
+	scripts/vpnc-script scripts/vpnc-script-detect-disconnect
 
 dist_check_SCRIPTS =
 
 if HAVE_NETNS
-dist_check_SCRIPTS += dtls-psk
+dist_check_SCRIPTS += dtls-psk sigterm
 endif
 
 if HAVE_CWRAP
