@@ -15,6 +15,7 @@
 <ul>
    <li><b>OpenConnect HEAD</b>
      <ul>
+       <li>Allow form responses to be provided on command line.</li>
        <li>Add support for SSL keys stored in <a href="tpm.html">TPM2</a>.</li>
        <li>Fix ESP rekey when replay protection is disabled.</li>
        <li>Drop support for GnuTLS older than 3.2.10.</li>

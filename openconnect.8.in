@@ -15,6 +15,7 @@ openconnect \- Multi-protocol VPN client, for Cisco AnyConnect VPNs and others
 .OP \-d,\-\-deflate
 .OP \-D,\-\-no\-deflate
 .OP \-\-force\-dpd interval
+.OP \-F,\-\-form\-entry form:opt=value
 .OP \-g,\-\-usergroup group
 .OP \-h,\-\-help
 .OP \-\-http\-auth methods
@@ -140,8 +141,8 @@ which may be either a file name or, if OpenConnect has been built with an approp
 version of GnuTLS, a PKCS#11 URL.
 .TP
 .B \-C,\-\-cookie=COOKIE
-Use authentication cookie COOKIE.
-.I COOKIE
+Use authentication cookie
+.IR COOKIE .
 .TP
 .B \-\-cookie\-on\-stdin
 Read cookie from standard input.
@@ -179,6 +180,19 @@ as minimum Dead Peer Detection interval for CSTP and DTLS, forcing use of DPD ev
 Use
 .I GROUP
 as login UserGroup
+.TP
+.B \-F,\-\-form\-entry=FORM:OPTION=VALUE
+Provide authentication form input, where
+.I FORM
+and
+.I OPTION
+are the identifiers from the form and the specific input field, and
+.I VALUE
+is the string to be filled in automatically. For example, the standard username field
+.I (also handled by the \-\-user option)
+could also be provided with this option thus:
+.I \-\-form\-entry
+.IR main:username=joebloggs .
 .TP
 .B \-h,\-\-help
 Display help text

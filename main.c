@@ -97,6 +97,8 @@ static int last_form_empty;
 
 static int sig_cmd_fd;
 
+static void add_form_field(char *field);
+
 #ifdef __ANDROID__
 #include <android/log.h>
 static void __attribute__ ((format(printf, 3, 4)))
@@ -271,6 +273,7 @@ static const struct option long_options[] = {
 	OPTION("dump-http-traffic", 0, OPT_DUMP_HTTP),
 	OPTION("no-system-trust", 0, OPT_NO_SYSTEM_TRUST),
 	OPTION("protocol", 1, OPT_PROTOCOL),
+	OPTION("form-entry", 1, 'F'),
 #ifdef OPENCONNECT_GNUTLS
 	OPTION("gnutls-debug", 1, OPT_GNUTLS_DEBUG),
 #endif
@@ -799,6 +802,7 @@ static void usage(void)
 	printf("      --non-inter                 %s\n", _("Do not expect user input; exit if it is required"));
 	printf("      --passwd-on-stdin           %s\n", _("Read password from standard input"));
 	printf("      --authgroup=GROUP           %s\n", _("Choose authentication login selection"));
+	printf("  -F, --form-field=FORM:OPT=VALUE %s\n", _("Provide authentication form responses"));
 	printf("  -c, --certificate=CERT          %s\n", _("Use SSL client certificate CERT"));
 	printf("  -k, --sslkey=KEY                %s\n", _("Use SSL private key file KEY"));
 	printf("  -e, --cert-expire-warning=DAYS  %s\n", _("Warn when certificate lifetime < DAYS"));
@@ -970,9 +974,9 @@ static int next_option(int argc, char **argv, char **config_arg)
 	if (!config_file) {
 		opt = getopt_long(argc, argv,
 #ifdef _WIN32
-				  "C:c:Dde:g:hi:k:m:P:p:Q:qs:u:Vvx:",
+				  "C:c:Dde:F:g:hi:k:m:P:p:Q:qs:u:Vvx:",
 #else
-				  "bC:c:Dde:g:hi:k:lm:P:p:Q:qSs:U:u:Vvx:",
+				  "bC:c:Dde:F:g:hi:k:lm:P:p:Q:qSs:U:u:Vvx:",
 #endif
 				  long_options, NULL);
 
@@ -1182,6 +1186,9 @@ int main(int argc, char **argv)
 			break;
 		case 'U':
 			get_uids(config_arg, &vpninfo->uid, &vpninfo->gid);
+			break;
+		case 'F':
+			add_form_field(keep_config_arg());
 			break;
 		case OPT_CSD_USER:
 			get_uids(config_arg, &vpninfo->uid_csd, &vpninfo->gid_csd);
@@ -1945,6 +1952,53 @@ retry:
 
 	return 0;
 }
+struct form_field {
+	struct form_field *next;
+	char *form_id;
+	char *opt_id;
+	char *value;
+};
+static struct form_field *form_fields = NULL;
+
+static void add_form_field(char *arg)
+{
+	struct form_field *ff;
+	char *opt, *value = strchr(arg, '=');
+
+	if (!value || value == arg) {
+	bad_field:
+		fprintf(stderr, "Form field invalid. Use --form-field=FORM_ID:OPT_NAME=VALUE\n");
+		exit(1);
+	}
+	*(value++) = 0;
+	opt = strchr(arg, ':');
+	if (!opt || opt == arg)
+		goto bad_field;
+	*(opt++) = 0;
+
+	ff = malloc(sizeof(*ff));
+	if (!ff) {
+		fprintf(stderr, "Out of memory for form field\n");
+		exit(1);
+	}
+	ff->form_id = arg;
+	ff->opt_id = opt;
+	ff->value = value;
+	ff->next = form_fields;
+	form_fields = ff;
+}
+
+static char *saved_form_field(struct openconnect_info *vpninfo, const char *form_id, const char *opt_id)
+{
+	struct form_field *ff = form_fields;
+
+	while (ff) {
+		if (!strcmp(form_id, ff->form_id) && !strcmp(ff->opt_id, opt_id))
+			return strdup(ff->value);
+		ff = ff->next;
+	}
+	return NULL;
+}
 
 /* Return value:
  *  < 0, on error
@@ -1970,6 +2024,8 @@ static int process_auth_form_cb(void *_vpninfo,
 	/* Special handling for GROUP: field if present, as different group
 	   selections can make other fields disappear/reappear */
 	if (form->authgroup_opt) {
+		if (!authgroup)
+			authgroup = saved_form_field(vpninfo, form->auth_id, form->authgroup_opt->form.name);
 		if (!authgroup ||
 		    match_choice_label(vpninfo, form->authgroup_opt, authgroup) != 0) {
 			if (prompt_opt_select(vpninfo, form->authgroup_opt, &authgroup) < 0)
@@ -1990,9 +2046,18 @@ static int process_auth_form_cb(void *_vpninfo,
 		   the Cisco clients do support them */
 		if (opt->type == OC_FORM_OPT_SELECT) {
 			struct oc_form_opt_select *select_opt = (void *)opt;
+			char *opt_response;
 
 			if (select_opt == form->authgroup_opt)
 				continue;
+
+			opt_response = saved_form_field(vpninfo, form->auth_id, select_opt->form.name);
+			if (opt_response &&
+			    match_choice_label(vpninfo, select_opt, opt_response) == 0) {
+				free(opt_response);
+				continue;
+			}
+			free(opt_response);
 			if (prompt_opt_select(vpninfo, select_opt, NULL) < 0)
 				goto err;
 			empty = 0;
@@ -2003,7 +2068,9 @@ static int process_auth_form_cb(void *_vpninfo,
 				opt->_value = username;
 				username = NULL;
 			} else {
-				opt->_value = prompt_for_input(opt->label, vpninfo, 0);
+				opt->_value = saved_form_field(vpninfo, form->auth_id, opt->name);
+				if (!opt->_value)
+					opt->_value = prompt_for_input(opt->label, vpninfo, 0);
 			}
 
 			if (!opt->_value)
@@ -2015,7 +2082,9 @@ static int process_auth_form_cb(void *_vpninfo,
 				opt->_value = password;
 				password = NULL;
 			} else {
-				opt->_value = prompt_for_input(opt->label, vpninfo, 1);
+				opt->_value = saved_form_field(vpninfo, form->auth_id, opt->name);
+				if (!opt->_value)
+					opt->_value = prompt_for_input(opt->label, vpninfo, 1);
 			}
 
 			if (!opt->_value)
