@@ -445,15 +445,6 @@ static int gpst_login(struct openconnect_info *vpninfo, int portal, struct login
 	const char *request_body_type = "application/x-www-form-urlencoded";
 	char *xml_buf = NULL, *orig_path;
 
-#ifdef HAVE_LIBSTOKEN
-	/* Step 1: Unlock software token (if applicable) */
-	if (vpninfo->token_mode == OC_TOKEN_MODE_STOKEN) {
-		result = prepare_stoken(vpninfo);
-		if (result)
-			goto out;
-	}
-#endif
-
 	/* Ask the user to fill in the auth form; repeat as necessary */
 	for (;;) {
 		/* submit prelogin request to get form */

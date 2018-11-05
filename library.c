@@ -236,6 +236,14 @@ int openconnect_setup_dtls(struct openconnect_info *vpninfo,
 
 int openconnect_obtain_cookie(struct openconnect_info *vpninfo)
 {
+#ifdef HAVE_LIBSTOKEN
+	int ret;
+	if (vpninfo->token_mode == OC_TOKEN_MODE_STOKEN) {
+		ret = prepare_stoken(vpninfo);
+		if (ret)
+			return ret;
+	}
+#endif
 	return vpninfo->proto->obtain_cookie(vpninfo);
 }
 

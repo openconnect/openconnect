@@ -1243,15 +1243,6 @@ int cstp_obtain_cookie(struct openconnect_info *vpninfo)
 	int cert_rq, cert_sent = !vpninfo->cert;
 	int newgroup_attempts = 5;
 
-#ifdef HAVE_LIBSTOKEN
-	/* Step 1: Unlock software token (if applicable) */
-	if (vpninfo->token_mode == OC_TOKEN_MODE_STOKEN) {
-		result = prepare_stoken(vpninfo);
-		if (result)
-			goto out;
-	}
-#endif
-
 	if (!vpninfo->xmlpost)
 		goto no_xmlpost;
 
