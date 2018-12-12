@@ -1,0 +1,14 @@
+#!/bin/sh -x
+
+# Fake script just for unit tests. Do not use.
+# For a real one, see http://www.infradead.org/openconnect/vpnc-script.html
+
+if [ "$reason" = "connect" ]; then
+    ip link set dev "$TUNDEV" up mtu "$INTERNAL_IP4_MTU"
+    ip addr add "$INTERNAL_IP4_ADDRESS/32" peer "$INTERNAL_IP4_ADDRESS" dev "$TUNDEV"
+    ip -6 addr add $INTERNAL_IP6_NETMASK dev $TUNDEV
+    rm -f ${DISCONNECT_FILE}
+elif [ "$reason" = "disconnect" ];then
+    touch ${DISCONNECT_FILE}
+fi
+exit 0

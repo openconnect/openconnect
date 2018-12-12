@@ -29,6 +29,7 @@
        <li>Verify ESP sequence numbers and warn even if replay protection is disabled.</li>
        <li>Add support for PAN GlobalProtect VPN protocol (<tt>--protocol=gp</tt>).</li>
        <li>Reorganize listing of command-line options, and include information on supported protocols.</li>
+       <li>SIGTERM cleans up the session similarly to SIGINT.</li>
      </ul><br/>
   </li>
   <li><b><a href="ftp://ftp.infradead.org/pub/openconnect/openconnect-7.08.tar.gz">OpenConnect v7.08</a></b>
