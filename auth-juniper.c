@@ -285,7 +285,7 @@ static xmlNodePtr find_form_node(xmlDocPtr doc)
 
 static int check_cookie_success(struct openconnect_info *vpninfo)
 {
-	const char *dslast = NULL, *dsfirst = NULL, *dsurl = NULL, *dsid = NULL;
+	const char *dslast = NULL, *dsfirst = NULL, *dsurl = NULL, *dsid = NULL, *dspreauth = NULL;
 	struct oc_vpn_option *cookie;
 	struct oc_text_buf *buf;
 
@@ -298,6 +298,8 @@ static int check_cookie_success(struct openconnect_info *vpninfo)
 			dsid = cookie->value;
 		else if (!strcmp(cookie->option, "DSSignInUrl"))
 			dsurl = cookie->value;
+		else if (!strcmp(cookie->option, "DSPREAUTH"))
+			dspreauth = cookie->value;
 	}
 	if (!dsid)
 		return -ENOENT;
@@ -305,7 +307,7 @@ static int check_cookie_success(struct openconnect_info *vpninfo)
 	buf = buf_alloc();
 	if (vpninfo->tncc_fd != -1) {
 		buf_append(buf, "setcookie\n");
-		buf_append(buf, "Cookie=%s\n", dsid);
+		buf_append(buf, "Cookie=%s\n", dspreauth);
 		if (buf_error(buf))
 			return buf_free(buf);
 		send(vpninfo->tncc_fd, buf->data, buf->pos, 0);
