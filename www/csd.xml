@@ -54,8 +54,7 @@ the <tt>trojans/</tt> subdirectory:</p>
 
   <li><tt>csd-post.sh</tt>: This script does <i>not</i> actually run the CSD trojan binary. Instead, it emulates
   the behaviour of the CSD trojan, creating a plaintext report similar to the one that the CSD trojans build, and
-  uploading it to the server sent by the VPN gateway. It requires the <tt>xmlstarlet</tt> tool for parsing XML
-  sent by the server, to extract a token value. The report may need to be customized in order to be accepted by some
+  uploading it to the server sent by the VPN gateway. The report may need to be customized in order to be accepted by some
   servers; the <a href="https://github.com/Gilks/hostscan-bypass">hostscan-bypass</a> tool may help with this.
   Because this script does not actually execute a trojan binary, and because its complete output is easily visible
   in the script, the security concerns are greatly alleviated.
