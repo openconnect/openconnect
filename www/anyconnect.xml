@@ -16,9 +16,16 @@
 HTTPS and <a href="http://www.rfc-editor.org/rfc/rfc4347.txt">DTLS</a>
 protocols. You connect to the secure web server, authenticate using
 certificates and/or arbitrary web forms, and you are rewarded with a
-standard HTTP cookie.</p>
+standard HTTP cookie named <tt>webvpn</tt>.</p>
 
-<p>You then use this cookie in an HTTP <tt>CONNECT</tt> request, and can
+<p>Some Cisco servers require you to execute a 'Cisco Secure Desktop'
+trojan binary (intended for security scanning of the client system)
+before authentication can complete; see <a href="csd.html">the CSD
+page</a> for information on how to comply with this requirement, or
+spoof it, with OpenConnect.</p>
+
+<p>After authentication, you use the <tt>webvpn</tt> cookie
+in an HTTP <tt>CONNECT</tt> request, and can
 then pass traffic over that connection. IP addresses and routing
 information are passed back and forth in the headers of that
 <tt>CONNECT</tt> request.</p>

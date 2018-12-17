@@ -10,6 +10,13 @@
 
 <h1>Cisco Secure Desktop</h1>
 
+<p>The CSD ('Cisco Secure Desktop') mechanism is a security scanner
+for the <a href="anyconnect.html">Cisco AnyConnect</a> VPNs, in the
+same vein as <a href="juniper.html">Juniper's Host Checker (tncc.jar)</a>
+and <a href="hip.html">GlobalProtect's HIP</a>.</p>
+
+<h2>Background</h2>
+
 <p>The 'Cisco Secure Desktop' is a bit of a misnomer &#8212; it works by
 downloading a trojan binary from the server and running it on your
 client machine to perform some kind of 'verification' and post its
@@ -26,6 +33,34 @@ option is used to handle the script in a 'safe' manner.</p>
 <p>
 This support currently only works when the server has a Linux binary
 installed, and only when that Linux binary runs on the client machine.</p>
+
+<h2>CSD support in OpenConnect</h2>
+
+<p>OpenConnect supports running the CSD binary, or spoofing its
+behaviour, by passing the <tt>--csd-wrapper=SCRIPT</tt> argument
+with a shell script.</p>
+
+<p>The OpenConnect distribution includes <i>two</i> alternative
+scripts to support the execution or spoofing of the CSD behaviour, in
+the <tt>trojans/</tt> subdirectory:</p>
+
+<ul>
+  <li><tt>csd-wrapper.sh</tt>: This script accepts the same options as some versions of the CSD trojan binary,
+  (<tt>-ticket</tt>, <tt>-stub</tt>, <tt>-group</tt>, <tt>-certhash</tt>, <tt>-url</tt>, <tt>-langselen</tt>),
+  downloads the files required by the binary, and then wraps the execution of the <tt>cstub</tt> binary.
+  Because of the security dangers of executing a server-provided trojan binary, this script should ideally be executed
+  with the permissions of a low-privilege user (e.g. <tt>--csd-user=nobody --csd-wrapper=trojans/csd-wrapper.sh</tt>).
+  </li>
+
+  <li><tt>csd-post.sh</tt>: This script does <i>not</i> actually run the CSD trojan binary. Instead, it emulates
+  the behaviour of the CSD trojan, creating a plaintext report similar to the one that the CSD trojans build, and
+  uploading it to the server sent by the VPN gateway. It requires the <tt>xmlstarlet</tt> tool for parsing XML
+  sent by the server, to extract a token value. The report may need to be customized in order to be accepted by some
+  servers; the <a href="https://github.com/Gilks/hostscan-bypass">hostscan-bypass</a> tool may help with this.
+  Because this script does not actually execute a trojan binary, and because its complete output is easily visible
+  in the script, the security concerns are greatly alleviated.
+  </li>
+</ul>
 
 <INCLUDE file="inc/footer.tmpl" />
 </PAGE>
