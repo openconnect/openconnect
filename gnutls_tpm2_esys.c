@@ -66,6 +66,7 @@ struct oc_tpm2_ctx {
 	TPM2B_DIGEST ownerauth;
 	unsigned int need_userauth:1;
 	unsigned int need_ownerauth:1;
+	unsigned int did_ownerauth:1;
 	unsigned int legacy_srk:1;
 	unsigned int parent;
 };
@@ -274,10 +275,11 @@ static int init_tpm2_key(ESYS_CONTEXT **ctx, ESYS_TR *keyHandle,
 				     vpninfo->tpm2->parent, r);
 			goto error;
 		}
-		/* If we don't already have a password, check the NODA flag on the parent
-		 * and demand one if DA protection is enabled (since that strongly implies
-		 * there is a non-empty password). */
-		if (!vpninfo->tpm2->ownerauth.size) {
+		/* If we don't already have a password (and haven't already authenticated
+		 * successfully), check the NODA flag on the parent and demand one if DA
+		 * protection is enabled (since that strongly implies there is a non-empty
+		 * password). */
+		if (!vpninfo->tpm2->did_ownerauth && !vpninfo->tpm2->ownerauth.size) {
 			TPM2B_PUBLIC *pub = NULL;
 
 			r = Esys_ReadPublic(*ctx, parentHandle, ESYS_TR_NONE, ESYS_TR_NONE, ESYS_TR_NONE,
@@ -322,6 +324,7 @@ static int init_tpm2_key(ESYS_CONTEXT **ctx, ESYS_TR *keyHandle,
 			     r);
 		goto error;
 	}
+	vpninfo->tpm2->did_ownerauth = 1;
 
 	if (parent_is_generated(vpninfo->tpm2->parent)) {
 		r = Esys_FlushContext(*ctx, parentHandle);
