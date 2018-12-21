@@ -575,7 +575,10 @@ int install_tpm2_key(struct openconnect_info *vpninfo, gnutls_privkey_t *pkey, g
 
 void release_tpm2_ctx(struct openconnect_info *vpninfo)
 {
-	if (vpninfo->tpm2)
+	if (vpninfo->tpm2) {
+		clear_mem(vpninfo->tpm2->ownerauth.buffer, sizeof(vpninfo->tpm2->ownerauth.buffer));
+		clear_mem(vpninfo->tpm2->userauth.buffer, sizeof(vpninfo->tpm2->userauth.buffer));
 		free(vpninfo->tpm2);
+	}
 	vpninfo->tpm2 = NULL;
 }

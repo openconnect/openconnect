@@ -109,26 +109,29 @@ int append_form_opts(struct openconnect_info *vpninfo,
 	return 0;
 }
 
+void clear_mem(void *p, size_t s)
+{
+#if defined(HAVE_MEMSET_S)
+	memset_s(p, 0x5a, s);
+#elif defined(HAVE_EXPLICIT_MEMSET)
+	explicit_memset(p, 0x5a, s);
+#elif defined(HAVE_EXPLICIT_BZERO)
+	explicit_bzero(p, s);
+#elif defined(_WIN32)
+	SecureZeroMemory(p, s);
+#else
+	volatile char *pp = (volatile char *)p;
+	while (s--)
+		*(pp++) = 0x5a;
+#endif
+}
+
 void free_pass(char **p)
 {
 	if (!*p)
 		return;
 
-#if defined(HAVE_MEMSET_S)
-	memset_s(*p, 0x5a, strlen(*p));
-#elif defined(HAVE_EXPLICIT_MEMSET)
-	explicit_memset(*p, 0x5a, strlen(*p));
-#elif defined(HAVE_EXPLICIT_BZERO)
-	explicit_bzero(*p, strlen(*p));
-#elif defined(_WIN32)
-	SecureZeroMemory(*p, strlen(*p));
-#else
-	{
-		volatile char *pp = (volatile char *)*p;
-		while (*pp)
-			*(pp++) = 0x5a;
-	}
-#endif
+	clear_mem(*p, strlen(*p));
 	free(*p);
 	*p = NULL;
 }

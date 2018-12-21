@@ -457,8 +457,11 @@ static int gpst_login(struct openconnect_info *vpninfo, int portal, struct login
 
 		/* submit prelogin request to get form */
 		orig_path = vpninfo->urlpath;
-		asprintf(&vpninfo->urlpath, "%s/prelogin.esp?tmp=tmp&clientVer=4100&clientos=%s",
-				 portal ? "global-protect" : "ssl-vpn", clientos);
+		if (asprintf(&vpninfo->urlpath, "%s/prelogin.esp?tmp=tmp&clientVer=4100&clientos=%s",
+			     portal ? "global-protect" : "ssl-vpn", clientos)) {
+			result = -ENOMEM;
+			goto out;
+		}
 		result = do_https_request(vpninfo, "POST", NULL, NULL, &xml_buf, 0);
 		free(vpninfo->urlpath);
 		vpninfo->urlpath = orig_path;
