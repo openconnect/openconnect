@@ -616,8 +616,7 @@ static int load_tpm_certificate(struct openconnect_info *vpninfo,
 				     _("Failed to set TPM SRK password\n"));
 			openconnect_report_ssl_errors(vpninfo);
 		}
-		vpninfo->cert_password = NULL;
-		free(vpninfo->cert_password);
+		free_pass(&vpninfo->cert_password);
 	}
 
 	/* Provide our own UI method to handle the PIN callback. */

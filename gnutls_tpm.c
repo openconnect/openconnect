@@ -184,7 +184,7 @@ int load_tpm1_key(struct openconnect_info *vpninfo, gnutls_datum_t *fdata,
 			goto out_srkpol;
 		}
 
-		free(pass);
+		free_pass(&pass);
 
 		/* ... we get it here instead. */
 		err = Tspi_Context_LoadKeyByBlob(vpninfo->tpm1->tpm_context, vpninfo->tpm1->srk,
@@ -244,7 +244,7 @@ int load_tpm1_key(struct openconnect_info *vpninfo, gnutls_datum_t *fdata,
 		err = Tspi_Policy_SetSecret(vpninfo->tpm1->tpm_key_policy,
 					    TSS_SECRET_MODE_PLAIN,
 					    strlen(pass), (void *)pass);
-		free(pass);
+		free_pass(&pass);
 
 		if (err) {
 			vpn_progress(vpninfo, PRG_ERR,
