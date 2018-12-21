@@ -1188,9 +1188,6 @@ int main(int argc, char **argv)
 		case 'U':
 			get_uids(config_arg, &vpninfo->uid, &vpninfo->gid);
 			break;
-		case 'F':
-			add_form_field(keep_config_arg());
-			break;
 		case OPT_CSD_USER:
 			get_uids(config_arg, &vpninfo->uid_csd, &vpninfo->gid_csd);
 			vpninfo->uid_csd_given = 1;
@@ -1199,6 +1196,9 @@ int main(int argc, char **argv)
 			vpninfo->csd_wrapper = keep_config_arg();
 			break;
 #endif /* !_WIN32 */
+		case 'F':
+			add_form_field(keep_config_arg());
+			break;
 		case OPT_PROTOCOL:
 			if (openconnect_set_protocol(vpninfo, config_arg))
 				exit(1);
