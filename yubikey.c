@@ -311,10 +311,7 @@ static int select_yubioath_applet(struct openconnect_info *vpninfo,
 		}
 	}
  out:
-	if (pin) {
-		memset(pin, 0, pin_len);
-		free(pin);
-	}
+	free_pass(&pin);
 	return ret;
 }
 
