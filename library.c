@@ -352,11 +352,12 @@ void openconnect_vpninfo_free(struct openconnect_info *vpninfo)
 	free(vpninfo->unique_hostname);
 	free(vpninfo->urlpath);
 	free(vpninfo->redirect_url);
-	free(vpninfo->cookie);
+	free_pass(&vpninfo->cookie);
 	free(vpninfo->proxy_type);
 	free(vpninfo->proxy);
 	free(vpninfo->proxy_user);
-	free(vpninfo->proxy_pass);
+	free_pass(&vpninfo->proxy_pass);
+	free_pass(&vpninfo->cert_password);
 	free(vpninfo->vpnc_script);
 	free(vpninfo->cafile);
 	free(vpninfo->ifname);
@@ -417,7 +418,7 @@ void openconnect_vpninfo_free(struct openconnect_info *vpninfo)
 	free(vpninfo->authgroup);
 #ifdef HAVE_LIBSTOKEN
 	if (vpninfo->stoken_pin)
-		free(vpninfo->stoken_pin);
+		free_pass(&vpninfo->stoken_pin);
 	if (vpninfo->stoken_ctx)
 		stoken_destroy(vpninfo->stoken_ctx);
 #endif
@@ -427,7 +428,7 @@ void openconnect_vpninfo_free(struct openconnect_info *vpninfo)
 			pskc_done(vpninfo->pskc);
 		else
 #endif /* HAVE_LIBPSKC */
-		free(vpninfo->oath_secret);
+		free_pass(&vpninfo->oath_secret);
 	}
 #ifdef HAVE_LIBPCSCLITE
 	release_pcsc_ctx(vpninfo);
