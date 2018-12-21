@@ -464,12 +464,12 @@ static int pem_pw_cb(char *buf, int len, int w, void *v)
 		vpn_progress(vpninfo, PRG_ERR,
 			     _("PEM password too long (%d >= %d)\n"),
 			     plen, len);
-		free(pass);
+		free_pass(&pass);
 		return -1;
 	}
 
 	memcpy(buf, pass, plen+1);
-	free(pass);
+	free_pass(&pass);
 	return plen;
 }
 
@@ -532,7 +532,7 @@ static int load_pkcs12_certificate(struct openconnect_info *vpninfo, PKCS12 *p12
 			if (pass)
 				vpn_progress(vpninfo, PRG_ERR,
 					     _("Failed to decrypt PKCS#12 certificate file\n"));
-			free(pass);
+			free_pass(&pass);
 			if (request_passphrase(vpninfo, "openconnect_pkcs12", &pass,
 					       _("Enter PKCS#12 pass phrase:")) < 0) {
 				PKCS12_free(p12);
@@ -547,10 +547,10 @@ static int load_pkcs12_certificate(struct openconnect_info *vpninfo, PKCS12 *p12
 		vpn_progress(vpninfo, PRG_ERR,
 			     _("Parse PKCS#12 failed (see above errors)\n"));
 		PKCS12_free(p12);
-		free(pass);
+		free_pass(&pass);
 		return -EINVAL;
 	}
-	free(pass);
+	free_pass(&pass);
 	if (cert) {
 		char buf[200];
 		vpninfo->cert_x509 = cert;
@@ -1001,7 +1001,7 @@ static int load_certificate(struct openconnect_info *vpninfo)
 					if (pass) {
 						vpn_progress(vpninfo, PRG_ERR,
 							     _("Failed to decrypt PKCS#8 certificate file\n"));
-						free(pass);
+						free_pass(&pass);
 						pass = NULL;
 					}
 
@@ -1014,13 +1014,13 @@ static int load_certificate(struct openconnect_info *vpninfo)
 					openconnect_report_ssl_errors(vpninfo);
 				}
 
-				free(pass);
+				free_pass(&pass);
 				vpninfo->cert_password = NULL;
 
 				X509_SIG_free(p8);
 				return -EINVAL;
 			}
-			free(pass);
+			free_pass(&pass);
 			vpninfo->cert_password = NULL;
 
 			key = EVP_PKCS82PKEY(p8inf);

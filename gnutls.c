@@ -460,7 +460,7 @@ static int load_pkcs12_certificate(struct openconnect_info *vpninfo,
 		} else
 			vpn_progress(vpninfo, PRG_ERR,
 				     _("Failed to decrypt PKCS#12 certificate file\n"));
-		free(pass);
+		free_pass(&pass);
 		vpninfo->cert_password = NULL;
 		err = request_passphrase(vpninfo, "openconnect_pkcs12", &pass,
 					 _("Enter PKCS#12 pass phrase:"));
@@ -492,7 +492,7 @@ static int load_pkcs12_certificate(struct openconnect_info *vpninfo,
 	}
 	err = gnutls_pkcs12_simple_parse(p12, pass, key, chain, chain_len,
 					 extra_certs, extra_certs_len, crl, 0);
-	free(pass);
+	free_pass(&pass);
 	vpninfo->cert_password = NULL;
 
 	gnutls_pkcs12_deinit(p12);
@@ -875,8 +875,7 @@ static int import_openssl_pem(struct openconnect_info *vpninfo,
  fail:
 		if (pass) {
 			vpn_progress(vpninfo, PRG_ERR,  _("Decrypting PEM key failed\n"));
-			free(pass);
-			pass = NULL;
+			free_pass(&pass);
 		}
 		err = request_passphrase(vpninfo, "openconnect_pem",
 					 &pass, _("Enter PEM pass phrase:"));
@@ -887,7 +886,7 @@ static int import_openssl_pem(struct openconnect_info *vpninfo,
 	}
  out:
 	free(key_data);
-	free(pass);
+	free_pass(&pass);
  out_enc_key:
 	free(enc_key.data);
  out_b64:
@@ -1400,7 +1399,7 @@ static int load_certificate(struct openconnect_info *vpninfo)
 			if (pass) {
 				vpn_progress(vpninfo, PRG_ERR,
 					     _("Failed to decrypt PKCS#8 certificate file\n"));
-				free(pass);
+				free_pass(&pass);
 			}
 			err = request_passphrase(vpninfo, "openconnect_pem",
 						 &pass, _("Enter PEM pass phrase:"));
@@ -1409,7 +1408,7 @@ static int load_certificate(struct openconnect_info *vpninfo)
 				goto out;
 			}
 		}
-		free(pass);
+		free_pass(&pass);
 		vpninfo->cert_password = NULL;
 	} else if (!gnutls_x509_privkey_import(key, &fdata, GNUTLS_X509_FMT_DER) ||
 		   !gnutls_x509_privkey_import_pkcs8(key, &fdata, GNUTLS_X509_FMT_DER,
@@ -1433,7 +1432,7 @@ static int load_certificate(struct openconnect_info *vpninfo)
 			if (pass) {
 				vpn_progress(vpninfo, PRG_ERR,
 					     _("Failed to decrypt PKCS#8 certificate file\n"));
-				free(pass);
+				free_pass(&pass);
 			}
 			err = request_passphrase(vpninfo, "openconnect_pem",
 						 &pass, _("Enter PKCS#8 pass phrase:"));
@@ -1442,7 +1441,7 @@ static int load_certificate(struct openconnect_info *vpninfo)
 				goto out;
 			}
 		}
-		free(pass);
+		free_pass(&pass);
 		vpninfo->cert_password = NULL;
 	}
 
