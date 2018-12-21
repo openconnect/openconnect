@@ -174,8 +174,7 @@ static void install_tpm_passphrase(struct openconnect_info *vpninfo, TPM2B_DIGES
 	}
 	auth->size = strlen(pass);
 	strcpy((char *)auth->buffer, pass);
-	memset(pass, 0, strlen(pass));
-	free(pass);
+	free_pass(&pass);
 }
 
 static int init_tpm2_primary(struct openconnect_info *vpninfo,
