@@ -118,6 +118,16 @@ fi
 AC_DEFINE_UNQUOTED(DEFAULT_VPNCSCRIPT, "${with_vpnc_script}", [Default vpnc-script locatin])
 AC_SUBST(DEFAULT_VPNCSCRIPT, "${with_vpnc_script}")
 
+AC_CHECK_FUNC(memset_s,
+	      [AC_DEFINE(HAVE_MEMSET_S, 1, [Have memset_s() function])],
+	      [AC_CHECK_FUNC(explicit_memset,
+	                    [AC_DEFINE(HAVE_EXPLICIT_MEMSET, 1, [Have explicit_memset() function])],
+			    [AC_CHECK_FUNC(explicit_bzero,
+					   [AC_DEFINE(HAVE_EXPLICIT_BZERO, 1, [Have explicit_bzero() function])],
+					   [])
+			    ])
+	      ])
+
 AC_CHECK_FUNC(fdevname_r, [AC_DEFINE(HAVE_FDEVNAME_R, 1, [Have fdevname_r() function])], [])
 AC_CHECK_FUNC(statfs, [AC_DEFINE(HAVE_STATFS, 1, [Have statfs() function])], [])
 AC_CHECK_FUNC(getline, [AC_DEFINE(HAVE_GETLINE, 1, [Have getline() function])],

@@ -1013,6 +1013,7 @@ int xmlnode_match_prop(xmlNode *xml_node, const char *name, const char *match);
 int append_opt(struct oc_text_buf *body, const char *opt, const char *name);
 int append_form_opts(struct openconnect_info *vpninfo,
 		     struct oc_auth_form *form, struct oc_text_buf *body);
+void free_pass(char **p);
 void free_opt(struct oc_form_opt *opt);
 void free_auth_form(struct oc_auth_form *form);
 int do_gen_tokencode(struct openconnect_info *vpninfo,

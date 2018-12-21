@@ -109,12 +109,36 @@ int append_form_opts(struct openconnect_info *vpninfo,
 	return 0;
 }
 
+void free_pass(char **p)
+{
+	if (!*p)
+		return;
+
+#if defined(HAVE_MEMSET_S)
+	memset_s(*p, 0x5a, strlen(*p));
+#elif defined(HAVE_EXPLICIT_MEMSET)
+	explicit_memset(*p, 0x5a, strlen(*p));
+#elif defined(HAVE_EXPLICIT_BZERO)
+	explicit_bzero(*p, strlen(*p));
+#elif defined(_WIN32)
+	SecureZeroMemory(*p, strlen(*p));
+#else
+	{
+		volatile char *pp = (volatile char *)*p;
+		while (*pp)
+			*(pp++) = 0x5a;
+	}
+#endif
+	free(*p);
+	*p = NULL;
+}
+
 void free_opt(struct oc_form_opt *opt)
 {
 	/* for SELECT options, opt->value is a pointer to oc_choice->name */
-	if (opt->type != OC_FORM_OPT_SELECT)
-		free(opt->_value);
-	else {
+	if (opt->type != OC_FORM_OPT_SELECT) {
+		free_pass(&opt->_value);
+	} else {
 		struct oc_form_opt_select *sel = (void *)opt;
 		int i;
 

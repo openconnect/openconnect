@@ -44,15 +44,6 @@ struct oc_tpm2_ctx {
 	unsigned int parent;
 };
 
-static void free_pass(char **p)
-{
-	if (!*p)
-		return;
-
-	memset(*p, 0x5a, strlen(*p));
-	free(*p);
-}
-
 static void tpm2_error(struct openconnect_info *vpninfo, TPM_RC rc, const char *reason)
 {
 	const char *msg = NULL, *submsg = NULL, *num = NULL;

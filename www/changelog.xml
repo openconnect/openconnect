@@ -15,6 +15,7 @@
 <ul>
    <li><b>OpenConnect HEAD</b>
      <ul>
+       <li>Clear form submissions (which may include passwords) before freeing (CVE-2018-20319).</li>
        <li>Allow form responses to be provided on command line.</li>
        <li>Add support for SSL keys stored in <a href="tpm.html">TPM2</a>.</li>
        <li>Fix ESP rekey when replay protection is disabled.</li>
