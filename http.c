@@ -81,9 +81,10 @@ void buf_truncate(struct oc_text_buf *buf)
 	if (!buf)
 		return;
 
-	buf->pos = 0;
 	if (buf->data)
-		buf->data[0] = 0;
+		memset(buf->data, 0, buf->pos);
+
+	buf->pos = 0;
 }
 
 int buf_ensure_space(struct oc_text_buf *buf, int len)
@@ -290,6 +291,7 @@ int buf_free(struct oc_text_buf *buf)
 	int error = buf_error(buf);
 
 	if (buf) {
+		buf_truncate(buf);
 		if (buf->data)
 			free(buf->data);
 		free(buf);
