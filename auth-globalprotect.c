@@ -458,7 +458,7 @@ static int gpst_login(struct openconnect_info *vpninfo, int portal, struct login
 		/* submit prelogin request to get form */
 		orig_path = vpninfo->urlpath;
 		if (asprintf(&vpninfo->urlpath, "%s/prelogin.esp?tmp=tmp&clientVer=4100&clientos=%s",
-			     portal ? "global-protect" : "ssl-vpn", clientos)) {
+			     portal ? "global-protect" : "ssl-vpn", clientos) < 0) {
 			result = -ENOMEM;
 			goto out;
 		}
