@@ -354,7 +354,7 @@ int tpm2_rsa_sign_hash_fn(gnutls_privkey_t key, gnutls_sign_algorithm_t algo,
 			 (COMMAND_PARAMETERS *)&in,
 			 NULL,
 			 TPM_CC_RSA_Decrypt,
-			 authHandle, pass, 0,
+			 authHandle, pass, TPMA_SESSION_DECRYPT,
 			 TPM_RH_NULL, NULL, 0);
 	if (rc == KEY_AUTH_FAILED) {
 		free_pass(&pass);
@@ -441,7 +441,7 @@ int tpm2_ec_sign_hash_fn(gnutls_privkey_t key, gnutls_sign_algorithm_t algo,
 			 (COMMAND_PARAMETERS *)&in,
 			 NULL,
 			 TPM_CC_Sign,
-			 authHandle, pass, 0,
+			 authHandle, pass, TPMA_SESSION_DECRYPT,
 			 TPM_RH_NULL, NULL, 0);
 	if (rc == KEY_AUTH_FAILED) {
 		free_pass(&pass);
