@@ -1530,6 +1530,7 @@ static int load_certificate(struct openconnect_info *vpninfo)
 			}
 		}
 		gnutls_free(pkey_sig.data);
+		pkey_sig.data = NULL;
 	}
 #endif /* P11KIT || TROUSERS || TSS2 || SYSTEM_KEYS */
 
@@ -1710,6 +1711,24 @@ static int load_certificate(struct openconnect_info *vpninfo)
 	   'fun' for GnuTLS 2.12... */
 #if defined(HAVE_P11KIT) || defined(HAVE_TROUSERS) || defined(HAVE_TSS2) || defined(HAVE_GNUTLS_SYSTEM_KEYS)
 	if (pkey) {
+#if GNUTLS_VERSION_NUMBER >= 0x030600
+		if (gnutls_privkey_get_pk_algorithm(pkey, NULL) == GNUTLS_PK_RSA) {
+			/*
+			 * For hardware RSA keys, we need to check if they can cope with PSS.
+			 * If not, disable TLSv1.3 which would make PSS mandatory.
+			 * https://bugzilla.redhat.com/show_bug.cgi?id=1663058
+			 */
+			err = gnutls_privkey_sign_data2(pkey, GNUTLS_SIGN_RSA_PSS_RSAE_SHA256, 0, &fdata, &pkey_sig);
+			if (err) {
+				vpn_progress(vpninfo, PRG_INFO,
+					     _("Private key appears not to support RSA-PSS. Disabling TLSv1.3\n"));
+				vpninfo->no_tls13 = 1;
+			} else {
+				free(pkey_sig.data);
+				pkey_sig.data = NULL;
+			}
+		}
+#endif
 		err = assign_privkey(vpninfo, pkey,
 				     supporting_certs,
 				     nr_supporting_certs,
@@ -2214,8 +2233,8 @@ int openconnect_open_https(struct openconnect_info *vpninfo)
 	}
 #endif
 
-	snprintf(vpninfo->gnutls_prio, sizeof(vpninfo->gnutls_prio), "%s%s",
-		 default_prio, vpninfo->pfs?":-RSA":"");
+	snprintf(vpninfo->gnutls_prio, sizeof(vpninfo->gnutls_prio), "%s%s%s",
+		 default_prio, vpninfo->pfs?":-RSA":"", vpninfo->no_tls13?":-VERS-TLS1.3":"");
 
 	err = gnutls_priority_set_direct(vpninfo->https_sess,
 					 vpninfo->gnutls_prio, NULL);

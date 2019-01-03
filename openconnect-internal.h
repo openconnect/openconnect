@@ -485,6 +485,7 @@ struct openconnect_info {
 	struct oc_vpn_option *csd_env;
 
 	unsigned pfs;
+	unsigned no_tls13;
 #if defined(OPENCONNECT_OPENSSL)
 #ifdef HAVE_LIBP11
 	PKCS11_CTX *pkcs11_ctx;
