@@ -12,9 +12,13 @@
 # server's security policy with lies. This script exists as an example
 # to work from.
 
-if ! xmlstarlet --version > /dev/null; then
-    echo "No xmlstarlet found"
-    exit 1;
+if ! xmlstarlet --version > /dev/null 2>&1; then
+    echo "************************************************************************" >&2
+    echo "WARNING: xmlstarlet not found in path; CSD token extraction may not work" >&2
+    echo "************************************************************************" >&2
+    unset XMLSTARLET
+else
+    XMLSTARLET=true
 fi
 
 DATA='endpoint.os.version="Linux";
@@ -64,7 +68,12 @@ done
 
 PINNEDPUBKEY="-s ${CSD_SHA256:+"-k --pinnedpubkey sha256//$CSD_SHA256"}"
 URL="https://$CSD_HOSTNAME/+CSCOE+/sdesktop/token.xml?ticket=$TICKET&stub=$STUB"
-COOKIE_HEADER="Cookie: sdesktop="$(curl $PINNEDPUBKEY -s "$URL"  | xmlstarlet sel -t -v /hostscan/token)
+if [ -n "$XMLSTARLET" ]; then
+    TOKEN=$(curl $PINNEDPUBKEY -s "$URL"  | xmlstarlet sel -t -v /hostscan/token)
+else
+    TOKEN=$(curl $PINNEDPUBKEY -s "$URL" | sed -n '/<token>/s^.*<token>\(.*\)</token>^\1^p' )
+fi
+COOKIE_HEADER="Cookie: sdesktop=$TOKEN"
 CONTENT_HEADER="Content-Type: text/xml"
 URL="https://$CSD_HOSTNAME/+CSCOE+/sdesktop/scan.xml?reusebrowser=1"
 curl $PINNEDPUBKEY -H "$CONTENT_HEADER" -H "$COOKIE_HEADER" --data "$DATA;type=text/xml" "$URL"

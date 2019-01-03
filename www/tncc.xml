@@ -1,0 +1,55 @@
+<PAGE>
+	<INCLUDE file="inc/header.tmpl" />
+
+	<VAR match="VAR_SEL_FEATURES" replace="selected" />
+	<VAR match="VAR_SEL_FEATURE_TNCC" replace="selected" />
+	<PARSE file="menu1.xml" />
+	<PARSE file="menu2-features.xml" />
+
+	<INCLUDE file="inc/content.tmpl" />
+
+<h1>Juniper Host Checker (tncc.jar)</h1>
+
+<p>The Host Checker mechanism is a security scanner for the <a
+href="juniper.html">Juniper</a> VPNs, in the same vein as <a
+href="csd.html">Cisco's CSD</a> and <a href="hip.html">GlobalProtect's
+HIP</a>.</p>
+
+<h3>Background</h3>
+
+<p>Many sites require a Java applet to run certain tests as a precondition
+of authentication. This works by sending a <tt>DSPREAUTH</tt> cookie
+to the client which is attempting to authenticate, and the Java code
+in <tt>tncc.jar</tt> then runs and communicates with the server, handing
+back a new value for the <tt>DSPREAUTH</tt> cookie to be used when
+autnentication continues.</p>
+
+<p>This Java applet is a black-box binary provided by a server outside
+of the client's control, and therefore has similar security concerns to Cisco's CSD
+trojan.</p>
+
+<h2>TNCC support in OpenConnect</h2>
+
+<p>OpenConnect supports running the tncc.jar binary with a little assistance. A Python wrapper
+script, <tt>tncc-wrapper.py</tt>, is provided in the <tt>trojans/</tt> subdirectory of the
+OpenConnect distribution. It can be used
+along with the <tt>tncc-preload.so</tt> from
+<a href="https://github.com/russdill/ncsvc-socks-wrapper">this repository</a>.
+It may also be necessary to pass a Mozilla-compatible user agent string:
+<pre>
+  ./openconnect --protocol=nc --useragent 'Mozilla/5.0 (Linux) Firefox' --csd-wrapper=trojans/tncc-wrapper.py vpn.example.com
+</pre>
+Because of the security dangers of executing a server-provided trojan binary, this script should ideally be executed
+with the permissions of a low-privilege user (e.g. <tt>--csd-user=nobody</tt>).
+</p>
+
+<p>Alternatively, the <a href="https://github.com/russdill/juniper-vpn-py">juniper-vpn-py</a> project provides a
+<tt>tncc.py</tt> which <i>emulates</i> the behaviour of the <tt>tncc.jar</tt> binary, rather than actually
+executing it. Because this script does not actually execute a server-provided binary, security concerns are greatly
+alleviated. However, this alternative script may require customization to work with VPNs that have modified
+the behaviour of their Host Checker binaries in some way.
+</p>
+
+
+<INCLUDE file="inc/footer.tmpl" />
+</PAGE>

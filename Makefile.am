@@ -130,7 +130,7 @@ pkgconfig_DATA = openconnect.pc
 
 EXTRA_DIST = version.sh README.TESTS COPYING.LGPL $(lib_srcs_openssl) $(lib_srcs_gnutls)
 EXTRA_DIST += $(shell cd "$(top_srcdir)" && \
-		git ls-tree HEAD -r --name-only -- android/ java/ 2>/dev/null)
+		git ls-tree HEAD -r --name-only -- android/ java/ trojans/ 2>/dev/null)
 
 DISTCLEANFILES = $(pkgconfig_DATA)
 
