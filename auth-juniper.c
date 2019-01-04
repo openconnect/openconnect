@@ -360,30 +360,20 @@ static int tncc_preauth(struct openconnect_info *vpninfo)
 		return -EINVAL;
 	}
 
-	buf = buf_alloc();
-	buf_append(buf, "start\n");
-	buf_append(buf, "IC=%s\n", vpninfo->hostname);
-	buf_append(buf, "Cookie=%s\n", dspreauth);
-	buf_append(buf, "DSSIGNIN=%s\n", dssignin);
-	if (buf_error(buf)) {
-		vpn_progress(vpninfo, PRG_ERR,
-			     _("Failed to allocate memory for communication with TNCC\n"));
-		return buf_free(buf);
-	}
 #ifdef SOCK_CLOEXEC
 	if (socketpair(AF_UNIX, SOCK_STREAM | SOCK_CLOEXEC, 0, sockfd))
 #endif
 	{
-		if (socketpair(AF_UNIX, SOCK_STREAM, 0, sockfd)) {
-			buf_free(buf);
+		if (socketpair(AF_UNIX, SOCK_STREAM, 0, sockfd))
 			return -errno;
-		}
+
 		set_fd_cloexec(sockfd[0]);
 		set_fd_cloexec(sockfd[1]);
 	}
 	pid = fork();
 	if (pid == -1) {
-		buf_free(buf);
+		close(sockfd[0]);
+		close(sockfd[1]);
 		return -errno;
 	}
 
@@ -410,6 +400,18 @@ static int tncc_preauth(struct openconnect_info *vpninfo)
 	}
 	waitpid(pid, NULL, 0);
 	close(sockfd[0]);
+
+	buf = buf_alloc();
+	buf_append(buf, "start\n");
+	buf_append(buf, "IC=%s\n", vpninfo->hostname);
+	buf_append(buf, "Cookie=%s\n", dspreauth);
+	buf_append(buf, "DSSIGNIN=%s\n", dssignin);
+	if (buf_error(buf)) {
+		vpn_progress(vpninfo, PRG_ERR,
+			     _("Failed to allocate memory for communication with TNCC\n"));
+		close(sockfd[1]);
+		return buf_free(buf);
+	}
 
 	if (cancellable_send(vpninfo, sockfd[1], buf->data, buf->pos) != buf->pos) {
 		vpn_progress(vpninfo, PRG_ERR,
