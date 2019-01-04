@@ -908,7 +908,13 @@ int udp_sockaddr(struct openconnect_info *vpninfo, int port);
 int udp_connect(struct openconnect_info *vpninfo);
 int ssl_reconnect(struct openconnect_info *vpninfo);
 void openconnect_clear_cookies(struct openconnect_info *vpninfo);
+int cancellable_gets(struct openconnect_info *vpninfo, int fd,
+		     char *buf, size_t len);
 
+int cancellable_send(struct openconnect_info *vpninfo, int fd,
+		     char *buf, size_t len);
+int cancellable_recv(struct openconnect_info *vpninfo, int fd,
+		     char *buf, size_t len);
 /* openssl-pkcs11.c */
 int load_pkcs11_key(struct openconnect_info *vpninfo);
 int load_pkcs11_certificate(struct openconnect_info *vpninfo);

@@ -1005,101 +1005,17 @@ char *openconnect_create_useragent(const char *base)
 
 static int proxy_gets(struct openconnect_info *vpninfo, char *buf, size_t len)
 {
-	int i = 0;
-	int ret;
-
-	if (len < 2)
-		return -EINVAL;
-
-	while ((ret = proxy_read(vpninfo, (void *)(buf + i), 1)) == 1) {
-		if (buf[i] == '\n') {
-			buf[i] = 0;
-			if (i && buf[i-1] == '\r') {
-				buf[i-1] = 0;
-				i--;
-			}
-			return i;
-		}
-		i++;
-
-		if (i >= len - 1) {
-			buf[i] = 0;
-			return i;
-		}
-	}
-	buf[i] = 0;
-	return i ?: ret;
+	return cancellable_gets(vpninfo, vpninfo->proxy_fd, buf, len);
 }
 
 static int proxy_write(struct openconnect_info *vpninfo, char *buf, size_t len)
 {
-	size_t count;
-	int fd = vpninfo->proxy_fd;
-
-	if (fd == -1)
-		return -EINVAL;
-
-	for (count = 0; count < len; ) {
-		fd_set rd_set, wr_set;
-		int maxfd = fd;
-		int i;
-
-		FD_ZERO(&wr_set);
-		FD_ZERO(&rd_set);
-		FD_SET(fd, &wr_set);
-		cmd_fd_set(vpninfo, &rd_set, &maxfd);
-
-		select(maxfd + 1, &rd_set, &wr_set, NULL, NULL);
-		if (is_cancel_pending(vpninfo, &rd_set))
-			return -EINTR;
-
-		/* Not that this should ever be able to happen... */
-		if (!FD_ISSET(fd, &wr_set))
-			continue;
-
-		i = send(fd, (void *)&buf[count], len - count, 0);
-		if (i < 0)
-			return -errno;
-
-		count += i;
-	}
-	return count;
+	return cancellable_send(vpninfo, vpninfo->proxy_fd, buf, len);
 }
 
 static int proxy_read(struct openconnect_info *vpninfo, char *buf, size_t len)
 {
-	size_t count;
-	int fd = vpninfo->proxy_fd;
-
-	if (fd == -1)
-		return -EINVAL;
-
-	for (count = 0; count < len; ) {
-		fd_set rd_set;
-		int maxfd = fd;
-		int i;
-
-		FD_ZERO(&rd_set);
-		FD_SET(fd, &rd_set);
-		cmd_fd_set(vpninfo, &rd_set, &maxfd);
-
-		select(maxfd + 1, &rd_set, NULL, NULL, NULL);
-		if (is_cancel_pending(vpninfo, &rd_set))
-			return -EINTR;
-
-		/* Not that this should ever be able to happen... */
-		if (!FD_ISSET(fd, &rd_set))
-			continue;
-
-		i = recv(fd, (void *)&buf[count], len - count, 0);
-		if (i < 0)
-			return -errno;
-		else if (i == 0)
-			return -ECONNRESET;
-
-		count += i;
-	}
-	return count;
+	return cancellable_recv(vpninfo, vpninfo->proxy_fd, buf, len);
 }
 
 static const char *socks_errors[] = {
