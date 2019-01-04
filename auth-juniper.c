@@ -345,7 +345,7 @@ static int tncc_preauth(struct openconnect_info *vpninfo)
 	struct oc_text_buf *buf;
 	struct oc_vpn_option *cookie;
 	const char *dspreauth = NULL, *dssignin = "null";
-	char recvbuf[1024], *p;
+	char recvbuf[1024];
 	int len;
 
 	for (cookie = vpninfo->cookies; cookie; cookie = cookie->next) {
@@ -371,10 +371,10 @@ static int tncc_preauth(struct openconnect_info *vpninfo)
 		return buf_free(buf);
 	}
 #ifdef SOCK_CLOEXEC
-	if (socketpair(AF_UNIX, SOCK_SEQPACKET | SOCK_CLOEXEC, 0, sockfd))
+	if (socketpair(AF_UNIX, SOCK_STREAM | SOCK_CLOEXEC, 0, sockfd))
 #endif
 	{
-		if (socketpair(AF_UNIX, SOCK_SEQPACKET, 0, sockfd)) {
+		if (socketpair(AF_UNIX, SOCK_STREAM, 0, sockfd)) {
 			buf_free(buf);
 			return -errno;
 		}
@@ -409,7 +409,7 @@ static int tncc_preauth(struct openconnect_info *vpninfo)
 	waitpid(pid, NULL, 0);
 	close(sockfd[0]);
 
-	if (send(sockfd[1], buf->data, buf->pos, 0) != buf->pos) {
+	if (cancellable_send(vpninfo, sockfd[1], buf->data, buf->pos) != buf->pos) {
 		vpn_progress(vpninfo, PRG_ERR,
 			     _("Failed to send start command to TNCC\n"));
 		buf_free(buf);
@@ -420,47 +420,55 @@ static int tncc_preauth(struct openconnect_info *vpninfo)
 	vpn_progress(vpninfo, PRG_DEBUG,
 		     _("Sent start; waiting for response from TNCC\n"));
 
-	len = recv(sockfd[1], recvbuf, sizeof(recvbuf) - 1, 0);
+	/* First line: HTTP-like response code. */
+	len = cancellable_gets(vpninfo, sockfd[1], recvbuf, sizeof(recvbuf));
 	if (len < 0) {
+	respfail:
 		vpn_progress(vpninfo, PRG_ERR,
 			     _("Failed to read response from TNCC\n"));
 		close(sockfd[1]);
 		return -EIO;
 	}
 
-	recvbuf[len] = 0;
-
-	p = strchr(recvbuf, '\n');
-	if (!p) {
-	invalid_response:
-		vpn_progress(vpninfo, PRG_ERR,
-			     _("Received invalid response from TNCC\n"));
-	print_response:
-		vpn_progress(vpninfo, PRG_TRACE, _("TNCC response: -->\n%s\n<--\n"),
-			     recvbuf);
-		close(sockfd[1]);
-		return -EINVAL;
-	}
-	*p = 0;
 	if (strcmp(recvbuf, "200")) {
 		vpn_progress(vpninfo, PRG_ERR,
 			     _("Received unsuccessful %s response from TNCC\n"),
 			     recvbuf);
-		goto print_response;
+		close(sockfd[1]);
+		return -EINVAL;
 	}
-	p = strchr(p + 1, '\n');
-	if (!p)
-		goto invalid_response;
-	dspreauth = p + 1;
-	p = strchr(p + 1, '\n');
-	if (!p)
-		goto invalid_response;
-	*p = 0;
+
+	vpn_progress(vpninfo, PRG_TRACE, _("TNCC response 200 OK\n"));
+
+	/* We're not sure what the second line is. We ignore it. */
+	len = cancellable_gets(vpninfo, sockfd[1], recvbuf, sizeof(recvbuf));
+	if (len < 0)
+		goto respfail;
+
+	vpn_progress(vpninfo, PRG_TRACE, _("Second line of TNCC response: '%s'\n"),
+		     recvbuf);
+
+	/* Third line is the DSPREAUTH cookie */
+	len = cancellable_gets(vpninfo, sockfd[1], recvbuf, sizeof(recvbuf));
+	if (len < 0)
+		goto respfail;
+
 	vpn_progress(vpninfo, PRG_DEBUG,
 		     _("Got new DSPREAUTH cookie from TNCC: %s\n"),
-		     dspreauth);
-	http_add_cookie(vpninfo, "DSPREAUTH", dspreauth, 1);
+		     recvbuf);
+	http_add_cookie(vpninfo, "DSPREAUTH", recvbuf, 1);
 	vpninfo->tncc_fd = sockfd[1];
+
+	len = cancellable_gets(vpninfo, sockfd[1], recvbuf, sizeof(recvbuf));
+	if (len < 0)
+		goto respfail;
+	if (len > 0) {
+		vpn_progress(vpninfo, PRG_ERR,
+			     _("Unexpected non-empty line from TNCC after DSPREAUTH cookie: '%s'\n"),
+			     recvbuf);
+		goto respfail;
+	}
+
 	return 0;
 }
 #endif
