@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python2
 
 # Lifted from Russ Dill's juniper-vpn-wrap.py, thus:
 #
