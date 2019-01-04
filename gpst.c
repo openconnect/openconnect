@@ -864,8 +864,15 @@ static int run_hip_script(struct openconnect_info *vpninfo)
 		     _("Error: Running the 'HIP Report' script on this platform is not yet implemented.\n"));
 	return -EPERM;
 #else
-	if (pipe(pipefd) == -1)
-		goto out;
+#ifdef __linux__
+	if (pipe2(pipefd, O_CLOEXEC))
+#endif
+	{
+		if (pipe(pipefd))
+			goto out;
+		set_fd_cloexec(pipefd[0]);
+		set_fd_cloexec(pipefd[1]);
+	}
 	child = fork();
 	if (child == -1) {
 		goto out;
@@ -907,6 +914,7 @@ static int run_hip_script(struct openconnect_info *vpninfo)
 		char *hip_argv[32];
 		int i = 0;
 		close(pipefd[0]);
+		/* The duplicated fd does not have O_CLOEXEC */
 		dup2(pipefd[1], 1);
 
 		if (set_csd_user(vpninfo) < 0)
