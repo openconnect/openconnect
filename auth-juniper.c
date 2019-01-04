@@ -396,8 +396,10 @@ static int tncc_preauth(struct openconnect_info *vpninfo)
 		close(sockfd[1]);
 		/* The duplicated fd does not have O_CLOEXEC */
 		dup2(sockfd[0], 0);
-		/* We really don't want anything going to stdout */
-		dup2(1, 2);
+		/* We really don't want anything going to our stdout.
+		   Redirect the child's stdout, to our stderr. */
+		dup2(2, 1);
+		/* And close everything else.*/
 		for (i = 3; i < 1024 ; i++)
 			close(i);
 
