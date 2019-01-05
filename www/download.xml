@@ -17,40 +17,26 @@
 
 <p>
 <!-- latest-release-start -->
-The latest release is <a href="ftp://ftp.infradead.org/pub/openconnect/openconnect-7.08.tar.gz">OpenConnect v7.08</a>
-<i>(<a href="ftp://ftp.infradead.org/pub/openconnect/openconnect-7.08.tar.gz.asc">PGP signature</a>)</i>,
-released on 2016-12-13 with the following changelog:</p>
+The latest release is <a href="ftp://ftp.infradead.org/pub/openconnect/openconnect-8.00.tar.gz">OpenConnect v8.00</a>
+<i>(<a href="ftp://ftp.infradead.org/pub/openconnect/openconnect-8.00.tar.gz.asc">PGP signature</a>)</i>,
+released on 2019-01-05 with the following changelog:</p>
      <ul>
-       <li>Add SHA256 support for server cert hashes.</li>
-       <li>Enable DHE ciphers for Cisco DTLS.</li>
-       <li>Increase initial oNCP configuration buffer size.</li>
-       <li>Reopen <tt>CONIN$</tt> when stdin is redirected on Windows.</li>
-       <li>Improve support for point-to-point routing on Windows.</li>
-       <li>Check for non-resumed DTLS sessions which may indicate a MiTM attack.</li>
-       <li>Add <tt>TUNIDX</tt> environment variable on Windows.</li>
-       <li>Fix compatibility with Pulse Secure 8.2R5.</li>
-       <li>Fix IPv6 support in Solaris.</li>
-       <li>Support DTLS automatic negotiation.</li>
-       <li>Support <tt>--key-password</tt> for GnuTLS PKCS#11 PIN.</li>
-       <li>Support automatic DTLS MTU detection with OpenSSL.</li>
-       <li>Drop support for combined GnuTLS/OpenSSL build.</li>
-       <li>Update OpenSSL to allow TLSv1.2, improve compatibility options.</li>
-       <li>Remove <tt>--no-cert-check</tt> option. It was being (mis)used.</li>
-       <li>Fix OpenSSL support for PKCS#11 EC keys without public key.</li>
-       <li>Support for final OpenSSL 1.1 release.</li>
-       <li>Fix polling/retry on "tun" socket when buffers full.</li>
-       <li>Fix AnyConnect server-side MTU setting.</li>
-       <li>Fix ESP replay detection.</li>
-       <li>Allow build with LibreSSL <i>(for fetishists only; do not use this as DTLS is broken)</i>.</li>
-       <li>Add certificate torture test suite.</li>
-       <li>Support PKCS#11 PIN via <tt>pin-value=</tt> and <tt>--key-password</tt> for OpenSSL.</li>
-       <li>Fix integer overflow issues with ESP packet replay detection.</li>
-       <li>Add <tt>--pass-tos</tt> option as in OpenVPN.</li>
-       <li>Support rôle selection form in Juniper VPN.</li>
-       <li>Support DER-format certificates, add certificate format torture tests.</li>
-       <li>For OpenSSL >= 1.0.2, fix certificate validation when only an
-          intermediate CA is specified with the <tt>--cafile</tt> option.</li>
-       <li>Support Juniper "Pre Sign-in Message".</li>
+       <li>Clear form submissions (which may include passwords) before freeing (CVE-2018-20319).</li>
+       <li>Allow form responses to be provided on command line.</li>
+       <li>Add support for SSL keys stored in <a href="tpm.html">TPM2</a>.</li>
+       <li>Fix ESP rekey when replay protection is disabled.</li>
+       <li>Drop support for GnuTLS older than 3.2.10.</li>
+       <li>Fix <tt>--passwd-on-stdin</tt> for Windows to not forcibly open console.</li>
+       <li>Fix portability of shell scripts in test suite.</li>
+       <li>Add Google Authenticator TOTP support for Juniper.</li>
+       <li>Add RFC7469 key PIN support for cert hashes.</li>
+       <li>Add protocol method to securely log out the Juniper session.</li>
+       <li>Relax requirements for Juniper hostname packet response to support old gateways.</li>
+       <li>Add API functions to query the supported protocols.</li>
+       <li>Verify ESP sequence numbers and warn even if replay protection is disabled.</li>
+       <li>Add support for PAN GlobalProtect VPN protocol (<tt>--protocol=gp</tt>).</li>
+       <li>Reorganize listing of command-line options, and include information on supported protocols.</li>
+       <li>SIGTERM cleans up the session similarly to SIGINT.</li>
      </ul>
 <!-- latest-release-end -->
 

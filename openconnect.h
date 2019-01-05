@@ -36,7 +36,7 @@ extern "C" {
 #define OPENCONNECT_API_VERSION_MINOR 5
 
 /*
- * API version 5.5:
+ * API version 5.5 (v8.00; 2019-01-05):
  *  - add openconnect_set_version_string()
  *  - add openconnect_set_key_password()
  *  - Add openconnect_has_tss2_blob_support()

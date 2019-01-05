@@ -15,6 +15,12 @@
 <ul>
    <li><b>OpenConnect HEAD</b>
      <ul>
+       <li><i>No changelog entries yet</i></li>
+     </ul><br/>
+  </li>
+  <li><b><a href="ftp://ftp.infradead.org/pub/openconnect/openconnect-8.00.tar.gz">OpenConnect v8.00</a></b>
+     <i>(<a href="ftp://ftp.infradead.org/pub/openconnect/openconnect-8.00.tar.gz.asc">PGP signature</a>)</i> &#8212; 2019-01-05
+     <ul>
        <li>Clear form submissions (which may include passwords) before freeing (CVE-2018-20319).</li>
        <li>Allow form responses to be provided on command line.</li>
        <li>Add support for SSL keys stored in <a href="tpm.html">TPM2</a>.</li>
