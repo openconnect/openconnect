@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openconnect\n"
 "Report-Msgid-Bugs-To: openconnect-devel@lists.infradead.org\n"
-"POT-Creation-Date: 2019-01-03 22:51+0000\n"
+"POT-Creation-Date: 2019-01-05 00:00+0000\n"
 "PO-Revision-Date: 2011-09-22 22:31+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Lithuanian (http://www.transifex.net/projects/p/meego/team/"
@@ -79,7 +79,7 @@ msgstr "Galimi %d tinklų sietuvų serveriai:\n"
 msgid "  %s (%s)\n"
 msgstr "  %s (%s)\n"
 
-#: auth-globalprotect.c:484 auth-juniper.c:706 auth.c:669
+#: auth-globalprotect.c:484 auth-juniper.c:720 auth.c:669
 msgid "Failed to generate OTP tokencode; disabling token\n"
 msgstr "Nepavyko sukurti OTP leksemos kodo; išjungiama leksema\n"
 
@@ -120,81 +120,79 @@ msgstr "Negalima apdoroti formos method='%s', action='%s'\n"
 msgid "Unknown textarea field: '%s'\n"
 msgstr "Nežinomas teksto srities laukas: „%s“\n"
 
-#: auth-juniper.c:335
+#: auth-juniper.c:337
 msgid "TNCC support not implemented yet on Windows\n"
 msgstr "TNCC palaikymas Windows sistemoje dar nerealizuotas\n"
 
-#: auth-juniper.c:357
+#: auth-juniper.c:359
 msgid "No DSPREAUTH cookie; not attempting TNCC\n"
 msgstr "Nėra DSPREAUTH slapuko; nebandoma TNCC\n"
 
-#: auth-juniper.c:368
-msgid "Failed to allocate memory for communication with TNCC\n"
-msgstr "Nepavyko išskirti atminties komunikacijai su TNCC\n"
-
-#: auth-juniper.c:403
+#: auth-juniper.c:397
 #, c-format
 msgid "Failed to exec TNCC script %s: %s\n"
 msgstr "Nepavyko įvykdyti TNCC scenarijaus %s: %s\n"
 
-#: auth-juniper.c:412
+#: auth-juniper.c:411
+msgid "Failed to allocate memory for communication with TNCC\n"
+msgstr "Nepavyko išskirti atminties komunikacijai su TNCC\n"
+
+#: auth-juniper.c:418
 msgid "Failed to send start command to TNCC\n"
 msgstr "Nepavyko išsiųsti pradžios komandos į TNCC\n"
 
-#: auth-juniper.c:419
+#: auth-juniper.c:425
 msgid "Sent start; waiting for response from TNCC\n"
 msgstr "Pradžia išsiųsta; laukiama atsakymo iš TNCC\n"
 
-#: auth-juniper.c:424
+#: auth-juniper.c:432
 msgid "Failed to read response from TNCC\n"
 msgstr "Nepavyko perskaityti TNCC atsakymo\n"
 
-#: auth-juniper.c:435
-msgid "Received invalid response from TNCC\n"
-msgstr "Iš TNCC gautas netinkamas atsakymas\n"
-
-#: auth-juniper.c:437
-#, c-format
-msgid ""
-"TNCC response: -->\n"
-"%s\n"
-"<--\n"
-msgstr ""
-"TNCC atsakymas: -->\n"
-"%s\n"
-"<--\n"
-"\n"
-
-#: auth-juniper.c:445
+#: auth-juniper.c:439
 #, c-format
 msgid "Received unsuccessful %s response from TNCC\n"
 msgstr "Iš TNCC gautas nesėkmingas %s atsakymas\n"
 
-#: auth-juniper.c:458
+#: auth-juniper.c:445
+msgid "TNCC response 200 OK\n"
+msgstr ""
+
+#: auth-juniper.c:452
+#, c-format
+msgid "Second line of TNCC response: '%s'\n"
+msgstr ""
+
+#: auth-juniper.c:461
 #, c-format
 msgid "Got new DSPREAUTH cookie from TNCC: %s\n"
 msgstr "Iš TNCC gautas naujas DSPREAUTH slapukas: %s\n"
 
-#: auth-juniper.c:626
+#: auth-juniper.c:471
+#, c-format
+msgid "Unexpected non-empty line from TNCC after DSPREAUTH cookie: '%s'\n"
+msgstr ""
+
+#: auth-juniper.c:640
 msgid "Failed to parse HTML document\n"
 msgstr "Nepavyko perskaityti HTML dokumento\n"
 
-#: auth-juniper.c:643
+#: auth-juniper.c:657
 msgid "Failed to find or parse web form in login page\n"
 msgstr ""
 "Nepavyko rasti ar perskaityti žiniatinklio formos prisijungimo puslapyje\n"
 "\n"
 
-#: auth-juniper.c:651
+#: auth-juniper.c:665
 msgid "Encountered form with no ID\n"
 msgstr "Sutikta forma be ID\n"
 
-#: auth-juniper.c:689
+#: auth-juniper.c:703
 #, c-format
 msgid "Unknown form ID '%s'\n"
 msgstr "Nežinoma formos ID „%s“\n"
 
-#: auth-juniper.c:692
+#: auth-juniper.c:706
 #, c-format
 msgid "Dumping unknown HTML form:\n"
 msgstr "Išmetama nežinoma HTML forma\n"
@@ -534,12 +532,12 @@ msgstr "Gautas %s suspaustas %d baitų duomenų paketas (buvo %d)\n"
 msgid "deflate failed %d\n"
 msgstr "nepavyko išskleisti %d\n"
 
-#: cstp.c:900 dtls.c:283 dtls.c:742 esp.c:136 gpst.c:1027 mainloop.c:69
+#: cstp.c:900 dtls.c:283 dtls.c:742 esp.c:136 gpst.c:1035 mainloop.c:69
 #: oncp.c:914
 msgid "Allocation failed\n"
 msgstr "Nepavyko išskirti atminties\n"
 
-#: cstp.c:911 gpst.c:1040
+#: cstp.c:911 gpst.c:1048
 #, c-format
 msgid "Short packet received (%d bytes)\n"
 msgstr "Gautas trumpas paketas (%d baitai)\n"
@@ -588,7 +586,7 @@ msgstr "gautas serverio pabaigos paketas\n"
 msgid "Unknown packet %02x %02x %02x %02x %02x %02x %02x %02x\n"
 msgstr "Nežinomas paketas %02x %02x %02x %02x %02x %02x %02x %02x\n"
 
-#: cstp.c:1041 gpst.c:1127 oncp.c:1121
+#: cstp.c:1041 gpst.c:1135 oncp.c:1121
 #, c-format
 msgid "SSL wrote too few bytes! Asked for %d, sent %d\n"
 msgstr "SSL įrašė per mažai baitų! Prašyta %d, išsiųsta %d\n"
@@ -608,7 +606,7 @@ msgstr "Pakartotinis rankos paspaudimas nepavyko; bandomas naujas tunelis\n"
 msgid "CSTP Dead Peer Detection detected dead peer!\n"
 msgstr "CSTO negyvų porininkų aptikimas aptiko negyvą porininką!\n"
 
-#: cstp.c:1091 gpst.c:1151 oncp.c:1091 oncp.c:1177
+#: cstp.c:1091 gpst.c:1159 oncp.c:1091 oncp.c:1177
 msgid "Reconnect failed\n"
 msgstr "Nepavyko persijungimas\n"
 
@@ -2004,51 +2002,51 @@ msgstr ""
 "Klaida: „HIP Report“ scenarijaus vykdymas šioje platformoje dar "
 "nerealizuotas.\n"
 
-#: gpst.c:886
+#: gpst.c:893
 #, c-format
 msgid "HIP script '%s' exited abnormally\n"
 msgstr "HIP scenarijus „%s“ išėjo nenormaliai\n"
 
-#: gpst.c:891
+#: gpst.c:898
 #, c-format
 msgid "HIP script '%s' returned non-zero status: %d\n"
 msgstr "HIP scenarijus „%s“ grąžino nenulinę būseną: %d\n"
 
-#: gpst.c:897
+#: gpst.c:904
 msgid "HIP report submission failed.\n"
 msgstr "Nepavyko pateikti HIP ataskaitos.\n"
 
-#: gpst.c:899
+#: gpst.c:906
 msgid "HIP report submitted successfully.\n"
 msgstr "HIP ataskaita sėkmingai pateikta.\n"
 
-#: gpst.c:927
+#: gpst.c:935
 #, c-format
 msgid "Failed to exec HIP script %s\n"
 msgstr "Nepavyko įvykdyti HIP scenarijaus %s\n"
 
-#: gpst.c:951
+#: gpst.c:959
 msgid "Gateway says HIP report submission is needed.\n"
 msgstr "Tinklų sietuvas sako, kad reikia HIP ataskaita.\n"
 
-#: gpst.c:957
+#: gpst.c:965
 msgid "Gateway says no HIP report submission is needed.\n"
 msgstr "Tinklų sietuvas sako, kad HIP ataskaitos nereikia.\n"
 
-#: gpst.c:984
+#: gpst.c:992
 msgid "ESP tunnel connected; exiting HTTPS mainloop.\n"
 msgstr "Prisijungta prie ESP tunelio; išeinama iš HTTPS pagrindinio ciklo.\n"
 
-#: gpst.c:1000
+#: gpst.c:1008
 msgid "Failed to connect ESP tunnel; using HTTPS instead.\n"
 msgstr "Nepavyko prisijungti prie ESP tunelio; vietoj to naudojamas HTTPS.\n"
 
-#: gpst.c:1036
+#: gpst.c:1044
 #, c-format
 msgid "Packet receive error: %s\n"
 msgstr "Paketo gavimo klaida: %s\n"
 
-#: gpst.c:1057
+#: gpst.c:1065
 #, c-format
 msgid ""
 "Unexpected packet length. SSL_read returned %d (includes 16 header bytes) "
@@ -2057,11 +2055,11 @@ msgstr ""
 "Nelauktas paketo ilgis. SSL_read grąžino %d (įskaitant 16 antraštės baitų), "
 "bet antraštė payload_len yra %d\n"
 
-#: gpst.c:1067
+#: gpst.c:1075
 msgid "Got GPST DPD/keepalive response\n"
 msgstr "Gautas CSTP DPD/keepalive atsakymas\n"
 
-#: gpst.c:1071
+#: gpst.c:1079
 msgid ""
 "Expected 0000000000000000 as last 8 bytes of DPD/keepalive packet header, "
 "but got:\n"
@@ -2069,35 +2067,35 @@ msgstr ""
 "Laukta 0000000000000000 kaip paskutinių 8 baitų DPD/keepalive paketo "
 "antraštėje, bet gauta:\n"
 
-#: gpst.c:1077
+#: gpst.c:1085
 #, c-format
 msgid "Received data packet of %d bytes\n"
 msgstr "Gautas %d baitų duomenų paketas\n"
 
-#: gpst.c:1086
+#: gpst.c:1094
 msgid ""
 "Expected 0100000000000000 as last 8 bytes of data packet header, but got:\n"
 msgstr ""
 "Laukta 0100000000000000 kaip paskutinių 8 baitų duomenų paketo antraštėje, "
 "bet gauta:\n"
 
-#: gpst.c:1094
+#: gpst.c:1102
 msgid "Unknown packet. Header dump follows:\n"
 msgstr "Nežinomas paketas. Antraštė yra:\n"
 
-#: gpst.c:1142
+#: gpst.c:1150
 msgid "GlobalProtect rekey due\n"
 msgstr "GlobalProtect raktų pakeitimas\n"
 
-#: gpst.c:1147
+#: gpst.c:1155
 msgid "GPST Dead Peer Detection detected dead peer!\n"
 msgstr "GPST negyvų porininkų aptikimas aptiko negyvą porininką!\n"
 
-#: gpst.c:1167
+#: gpst.c:1175
 msgid "Send GPST DPD/keepalive request\n"
 msgstr "Siųsti GPST DPD/keepalive užklausą\n"
 
-#: gpst.c:1187
+#: gpst.c:1195
 #, c-format
 msgid "Sending data packet of %d bytes\n"
 msgstr "Siunčiamas %d baitų duomenų paketas\n"
@@ -2212,7 +2210,7 @@ msgid "Attempting HTTP Basic authentication to server '%s'\n"
 msgstr ""
 "Bandomas HTTP Basic tapatybės patvirtinimas tarpiniame serveryje „%s“\n"
 
-#: http-auth.c:200 http.c:1250
+#: http-auth.c:200 http.c:1166
 msgid "This version of OpenConnect was built without GSSAPI support\n"
 msgstr "Ši OpenConnect versija sukurta be GSSAPI palaikymo\n"
 
@@ -2323,150 +2321,150 @@ msgstr "Nepavyko išskirti naujo kelio santykiniam nukreipimui: %s\n"
 msgid "Unexpected %d result from server\n"
 msgstr "Netikėtas %d rezultatas iš serverio\n"
 
-#: http.c:1106
+#: http.c:1022
 msgid "request granted"
 msgstr "prašymas patvirtintas"
 
-#: http.c:1107
+#: http.c:1023
 msgid "general failure"
 msgstr "bendroji klaida"
 
-#: http.c:1108
+#: http.c:1024
 msgid "connection not allowed by ruleset"
 msgstr "ryšis neleistas pagal taisykles"
 
-#: http.c:1109
+#: http.c:1025
 msgid "network unreachable"
 msgstr "tinklas nepasiekiamas"
 
-#: http.c:1110
+#: http.c:1026
 msgid "host unreachable"
 msgstr "serveris nepasiekiamas"
 
-#: http.c:1111
+#: http.c:1027
 msgid "connection refused by destination host"
 msgstr "ryšį atmetė paskirties serveris"
 
-#: http.c:1112
+#: http.c:1028
 msgid "TTL expired"
 msgstr "TTL laikas baigėsi"
 
-#: http.c:1113
+#: http.c:1029
 msgid "command not supported / protocol error"
 msgstr "komanda nepalaikoma / protokolo klaida"
 
-#: http.c:1114
+#: http.c:1030
 msgid "address type not supported"
 msgstr "adreso tipas nepalaikomas"
 
-#: http.c:1124
+#: http.c:1040
 msgid "SOCKS server requested username/password but we have none\n"
 msgstr ""
 "SOCKS serveris paprašė naudotojo vardo/slaptažodžio, bet mes jokių neturime\n"
 
-#: http.c:1132
+#: http.c:1048
 msgid "Username and password for SOCKS authentication must be < 255 bytes\n"
 msgstr ""
 "Naudotojo vardas ir slaptažodis SOCKS tapatybės patvirtinimui turi būti < "
 "255 baitai\n"
 
-#: http.c:1147 http.c:1203
+#: http.c:1063 http.c:1119
 #, c-format
 msgid "Error writing auth request to SOCKS proxy: %s\n"
 msgstr "Klaida rašant auth užklausą į SOCKS tarpinį serverį: %s\n"
 
-#: http.c:1155 http.c:1210
+#: http.c:1071 http.c:1126
 #, c-format
 msgid "Error reading auth response from SOCKS proxy: %s\n"
 msgstr "Klaida skaitant auth atsakymą iš SOCKS tarpinio serverio: %s\n"
 
-#: http.c:1162 http.c:1216
+#: http.c:1078 http.c:1132
 #, c-format
 msgid "Unexpected auth response from SOCKS proxy: %02x %02x\n"
 msgstr "Netikėtas auth atsakymas iš SOCKS tarpinio serverio: %02x %02x\n"
 
-#: http.c:1168
+#: http.c:1084
 msgid "Authenticated to SOCKS server using password\n"
 msgstr "Patvirtinta tapatybė SOCKS serveryje naudojant slaptažodį\n"
 
-#: http.c:1172
+#: http.c:1088
 msgid "Password authentication to SOCKS server failed\n"
 msgstr "Nepavyko patvirtinti tapatybės slaptažodžius SOCKS serveryje\n"
 
-#: http.c:1228 http.c:1235
+#: http.c:1144 http.c:1151
 msgid "SOCKS server requested GSSAPI authentication\n"
 msgstr "Socks serveris paprašė GSSAPI tapatybės patvirtinimo\n"
 
-#: http.c:1241
+#: http.c:1157
 msgid "SOCKS server requested password authentication\n"
 msgstr "Socks serveris paprašė tapatybės patvirtinimo slaptažodžiu\n"
 
-#: http.c:1248
+#: http.c:1164
 msgid "SOCKS server requires authentication\n"
 msgstr "Socks serveris paprašė tapatybės patvirtinimo\n"
 
-#: http.c:1255
+#: http.c:1171
 #, c-format
 msgid "SOCKS server requested unknown authentication type %02x\n"
 msgstr "Socks serveris paprašė nežinomo tipo %02x tapatybės patvirtinimo\n"
 
-#: http.c:1261
+#: http.c:1177
 #, c-format
 msgid "Requesting SOCKS proxy connection to %s:%d\n"
 msgstr "Prašomas SOCKS tarpinio serverio ryšio į %s:%d\n"
 
-#: http.c:1276
+#: http.c:1192
 #, c-format
 msgid "Error writing connect request to SOCKS proxy: %s\n"
 msgstr "Klaida rašant ryšio prašymą į SOCKS tarpinį serverį: %s\n"
 
-#: http.c:1284 http.c:1326
+#: http.c:1200 http.c:1242
 #, c-format
 msgid "Error reading connect response from SOCKS proxy: %s\n"
 msgstr "Klaida skaitant jungimosi atsakymą iš SOCKS tarpinio serverio: %s\n"
 
-#: http.c:1290
+#: http.c:1206
 #, c-format
 msgid "Unexpected connect response from SOCKS proxy: %02x %02x...\n"
 msgstr ""
 "Nelauktas jungimosi atsakymas iš SOCKS tarpinio serverio: %02x %02x...\n"
 
-#: http.c:1298
+#: http.c:1214
 #, c-format
 msgid "SOCKS proxy error %02x: %s\n"
 msgstr "SOCKS tarpinio serverio klaida %02x: %s\n"
 
-#: http.c:1302
+#: http.c:1218
 #, c-format
 msgid "SOCKS proxy error %02x\n"
 msgstr "SOCKS tarpinio serverio klaida %02x\n"
 
-#: http.c:1319
+#: http.c:1235
 #, c-format
 msgid "Unexpected address type %02x in SOCKS connect response\n"
 msgstr "Nelauktas adreso tipas %02x SOCKS jungimosi atsakyme\n"
 
-#: http.c:1342
+#: http.c:1258
 #, c-format
 msgid "Requesting HTTP proxy connection to %s:%d\n"
 msgstr "Prašomas HTTP tarpinio serverio ryšio į %s:%d\n"
 
-#: http.c:1377
+#: http.c:1293
 #, c-format
 msgid "Sending proxy request failed: %s\n"
 msgstr "Tarpinio serverio prašymo siuntimas nepavyko: %s\n"
 
-#: http.c:1400
+#: http.c:1316
 #, c-format
 msgid "Proxy CONNECT request failed: %d\n"
 msgstr "Tarpinio serverio CONNECT užklausa nepavyko: %d\n"
 
-#: http.c:1419
+#: http.c:1335
 #, c-format
 msgid "Unknown proxy type '%s'\n"
 msgstr "Nežinomas tarpinio serverio tipas „%s“\n"
 
-#: http.c:1468
+#: http.c:1384
 msgid "Only http or socks(5) proxies supported\n"
 msgstr "Palaikomi tik http arba socks(5) tarpiniai serveriai\n"
 
@@ -3662,7 +3660,7 @@ msgstr "Išsiųsta ESP įjungimo kontrolinis paketas\n"
 msgid "Logout successful.\n"
 msgstr "Atsijungimas sėkmingas.\n"
 
-#: openconnect-internal.h:1110 openconnect-internal.h:1118
+#: openconnect-internal.h:1116 openconnect-internal.h:1124
 #, c-format
 msgid "ERROR: %s() called with invalid UTF-8 for '%s' argument\n"
 msgstr "KLAIDA: %s() iškviesta su netinkamu UTF-8 „%s“ argumentui\n"
@@ -4853,6 +4851,3 @@ msgstr "skaičiavimo komanda"
 #: yubikey.c:627
 msgid "Unrecognised response from Yubikey when generating tokencode\n"
 msgstr "Neatpažintas atsakymas iš Yubikey generuojant leksemos kodą\n"
-
-#~ msgid "User cancelled (SIGINT); exiting.\n"
-#~ msgstr "Naudotojas atsisakė (SIGINT); išeinama.\n"

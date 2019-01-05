@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openconnect\n"
 "Report-Msgid-Bugs-To: openconnect-devel@lists.infradead.org\n"
-"POT-Creation-Date: 2019-01-03 22:51+0000\n"
+"POT-Creation-Date: 2019-01-05 00:00+0000\n"
 "PO-Revision-Date: 2014-02-21 01:11+0000\n"
 "Last-Translator: David Woodhouse <dwmw2@infradead.org>\n"
 "Language-Team: Czech (http://www.transifex.com/projects/p/meego/language/"
@@ -79,7 +79,7 @@ msgstr ""
 msgid "  %s (%s)\n"
 msgstr "  %s (%s)\n"
 
-#: auth-globalprotect.c:484 auth-juniper.c:706 auth.c:669
+#: auth-globalprotect.c:484 auth-juniper.c:720 auth.c:669
 msgid "Failed to generate OTP tokencode; disabling token\n"
 msgstr "Selhalo generování kódu OTP tokenu, deaktivuje se token\n"
 
@@ -120,80 +120,79 @@ msgstr "Nepodařilo se zvládnout formulář metoda='%s', činnost='%s'\n"
 msgid "Unknown textarea field: '%s'\n"
 msgstr "Neznámé textové pole: „%s“\n"
 
-#: auth-juniper.c:335
+#: auth-juniper.c:337
 msgid "TNCC support not implemented yet on Windows\n"
 msgstr "Podpora TNCC není zatím ve Windows implementována\n"
 
-#: auth-juniper.c:357
+#: auth-juniper.c:359
 msgid "No DSPREAUTH cookie; not attempting TNCC\n"
 msgstr "Žádná DSPREAUTH cookie, TNCC se nebude zkoušet\n"
 
-#: auth-juniper.c:368
-msgid "Failed to allocate memory for communication with TNCC\n"
-msgstr "Selhala alokace paměti pro komunikaci s TNCC\n"
-
-#: auth-juniper.c:403
+#: auth-juniper.c:397
 #, c-format
 msgid "Failed to exec TNCC script %s: %s\n"
 msgstr "Nepodařilo se spustit skript TNCC %s: %s\n"
 
-#: auth-juniper.c:412
+#: auth-juniper.c:411
+msgid "Failed to allocate memory for communication with TNCC\n"
+msgstr "Selhala alokace paměti pro komunikaci s TNCC\n"
+
+#: auth-juniper.c:418
 msgid "Failed to send start command to TNCC\n"
 msgstr "Nepodařilo se odeslat startovací příkaz TNCC\n"
 
-#: auth-juniper.c:419
+#: auth-juniper.c:425
 msgid "Sent start; waiting for response from TNCC\n"
 msgstr "Odeslán start, čeká se na odpověď od TNCC\n"
 
-#: auth-juniper.c:424
+#: auth-juniper.c:432
 msgid "Failed to read response from TNCC\n"
 msgstr "Selhalo čtení odpovědi od TNCC\n"
 
-#: auth-juniper.c:435
-msgid "Received invalid response from TNCC\n"
-msgstr "Přijata neplatná odpověď od TNCC\n"
-
-#: auth-juniper.c:437
-#, c-format
-msgid ""
-"TNCC response: -->\n"
-"%s\n"
-"<--\n"
-msgstr ""
-"Odpověď TNCC:  -->\n"
-"%s\n"
-"<--\n"
-
-#: auth-juniper.c:445
+#: auth-juniper.c:439
 #, c-format
 msgid "Received unsuccessful %s response from TNCC\n"
 msgstr "Přijata neúspěšná odpověď %s od TNCC\n"
 
-#: auth-juniper.c:458
+#: auth-juniper.c:445
+msgid "TNCC response 200 OK\n"
+msgstr ""
+
+#: auth-juniper.c:452
+#, c-format
+msgid "Second line of TNCC response: '%s'\n"
+msgstr ""
+
+#: auth-juniper.c:461
 #, c-format
 msgid "Got new DSPREAUTH cookie from TNCC: %s\n"
 msgstr "Získána nová DSPREAUTH cookie od TNCC: %s\n"
 
-#: auth-juniper.c:626
+#: auth-juniper.c:471
+#, c-format
+msgid "Unexpected non-empty line from TNCC after DSPREAUTH cookie: '%s'\n"
+msgstr ""
+
+#: auth-juniper.c:640
 msgid "Failed to parse HTML document\n"
 msgstr "Selhala analýza dokumentu HTML\n"
 
-#: auth-juniper.c:643
+#: auth-juniper.c:657
 msgid "Failed to find or parse web form in login page\n"
 msgstr ""
 "Selhalo vyhledání nebo zpracování webového formuláře na přihlašovací "
 "stránce\n"
 
-#: auth-juniper.c:651
+#: auth-juniper.c:665
 msgid "Encountered form with no ID\n"
 msgstr "Nalezen formulář bez ID\n"
 
-#: auth-juniper.c:689
+#: auth-juniper.c:703
 #, c-format
 msgid "Unknown form ID '%s'\n"
 msgstr "Neznámé ID formuláře „%s“\n"
 
-#: auth-juniper.c:692
+#: auth-juniper.c:706
 #, c-format
 msgid "Dumping unknown HTML form:\n"
 msgstr "Vypisuje se neznámý formulář HTML:\n"
@@ -533,12 +532,12 @@ msgstr "Přijat komprimovaný paket dat %s, %d bajtů (bylo %d)\n"
 msgid "deflate failed %d\n"
 msgstr "deflate se nezdařilo %d\n"
 
-#: cstp.c:900 dtls.c:283 dtls.c:742 esp.c:136 gpst.c:1027 mainloop.c:69
+#: cstp.c:900 dtls.c:283 dtls.c:742 esp.c:136 gpst.c:1035 mainloop.c:69
 #: oncp.c:914
 msgid "Allocation failed\n"
 msgstr "Přidělení paměti selhalo\n"
 
-#: cstp.c:911 gpst.c:1040
+#: cstp.c:911 gpst.c:1048
 #, c-format
 msgid "Short packet received (%d bytes)\n"
 msgstr "Přijat krátký paket (%d bajtů)\n"
@@ -587,7 +586,7 @@ msgstr "Přijat paket pro ukončení serveru\n"
 msgid "Unknown packet %02x %02x %02x %02x %02x %02x %02x %02x\n"
 msgstr "Neznámý paket %02x %02x %02x %02x %02x %02x %02x %02x\n"
 
-#: cstp.c:1041 gpst.c:1127 oncp.c:1121
+#: cstp.c:1041 gpst.c:1135 oncp.c:1121
 #, c-format
 msgid "SSL wrote too few bytes! Asked for %d, sent %d\n"
 msgstr "SSL napsalo příliš mnoho bytů! Požádáno o %d, posláno %d\n"
@@ -607,7 +606,7 @@ msgstr "Opětovné navázání selhalo, pokus o new-tunnel\n"
 msgid "CSTP Dead Peer Detection detected dead peer!\n"
 msgstr "CSTP odhalování mrtvého protějšku zjistilo mrtvý protějšek!\n"
 
-#: cstp.c:1091 gpst.c:1151 oncp.c:1091 oncp.c:1177
+#: cstp.c:1091 gpst.c:1159 oncp.c:1091 oncp.c:1177
 msgid "Reconnect failed\n"
 msgstr "Znovupřipojení se nezdařilo\n"
 
@@ -2009,51 +2008,51 @@ msgstr ""
 "Chyba: Spuštění skriptu „HIP Report“ není na této platformě zatím "
 "implementováno.\n"
 
-#: gpst.c:886
+#: gpst.c:893
 #, c-format
 msgid "HIP script '%s' exited abnormally\n"
 msgstr "Skript HIP „%s“ skončil neobvykle\n"
 
-#: gpst.c:891
+#: gpst.c:898
 #, c-format
 msgid "HIP script '%s' returned non-zero status: %d\n"
 msgstr "Skript HIP „%s“ vrátil nenulový stav: %d\n"
 
-#: gpst.c:897
+#: gpst.c:904
 msgid "HIP report submission failed.\n"
 msgstr "Odeslání hlášení HIP selhalo.\n"
 
-#: gpst.c:899
+#: gpst.c:906
 msgid "HIP report submitted successfully.\n"
 msgstr "Hlášení HIP bylo úspěšně odesláno.\n"
 
-#: gpst.c:927
+#: gpst.c:935
 #, c-format
 msgid "Failed to exec HIP script %s\n"
 msgstr "Selhalo spuštění skriptu HIP %s\n"
 
-#: gpst.c:951
+#: gpst.c:959
 msgid "Gateway says HIP report submission is needed.\n"
 msgstr "Brána říká, že je zapotřebí odeslat hlášení HIP.\n"
 
-#: gpst.c:957
+#: gpst.c:965
 msgid "Gateway says no HIP report submission is needed.\n"
 msgstr "Brána říká, že není zapotřebí odeslat hlášení HIP.\n"
 
-#: gpst.c:984
+#: gpst.c:992
 msgid "ESP tunnel connected; exiting HTTPS mainloop.\n"
 msgstr "Tunel ESP byl připojen, opouští se hlavní smyčka HTTPS.\n"
 
-#: gpst.c:1000
+#: gpst.c:1008
 msgid "Failed to connect ESP tunnel; using HTTPS instead.\n"
 msgstr "Selhalo připojení tunelu ESP, místo něj se použije HTTPS.\n"
 
-#: gpst.c:1036
+#: gpst.c:1044
 #, c-format
 msgid "Packet receive error: %s\n"
 msgstr "Chyba při příjmu paketu: %s\n"
 
-#: gpst.c:1057
+#: gpst.c:1065
 #, c-format
 msgid ""
 "Unexpected packet length. SSL_read returned %d (includes 16 header bytes) "
@@ -2062,11 +2061,11 @@ msgstr ""
 "Neočekávaná délka paketu. Funkce SSL_read vrátila %d (včetně 16 bajtů "
 "hlavičky), ale payload_len v hlavičce je %d\n"
 
-#: gpst.c:1067
+#: gpst.c:1075
 msgid "Got GPST DPD/keepalive response\n"
 msgstr "Obdržena odpověď GPST DPD/keepalive\n"
 
-#: gpst.c:1071
+#: gpst.c:1079
 msgid ""
 "Expected 0000000000000000 as last 8 bytes of DPD/keepalive packet header, "
 "but got:\n"
@@ -2074,35 +2073,35 @@ msgstr ""
 "Bylo očekáváno 0000000000000000 jako posledních 8 bajtů v hlavičce paketu "
 "DPD/keepalive, ale obdrženo bylo:\n"
 
-#: gpst.c:1077
+#: gpst.c:1085
 #, c-format
 msgid "Received data packet of %d bytes\n"
 msgstr "Přijat datový paket o velikosti %d bajtů\n"
 
-#: gpst.c:1086
+#: gpst.c:1094
 msgid ""
 "Expected 0100000000000000 as last 8 bytes of data packet header, but got:\n"
 msgstr ""
 "Bylo očekáváno 0100000000000000 jako posledních 8 bajtů v hlavičce paketu, "
 "ale obdrženo bylo:\n"
 
-#: gpst.c:1094
+#: gpst.c:1102
 msgid "Unknown packet. Header dump follows:\n"
 msgstr "Neznámý paket. Zde je výpis hlavičky:\n"
 
-#: gpst.c:1142
+#: gpst.c:1150
 msgid "GlobalProtect rekey due\n"
 msgstr "Důvod obnovy klíče GLobalProtect\n"
 
-#: gpst.c:1147
+#: gpst.c:1155
 msgid "GPST Dead Peer Detection detected dead peer!\n"
 msgstr "Odhalování GPST mrtvého protějšku odhalilo mrtvý protějšek!\n"
 
-#: gpst.c:1167
+#: gpst.c:1175
 msgid "Send GPST DPD/keepalive request\n"
 msgstr "Poslat požadavek GPST DPD/keepalive\n"
 
-#: gpst.c:1187
+#: gpst.c:1195
 #, c-format
 msgid "Sending data packet of %d bytes\n"
 msgstr "Posílá se datový paket délky %d B\n"
@@ -2209,7 +2208,7 @@ msgstr "Pokus o ověření k proxy metodou HTTP Basic\n"
 msgid "Attempting HTTP Basic authentication to server '%s'\n"
 msgstr "Zkouší se ověření vůči serveru „%s“ metodou HTTP Basic\n"
 
-#: http-auth.c:200 http.c:1250
+#: http-auth.c:200 http.c:1166
 msgid "This version of OpenConnect was built without GSSAPI support\n"
 msgstr "Tato verze OpenConnect byla sestavena bez podpory GSSAPI\n"
 
@@ -2319,147 +2318,147 @@ msgstr "Přidělení nové cesty pro relativní přesměrování se nezdařilo: 
 msgid "Unexpected %d result from server\n"
 msgstr "Neočekávaný výsledek %d od serveru\n"
 
-#: http.c:1106
+#: http.c:1022
 msgid "request granted"
 msgstr "Požadavek schválen"
 
-#: http.c:1107
+#: http.c:1023
 msgid "general failure"
 msgstr "Obecné selhání"
 
-#: http.c:1108
+#: http.c:1024
 msgid "connection not allowed by ruleset"
 msgstr "Spojení podle souboru pravidel nepovoleno"
 
-#: http.c:1109
+#: http.c:1025
 msgid "network unreachable"
 msgstr "Síť nedosažitelná"
 
-#: http.c:1110
+#: http.c:1026
 msgid "host unreachable"
 msgstr "Hostitel nedosažitelný"
 
-#: http.c:1111
+#: http.c:1027
 msgid "connection refused by destination host"
 msgstr "Spojení cílovým hostitelem odmítnuto"
 
-#: http.c:1112
+#: http.c:1028
 msgid "TTL expired"
 msgstr "TTL vypršel"
 
-#: http.c:1113
+#: http.c:1029
 msgid "command not supported / protocol error"
 msgstr "Příkaz nepodporován/chyba protokolu"
 
-#: http.c:1114
+#: http.c:1030
 msgid "address type not supported"
 msgstr "Typ adresy nepodporován"
 
-#: http.c:1124
+#: http.c:1040
 msgid "SOCKS server requested username/password but we have none\n"
 msgstr ""
 "Server SOCKS požadoval uživatelské jméno/heslo, ale žádné není k dispozici\n"
 
-#: http.c:1132
+#: http.c:1048
 msgid "Username and password for SOCKS authentication must be < 255 bytes\n"
 msgstr "Uživatelské jméno/heslo pro ověření SOCKS musí být < 255 bajtů\n"
 
-#: http.c:1147 http.c:1203
+#: http.c:1063 http.c:1119
 #, c-format
 msgid "Error writing auth request to SOCKS proxy: %s\n"
 msgstr "Chyba při zápisu požadavku na ověření do proxy SOCKS: %s\n"
 
-#: http.c:1155 http.c:1210
+#: http.c:1071 http.c:1126
 #, c-format
 msgid "Error reading auth response from SOCKS proxy: %s\n"
 msgstr "Chyba při čtení odpovědi týkající se ověřen z proxy SOCKS: %s\n"
 
-#: http.c:1162 http.c:1216
+#: http.c:1078 http.c:1132
 #, c-format
 msgid "Unexpected auth response from SOCKS proxy: %02x %02x\n"
 msgstr "Neočekávaná odpověď týkající se ověřen z proxy SOCKS: %02x %02x\n"
 
-#: http.c:1168
+#: http.c:1084
 msgid "Authenticated to SOCKS server using password\n"
 msgstr "Ověřeno vůči serveru SOCKS s použitím hesla\n"
 
-#: http.c:1172
+#: http.c:1088
 msgid "Password authentication to SOCKS server failed\n"
 msgstr "Ověření vůči serveru SOCKS pomocí hesla selhalo\n"
 
-#: http.c:1228 http.c:1235
+#: http.c:1144 http.c:1151
 msgid "SOCKS server requested GSSAPI authentication\n"
 msgstr "Server SOCSKS požadoval ověření GSSAPI\n"
 
-#: http.c:1241
+#: http.c:1157
 msgid "SOCKS server requested password authentication\n"
 msgstr "Server SOCKS požadoval ověření heslem\n"
 
-#: http.c:1248
+#: http.c:1164
 msgid "SOCKS server requires authentication\n"
 msgstr "Server SOCKS požaduje ověření\n"
 
-#: http.c:1255
+#: http.c:1171
 #, c-format
 msgid "SOCKS server requested unknown authentication type %02x\n"
 msgstr "Server SOCKS požadoval neznámý typ ověření %02x\n"
 
-#: http.c:1261
+#: http.c:1177
 #, c-format
 msgid "Requesting SOCKS proxy connection to %s:%d\n"
 msgstr "Požadavek na spojení proxy SOCKS do %s:%d\n"
 
-#: http.c:1276
+#: http.c:1192
 #, c-format
 msgid "Error writing connect request to SOCKS proxy: %s\n"
 msgstr "Chyba při zápisu odpovědi spojení do proxy SOCKS: %s\n"
 
-#: http.c:1284 http.c:1326
+#: http.c:1200 http.c:1242
 #, c-format
 msgid "Error reading connect response from SOCKS proxy: %s\n"
 msgstr "Chyba při čtení odpovědi spojení z proxy SOCKS: %s\n"
 
-#: http.c:1290
+#: http.c:1206
 #, c-format
 msgid "Unexpected connect response from SOCKS proxy: %02x %02x...\n"
 msgstr "Neočekávaná odpověď spojení z proxy SOCKS: %02x %02x...\n"
 
-#: http.c:1298
+#: http.c:1214
 #, c-format
 msgid "SOCKS proxy error %02x: %s\n"
 msgstr "Chyba proxy SOCKS %02x: %s\n"
 
-#: http.c:1302
+#: http.c:1218
 #, c-format
 msgid "SOCKS proxy error %02x\n"
 msgstr "Chyba proxy SOCKS %02x\n"
 
-#: http.c:1319
+#: http.c:1235
 #, c-format
 msgid "Unexpected address type %02x in SOCKS connect response\n"
 msgstr "Neočekávaný typ adresy %02x v odpovědi spojení SOCKS\n"
 
-#: http.c:1342
+#: http.c:1258
 #, c-format
 msgid "Requesting HTTP proxy connection to %s:%d\n"
 msgstr "Požadavek na spojení proxy HTTP do %s:%d\n"
 
-#: http.c:1377
+#: http.c:1293
 #, c-format
 msgid "Sending proxy request failed: %s\n"
 msgstr "Poslání požadavku na proxy se nezdařilo: %s\n"
 
-#: http.c:1400
+#: http.c:1316
 #, c-format
 msgid "Proxy CONNECT request failed: %d\n"
 msgstr "Požadavek na SPOJENÍ proxy se nezdařil: %d\n"
 
-#: http.c:1419
+#: http.c:1335
 #, c-format
 msgid "Unknown proxy type '%s'\n"
 msgstr "Neznámý typ proxy '%s'\n"
 
-#: http.c:1468
+#: http.c:1384
 msgid "Only http or socks(5) proxies supported\n"
 msgstr "Podporovány pouze proxy HTTP nebo socks(5)\n"
 
@@ -3650,7 +3649,7 @@ msgstr "Odeslán paket povolení kontroly ESP\n"
 msgid "Logout successful.\n"
 msgstr "Úspěšně odhášeno.\n"
 
-#: openconnect-internal.h:1110 openconnect-internal.h:1118
+#: openconnect-internal.h:1116 openconnect-internal.h:1124
 #, c-format
 msgid "ERROR: %s() called with invalid UTF-8 for '%s' argument\n"
 msgstr "CHYBA:%s() voláno s neplatným UTF-8 u argumentu „%s“\n"
@@ -4840,6 +4839,3 @@ msgstr "příkaz výpočtu"
 #: yubikey.c:627
 msgid "Unrecognised response from Yubikey when generating tokencode\n"
 msgstr "Nerozpoznaná odpověď od Yubikey při generování kódu tokenu\n"
-
-#~ msgid "User cancelled (SIGINT); exiting.\n"
-#~ msgstr "Přerušeno uživatelem (SIGINT); končí se.\n"

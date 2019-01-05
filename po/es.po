@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openconnect\n"
 "Report-Msgid-Bugs-To: openconnect-devel@lists.infradead.org\n"
-"POT-Creation-Date: 2019-01-03 22:51+0000\n"
+"POT-Creation-Date: 2019-01-05 00:00+0000\n"
 "Last-Translator: David Woodhouse <dwmw2@infradead.org>\n"
 "Language-Team: Spanish (Castilian) (http://www.transifex.net/projects/p/"
 "meego/language/es/)\n"
@@ -77,7 +77,7 @@ msgstr "%d servidores de puerta de enlace disponibles:\n"
 msgid "  %s (%s)\n"
 msgstr "  %s (%s)\n"
 
-#: auth-globalprotect.c:484 auth-juniper.c:706 auth.c:669
+#: auth-globalprotect.c:484 auth-juniper.c:720 auth.c:669
 msgid "Failed to generate OTP tokencode; disabling token\n"
 msgstr "Falló al generar el código de testigo OTP; desactivando testigo\n"
 
@@ -119,80 +119,79 @@ msgstr "No se puede gestionar el método='%s' del formulario, acción='%s'\n"
 msgid "Unknown textarea field: '%s'\n"
 msgstr "Campo de área de texto desconocido: '%s'\n"
 
-#: auth-juniper.c:335
+#: auth-juniper.c:337
 msgid "TNCC support not implemented yet on Windows\n"
 msgstr "Soporte TNCC aún no implementado en Windows\n"
 
-#: auth-juniper.c:357
+#: auth-juniper.c:359
 msgid "No DSPREAUTH cookie; not attempting TNCC\n"
 msgstr "Ninguna cookie DSPREAUTH; no intentar TNCC\n"
 
-#: auth-juniper.c:368
-msgid "Failed to allocate memory for communication with TNCC\n"
-msgstr "Falló al asignar memoria para la comunicación con TNCC\n"
-
-#: auth-juniper.c:403
+#: auth-juniper.c:397
 #, c-format
 msgid "Failed to exec TNCC script %s: %s\n"
 msgstr "Falló al ejecutar el script TNCC %s: %s\n"
 
-#: auth-juniper.c:412
+#: auth-juniper.c:411
+msgid "Failed to allocate memory for communication with TNCC\n"
+msgstr "Falló al asignar memoria para la comunicación con TNCC\n"
+
+#: auth-juniper.c:418
 msgid "Failed to send start command to TNCC\n"
 msgstr "Falló al enviar el comando de inicio a TNCC\n"
 
-#: auth-juniper.c:419
+#: auth-juniper.c:425
 msgid "Sent start; waiting for response from TNCC\n"
 msgstr "Envío iniciado; esperando respuesta por parte de TNCC\n"
 
-#: auth-juniper.c:424
+#: auth-juniper.c:432
 msgid "Failed to read response from TNCC\n"
 msgstr "Falló al leer la respuesta de TNCC\n"
 
-#: auth-juniper.c:435
-msgid "Received invalid response from TNCC\n"
-msgstr "Respuesta no válida recibida de TNCC\n"
-
-#: auth-juniper.c:437
-#, c-format
-msgid ""
-"TNCC response: -->\n"
-"%s\n"
-"<--\n"
-msgstr ""
-"Respuesta TNCC: -->\n"
-"%s\n"
-"<--\n"
-
-#: auth-juniper.c:445
+#: auth-juniper.c:439
 #, c-format
 msgid "Received unsuccessful %s response from TNCC\n"
 msgstr "Se recibió respuesta fallida %s de TNCC\n"
 
-#: auth-juniper.c:458
+#: auth-juniper.c:445
+msgid "TNCC response 200 OK\n"
+msgstr ""
+
+#: auth-juniper.c:452
+#, c-format
+msgid "Second line of TNCC response: '%s'\n"
+msgstr ""
+
+#: auth-juniper.c:461
 #, c-format
 msgid "Got new DSPREAUTH cookie from TNCC: %s\n"
 msgstr "Se ha obtenido una nueva cookie DSPREAUTH de TNCC: %s\n"
 
-#: auth-juniper.c:626
+#: auth-juniper.c:471
+#, c-format
+msgid "Unexpected non-empty line from TNCC after DSPREAUTH cookie: '%s'\n"
+msgstr ""
+
+#: auth-juniper.c:640
 msgid "Failed to parse HTML document\n"
 msgstr "Falló al analizar el documento HTML\n"
 
-#: auth-juniper.c:643
+#: auth-juniper.c:657
 msgid "Failed to find or parse web form in login page\n"
 msgstr ""
 "Falló al encontrar o analizar el formulario web en la página de inicio de "
 "sesión\n"
 
-#: auth-juniper.c:651
+#: auth-juniper.c:665
 msgid "Encountered form with no ID\n"
 msgstr "Encontrado formulario sin ID\n"
 
-#: auth-juniper.c:689
+#: auth-juniper.c:703
 #, c-format
 msgid "Unknown form ID '%s'\n"
 msgstr "ID de formulario desconocido «%s»\n"
 
-#: auth-juniper.c:692
+#: auth-juniper.c:706
 #, c-format
 msgid "Dumping unknown HTML form:\n"
 msgstr "Volcando formulario HTML desconocido:\n"
@@ -538,12 +537,12 @@ msgstr "Paquete de datos comprimidos %s de %d bytes recibido (eran %d)\n"
 msgid "deflate failed %d\n"
 msgstr "falló el vaciado %d\n"
 
-#: cstp.c:900 dtls.c:283 dtls.c:742 esp.c:136 gpst.c:1027 mainloop.c:69
+#: cstp.c:900 dtls.c:283 dtls.c:742 esp.c:136 gpst.c:1035 mainloop.c:69
 #: oncp.c:914
 msgid "Allocation failed\n"
 msgstr "Falló la reserva\n"
 
-#: cstp.c:911 gpst.c:1040
+#: cstp.c:911 gpst.c:1048
 #, c-format
 msgid "Short packet received (%d bytes)\n"
 msgstr "Paquete corto recibido (%d bytes)\n"
@@ -593,7 +592,7 @@ msgstr "se recibió el paquete de fin del servidor\n"
 msgid "Unknown packet %02x %02x %02x %02x %02x %02x %02x %02x\n"
 msgstr "Paquete desconocido %02x %02x %02x %02x %02x %02x %02x %02x\n"
 
-#: cstp.c:1041 gpst.c:1127 oncp.c:1121
+#: cstp.c:1041 gpst.c:1135 oncp.c:1121
 #, c-format
 msgid "SSL wrote too few bytes! Asked for %d, sent %d\n"
 msgstr "SSL escribió demasiados pocos bytes. Se pidieron %d, se enviaron %d\n"
@@ -613,7 +612,7 @@ msgstr "Renegociación fallida; intentando un túnel nuevo\n"
 msgid "CSTP Dead Peer Detection detected dead peer!\n"
 msgstr "La detección de muerte del par CSTP detectó la muerte del par\n"
 
-#: cstp.c:1091 gpst.c:1151 oncp.c:1091 oncp.c:1177
+#: cstp.c:1091 gpst.c:1159 oncp.c:1091 oncp.c:1177
 msgid "Reconnect failed\n"
 msgstr "Falló al reconectar\n"
 
@@ -2037,52 +2036,52 @@ msgstr ""
 "Error: La ejecución del script de «Informe HIP» no se ha implementado en "
 "esta plataforma.\n"
 
-#: gpst.c:886
+#: gpst.c:893
 #, c-format
 msgid "HIP script '%s' exited abnormally\n"
 msgstr "El script HIP «%s» salió anormalmente\n"
 
-#: gpst.c:891
+#: gpst.c:898
 #, c-format
 msgid "HIP script '%s' returned non-zero status: %d\n"
 msgstr "El script HIP «%s» devolvió un estado distinto de cero: %d\n"
 
-#: gpst.c:897
+#: gpst.c:904
 msgid "HIP report submission failed.\n"
 msgstr "Falló el envío del informe HIP.\n"
 
-#: gpst.c:899
+#: gpst.c:906
 msgid "HIP report submitted successfully.\n"
 msgstr "El informe HIP se envió correctamente.\n"
 
-#: gpst.c:927
+#: gpst.c:935
 #, c-format
 msgid "Failed to exec HIP script %s\n"
 msgstr "Falló al ejecutar el script HIP %s\n"
 
-#: gpst.c:951
+#: gpst.c:959
 msgid "Gateway says HIP report submission is needed.\n"
 msgstr "La puerta de enlace dice que se necesita el envío del informe HIP.\n"
 
-#: gpst.c:957
+#: gpst.c:965
 msgid "Gateway says no HIP report submission is needed.\n"
 msgstr ""
 "La puerta de enlace dice que no se necesita el envío del informe HIP.\n"
 
-#: gpst.c:984
+#: gpst.c:992
 msgid "ESP tunnel connected; exiting HTTPS mainloop.\n"
 msgstr "Túnel ESP conectado; saliendo del bucle principal HTTPS.\n"
 
-#: gpst.c:1000
+#: gpst.c:1008
 msgid "Failed to connect ESP tunnel; using HTTPS instead.\n"
 msgstr "Falló al conectar al túnel ESP; se usa HTTPS en su lugar.\n"
 
-#: gpst.c:1036
+#: gpst.c:1044
 #, c-format
 msgid "Packet receive error: %s\n"
 msgstr "Error al recibir el paquete: %s\n"
 
-#: gpst.c:1057
+#: gpst.c:1065
 #, c-format
 msgid ""
 "Unexpected packet length. SSL_read returned %d (includes 16 header bytes) "
@@ -2091,11 +2090,11 @@ msgstr ""
 "Longitud de paquete inesperada. SSL_read devolvió %d (incluye 16 bytes de "
 "cabecera) pero la cabecera payload_len es %d\n"
 
-#: gpst.c:1067
+#: gpst.c:1075
 msgid "Got GPST DPD/keepalive response\n"
 msgstr "Se obtuvo la respuesta GPST DPD/keepalive\n"
 
-#: gpst.c:1071
+#: gpst.c:1079
 msgid ""
 "Expected 0000000000000000 as last 8 bytes of DPD/keepalive packet header, "
 "but got:\n"
@@ -2103,35 +2102,35 @@ msgstr ""
 "Se esperaba 0000000000000000 como últimos 8 bytes del encabezado de paquete "
 "DPD/keepalive, pero se obtuvo:\n"
 
-#: gpst.c:1077
+#: gpst.c:1085
 #, c-format
 msgid "Received data packet of %d bytes\n"
 msgstr "Paquete de datos recibido de %d bytes\n"
 
-#: gpst.c:1086
+#: gpst.c:1094
 msgid ""
 "Expected 0100000000000000 as last 8 bytes of data packet header, but got:\n"
 msgstr ""
 "Se esperaba 0100000000000000 como últimos 8 bytes del encabezado del paquete "
 "de datos, pero se obtuvo:\n"
 
-#: gpst.c:1094
+#: gpst.c:1102
 msgid "Unknown packet. Header dump follows:\n"
 msgstr "Paquete desconocido. El volcado de la cabecera es el siguiente:\n"
 
-#: gpst.c:1142
+#: gpst.c:1150
 msgid "GlobalProtect rekey due\n"
 msgstr "La rekey de GlobalProtect está pendiente\n"
 
-#: gpst.c:1147
+#: gpst.c:1155
 msgid "GPST Dead Peer Detection detected dead peer!\n"
 msgstr "La detección de muerte del par GPST detectó la muerte del par\n"
 
-#: gpst.c:1167
+#: gpst.c:1175
 msgid "Send GPST DPD/keepalive request\n"
 msgstr "Enviar solicitud GPST DPD/keepalive\n"
 
-#: gpst.c:1187
+#: gpst.c:1195
 #, c-format
 msgid "Sending data packet of %d bytes\n"
 msgstr "Enviando paquete de datos de %d bytes\n"
@@ -2241,7 +2240,7 @@ msgstr "Intentando la autenticación HTTP Bacis en el proxy\n"
 msgid "Attempting HTTP Basic authentication to server '%s'\n"
 msgstr "Intentando la autenticación HTTP básica en el servidor «%s»\n"
 
-#: http-auth.c:200 http.c:1250
+#: http-auth.c:200 http.c:1166
 msgid "This version of OpenConnect was built without GSSAPI support\n"
 msgstr "Esta versión de OpenConnect se compiló sin soporte GSSAPI\n"
 
@@ -2354,151 +2353,151 @@ msgstr ""
 msgid "Unexpected %d result from server\n"
 msgstr "Resultado %d del servidor inesperado\n"
 
-#: http.c:1106
+#: http.c:1022
 msgid "request granted"
 msgstr "petición concedida"
 
-#: http.c:1107
+#: http.c:1023
 msgid "general failure"
 msgstr "fallo general"
 
-#: http.c:1108
+#: http.c:1024
 msgid "connection not allowed by ruleset"
 msgstr "conexión no permitida por el conjunto de reglas"
 
-#: http.c:1109
+#: http.c:1025
 msgid "network unreachable"
 msgstr "red inaccesible"
 
-#: http.c:1110
+#: http.c:1026
 msgid "host unreachable"
 msgstr "servidor inaccesible"
 
-#: http.c:1111
+#: http.c:1027
 msgid "connection refused by destination host"
 msgstr "conexión rechazada por el servidor de destino"
 
-#: http.c:1112
+#: http.c:1028
 msgid "TTL expired"
 msgstr "TTL caducado"
 
-#: http.c:1113
+#: http.c:1029
 msgid "command not supported / protocol error"
 msgstr "comando no soportado / error de protocolo"
 
-#: http.c:1114
+#: http.c:1030
 msgid "address type not supported"
 msgstr "tipo de dirección no soportada"
 
-#: http.c:1124
+#: http.c:1040
 msgid "SOCKS server requested username/password but we have none\n"
 msgstr ""
 "El servidor SOCKS requiere un nombre de usuario y una contraseña, pero no "
 "hay ninguno\n"
 
-#: http.c:1132
+#: http.c:1048
 msgid "Username and password for SOCKS authentication must be < 255 bytes\n"
 msgstr ""
 "El nombre de usuario y la contraseña para la autenticación SOCKS deben ser < "
 "255 bytes\n"
 
-#: http.c:1147 http.c:1203
+#: http.c:1063 http.c:1119
 #, c-format
 msgid "Error writing auth request to SOCKS proxy: %s\n"
 msgstr "Error al escribir petición auth al proxy SOCKS: %s\n"
 
-#: http.c:1155 http.c:1210
+#: http.c:1071 http.c:1126
 #, c-format
 msgid "Error reading auth response from SOCKS proxy: %s\n"
 msgstr "Error al leer respuesta auth desde el proxy SOCKS: %s\n"
 
-#: http.c:1162 http.c:1216
+#: http.c:1078 http.c:1132
 #, c-format
 msgid "Unexpected auth response from SOCKS proxy: %02x %02x\n"
 msgstr "Respuesta auth inesperada desde el proxy SOCKS: %02x %02x\n"
 
-#: http.c:1168
+#: http.c:1084
 msgid "Authenticated to SOCKS server using password\n"
 msgstr "Autenticado en el servidor SOCKS usando una contraseña\n"
 
-#: http.c:1172
+#: http.c:1088
 msgid "Password authentication to SOCKS server failed\n"
 msgstr "Falló la autenticación con contraseña en el servidor SOCKS\n"
 
-#: http.c:1228 http.c:1235
+#: http.c:1144 http.c:1151
 msgid "SOCKS server requested GSSAPI authentication\n"
 msgstr "El servidor SOCKS ha solicitado autenticación GSSAPI\n"
 
-#: http.c:1241
+#: http.c:1157
 msgid "SOCKS server requested password authentication\n"
 msgstr "El servidor SOCKS solicita autenticación por contraseña\n"
 
-#: http.c:1248
+#: http.c:1164
 msgid "SOCKS server requires authentication\n"
 msgstr "El servidor SOCKS requiere autenticación\n"
 
-#: http.c:1255
+#: http.c:1171
 #, c-format
 msgid "SOCKS server requested unknown authentication type %02x\n"
 msgstr ""
 "El servidor SOCKS ha solicitado una autenticación de tipo %02x desconocida\n"
 
-#: http.c:1261
+#: http.c:1177
 #, c-format
 msgid "Requesting SOCKS proxy connection to %s:%d\n"
 msgstr "Solicitando conexión al proxy SOCKS a %s:%d\n"
 
-#: http.c:1276
+#: http.c:1192
 #, c-format
 msgid "Error writing connect request to SOCKS proxy: %s\n"
 msgstr "Error al escribir la petición de conectar al proxy SOCKS: %s\n"
 
-#: http.c:1284 http.c:1326
+#: http.c:1200 http.c:1242
 #, c-format
 msgid "Error reading connect response from SOCKS proxy: %s\n"
 msgstr "Error al leer la respuesta de conexión desde el proxy SOCKS: %s\n"
 
-#: http.c:1290
+#: http.c:1206
 #, c-format
 msgid "Unexpected connect response from SOCKS proxy: %02x %02x...\n"
 msgstr "Respuesta de conexión inesperada desde el proxy SOCKS: %02x %02x…\n"
 
-#: http.c:1298
+#: http.c:1214
 #, c-format
 msgid "SOCKS proxy error %02x: %s\n"
 msgstr "Error del proxy SOCKS %02x: %s\n"
 
-#: http.c:1302
+#: http.c:1218
 #, c-format
 msgid "SOCKS proxy error %02x\n"
 msgstr "Error del proxy SOCKS %02x\n"
 
-#: http.c:1319
+#: http.c:1235
 #, c-format
 msgid "Unexpected address type %02x in SOCKS connect response\n"
 msgstr "Tipo de dirección inesperado %02x en la respuesta de conexión SOCKS\n"
 
-#: http.c:1342
+#: http.c:1258
 #, c-format
 msgid "Requesting HTTP proxy connection to %s:%d\n"
 msgstr "Solicitando conexión HTTP proxy a %s:%d\n"
 
-#: http.c:1377
+#: http.c:1293
 #, c-format
 msgid "Sending proxy request failed: %s\n"
 msgstr "Falló al enviar petición de proxy: %s\n"
 
-#: http.c:1400
+#: http.c:1316
 #, c-format
 msgid "Proxy CONNECT request failed: %d\n"
 msgstr "Falló la petición CONNECT del proxy: %d\n"
 
-#: http.c:1419
+#: http.c:1335
 #, c-format
 msgid "Unknown proxy type '%s'\n"
 msgstr "Tipo de proxy desconocido '%s'\n"
 
-#: http.c:1468
+#: http.c:1384
 msgid "Only http or socks(5) proxies supported\n"
 msgstr "Sólo se soportan proxies HTTP o socks(5)\n"
 
@@ -3704,7 +3703,7 @@ msgstr "Enviado paquete de control de activación\n"
 msgid "Logout successful.\n"
 msgstr "Sesión cerrada con éxito.\n"
 
-#: openconnect-internal.h:1110 openconnect-internal.h:1118
+#: openconnect-internal.h:1116 openconnect-internal.h:1124
 #, c-format
 msgid "ERROR: %s() called with invalid UTF-8 for '%s' argument\n"
 msgstr "Error: llamada a %s() con UTF-8 no válido para el argumento «%s»\n"
@@ -4913,6 +4912,3 @@ msgstr "calcular comando"
 #: yubikey.c:627
 msgid "Unrecognised response from Yubikey when generating tokencode\n"
 msgstr "Respuesta de Yubikey desconocida al generar el código del testigo\n"
-
-#~ msgid "User cancelled (SIGINT); exiting.\n"
-#~ msgstr "Cancelado por el usuario (SIGINT); saliendo.\n"

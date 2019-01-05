@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openconnect\n"
 "Report-Msgid-Bugs-To: openconnect-devel@lists.infradead.org\n"
-"POT-Creation-Date: 2019-01-03 22:51+0000\n"
+"POT-Creation-Date: 2019-01-05 00:00+0000\n"
 "PO-Revision-Date: 2011-09-22 22:31+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Danish (http://www.transifex.net/projects/p/meego/team/da/)\n"
@@ -78,7 +78,7 @@ msgstr "%d tilgængelige gatewayservere:\n"
 msgid "  %s (%s)\n"
 msgstr "  %s (%s)\n"
 
-#: auth-globalprotect.c:484 auth-juniper.c:706 auth.c:669
+#: auth-globalprotect.c:484 auth-juniper.c:720 auth.c:669
 msgid "Failed to generate OTP tokencode; disabling token\n"
 msgstr "Kunne ikke danne OTP-symbolkode; deaktiverer symbol\n"
 
@@ -120,78 +120,77 @@ msgstr "Kan ikke håndtere formularmetode=\"%s\", handling=\"%s\"\n"
 msgid "Unknown textarea field: '%s'\n"
 msgstr "Ukendt tekstområdefelt: \"%s\"\n"
 
-#: auth-juniper.c:335
+#: auth-juniper.c:337
 msgid "TNCC support not implemented yet on Windows\n"
 msgstr "Understøttelse af TNCC i Windows er endnu ikke implementeret\n"
 
-#: auth-juniper.c:357
+#: auth-juniper.c:359
 msgid "No DSPREAUTH cookie; not attempting TNCC\n"
 msgstr "Ingen DSPREAUTH-cookie; forsøger ikke TNCC\n"
 
-#: auth-juniper.c:368
-msgid "Failed to allocate memory for communication with TNCC\n"
-msgstr "Kunne ikke allokere hukommelse til kommunikation med TNCC\n"
-
-#: auth-juniper.c:403
+#: auth-juniper.c:397
 #, c-format
 msgid "Failed to exec TNCC script %s: %s\n"
 msgstr "Kunne ikke køre TNCC-skript %s: %s\n"
 
-#: auth-juniper.c:412
+#: auth-juniper.c:411
+msgid "Failed to allocate memory for communication with TNCC\n"
+msgstr "Kunne ikke allokere hukommelse til kommunikation med TNCC\n"
+
+#: auth-juniper.c:418
 msgid "Failed to send start command to TNCC\n"
 msgstr "Kunne ikke sende startkommando til TNCC\n"
 
-#: auth-juniper.c:419
+#: auth-juniper.c:425
 msgid "Sent start; waiting for response from TNCC\n"
 msgstr "Sendte start; venter på svar fra TNCC\n"
 
-#: auth-juniper.c:424
+#: auth-juniper.c:432
 msgid "Failed to read response from TNCC\n"
 msgstr "Kunne ikke læse svar fra TNCC\n"
 
-#: auth-juniper.c:435
-msgid "Received invalid response from TNCC\n"
-msgstr "Modtog ugyldigt svar fra TNCC\n"
-
-#: auth-juniper.c:437
-#, c-format
-msgid ""
-"TNCC response: -->\n"
-"%s\n"
-"<--\n"
-msgstr ""
-"TNCC-svar: -->\n"
-"%s\n"
-"<--\n"
-
-#: auth-juniper.c:445
+#: auth-juniper.c:439
 #, c-format
 msgid "Received unsuccessful %s response from TNCC\n"
 msgstr "Modtog mislykket %s-svar fra TNCC\n"
 
-#: auth-juniper.c:458
+#: auth-juniper.c:445
+msgid "TNCC response 200 OK\n"
+msgstr ""
+
+#: auth-juniper.c:452
+#, c-format
+msgid "Second line of TNCC response: '%s'\n"
+msgstr ""
+
+#: auth-juniper.c:461
 #, c-format
 msgid "Got new DSPREAUTH cookie from TNCC: %s\n"
 msgstr "Fik ny DSPREAUTH-cookie fra TNCC: %s\n"
 
-#: auth-juniper.c:626
+#: auth-juniper.c:471
+#, c-format
+msgid "Unexpected non-empty line from TNCC after DSPREAUTH cookie: '%s'\n"
+msgstr ""
+
+#: auth-juniper.c:640
 msgid "Failed to parse HTML document\n"
 msgstr "Kunne ikke fortolke HTML-dokument\n"
 
-#: auth-juniper.c:643
+#: auth-juniper.c:657
 msgid "Failed to find or parse web form in login page\n"
 msgstr "Kunne ikke finde eller fortolke webformular på loginside\n"
 
-#: auth-juniper.c:651
+#: auth-juniper.c:665
 msgid "Encountered form with no ID\n"
 msgstr "Stødte på formular uden ID\n"
 
-#: auth-juniper.c:689
+#: auth-juniper.c:703
 #, c-format
 msgid "Unknown form ID '%s'\n"
 msgstr "Ukendt formular-ID \"%s\"\n"
 
-#: auth-juniper.c:692
+#: auth-juniper.c:706
 #, c-format
 msgid "Dumping unknown HTML form:\n"
 msgstr "Dumper ukendt HTML-formular:\n"
@@ -534,12 +533,12 @@ msgstr "Modtog %s komprimeret datapakke på %d byte (var %d)\n"
 msgid "deflate failed %d\n"
 msgstr "pakning mislykkedes %d\n"
 
-#: cstp.c:900 dtls.c:283 dtls.c:742 esp.c:136 gpst.c:1027 mainloop.c:69
+#: cstp.c:900 dtls.c:283 dtls.c:742 esp.c:136 gpst.c:1035 mainloop.c:69
 #: oncp.c:914
 msgid "Allocation failed\n"
 msgstr "Tildeling mislykkedes\n"
 
-#: cstp.c:911 gpst.c:1040
+#: cstp.c:911 gpst.c:1048
 #, c-format
 msgid "Short packet received (%d bytes)\n"
 msgstr "Kort pakke modtaget (%d byte)\n"
@@ -588,7 +587,7 @@ msgstr "modtog serverafbrydelsespakke\n"
 msgid "Unknown packet %02x %02x %02x %02x %02x %02x %02x %02x\n"
 msgstr "Ukendt pakke %02x %02x %02x %02x %02x %02x %02x %02x\n"
 
-#: cstp.c:1041 gpst.c:1127 oncp.c:1121
+#: cstp.c:1041 gpst.c:1135 oncp.c:1121
 #, c-format
 msgid "SSL wrote too few bytes! Asked for %d, sent %d\n"
 msgstr "SSL skrev for få byte! Bad om %d, sendte %d\n"
@@ -608,7 +607,7 @@ msgstr "Genforhandling mislykkedes; forsøger ny-tunnel\n"
 msgid "CSTP Dead Peer Detection detected dead peer!\n"
 msgstr "CSTP Dead Peer Detection registrerede død peer!\n"
 
-#: cstp.c:1091 gpst.c:1151 oncp.c:1091 oncp.c:1177
+#: cstp.c:1091 gpst.c:1159 oncp.c:1091 oncp.c:1177
 msgid "Reconnect failed\n"
 msgstr "Genoprettelse af forbindelse mislykkedes\n"
 
@@ -2027,52 +2026,52 @@ msgstr ""
 "Fejl: Kørsel af “HIP-rapport”-skriptet er endnu ikke understøttet på denne "
 "platform\n"
 
-#: gpst.c:886
+#: gpst.c:893
 #, c-format
 msgid "HIP script '%s' exited abnormally\n"
 msgstr "HIP-skriptet “%s” afsluttede unormalt\n"
 
-#: gpst.c:891
+#: gpst.c:898
 #, c-format
 msgid "HIP script '%s' returned non-zero status: %d\n"
 msgstr "HIP-skriptet “%s” returnerede status forskellig fra nul:%d\n"
 
-#: gpst.c:897
+#: gpst.c:904
 msgid "HIP report submission failed.\n"
 msgstr "Indsendelse af HIP-rapporten mislykkedes.\n"
 
-#: gpst.c:899
+#: gpst.c:906
 msgid "HIP report submitted successfully.\n"
 msgstr "HIP-rapporten blev indsendt.\n"
 
-#: gpst.c:927
+#: gpst.c:935
 #, c-format
 msgid "Failed to exec HIP script %s\n"
 msgstr "Kunne ikke køre HIP-skriptet %s\n"
 
-#: gpst.c:951
+#: gpst.c:959
 msgid "Gateway says HIP report submission is needed.\n"
 msgstr "Gatewayen oplyser, at indsendelse af HIP-rapporten er nødvendig.\n"
 
-#: gpst.c:957
+#: gpst.c:965
 msgid "Gateway says no HIP report submission is needed.\n"
 msgstr ""
 "Gatewayen oplyser, at indsendelse af HIP-rapporten ikke er nødvendig.\n"
 
-#: gpst.c:984
+#: gpst.c:992
 msgid "ESP tunnel connected; exiting HTTPS mainloop.\n"
 msgstr "ESP-tunnel forbundet. Afslutter HTTPS-hovedløkke.\n"
 
-#: gpst.c:1000
+#: gpst.c:1008
 msgid "Failed to connect ESP tunnel; using HTTPS instead.\n"
 msgstr "Kunne ikke tilslutte ESP-tunnel. Bruger HTTPS i stedet.\n"
 
-#: gpst.c:1036
+#: gpst.c:1044
 #, c-format
 msgid "Packet receive error: %s\n"
 msgstr "Fejl ved modtagelse af pakke: %s\n"
 
-#: gpst.c:1057
+#: gpst.c:1065
 #, c-format
 msgid ""
 "Unexpected packet length. SSL_read returned %d (includes 16 header bytes) "
@@ -2081,11 +2080,11 @@ msgstr ""
 "Uventet pakkelængde. SSL_read returnerede %d (inklusive 16 byte i header), "
 "men headers payload_len er %d\n"
 
-#: gpst.c:1067
+#: gpst.c:1075
 msgid "Got GPST DPD/keepalive response\n"
 msgstr "Modtog GPST DPD/keepalive-svar\n"
 
-#: gpst.c:1071
+#: gpst.c:1079
 msgid ""
 "Expected 0000000000000000 as last 8 bytes of DPD/keepalive packet header, "
 "but got:\n"
@@ -2093,35 +2092,35 @@ msgstr ""
 "Forventede 0000000000000000 som de sidste 8 byte i DPD/keepalive-pakkens "
 "header, men fik:\n"
 
-#: gpst.c:1077
+#: gpst.c:1085
 #, c-format
 msgid "Received data packet of %d bytes\n"
 msgstr "Modtog data-pakke på %d byte\n"
 
-#: gpst.c:1086
+#: gpst.c:1094
 msgid ""
 "Expected 0100000000000000 as last 8 bytes of data packet header, but got:\n"
 msgstr ""
 "Forventede 0100000000000000 som de sidste 8 byte i datapakkens header, men "
 "fik:\n"
 
-#: gpst.c:1094
+#: gpst.c:1102
 msgid "Unknown packet. Header dump follows:\n"
 msgstr "Ukendt pakke. Headerdump følger:\n"
 
-#: gpst.c:1142
+#: gpst.c:1150
 msgid "GlobalProtect rekey due\n"
 msgstr "GlobalProtect rekey forfalden\n"
 
-#: gpst.c:1147
+#: gpst.c:1155
 msgid "GPST Dead Peer Detection detected dead peer!\n"
 msgstr "GPST Dead Peer Detection registrerede død peer!\n"
 
-#: gpst.c:1167
+#: gpst.c:1175
 msgid "Send GPST DPD/keepalive request\n"
 msgstr "Send GPST DPD/keepalive-anmodning\n"
 
-#: gpst.c:1187
+#: gpst.c:1195
 #, c-format
 msgid "Sending data packet of %d bytes\n"
 msgstr "Sender datapakke på %d byte\n"
@@ -2228,7 +2227,7 @@ msgstr "Forsøger basal HTTP-godkendelse til proxy\n"
 msgid "Attempting HTTP Basic authentication to server '%s'\n"
 msgstr "Forsøger basal HTTP-godkendelse til serveren \"%s\"\n"
 
-#: http-auth.c:200 http.c:1250
+#: http-auth.c:200 http.c:1166
 msgid "This version of OpenConnect was built without GSSAPI support\n"
 msgstr ""
 "Denne version af OpenConnect blev bygget uden understøttelse af GSSAPI\n"
@@ -2340,153 +2339,153 @@ msgstr "Allokering af ny sti til relativ omdirigering mislykkedes: %s\n"
 msgid "Unexpected %d result from server\n"
 msgstr "Uventet %d resultat fra server\n"
 
-#: http.c:1106
+#: http.c:1022
 msgid "request granted"
 msgstr "forespørgsel imødekommet"
 
-#: http.c:1107
+#: http.c:1023
 msgid "general failure"
 msgstr "generel fejl"
 
-#: http.c:1108
+#: http.c:1024
 msgid "connection not allowed by ruleset"
 msgstr "forbindelse ikke tilladt af regelsæt"
 
-#: http.c:1109
+#: http.c:1025
 msgid "network unreachable"
 msgstr "netværket er utilgængeligt"
 
-#: http.c:1110
+#: http.c:1026
 msgid "host unreachable"
 msgstr "værten er utilgængelig"
 
-#: http.c:1111
+#: http.c:1027
 msgid "connection refused by destination host"
 msgstr "forbindelse nægtet af destinationsvært"
 
-#: http.c:1112
+#: http.c:1028
 msgid "TTL expired"
 msgstr "TTL udløbet"
 
-#: http.c:1113
+#: http.c:1029
 msgid "command not supported / protocol error"
 msgstr "kommando ikke understøttet / protokolfejl"
 
-#: http.c:1114
+#: http.c:1030
 msgid "address type not supported"
 msgstr "adressetype ikke understøttet"
 
-#: http.c:1124
+#: http.c:1040
 msgid "SOCKS server requested username/password but we have none\n"
 msgstr "SOSCKS-server bad om brugernavn/adgangskode, men vi har ikke nogen\n"
 
-#: http.c:1132
+#: http.c:1048
 msgid "Username and password for SOCKS authentication must be < 255 bytes\n"
 msgstr "Brugernavn og adgangskode til SOCKS-godkendelse skal være < 255 byte\n"
 
-#: http.c:1147 http.c:1203
+#: http.c:1063 http.c:1119
 #, c-format
 msgid "Error writing auth request to SOCKS proxy: %s\n"
 msgstr ""
 "Der opstod en fejl under skrivning af godkendelsesforespørgsel til SOCKS-"
 "proxy: %s\n"
 
-#: http.c:1155 http.c:1210
+#: http.c:1071 http.c:1126
 #, c-format
 msgid "Error reading auth response from SOCKS proxy: %s\n"
 msgstr ""
 "Der opstod en fejl under læsning af godkendelsessvar fra SOCKS-proxy: %s\n"
 
-#: http.c:1162 http.c:1216
+#: http.c:1078 http.c:1132
 #, c-format
 msgid "Unexpected auth response from SOCKS proxy: %02x %02x\n"
 msgstr "Uventet godkendelsessvar fra SOCKS-proxy: %02x %02x\n"
 
-#: http.c:1168
+#: http.c:1084
 msgid "Authenticated to SOCKS server using password\n"
 msgstr "Godkendt til SOCKS-server med brug af adgangskode\n"
 
-#: http.c:1172
+#: http.c:1088
 msgid "Password authentication to SOCKS server failed\n"
 msgstr "Adgangskodegodkendelse til SOCKS-server mislykkedes\n"
 
-#: http.c:1228 http.c:1235
+#: http.c:1144 http.c:1151
 msgid "SOCKS server requested GSSAPI authentication\n"
 msgstr "SOCKS-server bad om GSSAPI-godkendelse\n"
 
-#: http.c:1241
+#: http.c:1157
 msgid "SOCKS server requested password authentication\n"
 msgstr "SOCKS-server bad om adgangskodegodkendelse\n"
 
-#: http.c:1248
+#: http.c:1164
 msgid "SOCKS server requires authentication\n"
 msgstr "SOCKS-server kræver godkendelse\n"
 
-#: http.c:1255
+#: http.c:1171
 #, c-format
 msgid "SOCKS server requested unknown authentication type %02x\n"
 msgstr "SOCKS-server bad om ukendt godkendelsestype %02x\n"
 
-#: http.c:1261
+#: http.c:1177
 #, c-format
 msgid "Requesting SOCKS proxy connection to %s:%d\n"
 msgstr "Beder om SOCKS-proxyforbindelse til %s:%d\n"
 
-#: http.c:1276
+#: http.c:1192
 #, c-format
 msgid "Error writing connect request to SOCKS proxy: %s\n"
 msgstr ""
 "Der opstod en fejl under skrivning af forbindelsesanmodning til SOCKS-proxy: "
 "%s\n"
 
-#: http.c:1284 http.c:1326
+#: http.c:1200 http.c:1242
 #, c-format
 msgid "Error reading connect response from SOCKS proxy: %s\n"
 msgstr ""
 "Der opstod en fejl under læsning af forbindelsesanmodning fra SOCKS-proxy: "
 "%s\n"
 
-#: http.c:1290
+#: http.c:1206
 #, c-format
 msgid "Unexpected connect response from SOCKS proxy: %02x %02x...\n"
 msgstr "Uventet forbindelsesanmodning fra SOCKS-proxy: %02x %02x...\n"
 
-#: http.c:1298
+#: http.c:1214
 #, c-format
 msgid "SOCKS proxy error %02x: %s\n"
 msgstr "SOCKS-proxyfejl %02x: %s\n"
 
-#: http.c:1302
+#: http.c:1218
 #, c-format
 msgid "SOCKS proxy error %02x\n"
 msgstr "SOCKS-proxyfejl %02x\n"
 
-#: http.c:1319
+#: http.c:1235
 #, c-format
 msgid "Unexpected address type %02x in SOCKS connect response\n"
 msgstr "Uventet adressetype %02x i SOCKS-forbindelsessvar\n"
 
-#: http.c:1342
+#: http.c:1258
 #, c-format
 msgid "Requesting HTTP proxy connection to %s:%d\n"
 msgstr "Anmoder om HTTP-proxyforbindelse til %s: %d\n"
 
-#: http.c:1377
+#: http.c:1293
 #, c-format
 msgid "Sending proxy request failed: %s\n"
 msgstr "Afsending af proxyanmodning mislykkedes: %s\n"
 
-#: http.c:1400
+#: http.c:1316
 #, c-format
 msgid "Proxy CONNECT request failed: %d\n"
 msgstr "Proxy CONNECT-anmodning mislykkedes: %d\n"
 
-#: http.c:1419
+#: http.c:1335
 #, c-format
 msgid "Unknown proxy type '%s'\n"
 msgstr "Ukendt proxytype \"%s\"\n"
 
-#: http.c:1468
+#: http.c:1384
 msgid "Only http or socks(5) proxies supported\n"
 msgstr "Kun http- eller socks(5)-proxyer understøttes\n"
 
@@ -3685,7 +3684,7 @@ msgstr "Sendte kontrolpakke til aktivering af ESP\n"
 msgid "Logout successful.\n"
 msgstr "Logout lykkedes.\n"
 
-#: openconnect-internal.h:1110 openconnect-internal.h:1118
+#: openconnect-internal.h:1116 openconnect-internal.h:1124
 #, c-format
 msgid "ERROR: %s() called with invalid UTF-8 for '%s' argument\n"
 msgstr "FEJL: %s() kaldt med ugyldig UTF-8 for argumentet \"%s\"\n"
@@ -4885,6 +4884,3 @@ msgstr "beregn kommando"
 #: yubikey.c:627
 msgid "Unrecognised response from Yubikey when generating tokencode\n"
 msgstr "Svaret fra Yubikey, da symbolkoden blev oprettet, blev ikke genkendt\n"
-
-#~ msgid "User cancelled (SIGINT); exiting.\n"
-#~ msgstr "Bruger annullerede (SIGINT); afslutter.\n"
