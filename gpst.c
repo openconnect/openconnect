@@ -34,14 +34,14 @@
 #include <lz4.h>
 #endif
 
-#ifdef __FreeBSD__
-#include <sys/types.h>
-#include <netinet/in.h>
-#endif
-
 #ifdef _WIN32
 #include "win32-ipicmp.h"
 #else
+/* The BSDs require the first two headers before netinet/ip.h
+ * (Linux and macOS already #include them within netinet/ip.h)
+ */
+#include <sys/types.h>
+#include <netinet/in.h>
 #include <netinet/ip.h>
 #include <netinet/ip_icmp.h>
 #endif
