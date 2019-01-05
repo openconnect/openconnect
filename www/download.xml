@@ -17,26 +17,12 @@
 
 <p>
 <!-- latest-release-start -->
-The latest release is <a href="ftp://ftp.infradead.org/pub/openconnect/openconnect-8.00.tar.gz">OpenConnect v8.00</a>
-<i>(<a href="ftp://ftp.infradead.org/pub/openconnect/openconnect-8.00.tar.gz.asc">PGP signature</a>)</i>,
+The latest release is <a href="ftp://ftp.infradead.org/pub/openconnect/openconnect-8.01.tar.gz">OpenConnect v8.01</a>
+<i>(<a href="ftp://ftp.infradead.org/pub/openconnect/openconnect-8.01.tar.gz.asc">PGP signature</a>)</i>,
 released on 2019-01-05 with the following changelog:</p>
      <ul>
-       <li>Clear form submissions (which may include passwords) before freeing (CVE-2018-20319).</li>
-       <li>Allow form responses to be provided on command line.</li>
-       <li>Add support for SSL keys stored in <a href="tpm.html">TPM2</a>.</li>
-       <li>Fix ESP rekey when replay protection is disabled.</li>
-       <li>Drop support for GnuTLS older than 3.2.10.</li>
-       <li>Fix <tt>--passwd-on-stdin</tt> for Windows to not forcibly open console.</li>
-       <li>Fix portability of shell scripts in test suite.</li>
-       <li>Add Google Authenticator TOTP support for Juniper.</li>
-       <li>Add RFC7469 key PIN support for cert hashes.</li>
-       <li>Add protocol method to securely log out the Juniper session.</li>
-       <li>Relax requirements for Juniper hostname packet response to support old gateways.</li>
-       <li>Add API functions to query the supported protocols.</li>
-       <li>Verify ESP sequence numbers and warn even if replay protection is disabled.</li>
-       <li>Add support for PAN GlobalProtect VPN protocol (<tt>--protocol=gp</tt>).</li>
-       <li>Reorganize listing of command-line options, and include information on supported protocols.</li>
-       <li>SIGTERM cleans up the session similarly to SIGINT.</li>
+       <li>Fix <tt>memset_s()</tt> arguments.</li>
+       <li>Fix OpenBSD build.</li>
      </ul>
 <!-- latest-release-end -->
 

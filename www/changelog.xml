@@ -15,6 +15,12 @@
 <ul>
    <li><b>OpenConnect HEAD</b>
      <ul>
+       <li><i>No changelog entries yet</i></li>
+     </ul><br/>
+  </li>
+  <li><b><a href="ftp://ftp.infradead.org/pub/openconnect/openconnect-8.01.tar.gz">OpenConnect v8.01</a></b>
+     <i>(<a href="ftp://ftp.infradead.org/pub/openconnect/openconnect-8.01.tar.gz.asc">PGP signature</a>)</i> &#8212; 2019-01-05
+     <ul>
        <li>Fix <tt>memset_s()</tt> arguments.</li>
        <li>Fix OpenBSD build.</li>
      </ul><br/>
