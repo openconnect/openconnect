@@ -112,7 +112,7 @@ int append_form_opts(struct openconnect_info *vpninfo,
 void clear_mem(void *p, size_t s)
 {
 #if defined(HAVE_MEMSET_S)
-	memset_s(p, 0x5a, s, s);
+	memset_s(p, s, 0x5a, s);
 #elif defined(HAVE_EXPLICIT_MEMSET)
 	explicit_memset(p, 0x5a, s);
 #elif defined(HAVE_EXPLICIT_BZERO)
