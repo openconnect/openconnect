@@ -15,7 +15,8 @@
 <ul>
    <li><b>OpenConnect HEAD</b>
      <ul>
-       <li><i>No changelog entries yet</i></li>
+       <li>Fix <tt>memset_s()</tt> arguments.</li>
+       <li>Fix OpenBSD build.</li>
      </ul><br/>
   </li>
   <li><b><a href="ftp://ftp.infradead.org/pub/openconnect/openconnect-8.00.tar.gz">OpenConnect v8.00</a></b>
