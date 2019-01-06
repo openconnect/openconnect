@@ -22,7 +22,6 @@
 
 #include <gnutls/gnutls.h>
 #include "openconnect-internal.h"
-#include <libtasn1.h>
 #include "gnutls.h"
 
 #ifdef HAVE_TSS2
