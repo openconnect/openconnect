@@ -274,19 +274,31 @@ static int start_cstp_connection(struct openconnect_info *vpninfo)
 			buf_append(reqbuf, "%02X", vpninfo->dtls_secret[i]);
 			dtls_secret_set |= vpninfo->dtls_secret[i];
 		}
+		buf_append(reqbuf, "\r\n");
+
 		if (!dtls_secret_set) {
 			vpn_progress(vpninfo, PRG_ERR,
 				     _("CRITICAL ERROR: DTLS master secret is uninitialised. Please report this.\n"));
 			buf_free(reqbuf);
 			return -EINVAL;
 		}
-		buf_append(reqbuf, "\r\nX-DTLS-CipherSuite: ");
-		if (vpninfo->dtls_ciphers)
-			buf_append(reqbuf, "%s", vpninfo->dtls_ciphers);
-		else
-			append_dtls_ciphers(vpninfo, reqbuf);
-		buf_append(reqbuf, "\r\n");
 
+
+		if (vpninfo->dtls_ciphers)
+			buf_append(reqbuf, "X-DTLS-CipherSuite: %s\r\n", vpninfo->dtls_ciphers);
+		else {
+			struct oc_text_buf *dtls_cl, *dtls12_cl;
+
+			dtls_cl = buf_alloc();
+			dtls12_cl = buf_alloc();
+			gather_dtls_ciphers(vpninfo, dtls_cl, dtls12_cl);
+			if (!buf_error(dtls_cl) && dtls_cl->pos)
+				buf_append(reqbuf, "X-DTLS-CipherSuite: %s\r\n", dtls_cl->data);
+			if (!buf_error(dtls12_cl) && dtls12_cl->pos)
+				buf_append(reqbuf, "X-DTLS12-CipherSuite: %s\r\n", dtls12_cl->data);
+			buf_free(dtls_cl);
+			buf_free(dtls12_cl);
+		}
 		append_compr_types(reqbuf, "DTLS", vpninfo->req_compr & ~COMPR_DEFLATE);
 	}
 #endif

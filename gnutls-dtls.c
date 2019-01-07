@@ -82,7 +82,8 @@ struct {
 };
 
 #if GNUTLS_VERSION_NUMBER < 0x030009
-void append_dtls_ciphers(struct openconnect_info *vpninfo, struct oc_text_buf *buf)
+void gather_dtls_ciphers(struct openconnect_info *vpninfo, struct oc_text_buf *buf,
+			 struct oc_text_buf *buf12)
 {
 	int i, first = 1;
 
@@ -93,8 +94,10 @@ void append_dtls_ciphers(struct openconnect_info *vpninfo, struct oc_text_buf *b
 			first = 0;
 		}
 	}
+}
 #else
-void append_dtls_ciphers(struct openconnect_info *vpninfo, struct oc_text_buf *buf)
+void gather_dtls_ciphers(struct openconnect_info *vpninfo, struct oc_text_buf *buf,
+			 struct oc_text_buf *buf12)
 {
 	/* only enable the ciphers that would have been negotiated in the TLS channel */
 	unsigned i, j, first = 1;

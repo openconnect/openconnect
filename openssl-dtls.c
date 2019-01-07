@@ -678,7 +678,8 @@ void dtls_ssl_free(struct openconnect_info *vpninfo)
 	SSL_free(vpninfo->dtls_ssl);
 }
 
-void append_dtls_ciphers(struct openconnect_info *vpninfo, struct oc_text_buf *buf)
+void gather_dtls_ciphers(struct openconnect_info *vpninfo, struct oc_text_buf *buf,
+			 struct oc_text_buf *buf12)
 {
 #ifdef HAVE_DTLS12
 #ifndef OPENSSL_NO_PSK

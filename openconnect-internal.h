@@ -832,7 +832,7 @@ int dtls_setup(struct openconnect_info *vpninfo, int dtls_attempt_period);
 int dtls_mainloop(struct openconnect_info *vpninfo, int *timeout);
 void dtls_close(struct openconnect_info *vpninfo);
 void dtls_shutdown(struct openconnect_info *vpninfo);
-void append_dtls_ciphers(struct openconnect_info *vpninfo, struct oc_text_buf *buf);
+void gather_dtls_ciphers(struct openconnect_info *vpninfo, struct oc_text_buf *buf, struct oc_text_buf *buf12);
 void dtls_detect_mtu(struct openconnect_info *vpninfo);
 int openconnect_dtls_read(struct openconnect_info *vpninfo, void *buf, size_t len, unsigned ms);
 int openconnect_dtls_write(struct openconnect_info *vpninfo, void *buf, size_t len);
