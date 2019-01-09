@@ -332,7 +332,9 @@ int start_dtls_handshake(struct openconnect_info *vpninfo, int dtls_fd)
 	const char *cipher = vpninfo->dtls_cipher;
 
 #ifdef HAVE_DTLS12
-	if (!strcmp(cipher, "OC-DTLS1_2-AES128-GCM")) {
+	if (vpninfo->cisco_dtls12) {
+		dtlsver = DTLS1_2_VERSION;
+	} else if (!strcmp(cipher, "OC-DTLS1_2-AES128-GCM")) {
 		dtlsver = DTLS1_2_VERSION;
 		cipher = "AES128-GCM-SHA256";
 	} else if (!strcmp(cipher, "OC-DTLS1_2-AES256-GCM")) {
@@ -689,5 +691,8 @@ void gather_dtls_ciphers(struct openconnect_info *vpninfo, struct oc_text_buf *b
 #endif
 	buf_append(buf, "DHE-RSA-AES256-SHA:DHE-RSA-AES128-SHA:");
 	buf_append(buf, "AES256-SHA:AES128-SHA:DES-CBC3-SHA:DES-CBC-SHA");
+#ifdef HAVE_DTLS12
+	buf_append(buf12, "ECDHE-RSA-AES256-GCM-SHA384:ECDHE-RSA-AES128-GCM-SHA256:AES128-GCM-SHA256:AES256-GCM-SHA384\r\n");
+#endif
 }
 
