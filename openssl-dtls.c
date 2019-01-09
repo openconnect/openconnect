@@ -324,7 +324,6 @@ static const SSL_CIPHER *SSL_CIPHER_find(SSL *ssl, const unsigned char *ptr)
 
 int start_dtls_handshake(struct openconnect_info *vpninfo, int dtls_fd)
 {
-	STACK_OF(SSL_CIPHER) *ciphers;
 	method_const SSL_METHOD *dtls_method;
 	SSL_SESSION *dtls_session;
 	SSL *dtls_ssl;
@@ -423,9 +422,20 @@ int start_dtls_handshake(struct openconnect_info *vpninfo, int dtls_fd)
 
 
 	if (dtlsver) {
-		ciphers = SSL_get_ciphers(dtls_ssl);
-		if (dtlsver != 0 && sk_SSL_CIPHER_num(ciphers) != 1) {
-			vpn_progress(vpninfo, PRG_ERR, _("Not precisely one DTLS cipher\n"));
+		STACK_OF(SSL_CIPHER) *ciphers = SSL_get_ciphers(dtls_ssl);
+		const SSL_CIPHER *ssl_ciph = NULL;
+		int i;
+
+		for (i = 0; i < sk_SSL_CIPHER_num(ciphers); i++) {
+			ssl_ciph = sk_SSL_CIPHER_value(ciphers, i);
+			/* For PSK-NEGOTIATE just use the first one we find */
+			if (!dtlsver || !strcmp(SSL_CIPHER_get_name(ssl_ciph), cipher))
+				break;
+		}
+
+		if (i == sk_SSL_CIPHER_num(ciphers)) {
+			vpn_progress(vpninfo, PRG_ERR, _("DTLS cipher '%s' not found\n"),
+				     cipher);
 			SSL_CTX_free(vpninfo->dtls_ctx);
 			SSL_free(dtls_ssl);
 			vpninfo->dtls_ctx = NULL;
@@ -434,8 +444,7 @@ int start_dtls_handshake(struct openconnect_info *vpninfo, int dtls_fd)
 		}
 
 		/* We're going to "resume" a session which never existed. Fake it... */
-		dtls_session = generate_dtls_session(vpninfo, dtlsver,
-						     sk_SSL_CIPHER_value(ciphers, 0), 0);
+		dtls_session = generate_dtls_session(vpninfo, dtlsver, ssl_ciph, 0);
 		if (!dtls_session) {
 			SSL_CTX_free(vpninfo->dtls_ctx);
 			SSL_free(dtls_ssl);
