@@ -680,6 +680,7 @@ void dtls_ssl_free(struct openconnect_info *vpninfo)
 	SSL_free(vpninfo->dtls_ssl);
 }
 
+#if OPENSSL_VERSION_NUMBER < 0x10100000L || defined(LIBRESSL_VERSION_NUMBER)
 void gather_dtls_ciphers(struct openconnect_info *vpninfo, struct oc_text_buf *buf,
 			 struct oc_text_buf *buf12)
 {
@@ -688,11 +689,57 @@ void gather_dtls_ciphers(struct openconnect_info *vpninfo, struct oc_text_buf *b
 	buf_append(buf, "PSK-NEGOTIATE:");
 #endif
 	buf_append(buf, "OC-DTLS1_2-AES256-GCM:OC-DTLS1_2-AES128-GCM:");
+	buf_append(buf12, "ECDHE-RSA-AES256-GCM-SHA384:ECDHE-RSA-AES128-GCM-SHA256:AES128-GCM-SHA256:AES256-GCM-SHA384\r\n");
 #endif
 	buf_append(buf, "DHE-RSA-AES256-SHA:DHE-RSA-AES128-SHA:");
 	buf_append(buf, "AES256-SHA:AES128-SHA:DES-CBC3-SHA:DES-CBC-SHA");
-#ifdef HAVE_DTLS12
-	buf_append(buf12, "ECDHE-RSA-AES256-GCM-SHA384:ECDHE-RSA-AES128-GCM-SHA256:AES128-GCM-SHA256:AES256-GCM-SHA384\r\n");
+}
+#else
+void gather_dtls_ciphers(struct openconnect_info *vpninfo, struct oc_text_buf *buf,
+			 struct oc_text_buf *buf12)
+{
+	method_const SSL_METHOD *dtls_method;
+	SSL_CTX *ctx;
+	SSL *ssl;
+	STACK_OF(SSL_CIPHER) *ciphers;
+	int i;
+
+	dtls_method = DTLS_client_method();
+	ctx = SSL_CTX_new(dtls_method);
+	if (!ctx)
+		return;
+	ssl = SSL_new(ctx);
+	if (!ssl) {
+		SSL_CTX_free(ctx);
+		return;
+	}
+
+	ciphers = SSL_get1_supported_ciphers(ssl);
+	for (i = 0; i < sk_SSL_CIPHER_num(ciphers); i++) {
+		const SSL_CIPHER *ciph = sk_SSL_CIPHER_value(ciphers, i);
+		const char *name = SSL_CIPHER_get_name(ciph);
+		const char *vers = SSL_CIPHER_get_version(ciph);
+
+		if (!strcmp(vers, "SSLv3") || !strcmp(vers, "TLSv1.0") ||
+		    !strcmp(vers, "TLSv1/SSLv3")) {
+			buf_append(buf, "%s%s",
+				   (buf_error(buf) || !buf->pos) ? "" : ":",
+				   name);
+		} else if (!strcmp(vers, "TLSv1.2")) {
+			buf_append(buf12, "%s%s:",
+				   (buf_error(buf12) || !buf12->pos) ? "" : ":",
+				   name);
+		}
+	}
+	sk_SSL_CIPHER_free(ciphers);
+	SSL_free(ssl);
+	SSL_CTX_free(ctx);
+
+	/* All DTLSv1 suites are also supported in DTLSv1.2 */
+	if (!buf_error(buf))
+		buf_append(buf12, ":%s", buf->data);
+#ifndef OPENSSL_NO_PSK
+	buf_append(buf, ":PSK-NEGOTIATE");
 #endif
 }
-
+#endif
