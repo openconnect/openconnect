@@ -15,7 +15,9 @@
 <ul>
    <li><b>OpenConnect HEAD</b>
      <ul>
-       <li><i>No changelog entries yet</i></li>
+       <li>Fix GnuTLS builds without libtasn1.</li>
+       <li>Fix DTLS support with OpenSSL 1.1.1+.</li>
+       <li>Add Cisco-compatible DTLSv1.2 support.</li>
      </ul><br/>
   </li>
   <li><b><a href="ftp://ftp.infradead.org/pub/openconnect/openconnect-8.01.tar.gz">OpenConnect v8.01</a></b>
