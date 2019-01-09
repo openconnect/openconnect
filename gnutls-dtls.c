@@ -57,6 +57,7 @@ struct {
 	gnutls_mac_algorithm_t mac;
 	const char *prio;
 	const char *min_gnutls_version;
+	int cisco_dtls12;
 } gnutls_dtls_ciphers[] = {
 	{ "DHE-RSA-AES128-SHA", GNUTLS_DTLS0_9, GNUTLS_CIPHER_AES_128_CBC, GNUTLS_KX_DHE_RSA, GNUTLS_MAC_SHA1,
 	  "NONE:+VERS-DTLS0.9:+COMP-NULL:+AES-128-CBC:+SHA1:+DHE-RSA:%COMPAT", "3.0.0" },
@@ -74,6 +75,15 @@ struct {
 	  "NONE:+VERS-DTLS1.2:+COMP-NULL:+AES-256-GCM:+AEAD:+RSA:%COMPAT:+SIGN-ALL", "3.2.7" },
 	{ "OC2-DTLS1_2-CHACHA20-POLY1305", GNUTLS_DTLS1_2, GNUTLS_CIPHER_CHACHA20_POLY1305, GNUTLS_KX_PSK, GNUTLS_MAC_AEAD,
 	  "NONE:+VERS-DTLS1.2:+COMP-NULL:+CHACHA20-POLY1305:+AEAD:+PSK:%COMPAT:+SIGN-ALL", "3.4.8" },
+	/* Cisco X-DTLS12-CipherSuite: values */
+	{ "ECDHE-RSA-AES256-GCM-SHA384", GNUTLS_DTLS1_2, GNUTLS_CIPHER_AES_256_GCM, GNUTLS_KX_ECDHE_RSA, GNUTLS_MAC_AEAD,
+	  "NONE:+VERS-DTLS1.2:+COMP-NULL:+AES-256-GCM:+AEAD:+ECDHE-RSA:+SIGN-ALL:%COMPAT", "3.2.7", 1 },
+	{ "ECDHE-RSA-AES128-GCM-SHA256", GNUTLS_DTLS1_2, GNUTLS_CIPHER_AES_128_GCM, GNUTLS_KX_ECDHE_RSA, GNUTLS_MAC_AEAD,
+	  "NONE:+VERS-DTLS1.2:+COMP-NULL:+AES-128-GCM:+AEAD:+ECDHE-RSA:+SIGN-ALL:%COMPAT", "3.2.7", 1 },
+	{ "AES128-GCM-SHA256", GNUTLS_DTLS1_2, GNUTLS_CIPHER_AES_128_GCM, GNUTLS_KX_RSA, GNUTLS_MAC_AEAD,
+	  "NONE:+VERS-DTLS1.2:+COMP-NULL:+AES-128-GCM:+AEAD:+RSA:+SIGN-ALL:%COMPAT", "3.2.7", 1 },
+	{ "AES256-GCM-SHA384", GNUTLS_DTLS1_2, GNUTLS_CIPHER_AES_256_GCM, GNUTLS_KX_RSA, GNUTLS_MAC_AEAD,
+	  "NONE:+VERS-DTLS1.2:+COMP-NULL:+AES-256-GCM:+AEAD:+RSA:%COMPAT", "3.2.7", 1 },
 	/* NB. We agreed that any new cipher suites probably shouldn't use
 	 * Cisco's session resume hack (which ties us to a specific version
 	 * of DTLS). Instead, we'll use GNUTLS_KX_PSK and let it negotiate
@@ -88,7 +98,8 @@ void gather_dtls_ciphers(struct openconnect_info *vpninfo, struct oc_text_buf *b
 	int i, first = 1;
 
 	for (i = 0; i < sizeof(gnutls_dtls_ciphers) / sizeof(gnutls_dtls_ciphers[0]); i++) {
-		if (gnutls_check_version(gnutls_dtls_ciphers[i].min_gnutls_version)) {
+		if (!gnutls_dtls_ciphers[i].cisco_dtls12 &&
+		    gnutls_check_version(gnutls_dtls_ciphers[i].min_gnutls_version)) {
 			buf_append(buf, "%s%s", first ? "" : ":",
 				   gnutls_dtls_ciphers[i].name);
 			first = 0;
@@ -100,7 +111,7 @@ void gather_dtls_ciphers(struct openconnect_info *vpninfo, struct oc_text_buf *b
 			 struct oc_text_buf *buf12)
 {
 	/* only enable the ciphers that would have been negotiated in the TLS channel */
-	unsigned i, j, first = 1;
+	unsigned i, j;
 	int ret;
 	unsigned idx;
 	gnutls_cipher_algorithm_t cipher;
@@ -109,7 +120,6 @@ void gather_dtls_ciphers(struct openconnect_info *vpninfo, struct oc_text_buf *b
 	uint32_t used = 0;
 
 	buf_append(buf, "PSK-NEGOTIATE");
-	first = 0;
 
 	ret = gnutls_priority_init(&cache, vpninfo->gnutls_prio, NULL);
 	if (ret < 0) {
@@ -129,16 +139,27 @@ void gather_dtls_ciphers(struct openconnect_info *vpninfo, struct oc_text_buf *b
 				if (used & (1 << i))
 					continue;
 				if (gnutls_dtls_ciphers[i].mac == mac && gnutls_dtls_ciphers[i].cipher == cipher) {
-					buf_append(buf, "%s%s", first ? "" : ":",
-						   gnutls_dtls_ciphers[i].name);
-					first = 0;
+					/* This cipher can be supported. Decide whether which list it lives
+					 * in. Cisco's DTLSv1.2 options need to go into a separate
+					 * into a separate X-DTLS12-CipherSuite header for some reason... */
+					struct oc_text_buf *list;
+
+					if (gnutls_dtls_ciphers[i].cisco_dtls12)
+						list = buf12;
+					else
+						list = buf;
+
+					if (list && list->pos)
+						buf_append(list, ":%s", gnutls_dtls_ciphers[i].name);
+					else
+						buf_append(list, "%s", gnutls_dtls_ciphers[i].name);
+
 					used |= (1 << i);
 					break;
 				}
 			}
 		}
 	}
-
 	gnutls_priority_deinit(cache);
 }
 #endif
@@ -279,7 +300,8 @@ int start_dtls_handshake(struct openconnect_info *vpninfo, int dtls_fd)
 		return start_dtls_psk_handshake(vpninfo, dtls_fd);
 
 	for (cipher = 0; cipher < sizeof(gnutls_dtls_ciphers)/sizeof(gnutls_dtls_ciphers[0]); cipher++) {
-		if (gnutls_check_version(gnutls_dtls_ciphers[cipher].min_gnutls_version) == NULL)
+		if (gnutls_dtls_ciphers[cipher].cisco_dtls12 != vpninfo->cisco_dtls12 ||
+		    gnutls_check_version(gnutls_dtls_ciphers[cipher].min_gnutls_version) == NULL)
 			continue;
 		if (!strcmp(vpninfo->dtls_cipher, gnutls_dtls_ciphers[cipher].name))
 			goto found_cipher;
