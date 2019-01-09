@@ -384,7 +384,8 @@ static int start_cstp_connection(struct openconnect_info *vpninfo)
 			colon++;
 
 		if (strncmp(buf, "X-DTLS-", 7) &&
-		    strncmp(buf, "X-CSTP-", 7))
+		    strncmp(buf, "X-CSTP-", 7) &&
+		    strncmp(buf, "X-DTLS12-", 9))
 			continue;
 
 		new_option = malloc(sizeof(*new_option));
@@ -410,15 +411,16 @@ static int start_cstp_connection(struct openconnect_info *vpninfo)
 		else
 			vpn_progress(vpninfo, PRG_DEBUG, "%s: %s\n", buf, colon);
 
-		if (!strncmp(buf, "X-DTLS-", 7)) {
+		if (((i = 7) && !strncmp(buf, "X-DTLS-", 7)) ||
+		    ((i = 9) && !strncmp(buf, "X-DTLS12-", 9))) {
 			*next_dtls_option = new_option;
 			next_dtls_option = &new_option->next;
 
-			if (!strcmp(buf + 7, "MTU")) {
+			if (!strcmp(buf + i, "MTU")) {
 				int dtlsmtu = atol(colon);
 				if (dtlsmtu > mtu)
 					mtu = dtlsmtu;
-			} else if (!strcmp(buf + 7, "Session-ID")) {
+			} else if (!strcmp(buf + i, "Session-ID")) {
 				int dtls_sessid_changed = 0;
 				int vsize;
 
@@ -435,7 +437,7 @@ static int start_cstp_connection(struct openconnect_info *vpninfo)
 
 				if (dtls_sessid_changed && vpninfo->dtls_state > DTLS_SLEEPING)
 					vpninfo->dtls_need_reconnect = 1;
-			} else if (!strcmp(buf + 7, "App-ID")) {
+			} else if (!strcmp(buf + i, "App-ID")) {
 				int dtls_appid_changed = 0;
 				int vsize;
 
@@ -453,7 +455,7 @@ static int start_cstp_connection(struct openconnect_info *vpninfo)
 
 				if (dtls_appid_changed && vpninfo->dtls_state > DTLS_SLEEPING)
 					vpninfo->dtls_need_reconnect = 1;
-			} else if (!strcmp(buf + 7, "Content-Encoding")) {
+			} else if (!strcmp(buf + i, "Content-Encoding")) {
 				if (!strcmp(colon, "lzs"))
 					vpninfo->dtls_compr = COMPR_LZS;
 				else if (!strcmp(colon, "oc-lz4"))
@@ -464,6 +466,10 @@ static int start_cstp_connection(struct openconnect_info *vpninfo)
 						     colon);
 					return -EINVAL;
 				}
+			} else if (!strcmp(buf + i, "CipherSuite")) {
+				/* Remember if it came from a 'X-DTLS12-CipherSuite:' header */
+				vpninfo->cisco_dtls12 = (i == 9);
+				vpninfo->dtls_cipher = strdup(colon);
 			}
 			continue;
 		}

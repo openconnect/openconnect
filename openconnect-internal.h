@@ -558,6 +558,7 @@ struct openconnect_info {
 	unsigned char dtls_app_id[32];
 	unsigned dtls_app_id_size;
 
+	int cisco_dtls12;
 	char *dtls_cipher;
 	char *vpnc_script;
 #ifndef _WIN32
