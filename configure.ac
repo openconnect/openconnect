@@ -342,12 +342,12 @@ if test "$ssl_library" = ""; then
     else
 	OPENSSL_CFLAGS="-I${with_openssl}/include ${OPENSSL_CFLAGS}"
 	if test -r "${with_openssl}/libssl.a" -a -r "${with_openssl}/libcrypto.a";  then
-	    OPENSSL_LIBS="${with_openssl}/libssl.a ${with_openssl}/libcrypto.a -ldl -lz"
+	    OPENSSL_LIBS="${with_openssl}/libssl.a ${with_openssl}/libcrypto.a -ldl -lz -pthread"
 	elif test -r "${with_openssl}/crypto/.libs/libcrypto.a" -a \
 		  -r "${with_openssl}/ssl/.libs/libssl.a"; then
-	    OPENSSL_LIBS="${with_openssl}/ssl/.libs/libssl.a ${with_openssl}/crypto/.libs/libcrypto.a -ldl -lz"
+	    OPENSSL_LIBS="${with_openssl}/ssl/.libs/libssl.a ${with_openssl}/crypto/.libs/libcrypto.a -ldl -lz -pthread"
 	else
-	    AC_ERROR([Could not found OpenSSL libraries]);
+	    AC_ERROR([Could not find OpenSSL libraries in ${with_openssl}]);
 	fi
 	AC_SUBST(OPENSSL_CFLAGS)
 	AC_SUBST(OPENSSL_LIBS)
