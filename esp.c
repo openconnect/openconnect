@@ -24,13 +24,6 @@
 #include <stdlib.h>
 #include <errno.h>
 
-#ifdef _WIN32
-#include <winsock2.h>
-#include <ws2tcpip.h>
-#include "win32-ipicmp.h"
-#else
-#endif
-
 #include "openconnect-internal.h"
 #include "lzo.h"
 
