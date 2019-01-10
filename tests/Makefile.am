@@ -39,7 +39,7 @@ USER_CERTS = $(certsdir)/user-cert.pem $(certsdir)/dsa-cert.pem $(certsdir)/ec-c
 
 EXTRA_DIST = certs/ca.pem certs/ca-key.pem certs/user-cert.pem $(USER_KEYS) $(USER_CERTS) \
 	$(OSSL_KEYS) $(DSA_KEYS) $(certsdir)/user-key-nonascii-password.p12 \
-	pass-UTF-8 pass-ISO8859-2 pass-CP852 \
+	pass-UTF-8 pass-ISO8859-2 \
 	certs/server-cert.pem certs/server-key.pem configs/test1.passwd \
 	common.sh configs/test-user-cert.config configs/test-user-pass.config \
 	configs/user-cert.prm softhsm2.conf.in softhsm ns.sh configs/test-dtls-psk.config \
