@@ -147,6 +147,9 @@ version.c: $(library_srcs) $(lib_openssl_srcs) $(lib_gnutls_srcs) \
 tmp-dist: uncommitted-check
 	$(MAKE) $(AM_MAKEFLAGS) VERSION=$(patsubst v%,%,$(shell git describe --tags)) DISTHOOK=0 dist
 
+tmp-distdir: uncommitted-check
+	$(MAKE) $(AM_MAKEFLAGS) VERSION=$(patsubst v%,%,$(shell git describe --tags)) DISTHOOK=0 distdir
+
 uncommitted-check:
 	@if ! git update-index --refresh --unmerged || \
 	    ! git diff-index --name-only --exit-code HEAD; then \
