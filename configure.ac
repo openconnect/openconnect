@@ -81,7 +81,7 @@ if test "$with_vpnc_script" = "yes" || test "$with_vpnc_script" = ""; then
    if test "$have_win" = "yes"; then
       with_vpnc_script=vpnc-script-win.js
    else
-      for with_vpnc_script in /usr/share/vpnc-scripts/vpnc-script /etc/vpnc/vpnc-script; do
+      for with_vpnc_script in /usr/local/share/vpnc-scripts/vpnc-script /usr/local/sbin/vpnc-script /usr/share/vpnc-scripts/vpnc-script /usr/sbin/vpnc-script /etc/vpnc/vpnc-script; do
          if test -x "$with_vpnc_script"; then
             break
          fi
