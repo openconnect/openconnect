@@ -18,6 +18,14 @@
 	they don't <em>want</em> a coherent response, which is strange. Please, don't do
 	that.</p>
 
+	<h1>GitHub</h1>
+
+	<p>As an experiment we have created an <a href="https://gitlab.com/openconnect/openconnect">OpenConnect project</a> on GitHub.</p>
+
+	<p>You can file <a href="https://gitlab.com/openconnect/openconnect/issues">issues</a>
+	there, which may be slightly more effective than sending them in email. You can also
+	submit <a href="https://gitlab.com/openconnect/openconnect/merge_requests">merge requests</a>.</p>
+
     	<h1>Mailing list</h1>
 
 	<p>There is a mailing list at <tt><a href="mailto:openconnect-devel@lists.infradead.org">
