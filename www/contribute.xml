@@ -8,42 +8,18 @@
 
 <h1>Contributing to OpenConnect</h1>
 
-<a name="translation"/>
-<h2>Translations</h2>
-
-<p>The main thing needed at the present time is translations into
-languages other than English. All contributions will be gratefully
-received.</p>
-
-<p>Translations for OpenConnect are maintained in the GNOME
-<a href="https://l10n.gnome.org/module/network-manager-openconnect/">network-manager-openconnect module</a>. Translations can be contributed by joining
-the GNOME team as described on their
-<a href="https://wiki.gnome.org/TranslationProject">TranslationProject</a>
-wiki page, or simply by editing one of the language files in the <tt><a
-href="http://git.infradead.org/users/dwmw2/openconnect.git/tree/HEAD:/po">po/</a></tt>
-directory and sending the resulting patch (or file) to the <a
-href="mail.html">mailing list</a>.</p>
-
-<p>If there are questions about the messages because the intent is not clear, or if the
-messages could be improved to make translation easier or better, please also feel free to
-ask or make suggestions on the mailing list.</p>
-
-
-
-<h2>TODO</h2>
-
-Other items on the TODO list include:
-
-<ul>
-  <li>Better support for running or emulating the '<a href="csd.html">Cisco Secure Desktop</a>' trojan.</li>
-  <li>GUI for OS X, perhaps based on <a href="http://code.google.com/p/tunnelblick/">Tunnelblick</a>.</li>
-</ul>
+<p>Contributions to OpenConnect are very welcome. You don't need to be able to write
+code. Testing, documentation improvements and especially translations are all
+extremely useful. Some specific suggestions and requests for help can be found below.</p>
 
 <h2>Submitting Patches</h2>
 
 <p>Patches can be sent to the <a href="mail.html">mailing list</a> or directly to <a
-href="mailto:dwmw2@infradead.org">the author</a> in private email. </p>
-<p>When sending patches to be included in OpenConnect, please certify that your
+href="mailto:dwmw2@infradead.org">the author</a> in private email. We are also experimenting
+with using GitLab, so please feel free to file issues and submit merge requests at
+<a href="https://gitlab.com/openconnect/openconnect">https://gitlab.com/openconnect/openconnect</a>.</p>
+
+<p>When submitting patches to be included in OpenConnect, please certify that your
 patch meets the criteria below by including include a <i>sign-off</i>
 line in your email which looks like this:
 </p>
@@ -77,7 +53,100 @@ maintained indefinitely and may be redistributed consistent with
 this project or the open source license(s) involved.
 </li></ul>
 </li></ul>
+
+<h1>What needs doing?</h1>
+
+<a name="translation"/>
+<h2>Translations</h2>
+
+<p>One of the main things needed at the present time is translations into
+languages other than English. All contributions will be gratefully received.</p>
+
+<p>Translations for OpenConnect are maintained in the GNOME
+<a href="https://l10n.gnome.org/module/NetworkManager-openconnect/">NetworkManager-openconnect module</a>.
+Translations can be contributed by joining the GNOME team as described on their
+<a href="https://wiki.gnome.org/TranslationProject">TranslationProject</a>
+wiki page, or simply by editing one of the language files in the <tt><a
+href="http://git.infradead.org/users/dwmw2/openconnect.git/tree/HEAD:/po">po/</a></tt>
+directory and sending the resulting patch (or file) to the <a
+href="mail.html">mailing list</a>.</p>
+
+<p>If there are questions about the messages because the intent is not clear, or if the
+messages could be improved to make translation easier or better, please also feel free to
+ask or make suggestions on the mailing list.</p>
+
+<h2>Documentation / Web Site</h2>
+
+<p>OpenConnect is designed with the principle that <i>"if it needs documenting, fix it instead"</i>. That isn't
+to say that we don't have documentation. But if a user finds something non-obvious and has to look it up
+in the documentation, then that in itself is a little bit of a usability failure. Software should Just Work™.</p>
+
+<p>So if you find something that is more complex than it needs to be, and you think it should
+Just Work™ then please don't hesistate to
+<a href="mailto:openconnect-devel@lists.infradead.org?subject=Usability improvement suggestion">tell us</a>
+bout it.</p>
+
+<p>Any improvements to the documentation are most welcome. In particular:</p>
+<ul>
+  <li><b>Update web site to be <a href="https://search.google.com/test/mobile-friendly?url=www.infradead.org%2Fopenconnect/">mobile-friendly</a></b><br/>
+  The current template is definitely showing its age, and could very much do with an overhaul.</li>
+</ul>
+
+<h2>Testing</h2>
+
+<p>All testing is valuable, and please do let us know if anything doesn't work when you think
+it should. There are some things which the regular developers don't have easy access to test,
+some help with testing these would be particularly welcome:</p>
+<ul>
+  <li><b>Testing against a Cisco ASAv virtual applicance (v9.10 or above) with <a href="https://gitlab.com/openconnect/ocserv/issues/188#note_130304667">DTLS v1.2</a> support.</b><br/>
+  Cisco have finally updated to use a standard version of the DTLS protocol, where the hardware acceleration doesn't prevent it. We have tested their client and OpenConnect against <a href="http://www.infradead.org/ocserv/">ocserv</a> and we believe we have a compatibile implementation, but testing OpenConnect directly against a Cisco server with DTLS v1.2 would be extremely useful.</li>
+  <li><b>Testing a PAN GlobalProtect VPN with IPv6 internal addresses.</b><br/>
+  We think we know how this works, but we've not been able to test.</li>
+</ul>
+
+
+<h2>New Protocols</h2>
+
+<p>There are some other protocols which would be good to add to OpenConnect. Getting a new
+protocol to the point where it basically works to send and receive traffic is only a
+few hours of work, and can be very rewarding.</p>
+
+<p>For some protocols we already know how they work on the wire and it's mostly
+just a matter of typing. For others we might have to observe the existing clients
+to learn how they work.</p>
+<p>These would be great projects for someone to take on as a learning exercise, or
+perhaps even Google Summer of Code projects.</p>
+
+<ul>
+  <li><b>Junos Pulse / <a href="https://www.pulsesecure.net/connect-secure/overview/">Pulse Connect Secure</a></b><br/>
+  This is the successor to the Juniper Network Connect protocol which is already supported. It's saner, simpler, and has IPv6 support. We do understand how it works, with EAP over <a href="https://trustedcomputinggroup.org/resource/tnc-if-t-binding-to-tls/">IF-T/TLS</a>.</li>
+  <li><b><a href="https://www.checkpoint.com/products/endpoint-remote-access-vpn-software-blade/">CheckPoint VPN</a></b><br/>
+  This is an IPSec-based VPN with fallback to using the SSL transport. Some discussion of OpenConnect support in this <a href="https://gitlab.com/openconnect/openconnect/issues/13">GitLab ticket</a>. </li>
+  <li><b>Cisco / Nortel IPSec VPN</b><br/>
+  These IPSec-based protocols are already supported by <a href="https://www.unix-ag.uni-kl.de/~massar/vpnc/">vpnc</a> to differing extents, but vpnc is no longer actively maintained.
+  Since OpenConnect now has ESP support, and since some of these protocols also fall back to operating over TCP when UDP and native ESP aren't available, it may make sense to implement them in OpenConnect now.</li>
+</ul>
+
+<p>Suggestions for other protocols which OpenConnect could usefully implement, are also welcome.</p>
+
+<h2>Other enhancements</h2>
+
+One of the main other improvements that would be welcome, is implementing a full WebView in the graphical clients. Currently for protocols like Juniper, OpenConnect screen-scrapes the HTML pages used for login, and attempts to make sense of them. This is The main thing that would be 
+Other items on the TODO list include:
+
+<ul>
+  <li><b>WebView support in graphical clients.</b><br/>
+  OpenConnect currently screen-scrapes the HTML login pages for protocols like Juniper, which is fragile and error-prone. It would be great if the graphical interfaces like NetworkManager could use a real WebView to show the pages, which would work with JavaScript and various other customisations that the admins often make. This might make an excellent Google Summer of Code project, or would also suit someone just trying to contribute in their spare time.</li>
+  <li><b>Better support for running or emulating the '<a href="csd.html">Cisco Secure Desktop</a>' trojan.</b><br/>
+  The Cisco <tt>hostscan</tt> tool seems to download and interpret a manifest file from the server and send back results based on the "questions" therein. A native implementation of this would be useful.</li>
+  <li><b>GUI for OS X, perhaps based on <a href="https://tunnelblick.net/">Tunnelblick</a>.</b></li>
+  <li><b>Full Android keystore support.</b><br/>
+  OpenConnect's support for the Android keystore predates the Android keystore actually doing anything useful. We assume we can just ask for the private key and be given it. A real keystore would only allow us to perform signature operations using the key, and wouldn't just give it to us. Modern versions of Android can support this, and we should add support for it.</li>
+  <li><b>Mac OS X keychain support.</b><br/>
+  Likewise, using keys stored in the OS X keychain would be extremely useful.</li>
+</ul>
+
 </p>
 
-	<INCLUDE file="inc/footer.tmpl" />
+<INCLUDE file="inc/footer.tmpl" />
 </PAGE>
