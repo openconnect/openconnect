@@ -128,7 +128,7 @@ endif
 
 pkgconfig_DATA = openconnect.pc
 
-EXTRA_DIST = version.sh README.TESTS COPYING.LGPL $(lib_srcs_openssl) $(lib_srcs_gnutls)
+EXTRA_DIST = AUTHORS version.sh README.TESTS COPYING.LGPL $(lib_srcs_openssl) $(lib_srcs_gnutls)
 EXTRA_DIST += $(shell cd "$(top_srcdir)" && \
 		git ls-tree HEAD -r --name-only -- android/ java/ trojans/ 2>/dev/null)
 
@@ -143,6 +143,9 @@ version.c: $(library_srcs) $(lib_openssl_srcs) $(lib_gnutls_srcs) \
 	   $(openconnect_SOURCES) Makefile.am configure.ac \
 	   openconnect.h openconnect-internal.h version.sh @GITVERSIONDEPS@
 	@cd $(srcdir) && ./version.sh $(abs_builddir)/version.c
+
+AUTHORS: @GITVERSIONDEPS@
+	@git shortlog -sen > AUTHORS
 
 tmp-dist: uncommitted-check
 	$(MAKE) $(AM_MAKEFLAGS) VERSION=$(patsubst v%,%,$(shell git describe --tags)) DISTHOOK=0 dist
