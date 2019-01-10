@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openconnect\n"
 "Report-Msgid-Bugs-To: openconnect-devel@lists.infradead.org\n"
-"POT-Creation-Date: 2019-01-05 00:00+0000\n"
+"POT-Creation-Date: 2019-01-10 13:22+0000\n"
 "PO-Revision-Date: 2011-09-22 22:31+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Polish (http://www.transifex.net/projects/p/meego/team/pl/)\n"
@@ -154,12 +154,12 @@ msgstr "Otrzymano niepomyślną odpowiedź %s z TNCC\n"
 
 #: auth-juniper.c:445
 msgid "TNCC response 200 OK\n"
-msgstr ""
+msgstr "Odpowiedź TNCC 200 OK\n"
 
 #: auth-juniper.c:452
 #, c-format
 msgid "Second line of TNCC response: '%s'\n"
-msgstr ""
+msgstr "Drugi wiersz odpowiedzi TNCC: „%s”\n"
 
 #: auth-juniper.c:461
 #, c-format
@@ -169,7 +169,7 @@ msgstr "Otrzymano nowe ciasteczko DSPREAUTH z TNCC: %s\n"
 #: auth-juniper.c:471
 #, c-format
 msgid "Unexpected non-empty line from TNCC after DSPREAUTH cookie: '%s'\n"
-msgstr ""
+msgstr "Nieoczekiwany niepusty wiersz z TNCC po ciasteczku DSPREAUTH: „%s”\n"
 
 #: auth-juniper.c:640
 msgid "Failed to parse HTML document\n"
@@ -246,7 +246,7 @@ msgstr "Zapytano o hasło, ale ustawiono „--no-passwd”\n"
 msgid "Not downloading XML profile because SHA1 already matches\n"
 msgstr "Profil XML nie zostanie pobrany, ponieważ suma SHA1 już pasuje\n"
 
-#: auth.c:931 cstp.c:320 http.c:917
+#: auth.c:931 cstp.c:332 http.c:917
 #, c-format
 msgid "Failed to open HTTPS connection to %s\n"
 msgstr "Otwarcie połączenia HTTPS z %s się nie powiodło\n"
@@ -396,244 +396,244 @@ msgstr "TCP_INFO rcv mss %d, snd mss %d, adv mss %d, pmtu %d\n"
 msgid "TCP_MAXSEG %d\n"
 msgstr "TCP_MAXSEG %d\n"
 
-#: cstp.c:279
+#: cstp.c:281
 msgid ""
 "CRITICAL ERROR: DTLS master secret is uninitialised. Please report this.\n"
 msgstr ""
 "BŁĄD KRYTYCZNY: główne hasło DTLS jest niezainicjowane. Prosimy to zgłosić.\n"
 
-#: cstp.c:297
+#: cstp.c:309
 msgid "Error creating HTTPS CONNECT request\n"
 msgstr "Błąd podczas tworzenia żądania „CONNECT” HTTPS\n"
 
-#: cstp.c:313 http.c:385
+#: cstp.c:325 http.c:385
 msgid "Error fetching HTTPS response\n"
 msgstr "Błąd podczas pobierania odpowiedzi HTTPS\n"
 
-#: cstp.c:340
+#: cstp.c:352
 #, c-format
 msgid "VPN service unavailable; reason: %s\n"
 msgstr "Usługa VPN jest niedostępna. Przyczyna: %s\n"
 
-#: cstp.c:345
+#: cstp.c:357
 #, c-format
 msgid "Got inappropriate HTTP CONNECT response: %s\n"
 msgstr "Otrzymano nieodpowiednią odpowiedź „CONNECT” HTTPS: %s\n"
 
-#: cstp.c:352
+#: cstp.c:364
 #, c-format
 msgid "Got CONNECT response: %s\n"
 msgstr "Otrzymano odpowiedź „CONNECT”: %s\n"
 
-#: cstp.c:380 cstp.c:388
+#: cstp.c:393 cstp.c:401
 msgid "No memory for options\n"
 msgstr "Brak pamięci dla opcji\n"
 
-#: cstp.c:397 http.c:445
+#: cstp.c:410 http.c:445
 msgid "<elided>"
 msgstr "<opuszczono>"
 
-#: cstp.c:416
+#: cstp.c:430
 #, c-format
 msgid "X-DTLS-Session-ID not 64 characters; is: \"%s\"\n"
 msgstr "X-DTLS-Session-ID nie wynosi 64 znaków. Wynosi: „%s”\n"
 
-#: cstp.c:433
+#: cstp.c:447
 #, c-format
 msgid "X-DTLS-Session-ID is invalid; is: \"%s\"\n"
 msgstr "X-DTLS-Session-ID jest nieprawidłowe. Wynosi: „%s”\n"
 
-#: cstp.c:451
+#: cstp.c:465
 #, c-format
 msgid "Unknown DTLS-Content-Encoding %s\n"
 msgstr "Nieznane DTLS-Content-Encoding %s\n"
 
-#: cstp.c:489
+#: cstp.c:507
 #, c-format
 msgid "Unknown CSTP-Content-Encoding %s\n"
 msgstr "Nieznane CSTP-Content-Encoding %s\n"
 
-#: cstp.c:564
+#: cstp.c:582
 msgid "No MTU received. Aborting\n"
 msgstr "Nie otrzymano MTU. Przerywanie\n"
 
-#: cstp.c:572 gpst.c:634
+#: cstp.c:590 gpst.c:634
 msgid "No IP address received. Aborting\n"
 msgstr "Nie otrzymano adresu IP. Przerywanie\n"
 
-#: cstp.c:578
+#: cstp.c:596
 #, c-format
 msgid "IPv6 configuration received but MTU %d is too small.\n"
 msgstr "Otrzymano konfigurację IPv6, ale MTU %d jest za małe.\n"
 
-#: cstp.c:584 gpst.c:641
+#: cstp.c:602 gpst.c:641
 #, c-format
 msgid "Reconnect gave different Legacy IP address (%s != %s)\n"
 msgstr "Ponowne połączenie przekazało inny adres IP „Legacy” (%s != %s)\n"
 
-#: cstp.c:592 gpst.c:650
+#: cstp.c:610 gpst.c:650
 #, c-format
 msgid "Reconnect gave different Legacy IP netmask (%s != %s)\n"
 msgstr ""
 "Ponowne połączenie przekazało inną maskę sieci IP „Legacy” (%s != %s)\n"
 
-#: cstp.c:600
+#: cstp.c:618
 #, c-format
 msgid "Reconnect gave different IPv6 address (%s != %s)\n"
 msgstr "Ponowne połączenie przekazało inny adres IPv6 (%s != %s)\n"
 
-#: cstp.c:608
+#: cstp.c:626
 #, c-format
 msgid "Reconnect gave different IPv6 netmask (%s != %s)\n"
 msgstr "Ponowne połączenie przekazało inną maskę sieci IPv6 (%s != %s)\n"
 
-#: cstp.c:616
+#: cstp.c:634
 #, c-format
 msgid "CSTP connected. DPD %d, Keepalive %d\n"
 msgstr "Połączono CSTP. DPD %d, Keepalive %d\n"
 
-#: cstp.c:618
+#: cstp.c:636
 #, c-format
 msgid "CSTP Ciphersuite: %s\n"
 msgstr "Zestaw szyfrów CSTP: %s\n"
 
-#: cstp.c:680
+#: cstp.c:698
 msgid "Compression setup failed\n"
 msgstr "Ustawienie kompresji się nie powiodło\n"
 
-#: cstp.c:697
+#: cstp.c:715
 msgid "Allocation of deflate buffer failed\n"
 msgstr "Przydzielenie bufora „deflate” się nie powiodło\n"
 
-#: cstp.c:759
+#: cstp.c:777
 msgid "inflate failed\n"
 msgstr "„inflate” się nie powiodło\n"
 
-#: cstp.c:782
+#: cstp.c:800
 #, c-format
 msgid "LZS decompression failed: %s\n"
 msgstr "Dekompresja LZS się nie powiodła: %s\n"
 
-#: cstp.c:795
+#: cstp.c:813
 msgid "LZ4 decompression failed\n"
 msgstr "Dekompresja LZ4 się nie powiodła\n"
 
-#: cstp.c:802
+#: cstp.c:820
 #, c-format
 msgid "Unknown compression type %d\n"
 msgstr "Nieznany typ kompresji %d\n"
 
-#: cstp.c:807
+#: cstp.c:825
 #, c-format
 msgid "Received %s compressed data packet of %d bytes (was %d)\n"
 msgstr ""
 "Otrzymano skompresowany pakiet danych %s o rozmiarze %d bajtów (wynosił %d)\n"
 
-#: cstp.c:827
+#: cstp.c:845
 #, c-format
 msgid "deflate failed %d\n"
 msgstr "%d „deflate” się nie powiodło\n"
 
-#: cstp.c:900 dtls.c:283 dtls.c:742 esp.c:136 gpst.c:1035 mainloop.c:69
+#: cstp.c:918 dtls.c:281 dtls.c:740 esp.c:129 gpst.c:1035 mainloop.c:69
 #: oncp.c:914
 msgid "Allocation failed\n"
 msgstr "Przydzielenie się nie powiodło\n"
 
-#: cstp.c:911 gpst.c:1048
+#: cstp.c:929 gpst.c:1048
 #, c-format
 msgid "Short packet received (%d bytes)\n"
 msgstr "Otrzymano krótki pakiet (%d bajtów)\n"
 
-#: cstp.c:924
+#: cstp.c:942
 #, c-format
 msgid "Unexpected packet length. SSL_read returned %d but packet is\n"
 msgstr ""
 "Nieoczekiwana długość pakietu. „SSL_read” zwróciło %d, ale pakiet wynosi\n"
 
-#: cstp.c:938
+#: cstp.c:956
 msgid "Got CSTP DPD request\n"
 msgstr "Otrzymano żądanie „DPD” CSTP\n"
 
-#: cstp.c:944
+#: cstp.c:962
 msgid "Got CSTP DPD response\n"
 msgstr "Otrzymano odpowiedź „DPD” CSTP\n"
 
-#: cstp.c:949
+#: cstp.c:967
 msgid "Got CSTP Keepalive\n"
 msgstr "Otrzymano „Keepalive” CSTP\n"
 
-#: cstp.c:954 oncp.c:1003
+#: cstp.c:972 oncp.c:1003
 #, c-format
 msgid "Received uncompressed data packet of %d bytes\n"
 msgstr "Otrzymano nieskompresowany pakiet danych o rozmiarze %d bajtów\n"
 
-#: cstp.c:971
+#: cstp.c:989
 #, c-format
 msgid "Received server disconnect: %02x '%s'\n"
 msgstr "Otrzymano rozłączenie z serwera: %02x „%s”\n"
 
-#: cstp.c:974
+#: cstp.c:992
 msgid "Received server disconnect\n"
 msgstr "Otrzymano rozłączenie z serwera\n"
 
-#: cstp.c:982
+#: cstp.c:1000
 msgid "Compressed packet received in !deflate mode\n"
 msgstr "Otrzymano nieskompresowany pakiet w trybie „!deflate”\n"
 
-#: cstp.c:991
+#: cstp.c:1009
 msgid "received server terminate packet\n"
 msgstr "otrzymano pakiet wymuszenia zakończenia serwera\n"
 
-#: cstp.c:998
+#: cstp.c:1016
 #, c-format
 msgid "Unknown packet %02x %02x %02x %02x %02x %02x %02x %02x\n"
 msgstr "Nieznany pakiet %02x %02x %02x %02x %02x %02x %02x %02x\n"
 
-#: cstp.c:1041 gpst.c:1135 oncp.c:1121
+#: cstp.c:1059 gpst.c:1135 oncp.c:1121
 #, c-format
 msgid "SSL wrote too few bytes! Asked for %d, sent %d\n"
 msgstr "SSL zapisało za mało bajtów. Poproszono o %d, wysłano %d\n"
 
 #. Not that this will ever happen; we don't even process
 #. the setting when we're asked for it.
-#: cstp.c:1069 oncp.c:1155
+#: cstp.c:1087 oncp.c:1155
 msgid "CSTP rekey due\n"
 msgstr "„rekey” CSTP do\n"
 
 #. if we failed rehandshake try establishing a new-tunnel instead of failing
-#: cstp.c:1076 oncp.c:1162
+#: cstp.c:1094 oncp.c:1162
 msgid "Rehandshake failed; attempting new-tunnel\n"
 msgstr "Ponowne powitanie się nie powiodło. Próbowanie „new-tunnel”\n"
 
-#: cstp.c:1087 oncp.c:1173
+#: cstp.c:1105 oncp.c:1173
 msgid "CSTP Dead Peer Detection detected dead peer!\n"
 msgstr "Wykrywanie martwych partnerów CSTP wykryło martwego partnera.\n"
 
-#: cstp.c:1091 gpst.c:1159 oncp.c:1091 oncp.c:1177
+#: cstp.c:1109 gpst.c:1159 oncp.c:1091 oncp.c:1177
 msgid "Reconnect failed\n"
 msgstr "Ponowne połączenie się nie powiodło\n"
 
-#: cstp.c:1107 oncp.c:1193
+#: cstp.c:1125 oncp.c:1193
 msgid "Send CSTP DPD\n"
 msgstr "Wysłanie „DPD” CSTP\n"
 
-#: cstp.c:1119 oncp.c:1204
+#: cstp.c:1137 oncp.c:1204
 msgid "Send CSTP Keepalive\n"
 msgstr "Wysłanie „Keepalive” CSTP\n"
 
-#: cstp.c:1144
+#: cstp.c:1162
 #, c-format
 msgid "Sending compressed data packet of %d bytes (was %d)\n"
 msgstr ""
 "Wysyłanie nieskompresowanego pakietu danych o rozmiarze %d bajtów (wynosił "
 "%d)\n"
 
-#: cstp.c:1155 oncp.c:1238
+#: cstp.c:1173 oncp.c:1238
 #, c-format
 msgid "Sending uncompressed data packet of %d bytes\n"
 msgstr "Wysyłanie nieskompresowanego pakietu danych o rozmiarze %d bajtów\n"
 
-#: cstp.c:1194
+#: cstp.c:1212
 #, c-format
 msgid "Send BYE packet: %s\n"
 msgstr "Wysłanie pakietu „BYE”: %s\n"
@@ -670,183 +670,183 @@ msgstr "Brak DTLS podczas łączenia przez pośrednika\n"
 msgid "DTLS option %s : %s\n"
 msgstr "Opcja DTLS %s: %s\n"
 
-#: dtls.c:241
+#: dtls.c:239
 #, c-format
 msgid "DTLS initialised. DPD %d, Keepalive %d\n"
 msgstr "Zainicjowano DTLS. DPD %d, Keepalive %d\n"
 
-#: dtls.c:267
+#: dtls.c:265
 msgid "Attempt new DTLS connection\n"
 msgstr "Próba nowego połączenia DTLS\n"
 
-#: dtls.c:294
+#: dtls.c:292
 #, c-format
 msgid "Received DTLS packet 0x%02x of %d bytes\n"
 msgstr "Otrzymano pakiet DTLS 0x%02x z %d bajtów\n"
 
-#: dtls.c:308
+#: dtls.c:306
 msgid "Got DTLS DPD request\n"
 msgstr "Otrzymano żądanie „DPD” DTLS\n"
 
-#: dtls.c:314
+#: dtls.c:312
 msgid "Failed to send DPD response. Expect disconnect\n"
 msgstr ""
 "Wysłanie odpowiedzi DPD się nie powiodło. Należy oczekiwać rozłączenia\n"
 
-#: dtls.c:318
+#: dtls.c:316
 msgid "Got DTLS DPD response\n"
 msgstr "Otrzymano odpowiedź „DPD” DTLS\n"
 
-#: dtls.c:322
+#: dtls.c:320
 msgid "Got DTLS Keepalive\n"
 msgstr "Otrzymano „Keepalive” DTLS\n"
 
-#: dtls.c:328
+#: dtls.c:326
 msgid "Compressed DTLS packet received when compression not enabled\n"
 msgstr "Otrzymano skompresowany pakiet DTLS, kiedy kompresja jest wyłączona\n"
 
-#: dtls.c:336
+#: dtls.c:334
 #, c-format
 msgid "Unknown DTLS packet type %02x, len %d\n"
 msgstr "Nieznany typ pakietu DTLS %02x, len %d\n"
 
-#: dtls.c:358
+#: dtls.c:356
 msgid "DTLS rekey due\n"
 msgstr "„rekey” DTLS do\n"
 
-#: dtls.c:365
+#: dtls.c:363
 msgid "DTLS Rehandshake failed; reconnecting.\n"
 msgstr "Ponowne powitanie DTLS się nie powiodło. Łączenie ponownie.\n"
 
-#: dtls.c:374
+#: dtls.c:372
 msgid "DTLS Dead Peer Detection detected dead peer!\n"
 msgstr "Wykrywanie martwych partnerów DTLS wykryło martwego partnera.\n"
 
-#: dtls.c:380
+#: dtls.c:378
 msgid "Send DTLS DPD\n"
 msgstr "Wysłanie „DPD” DTLS\n"
 
-#: dtls.c:385
+#: dtls.c:383
 msgid "Failed to send DPD request. Expect disconnect\n"
 msgstr "Wysłanie żądania DPD się nie powiodło. Należy oczekiwać rozłączenia\n"
 
-#: dtls.c:398
+#: dtls.c:396
 msgid "Send DTLS Keepalive\n"
 msgstr "Wysłanie „Keepalive” DTLS\n"
 
-#: dtls.c:403
+#: dtls.c:401
 msgid "Failed to send keepalive request. Expect disconnect\n"
 msgstr ""
 "Wysłanie żądania Keepalive się nie powiodło. Należy oczekiwać rozłączenia\n"
 
-#: dtls.c:434 tun.c:541
+#: dtls.c:432 tun.c:541
 #, c-format
 msgid "Unknown packet (len %d) received: %02x %02x %02x %02x...\n"
 msgstr "Otrzymano nieznany pakiet (len %d): %02x %02x %02x %02x...\n"
 
-#: dtls.c:441
+#: dtls.c:439
 #, c-format
 msgid "TOS this: %d, TOS last: %d\n"
 msgstr "Ten TOS: %d, ostatni TOS: %d\n"
 
-#: dtls.c:445
+#: dtls.c:443
 msgid "UDP setsockopt"
 msgstr "setsockopt UDP"
 
-#: dtls.c:476
+#: dtls.c:474
 #, c-format
 msgid "DTLS got write error %d. Falling back to SSL\n"
 msgstr "DTLS otrzymało błąd zapisu %d. Używanie SSL\n"
 
-#: dtls.c:490
+#: dtls.c:488
 #, c-format
 msgid "DTLS got write error: %s. Falling back to SSL\n"
 msgstr "DTLS otrzymało błąd zapisu: %s. Używanie SSL\n"
 
-#: dtls.c:505
+#: dtls.c:503
 #, c-format
 msgid "Sent DTLS packet of %d bytes; DTLS send returned %d\n"
 msgstr "Wysłano pakiet DTLS o rozmiarze %d bajtów. Wysłanie DTLS zwróciło %d\n"
 
-#: dtls.c:533
+#: dtls.c:531
 #, c-format
 msgid "Initiating IPv4 MTU detection (min=%d, max=%d)\n"
 msgstr "Inicjowanie wykrywania MTU IPv4 (min=%d, max=%d)\n"
 
-#: dtls.c:553
+#: dtls.c:551
 msgid "Too long time in MTU detect loop; assuming negotiated MTU.\n"
 msgstr ""
 "Za dużo czasu w pętli wykrywania MTU. Przyjmowanie wynegocjowanego MTU.\n"
 
-#: dtls.c:557
+#: dtls.c:555
 #, c-format
 msgid "Too long time in MTU detect loop; MTU set to %d.\n"
 msgstr "Za dużo czasu w pętli wykrywania MTU. Ustawiono MTU na %d.\n"
 
-#: dtls.c:566
+#: dtls.c:564
 #, c-format
 msgid "Sending MTU DPD probe (%u bytes, min=%u, max=%u)\n"
 msgstr "Wysyłanie sondy „DPD” MTU (%u bajtów, min=%u, max=%u)\n"
 
-#: dtls.c:570
+#: dtls.c:568
 #, c-format
 msgid "Failed to send DPD request (%d %d)\n"
 msgstr "Wysłanie żądania DPD się nie powiodło (%d %d)\n"
 
-#: dtls.c:584 dtls.c:692
+#: dtls.c:582 dtls.c:690
 #, c-format
 msgid "Received unexpected packet (%.2x) in MTU detection; skipping.\n"
 msgstr ""
 "Odebrano nieoczekiwany pakiet (%.2x) podczas wykrywania MTU. Pomijanie.\n"
 
-#: dtls.c:596
+#: dtls.c:594
 #, c-format
 msgid "Timeout while waiting for DPD response; trying %d\n"
 msgstr ""
 "Przekroczono czas oczekiwania podczas oczekiwania na odpowiedź DPD. "
 "Próbowanie %d\n"
 
-#: dtls.c:603 dtls.c:684
+#: dtls.c:601 dtls.c:682
 msgid "Timeout while waiting for DPD response; resending probe.\n"
 msgstr ""
 "Przekroczono czas oczekiwania podczas czekania na odpowiedź DPD. Ponowne "
 "wysyłanie sondy.\n"
 
-#: dtls.c:610 dtls.c:711
+#: dtls.c:608 dtls.c:709
 #, c-format
 msgid "Failed to recv DPD request (%d)\n"
 msgstr "Odebranie żądania DPD się nie powiodło (%d)\n"
 
-#: dtls.c:615
+#: dtls.c:613
 #, c-format
 msgid "Received MTU DPD probe (%u bytes of %u)\n"
 msgstr "Otrzymano sondę „DPD” MTU (%u bajtów z %u)\n"
 
-#: dtls.c:653
+#: dtls.c:651
 msgid "Initiating IPv6 MTU detection\n"
 msgstr "Inicjowanie wykrywania MTU IPv6\n"
 
-#: dtls.c:668
+#: dtls.c:666
 #, c-format
 msgid "Sending MTU DPD probe (%u bytes)\n"
 msgstr "Wysyłanie sondy „DPD” MTU (%u bajtów)\n"
 
-#: dtls.c:672
+#: dtls.c:670
 #, c-format
 msgid "Failed to send DPD request (%d)\n"
 msgstr "Wysłanie żądania DPD się nie powiodło (%d)\n"
 
-#: dtls.c:697
+#: dtls.c:695
 #, c-format
 msgid "Received MTU DPD probe (%u bytes)\n"
 msgstr "Otrzymano sondę „DPD” MTU (%u bajtów)\n"
 
-#: dtls.c:761
+#: dtls.c:759
 #, c-format
 msgid "Detected MTU of %d bytes (was %d)\n"
 msgstr "Wykryto MTU o rozmiarze %d bajtów (wynosił %d)\n"
 
-#: dtls.c:764
+#: dtls.c:762
 #, c-format
 msgid "No change in MTU after detection (was %d)\n"
 msgstr "Brak zmian w MTU po wykrywaniu (wynosił %d)\n"
@@ -892,201 +892,201 @@ msgstr ""
 "Przyjmowanie pakietu ESP poza kolejnością z sekwencją %u (oczekiwano "
 "%<PRIu64>)\n"
 
-#: esp.c:70
+#: esp.c:63
 #, c-format
 msgid "Parameters for %s ESP: SPI 0x%08x\n"
 msgstr "Parametry dla ESP %s: SPI 0x%08x\n"
 
-#: esp.c:73
+#: esp.c:66
 #, c-format
 msgid "ESP encryption type %s key 0x%s\n"
 msgstr "Szyfrowanie ESP typu %s klucz 0x%s\n"
 
-#: esp.c:76
+#: esp.c:69
 #, c-format
 msgid "ESP authentication type %s key 0x%s\n"
 msgstr "Uwierzytelnienie ESP typu %s klucz 0x%s\n"
 
-#: esp.c:94
+#: esp.c:87
 msgid "incoming"
 msgstr "przychodzące"
 
-#: esp.c:95
+#: esp.c:88
 msgid "outgoing"
 msgstr "wychodzące"
 
-#: esp.c:97 esp.c:120
+#: esp.c:90 esp.c:113
 msgid "Send ESP probes\n"
 msgstr "Wysłanie próbek ESP\n"
 
-#: esp.c:145
+#: esp.c:138
 #, c-format
 msgid "Received ESP packet of %d bytes\n"
 msgstr "Otrzymano pakiet ESP o rozmiarze %d bajtów\n"
 
-#: esp.c:162
+#: esp.c:155
 #, c-format
 msgid "Received ESP packet from old SPI 0x%x, seq %u\n"
 msgstr "Otrzymano pakiet ESP ze starym SPI 0x%x, sekwencją %u\n"
 
-#: esp.c:168
+#: esp.c:161
 #, c-format
 msgid "Received ESP packet with invalid SPI 0x%08x\n"
 msgstr "Otrzymano pakiet ESP z nieprawidłowym SPI 0x%08x\n"
 
-#: esp.c:181
+#: esp.c:174
 #, c-format
 msgid "Received ESP packet with unrecognised payload type %02x\n"
 msgstr "Otrzymano pakiet ESP z nierozpoznanym typem ładunku %02x\n"
 
-#: esp.c:188
+#: esp.c:181
 #, c-format
 msgid "Invalid padding length %02x in ESP\n"
 msgstr "Nieprawidłowa długość wypełnienia %02x w ESP\n"
 
-#: esp.c:200
+#: esp.c:193
 msgid "Invalid padding bytes in ESP\n"
 msgstr "Nieprawidłowe bajty wypełnienia w ESP\n"
 
-#: esp.c:209
+#: esp.c:202
 msgid "ESP session established with server\n"
 msgstr "Nawiązano sesję ESP z serwerem\n"
 
-#: esp.c:220
+#: esp.c:213
 msgid "Failed to allocate memory to decrypt ESP packet\n"
 msgstr "Przydzielenie pamięci do odszyfrowania pakietu ESP się nie powiodło\n"
 
-#: esp.c:226
+#: esp.c:219
 msgid "LZO decompression of ESP packet failed\n"
 msgstr "Dekompresja LZO pakietu ESP się nie powiodła\n"
 
-#: esp.c:232
+#: esp.c:225
 #, c-format
 msgid "LZO decompressed %d bytes into %d\n"
 msgstr "LZO zdekompresowało %d bajtów do %d\n"
 
-#: esp.c:246
+#: esp.c:239
 msgid "Rekey not implemented for ESP\n"
 msgstr "„rekey” nie jest zaimplementowane dla ESP\n"
 
-#: esp.c:250
+#: esp.c:243
 msgid "ESP detected dead peer\n"
 msgstr "ESP wykryło martwego partnera\n"
 
-#: esp.c:258
+#: esp.c:251
 msgid "Send ESP probes for DPD\n"
 msgstr "Wysłanie próbek ESP dla DPD\n"
 
-#: esp.c:265
+#: esp.c:258
 msgid "Keepalive not implemented for ESP\n"
 msgstr "„Keepalive” nie jest zaimplementowane dla ESP\n"
 
-#: esp.c:288
+#: esp.c:281
 #, c-format
 msgid "Failed to send ESP packet: %s\n"
 msgstr "Wysłanie pakietu ESP się nie powiodło: %s\n"
 
-#: esp.c:294
+#: esp.c:287
 #, c-format
 msgid "Sent ESP packet of %d bytes\n"
 msgstr "Wysłano pakiet ESP o rozmiarze %d bajtów\n"
 
-#: gnutls-dtls.c:166
+#: gnutls-dtls.c:190
 msgid "Deferring DTLS resumption until CSTP generates a PSK\n"
 msgstr "Odkładanie wznowienia DTLS, aż CSTP utworzy PSK\n"
 
-#: gnutls-dtls.c:174
+#: gnutls-dtls.c:198
 msgid "Failed to generate DTLS priority string\n"
 msgstr "Utworzenie ciągu priorytetu DTLS się nie powiodło\n"
 
-#: gnutls-dtls.c:183
+#: gnutls-dtls.c:207
 #, c-format
 msgid "Failed to initialize DTLS: %s\n"
 msgstr "Zainicjowanie DTLS się nie powiodło: %s\n"
 
-#: gnutls-dtls.c:192
+#: gnutls-dtls.c:216
 #, c-format
 msgid "Failed to set DTLS priority: '%s': %s\n"
 msgstr "Ustawienie priorytetu DTLS się nie powiodło: „%s”: %s\n"
 
-#: gnutls-dtls.c:216
+#: gnutls-dtls.c:240
 #, c-format
 msgid "Failed to allocate credentials: %s\n"
 msgstr "Przydzielenie danych uwierzytelniających się nie powiodło: %s\n"
 
-#: gnutls-dtls.c:229
+#: gnutls-dtls.c:253
 #, c-format
 msgid "Failed to generate DTLS key: %s\n"
 msgstr "Utworzenie klucza DTLS się nie powiodło: %s\n"
 
-#: gnutls-dtls.c:243
+#: gnutls-dtls.c:267
 #, c-format
 msgid "Failed to set DTLS key: %s\n"
 msgstr "Ustawienie klucza DTLS się nie powiodło: %s\n"
 
-#: gnutls-dtls.c:251
+#: gnutls-dtls.c:275
 #, c-format
 msgid "Failed to set DTLS PSK credentials: %s\n"
 msgstr ""
 "Ustawienie danych uwierzytelniających „PSK” DTLS się nie powiodło: %s\n"
 
-#: gnutls-dtls.c:284
+#: gnutls-dtls.c:309
 #, c-format
 msgid "Unknown DTLS parameters for requested CipherSuite '%s'\n"
 msgstr "Nieznane parametry DTLS dla żądanego zestawu szyfrów „%s”\n"
 
-#: gnutls-dtls.c:299
+#: gnutls-dtls.c:324
 #, c-format
 msgid "Failed to set DTLS priority: %s\n"
 msgstr "Ustawienie priorytetu DTLS się nie powiodło: %s\n"
 
-#: gnutls-dtls.c:320
+#: gnutls-dtls.c:345
 #, c-format
 msgid "Failed to set DTLS session parameters: %s\n"
 msgstr "Ustawienie parametrów sesji DTLS się nie powiodło: %s\n"
 
-#: gnutls-dtls.c:348 openssl-dtls.c:523
+#: gnutls-dtls.c:373 openssl-dtls.c:534
 #, c-format
 msgid "Peer MTU %d too small to allow DTLS\n"
 msgstr "MTU partnera %d jest za małe, aby umożliwić DTLS\n"
 
-#: gnutls-dtls.c:357 openssl-dtls.c:534
+#: gnutls-dtls.c:382 openssl-dtls.c:545
 #, c-format
 msgid "DTLS MTU reduced to %d\n"
 msgstr "Zmniejszono „MTU” DTLS do %d\n"
 
-#: gnutls-dtls.c:367 openssl-dtls.c:543
+#: gnutls-dtls.c:392 openssl-dtls.c:554
 msgid "DTLS session resume failed; possible MITM attack. Disabling DTLS.\n"
 msgstr ""
 "Wznowienie sesji DTLS się nie powiodło. Możliwe, że to atak typu „MITM”. "
 "Wyłączanie DTLS.\n"
 
-#: gnutls-dtls.c:380
+#: gnutls-dtls.c:405
 #, c-format
 msgid "Failed to set DTLS MTU: %s\n"
 msgstr "Ustawienie „MTU” DTLS się nie powiodło: %s\n"
 
-#: gnutls-dtls.c:391
+#: gnutls-dtls.c:416
 #, c-format
 msgid "Established DTLS connection (using GnuTLS). Ciphersuite %s.\n"
 msgstr ""
 "Nawiązano połączenie DTLS (używając biblioteki GnuTLS). Zestaw szyfrów %s.\n"
 
-#: gnutls-dtls.c:397 openssl-dtls.c:561
+#: gnutls-dtls.c:422 openssl-dtls.c:572
 #, c-format
 msgid "DTLS connection compression using %s.\n"
 msgstr "Kompresja połączenia DTLS używając %s.\n"
 
-#: gnutls-dtls.c:412 openssl-dtls.c:642 openssl-dtls.c:646
+#: gnutls-dtls.c:437 openssl-dtls.c:653 openssl-dtls.c:657
 msgid "DTLS handshake timed out\n"
 msgstr "Powitanie DTLS przekroczyło czas oczekiwania\n"
 
-#: gnutls-dtls.c:415
+#: gnutls-dtls.c:440
 #, c-format
 msgid "DTLS handshake failed: %s\n"
 msgstr "Powitanie DTLS się nie powiodło: %s\n"
 
-#: gnutls-dtls.c:419
+#: gnutls-dtls.c:444
 msgid "(Is a firewall preventing you from sending UDP packets?)\n"
 msgstr "(Czy zapora sieciowa uniemożliwia wysyłanie pakietów UDP?)\n"
 
@@ -1477,7 +1477,7 @@ msgstr "Dodawanie wspierającego CA „%s”\n"
 
 #: gnutls.c:1724
 msgid "Private key appears not to support RSA-PSS. Disabling TLSv1.3\n"
-msgstr ""
+msgstr "Klucz prywatny nie obsługuje RSA-PSS. Wyłączanie TLSv1.3\n"
 
 #: gnutls.c:1748
 #, c-format
@@ -1723,199 +1723,199 @@ msgstr "Kod PIN klucza TPM:"
 msgid "Failed to set key PIN: %s\n"
 msgstr "Ustawienie kodu PIN klucza się nie powiodło: %s\n"
 
-#: gnutls_tpm2.c:93 gnutls_tpm2_esys.c:473 gnutls_tpm2_ibm.c:418
+#: gnutls_tpm2.c:92 gnutls_tpm2_esys.c:474 gnutls_tpm2_ibm.c:418
 #, c-format
 msgid "Unknown TPM2 EC digest size %d\n"
 msgstr "Nieznany rozmiar skrótu EC TPM2 %d\n"
 
-#: gnutls_tpm2.c:199
+#: gnutls_tpm2.c:198
 #, c-format
 msgid "Error decoding TSS2 key blob: %s\n"
 msgstr "Błąd podczas dekodowania danych „blob” klucza TSS2: %s\n"
 
-#: gnutls_tpm2.c:209
+#: gnutls_tpm2.c:208
 #, c-format
 msgid "Failed to create ASN.1 type for TPM2: %s\n"
 msgstr "Utworzenie typu ASN.1 dla TPM2 się nie powiodło: %s\n"
 
-#: gnutls_tpm2.c:218
+#: gnutls_tpm2.c:217
 #, c-format
 msgid "Failed to decode TPM2 key ASN.1: %s\n"
 msgstr "Dekodowanie ASN.1 klucza TPM2 się nie powiodło: %s\n"
 
-#: gnutls_tpm2.c:226
+#: gnutls_tpm2.c:225
 #, c-format
 msgid "Failed to parse TPM2 key type OID: %s\n"
-msgstr ""
+msgstr "Przetworzenie typu OID klucza TPM2 się nie powiodło: %s\n"
 
-#: gnutls_tpm2.c:232
+#: gnutls_tpm2.c:231
 #, c-format
 msgid "TPM2 key has unknown type OID %s not %s\n"
-msgstr ""
+msgstr "Klucz TPM2 ma nieznany typ OID %s, nie %s\n"
 
-#: gnutls_tpm2.c:250
+#: gnutls_tpm2.c:249
 #, c-format
 msgid "Failed to parse TPM2 key parent: %s\n"
 msgstr "Przetworzenie nadrzędnego klucza TPM2 się nie powiodło: %s\n"
 
-#: gnutls_tpm2.c:271
+#: gnutls_tpm2.c:270
 msgid "Failed to parse TPM2 pubkey element\n"
 msgstr "Przetworzenie elementu klucza publicznego TPM2 się nie powiodło\n"
 
-#: gnutls_tpm2.c:276
+#: gnutls_tpm2.c:275
 msgid "Failed to parse TPM2 privkey element\n"
 msgstr "Przetworzenie elementu klucza prywatnego TPM2 się nie powiodło\n"
 
-#: gnutls_tpm2.c:281
+#: gnutls_tpm2.c:280
 #, c-format
 msgid "Parsed TPM2 key with parent %x, emptyauth %d\n"
 msgstr "Przetworzono klucz TPM2 za pomocą nadrzędnego %x, emptyauth %d\n"
 
-#: gnutls_tpm2.c:385
+#: gnutls_tpm2.c:384
 #, c-format
 msgid "TPM2 digest too large: %d > %d\n"
 msgstr "Skrót TPM2 jest za duży: %d > %d\n"
 
-#: gnutls_tpm2_esys.c:172
+#: gnutls_tpm2_esys.c:173
 msgid "TPM2 password too long; truncating\n"
 msgstr "Hasło TPM2 jest za długie, skracanie\n"
 
-#: gnutls_tpm2_esys.c:188
+#: gnutls_tpm2_esys.c:189
 msgid "owner"
 msgstr "właściciel"
 
-#: gnutls_tpm2_esys.c:189
+#: gnutls_tpm2_esys.c:190
 msgid "null"
 msgstr "puste"
 
-#: gnutls_tpm2_esys.c:190
+#: gnutls_tpm2_esys.c:191
 msgid "endorsement"
 msgstr "aprobata"
 
-#: gnutls_tpm2_esys.c:191
+#: gnutls_tpm2_esys.c:192
 msgid "platform"
 msgstr "platforma"
 
-#: gnutls_tpm2_esys.c:195
+#: gnutls_tpm2_esys.c:196
 #, c-format
 msgid "Creating primary key under %s hierarchy.\n"
 msgstr "Tworzenie głównego klucz w hierarchii %s.\n"
 
-#: gnutls_tpm2_esys.c:200 gnutls_tpm2_ibm.c:261
+#: gnutls_tpm2_esys.c:201 gnutls_tpm2_ibm.c:261
 #, c-format
 msgid "Enter TPM2 %s hierarchy password:"
 msgstr "Hasło hierarchii TPM2 %s:"
 
-#: gnutls_tpm2_esys.c:208 gnutls_tpm2_esys.c:302 gnutls_tpm2_esys.c:373
+#: gnutls_tpm2_esys.c:209 gnutls_tpm2_esys.c:303 gnutls_tpm2_esys.c:374
 #, c-format
 msgid "TPM2 Esys_TR_SetAuth failed: 0x%x\n"
 msgstr "Esys_TR_SetAuth TPM2 się nie powiodło: 0x%x\n"
 
-#: gnutls_tpm2_esys.c:220
+#: gnutls_tpm2_esys.c:221
 msgid "TPM2 Esys_CreatePrimary owner auth failed\n"
 msgstr ""
 "Uwierzytelnienie właściciela Esys_CreatePrimary TPM2 się nie powiodło\n"
 
-#: gnutls_tpm2_esys.c:225
+#: gnutls_tpm2_esys.c:226
 #, c-format
 msgid "TPM2 Esys_CreatePrimary failed: 0x%x\n"
 msgstr "Esys_CreatePrimary TPM2 się nie powiodło: 0x%x\n"
 
-#: gnutls_tpm2_esys.c:244
+#: gnutls_tpm2_esys.c:245
 msgid "Establishing connection with TPM.\n"
 msgstr "Nawiązywanie połączenia za pomocą TPM.\n"
 
-#: gnutls_tpm2_esys.c:249
+#: gnutls_tpm2_esys.c:250
 #, c-format
 msgid "TPM2 Esys_Initialize failed: 0x%x\n"
 msgstr "Esys_Initialize TPM2 się nie powiodło: 0x%x\n"
 
-#: gnutls_tpm2_esys.c:257
+#: gnutls_tpm2_esys.c:258
 msgid ""
 "TPM2 was already started up thus false positive failing in tpm2tss log.\n"
 msgstr ""
 "TPM2 zostało już uruchomione, co spowodowało fałszywy alarm niepowodzenia "
 "w dzienniku tpm2tss.\n"
 
-#: gnutls_tpm2_esys.c:260
+#: gnutls_tpm2_esys.c:261
 #, c-format
 msgid "TPM2 Esys_Startup failed: 0x%x\n"
 msgstr "Esys_Startup TPM2 się nie powiodło: 0x%x\n"
 
-#: gnutls_tpm2_esys.c:273
+#: gnutls_tpm2_esys.c:274
 #, c-format
 msgid "Esys_TR_FromTPMPublic failed for handle 0x%x: 0x%x\n"
 msgstr ""
 "Esys_TR_FromTPMPublic się nie powiodło dla programu obsługującego 0x%x: 0x"
 "%x\n"
 
-#: gnutls_tpm2_esys.c:294 gnutls_tpm2_ibm.c:277
+#: gnutls_tpm2_esys.c:295 gnutls_tpm2_ibm.c:277
 msgid "Enter TPM2 parent key password:"
 msgstr "Hasło nadrzędnego klucza TPM2:"
 
-#: gnutls_tpm2_esys.c:308
+#: gnutls_tpm2_esys.c:309
 #, c-format
 msgid "Loading TPM2 key blob, parent %x.\n"
 msgstr "Wczytywanie danych „blob” klucza TPM2, nadrzędny %x.\n"
 
-#: gnutls_tpm2_esys.c:316
+#: gnutls_tpm2_esys.c:317
 msgid "TPM2 Esys_Load auth failed\n"
 msgstr "Uwierzytelnienie Esys_Load TPM2 się nie powiodło\n"
 
-#: gnutls_tpm2_esys.c:322
+#: gnutls_tpm2_esys.c:323
 #, c-format
 msgid "TPM2 Esys_Load failed: 0x%x\n"
 msgstr "Esys_Load TPM2 się nie powiodło: 0x%x\n"
 
-#: gnutls_tpm2_esys.c:332
+#: gnutls_tpm2_esys.c:333
 #, c-format
 msgid "TPM2 Esys_FlushContext for generated primary failed: 0x%x\n"
 msgstr ""
 "Esys_FlushContex TPM2 dla utworzonego głównego się nie powiodło: 0x%x\n"
 
-#: gnutls_tpm2_esys.c:362 gnutls_tpm2_ibm.c:362 gnutls_tpm2_ibm.c:449
+#: gnutls_tpm2_esys.c:363 gnutls_tpm2_ibm.c:362 gnutls_tpm2_ibm.c:449
 msgid "Enter TPM2 key password:"
 msgstr "Hasło klucza TPM2:"
 
-#: gnutls_tpm2_esys.c:394
+#: gnutls_tpm2_esys.c:395
 #, c-format
 msgid "TPM2 RSA sign function called for %d bytes.\n"
 msgstr "Wywołano funkcję podpisywania RSA TPM2 dla %d B.\n"
 
-#: gnutls_tpm2_esys.c:413
+#: gnutls_tpm2_esys.c:414
 msgid "TPM2 Esys_RSA_Decrypt auth failed\n"
 msgstr "Uwierzytelnienie Esys_RSA_Decrypt TPM2 się nie powiodło\n"
 
-#: gnutls_tpm2_esys.c:419 gnutls_tpm2_esys.c:499
+#: gnutls_tpm2_esys.c:420 gnutls_tpm2_esys.c:500
 #, c-format
 msgid "TPM2 failed to generate RSA signature: 0x%x\n"
 msgstr "Utworzenie podpisu RSA przez TPM2 się nie powiodło: 0x%x\n"
 
-#: gnutls_tpm2_esys.c:463 gnutls_tpm2_ibm.c:404
+#: gnutls_tpm2_esys.c:464 gnutls_tpm2_ibm.c:404
 #, c-format
 msgid "TPM2 EC sign function called for %d bytes.\n"
 msgstr "Wywołano funkcję podpisywania EC TPM2 dla %d B.\n"
 
-#: gnutls_tpm2_esys.c:493
+#: gnutls_tpm2_esys.c:494
 msgid "TPM2 Esys_Sign auth failed\n"
 msgstr "Uwierzytelnienie Esys_Sign TPM2 się nie powiodło\n"
 
-#: gnutls_tpm2_esys.c:531 gnutls_tpm2_ibm.c:484
+#: gnutls_tpm2_esys.c:532 gnutls_tpm2_ibm.c:484
 #, c-format
 msgid "Invalid TPM2 parent handle 0x%08x\n"
 msgstr "Nieprawidłowy program obsługujący 0x%08x nadrzędnego TPM2\n"
 
-#: gnutls_tpm2_esys.c:545 gnutls_tpm2_ibm.c:501
+#: gnutls_tpm2_esys.c:546 gnutls_tpm2_ibm.c:501
 #, c-format
 msgid "Failed to import TPM2 private key data: 0x%x\n"
 msgstr "Zaimportowanie danych klucza prywatnego TPM2 się nie powiodło: 0x%x\n"
 
-#: gnutls_tpm2_esys.c:554 gnutls_tpm2_ibm.c:511
+#: gnutls_tpm2_esys.c:555 gnutls_tpm2_ibm.c:511
 #, c-format
 msgid "Failed to import TPM2 public key data: 0x%x\n"
 msgstr "Zaimportowanie danych klucza publicznego TPM2 się nie powiodło: 0x%x\n"
 
-#: gnutls_tpm2_esys.c:568 gnutls_tpm2_ibm.c:522
+#: gnutls_tpm2_esys.c:569 gnutls_tpm2_ibm.c:522
 #, c-format
 msgid "Unsupported TPM2 key type %d\n"
 msgstr "Nieobsługiwany typ klucza TPM2 %d\n"
@@ -2704,7 +2704,7 @@ msgstr "Wybiera logowanie uwierzytelnienia"
 
 #: main.c:806
 msgid "Provide authentication form responses"
-msgstr ""
+msgstr "Podaje odpowiedzi formularza uwierzytelnienia"
 
 #: main.c:807
 msgid "Use SSL client certificate CERT"
@@ -2960,11 +2960,11 @@ msgstr "Typ zgłaszanego systemu operacyjnego (linux,linux-64,win…)"
 
 #: main.c:889
 msgid "reported version string during authentication"
-msgstr ""
+msgstr "zgłaszany ciąg wersji podczas uwierzytelniania"
 
 #: main.c:890
 msgid "default:"
-msgstr ""
+msgstr "domyślnie:"
 
 #: main.c:893
 msgid "Trojan binary (CSD) execution"
@@ -3211,7 +3211,7 @@ msgstr "Sesja została zakończona przez serwer. Kończenie działania.\n"
 
 #: main.c:1698
 msgid "User cancelled (SIGINT/SIGTERM); exiting.\n"
-msgstr ""
+msgstr "Anulowane przez użytkownika (SIGINT/SIGTERM). Kończenie działania.\n"
 
 #: main.c:1702
 msgid "User detached from session (SIGHUP); exiting.\n"
@@ -3699,7 +3699,7 @@ msgstr "Wysłano pakiet kontroli włączenia ESP\n"
 msgid "Logout successful.\n"
 msgstr "Pomyślnie wylogowano.\n"
 
-#: openconnect-internal.h:1116 openconnect-internal.h:1124
+#: openconnect-internal.h:1117 openconnect-internal.h:1125
 #, c-format
 msgid "ERROR: %s() called with invalid UTF-8 for '%s' argument\n"
 msgstr ""
@@ -3738,27 +3738,28 @@ msgstr "Za duży rozmiar identyfikatora programu\n"
 msgid "PSK callback\n"
 msgstr "Wywołanie zwrotne PSK\n"
 
-#: openssl-dtls.c:364
+#: openssl-dtls.c:365
 msgid "Initialise DTLSv1 CTX failed\n"
 msgstr "Zainicjowanie sesji „CTX” DTLSv1 się nie powiodło\n"
 
-#: openssl-dtls.c:377
+#: openssl-dtls.c:378
 msgid "Set DTLS CTX version failed\n"
 msgstr "Ustawienie wersji „CTX” DTLS się nie powiodło\n"
 
-#: openssl-dtls.c:394
+#: openssl-dtls.c:395
 msgid "Failed to generate DTLS key\n"
 msgstr "Utworzenie klucza DTLS się nie powiodło\n"
 
-#: openssl-dtls.c:412
+#: openssl-dtls.c:413
 msgid "Set DTLS cipher list failed\n"
 msgstr "Ustawienie listy szyfrów DTLS się nie powiodło\n"
 
-#: openssl-dtls.c:428
-msgid "Not precisely one DTLS cipher\n"
-msgstr "Nie wynosi dokładnie jednego szyfru DTLS\n"
+#: openssl-dtls.c:439
+#, c-format
+msgid "DTLS cipher '%s' not found\n"
+msgstr ""
 
-#: openssl-dtls.c:449
+#: openssl-dtls.c:460
 #, c-format
 msgid ""
 "SSL_set_session() failed with old protocol version 0x%x\n"
@@ -3771,23 +3772,23 @@ msgstr ""
 "Więcej informacji na http://rt.openssl.org/Ticket/Display.html?id=1751\n"
 "Należy użyć opcji wiersza poleceń „--no-dtls”, aby uniknąć tego komunikatu\n"
 
-#: openssl-dtls.c:482
+#: openssl-dtls.c:493
 msgid "SSL_set_session() failed\n"
 msgstr "SSL_set_session() się nie powiodło\n"
 
-#: openssl-dtls.c:555
+#: openssl-dtls.c:566
 #, c-format
 msgid "Established DTLS connection (using OpenSSL). Ciphersuite %s.\n"
 msgstr ""
 "Nawiązano połączenie DTLS (używając biblioteki OpenSSL). Zestaw szyfrów %s.\n"
 
-#: openssl-dtls.c:592
+#: openssl-dtls.c:603
 msgid "Your OpenSSL is older than the one you built against, so DTLS may fail!"
 msgstr ""
 "Biblioteka OpenSSL jest starsza niż ta, z którą zbudowano, więc DTLS może "
 "się nie powieść."
 
-#: openssl-dtls.c:643
+#: openssl-dtls.c:654
 msgid ""
 "This is probably because your OpenSSL is broken\n"
 "See http://rt.openssl.org/Ticket/Display.html?id=2984\n"
@@ -3795,7 +3796,7 @@ msgstr ""
 "Prawdopodobnie biblioteka OpenSSL jest uszkodzona\n"
 "Więcej informacji na http://rt.openssl.org/Ticket/Display.html?id=2984\n"
 
-#: openssl-dtls.c:650
+#: openssl-dtls.c:661
 #, c-format
 msgid "DTLS handshake failed: %d\n"
 msgstr "Powitanie DTLS się nie powiodło: %d\n"
@@ -4917,3 +4918,6 @@ msgstr "polecenie obliczania"
 #: yubikey.c:627
 msgid "Unrecognised response from Yubikey when generating tokencode\n"
 msgstr "Nierozpoznana odpowiedź z Yubikey podczas tworzenia kodu tokena\n"
+
+#~ msgid "Not precisely one DTLS cipher\n"
+#~ msgstr "Nie wynosi dokładnie jednego szyfru DTLS\n"
