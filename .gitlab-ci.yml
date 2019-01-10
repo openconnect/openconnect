@@ -97,6 +97,9 @@ Fedora/GnuTLS:
     java-devel-openjdk glibc-langpack-cs iproute iputils nuttcp
   - ./autogen.sh
   - ./configure --with-java --disable-dsa-tests CFLAGS=-g
+  - make tmp-distdir
+  - cd openconnect-$(git describe --tags | sed s/^v//)
+  - ./configure --with-java --disable-dsa-tests CFLAGS=-g
   - make -j4
   - make VERBOSE=1 -j4 check
   tags:
@@ -120,6 +123,9 @@ Fedora/GnuTLS/clang:
     vpnc-script 'pkgconfig(libpskc)' 'pkgconfig(libpcsclite)' tss2-devel
     java-devel-openjdk clang glibc-langpack-cs iproute iputils nuttcp
   - ./autogen.sh
+  - ./configure --with-java --disable-dsa-tests CC=clang CFLAGS=-g
+  - make tmp-distdir
+  - cd openconnect-$(git describe --tags | sed s/^v//)
   - ./configure --with-java --disable-dsa-tests CC=clang CFLAGS=-g
   - make -j4
   - make VERBOSE=1 -j4 check
@@ -147,6 +153,9 @@ Fedora/OpenSSL:
   - update-crypto-policies --set LEGACY
   - ./autogen.sh
   - ./configure --without-gnutls --with-openssl --without-openssl-version-check --disable-dsa-tests CFLAGS=-g
+  - make tmp-distdir
+  - cd openconnect-$(git describe --tags | sed s/^v//)
+  - ./configure --without-gnutls --with-openssl --without-openssl-version-check --disable-dsa-tests CFLAGS=-g
   - make -j4
   - make VERBOSE=1 -j4 check
   tags:
@@ -172,6 +181,9 @@ Fedora/OpenSSL/clang:
 # Re-enable DSA since we test it
   - update-crypto-policies --set LEGACY
   - ./autogen.sh
+  - ./configure CC=clang --without-gnutls --with-openssl --without-openssl-version-check --disable-dsa-tests CFLAGS=-g
+  - make tmp-distdir
+  - cd openconnect-$(git describe --tags | sed s/^v//)
   - ./configure CC=clang --without-gnutls --with-openssl --without-openssl-version-check --disable-dsa-tests CFLAGS=-g
   - make -j4
   - make VERBOSE=1 -j4 check
