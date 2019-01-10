@@ -427,6 +427,7 @@ struct openconnect_info {
 	int nopasswd;
 	int xmlpost;
 	char *dtls_ciphers;
+	char *dtls12_ciphers;
 	char *csd_wrapper;
 	int no_http_keepalive;
 	int dump_http_traffic;

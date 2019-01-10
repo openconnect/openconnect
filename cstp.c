@@ -284,9 +284,12 @@ static int start_cstp_connection(struct openconnect_info *vpninfo)
 		}
 
 
-		if (vpninfo->dtls_ciphers)
-			buf_append(reqbuf, "X-DTLS-CipherSuite: %s\r\n", vpninfo->dtls_ciphers);
-		else {
+		if (vpninfo->dtls_ciphers || vpninfo->dtls12_ciphers) {
+			if (vpninfo->dtls_ciphers)
+				buf_append(reqbuf, "X-DTLS-CipherSuite: %s\r\n", vpninfo->dtls_ciphers);
+			if (vpninfo->dtls12_ciphers)
+				buf_append(reqbuf, "X-DTLS12-CipherSuite: %s\r\n", vpninfo->dtls12_ciphers);
+		} else {
 			struct oc_text_buf *dtls_cl, *dtls12_cl;
 
 			dtls_cl = buf_alloc();

@@ -158,6 +158,7 @@ enum {
 	OPT_CSD_WRAPPER,
 	OPT_DISABLE_IPV6,
 	OPT_DTLS_CIPHERS,
+	OPT_DTLS12_CIPHERS,
 	OPT_DUMP_HTTP,
 	OPT_FORCE_DPD,
 	OPT_GNUTLS_DEBUG,
@@ -251,6 +252,7 @@ static const struct option long_options[] = {
 	OPTION("no-passwd", 0, OPT_NO_PASSWD),
 	OPTION("reconnect-timeout", 1, OPT_RECONNECT_TIMEOUT),
 	OPTION("dtls-ciphers", 1, OPT_DTLS_CIPHERS),
+	OPTION("dtls12-ciphers", 1, OPT_DTLS12_CIPHERS),
 	OPTION("authgroup", 1, OPT_AUTHGROUP),
 	OPTION("servercert", 1, OPT_SERVERCERT),
 	OPTION("resolve", 1, OPT_RESOLVE),
@@ -1306,6 +1308,9 @@ int main(int argc, char **argv)
 			break;
 		case OPT_DTLS_CIPHERS:
 			vpninfo->dtls_ciphers = keep_config_arg();
+			break;
+		case OPT_DTLS12_CIPHERS:
+			vpninfo->dtls12_ciphers = keep_config_arg();
 			break;
 		case OPT_AUTHGROUP:
 			authgroup = keep_config_arg();

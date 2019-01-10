@@ -48,6 +48,7 @@ openconnect \- Multi-protocol VPN client, for Cisco AnyConnect VPNs and others
 .OP \-\-cafile file
 .OP \-\-disable\-ipv6
 .OP \-\-dtls\-ciphers list
+.OP \-\-dtls12\-ciphers list
 .OP \-\-dtls\-local\-port port
 .OP \-\-dump\-http\-traffic
 .OP \-\-no\-system\-trust
@@ -367,6 +368,9 @@ Do not advertise IPv6 capability to server
 .TP
 .B \-\-dtls\-ciphers=LIST
 Set OpenSSL ciphers to support for DTLS
+.TP
+.B \-\-dtls12\-ciphers=LIST
+Set OpenSSL ciphers for Cisco's DTLS v1.2
 .TP
 .B \-\-dtls\-local\-port=PORT
 Use
