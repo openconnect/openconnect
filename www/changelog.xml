@@ -15,6 +15,9 @@
 <ul>
    <li><b>OpenConnect HEAD</b>
      <ul>
+       <li>Fix GNU/Hurd build.</li>
+       <li>Discover <tt>vpnc-script</tt> in default packaged location on FreeBSD/OpenBSD.</li>
+       <li>Support split-exclude routes for GlobalProtect.</li>
        <li>Fix GnuTLS builds without libtasn1.</li>
        <li>Fix DTLS support with OpenSSL 1.1.1+.</li>
        <li>Add Cisco-compatible DTLSv1.2 support.</li>
