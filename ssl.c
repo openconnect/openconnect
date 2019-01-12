@@ -49,6 +49,13 @@
 #define AI_NUMERICSERV 0
 #endif
 
+/* GNU Hurd doesn't yet declare IPV6_TCLASS */
+#ifndef IPV6_TCLASS
+#if defined(__GNU__)
+#define IPV6_TCLASS 61
+#endif
+#endif
+
 static inline int connect_pending()
 {
 #ifdef _WIN32
