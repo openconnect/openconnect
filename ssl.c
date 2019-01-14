@@ -53,6 +53,8 @@
 #ifndef IPV6_TCLASS
 #if defined(__GNU__)
 #define IPV6_TCLASS 61
+#elif defined(__APPLE__)
+#define IPV6_TCLASS 36
 #endif
 #endif
 
