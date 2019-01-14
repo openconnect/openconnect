@@ -404,36 +404,45 @@ static int calculate_mtu(struct openconnect_info *vpninfo, int can_use_esp)
 }
 
 #ifdef HAVE_ESP
-static int set_esp_algo(struct openconnect_info *vpninfo, const char *s, int hmac)
+static int check_hmac_algo(struct openconnect_info *v, const char *s)
 {
-	if (hmac) {
-		if (!strcmp(s, "sha1"))		{ vpninfo->esp_hmac = HMAC_SHA1; vpninfo->hmac_key_len = 20; return 0; }
-		if (!strcmp(s, "md5"))		{ vpninfo->esp_hmac = HMAC_MD5;  vpninfo->hmac_key_len = 16; return 0; }
-	} else {
-		if (!strcmp(s, "aes128") || !strcmp(s, "aes-128-cbc"))
-		                                { vpninfo->esp_enc = ENC_AES_128_CBC; vpninfo->enc_key_len = 16; return 0; }
-		if (!strcmp(s, "aes-256-cbc"))	{ vpninfo->esp_enc = ENC_AES_256_CBC; vpninfo->enc_key_len = 32; return 0; }
-	}
-	vpn_progress(vpninfo, PRG_ERR, _("Unknown ESP %s algorithm: %s"), hmac ? "MAC" : "encryption", s);
+	if (!strcmp(s, "sha1"))	return HMAC_SHA1;
+	if (!strcmp(s, "md5"))  return HMAC_MD5;
+	vpn_progress(v, PRG_ERR, _("Unknown ESP MAC algorithm: %s"), s);
 	return -ENOENT;
 }
 
-static int get_key_bits(xmlNode *xml_node, unsigned char *dest)
+static int check_enc_algo(struct openconnect_info *v, const char *s)
 {
-	int bits = -1;
+	if (!strcmp(s, "aes128") || !strcmp(s, "aes-128-cbc")) return ENC_AES_128_CBC;
+	if (!strcmp(s, "aes-256-cbc"))                         return ENC_AES_256_CBC;
+	vpn_progress(v, PRG_ERR, _("Unknown ESP encryption algorithm: %s"), s);
+	return -ENOENT;
+}
+
+/* Reads <KEYTAG/><bits>N</bits><val>hex digits</val></KEYTAG> and saves the
+ * key in dest, returning its length in bytes.
+ */
+static int xml_to_key(xmlNode *xml_node, unsigned char *dest, int dest_size)
+{
+	int explen = -1, len = 0;
 	xmlNode *child;
 	char *p, *s = NULL;
 
 	for (child = xml_node->children; child; child=child->next) {
 		if (xmlnode_get_val(child, "bits", &s) == 0) {
-			bits = atoi(s);
+			explen = atoi(s);
+			if (explen & 0x07) goto out;
+			explen >>= 3;
 		} else if (xmlnode_get_val(child, "val", &s) == 0) {
-			for (p=s; *p && *(p+1) && (bits-=8)>=0; p+=2)
-				*dest++ = unhex(p);
+			for (p=s; p[0] && p[1]; p+=2)
+				if (len++ < dest_size)
+					*dest++ = unhex(p);
 		}
 	}
+out:
 	free(s);
-	return (bits == 0) ? 0 : -EINVAL;
+	return (len == explen) ? len : -EINVAL;
 }
 #endif
 
@@ -538,17 +547,18 @@ static int gpst_parse_config_xml(struct openconnect_info *vpninfo, xmlNode *xml_
 #ifdef HAVE_ESP
 			if (vpninfo->dtls_state != DTLS_DISABLED) {
 				int c = (vpninfo->current_esp_in ^= 1);
+				struct esp *ei = &vpninfo->esp_in[c], *eo = &vpninfo->esp_out;
 				vpninfo->old_esp_maxseq = vpninfo->esp_in[c^1].seq + 32;
 				for (member = xml_node->children; member; member=member->next) {
 					if (!xmlnode_get_val(member, "udp-port", &s))		udp_sockaddr(vpninfo, atoi(s));
-					else if (!xmlnode_get_val(member, "enc-algo", &s)) 	set_esp_algo(vpninfo, s, 0);
-					else if (!xmlnode_get_val(member, "hmac-algo", &s))	set_esp_algo(vpninfo, s, 1);
-					else if (!xmlnode_get_val(member, "c2s-spi", &s))	vpninfo->esp_out.spi = htonl(strtoul(s, NULL, 16));
-					else if (!xmlnode_get_val(member, "s2c-spi", &s))	vpninfo->esp_in[c].spi = htonl(strtoul(s, NULL, 16));
-					else if (xmlnode_is_named(member, "ekey-c2s"))		get_key_bits(member, vpninfo->esp_out.enc_key);
-					else if (xmlnode_is_named(member, "ekey-s2c"))		get_key_bits(member, vpninfo->esp_in[c].enc_key);
-					else if (xmlnode_is_named(member, "akey-c2s"))		get_key_bits(member, vpninfo->esp_out.hmac_key);
-					else if (xmlnode_is_named(member, "akey-s2c"))		get_key_bits(member, vpninfo->esp_in[c].hmac_key);
+					else if (!xmlnode_get_val(member, "enc-algo", &s)) 	vpninfo->esp_enc = check_enc_algo(vpninfo, s);
+					else if (!xmlnode_get_val(member, "hmac-algo", &s))	vpninfo->esp_hmac = check_hmac_algo(vpninfo, s);
+					else if (!xmlnode_get_val(member, "c2s-spi", &s))	eo->spi = htonl(strtoul(s, NULL, 16));
+					else if (!xmlnode_get_val(member, "s2c-spi", &s))	ei->spi = htonl(strtoul(s, NULL, 16));
+					else if (xmlnode_is_named(member, "ekey-c2s"))		vpninfo->enc_key_len = xml_to_key(member, eo->enc_key, sizeof(eo->enc_key));
+					else if (xmlnode_is_named(member, "ekey-s2c"))		vpninfo->enc_key_len = xml_to_key(member, ei->enc_key, sizeof(ei->enc_key));
+					else if (xmlnode_is_named(member, "akey-c2s"))		vpninfo->hmac_key_len = xml_to_key(member, eo->hmac_key, sizeof(eo->hmac_key));
+					else if (xmlnode_is_named(member, "akey-s2c"))		vpninfo->hmac_key_len = xml_to_key(member, ei->hmac_key, sizeof(ei->hmac_key));
 					else if (!xmlnode_get_val(member, "ipsec-mode", &s) && strcmp(s, "esp-tunnel"))
 						vpn_progress(vpninfo, PRG_ERR, _("GlobalProtect config sent ipsec-mode=%s (expected esp-tunnel)\n"), s);
 				}
