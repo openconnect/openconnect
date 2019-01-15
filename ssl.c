@@ -1012,7 +1012,12 @@ int ssl_reconnect(struct openconnect_info *vpninfo)
 	free(vpninfo->tun_pkt);
 	vpninfo->tun_pkt = NULL;
 
-	while ((ret = vpninfo->proto->tcp_connect(vpninfo))) {
+	while (1) {
+		script_config_tun(vpninfo, "attempt-reconnect");
+		ret = vpninfo->proto->tcp_connect(vpninfo);
+		if (!ret)
+			break;
+
 		if (timeout <= 0)
 			return ret;
 		if (ret == -EPERM) {
