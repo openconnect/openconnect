@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openconnect\n"
 "Report-Msgid-Bugs-To: openconnect-devel@lists.infradead.org\n"
-"POT-Creation-Date: 2019-01-05 00:00+0000\n"
+"POT-Creation-Date: 2019-01-16 11:23+0200\n"
 "PO-Revision-Date: 2012-06-21 09:22+0000\n"
 "Last-Translator: David Woodhouse <dwmw2@infradead.org>\n"
 "Language-Team: Latvian (http://www.transifex.net/projects/p/meego/language/"
@@ -243,7 +243,7 @@ msgstr ""
 msgid "Not downloading XML profile because SHA1 already matches\n"
 msgstr ""
 
-#: auth.c:931 cstp.c:320 http.c:917
+#: auth.c:931 cstp.c:335 http.c:917
 #, c-format
 msgid "Failed to open HTTPS connection to %s\n"
 msgstr ""
@@ -380,238 +380,238 @@ msgstr ""
 msgid "TCP_MAXSEG %d\n"
 msgstr ""
 
-#: cstp.c:279
+#: cstp.c:281
 msgid ""
 "CRITICAL ERROR: DTLS master secret is uninitialised. Please report this.\n"
 msgstr ""
 
-#: cstp.c:297
+#: cstp.c:312
 msgid "Error creating HTTPS CONNECT request\n"
 msgstr ""
 
-#: cstp.c:313 http.c:385
+#: cstp.c:328 http.c:385
 msgid "Error fetching HTTPS response\n"
 msgstr ""
 
-#: cstp.c:340
+#: cstp.c:355
 #, c-format
 msgid "VPN service unavailable; reason: %s\n"
 msgstr ""
 
-#: cstp.c:345
+#: cstp.c:360
 #, c-format
 msgid "Got inappropriate HTTP CONNECT response: %s\n"
 msgstr ""
 
-#: cstp.c:352
+#: cstp.c:367
 #, c-format
 msgid "Got CONNECT response: %s\n"
 msgstr ""
 
-#: cstp.c:380 cstp.c:388
+#: cstp.c:396 cstp.c:404
 msgid "No memory for options\n"
 msgstr ""
 
-#: cstp.c:397 http.c:445
+#: cstp.c:413 http.c:445
 msgid "<elided>"
-msgstr ""
-
-#: cstp.c:416
-#, c-format
-msgid "X-DTLS-Session-ID not 64 characters; is: \"%s\"\n"
 msgstr ""
 
 #: cstp.c:433
 #, c-format
+msgid "X-DTLS-Session-ID not 64 characters; is: \"%s\"\n"
+msgstr ""
+
+#: cstp.c:450
+#, c-format
 msgid "X-DTLS-Session-ID is invalid; is: \"%s\"\n"
 msgstr ""
 
-#: cstp.c:451
+#: cstp.c:468
 #, c-format
 msgid "Unknown DTLS-Content-Encoding %s\n"
 msgstr ""
 
-#: cstp.c:489
+#: cstp.c:510
 #, c-format
 msgid "Unknown CSTP-Content-Encoding %s\n"
 msgstr ""
 
-#: cstp.c:564
+#: cstp.c:585
 msgid "No MTU received. Aborting\n"
 msgstr ""
 
-#: cstp.c:572 gpst.c:634
+#: cstp.c:593 gpst.c:640
 msgid "No IP address received. Aborting\n"
 msgstr ""
 
-#: cstp.c:578
+#: cstp.c:599
 #, c-format
 msgid "IPv6 configuration received but MTU %d is too small.\n"
 msgstr ""
 
-#: cstp.c:584 gpst.c:641
+#: cstp.c:605 gpst.c:647
 #, c-format
 msgid "Reconnect gave different Legacy IP address (%s != %s)\n"
 msgstr ""
 
-#: cstp.c:592 gpst.c:650
+#: cstp.c:613 gpst.c:656
 #, c-format
 msgid "Reconnect gave different Legacy IP netmask (%s != %s)\n"
 msgstr ""
 
-#: cstp.c:600
+#: cstp.c:621
 #, c-format
 msgid "Reconnect gave different IPv6 address (%s != %s)\n"
 msgstr ""
 
-#: cstp.c:608
+#: cstp.c:629
 #, c-format
 msgid "Reconnect gave different IPv6 netmask (%s != %s)\n"
 msgstr ""
 
-#: cstp.c:616
+#: cstp.c:637
 #, c-format
 msgid "CSTP connected. DPD %d, Keepalive %d\n"
 msgstr ""
 
-#: cstp.c:618
+#: cstp.c:639
 #, c-format
 msgid "CSTP Ciphersuite: %s\n"
 msgstr ""
 
-#: cstp.c:680
+#: cstp.c:701
 msgid "Compression setup failed\n"
 msgstr ""
 
-#: cstp.c:697
+#: cstp.c:718
 msgid "Allocation of deflate buffer failed\n"
 msgstr ""
 
-#: cstp.c:759
+#: cstp.c:780
 msgid "inflate failed\n"
 msgstr ""
 
-#: cstp.c:782
+#: cstp.c:803
 #, c-format
 msgid "LZS decompression failed: %s\n"
 msgstr ""
 
-#: cstp.c:795
+#: cstp.c:816
 msgid "LZ4 decompression failed\n"
 msgstr ""
 
-#: cstp.c:802
+#: cstp.c:823
 #, c-format
 msgid "Unknown compression type %d\n"
 msgstr ""
 
-#: cstp.c:807
+#: cstp.c:828
 #, c-format
 msgid "Received %s compressed data packet of %d bytes (was %d)\n"
 msgstr ""
 
-#: cstp.c:827
+#: cstp.c:848
 #, c-format
 msgid "deflate failed %d\n"
 msgstr ""
 
-#: cstp.c:900 dtls.c:283 dtls.c:742 esp.c:136 gpst.c:1035 mainloop.c:69
+#: cstp.c:921 dtls.c:281 dtls.c:740 esp.c:129 gpst.c:1041 mainloop.c:69
 #: oncp.c:914
 msgid "Allocation failed\n"
 msgstr ""
 
-#: cstp.c:911 gpst.c:1048
+#: cstp.c:932 gpst.c:1054
 #, c-format
 msgid "Short packet received (%d bytes)\n"
 msgstr ""
 
-#: cstp.c:924
+#: cstp.c:945
 #, c-format
 msgid "Unexpected packet length. SSL_read returned %d but packet is\n"
 msgstr ""
 
-#: cstp.c:938
+#: cstp.c:959
 msgid "Got CSTP DPD request\n"
 msgstr ""
 
-#: cstp.c:944
+#: cstp.c:965
 msgid "Got CSTP DPD response\n"
 msgstr ""
 
-#: cstp.c:949
+#: cstp.c:970
 msgid "Got CSTP Keepalive\n"
 msgstr ""
 
-#: cstp.c:954 oncp.c:1003
+#: cstp.c:975 oncp.c:1003
 #, c-format
 msgid "Received uncompressed data packet of %d bytes\n"
 msgstr ""
 
-#: cstp.c:971
+#: cstp.c:992
 #, c-format
 msgid "Received server disconnect: %02x '%s'\n"
 msgstr ""
 
-#: cstp.c:974
+#: cstp.c:995
 msgid "Received server disconnect\n"
 msgstr ""
 
-#: cstp.c:982
+#: cstp.c:1003
 msgid "Compressed packet received in !deflate mode\n"
 msgstr ""
 
-#: cstp.c:991
+#: cstp.c:1012
 msgid "received server terminate packet\n"
 msgstr ""
 
-#: cstp.c:998
+#: cstp.c:1019
 #, c-format
 msgid "Unknown packet %02x %02x %02x %02x %02x %02x %02x %02x\n"
 msgstr ""
 
-#: cstp.c:1041 gpst.c:1135 oncp.c:1121
+#: cstp.c:1062 gpst.c:1141 oncp.c:1121
 #, c-format
 msgid "SSL wrote too few bytes! Asked for %d, sent %d\n"
 msgstr ""
 
 #. Not that this will ever happen; we don't even process
 #. the setting when we're asked for it.
-#: cstp.c:1069 oncp.c:1155
+#: cstp.c:1090 oncp.c:1155
 msgid "CSTP rekey due\n"
 msgstr ""
 
 #. if we failed rehandshake try establishing a new-tunnel instead of failing
-#: cstp.c:1076 oncp.c:1162
+#: cstp.c:1097 oncp.c:1162
 msgid "Rehandshake failed; attempting new-tunnel\n"
 msgstr ""
 
-#: cstp.c:1087 oncp.c:1173
+#: cstp.c:1108 oncp.c:1173
 msgid "CSTP Dead Peer Detection detected dead peer!\n"
 msgstr ""
 
-#: cstp.c:1091 gpst.c:1159 oncp.c:1091 oncp.c:1177
+#: cstp.c:1112 gpst.c:1165 oncp.c:1091 oncp.c:1177
 msgid "Reconnect failed\n"
 msgstr ""
 
-#: cstp.c:1107 oncp.c:1193
+#: cstp.c:1128 oncp.c:1193
 msgid "Send CSTP DPD\n"
 msgstr ""
 
-#: cstp.c:1119 oncp.c:1204
+#: cstp.c:1140 oncp.c:1204
 msgid "Send CSTP Keepalive\n"
 msgstr ""
 
-#: cstp.c:1144
+#: cstp.c:1165
 #, c-format
 msgid "Sending compressed data packet of %d bytes (was %d)\n"
 msgstr ""
 
-#: cstp.c:1155 oncp.c:1238
+#: cstp.c:1176 oncp.c:1238
 #, c-format
 msgid "Sending uncompressed data packet of %d bytes\n"
 msgstr ""
 
-#: cstp.c:1194
+#: cstp.c:1215
 #, c-format
 msgid "Send BYE packet: %s\n"
 msgstr ""
@@ -648,175 +648,175 @@ msgstr ""
 msgid "DTLS option %s : %s\n"
 msgstr ""
 
-#: dtls.c:241
+#: dtls.c:239
 #, c-format
 msgid "DTLS initialised. DPD %d, Keepalive %d\n"
 msgstr ""
 
-#: dtls.c:267
+#: dtls.c:265
 msgid "Attempt new DTLS connection\n"
 msgstr ""
 
-#: dtls.c:294
+#: dtls.c:292
 #, c-format
 msgid "Received DTLS packet 0x%02x of %d bytes\n"
 msgstr ""
 
-#: dtls.c:308
+#: dtls.c:306
 msgid "Got DTLS DPD request\n"
 msgstr ""
 
-#: dtls.c:314
+#: dtls.c:312
 msgid "Failed to send DPD response. Expect disconnect\n"
 msgstr ""
 
-#: dtls.c:318
+#: dtls.c:316
 msgid "Got DTLS DPD response\n"
 msgstr ""
 
-#: dtls.c:322
+#: dtls.c:320
 msgid "Got DTLS Keepalive\n"
 msgstr ""
 
-#: dtls.c:328
+#: dtls.c:326
 msgid "Compressed DTLS packet received when compression not enabled\n"
 msgstr ""
 
-#: dtls.c:336
+#: dtls.c:334
 #, c-format
 msgid "Unknown DTLS packet type %02x, len %d\n"
 msgstr ""
 
-#: dtls.c:358
+#: dtls.c:356
 msgid "DTLS rekey due\n"
 msgstr ""
 
-#: dtls.c:365
+#: dtls.c:363
 msgid "DTLS Rehandshake failed; reconnecting.\n"
 msgstr ""
 
-#: dtls.c:374
+#: dtls.c:372
 msgid "DTLS Dead Peer Detection detected dead peer!\n"
 msgstr ""
 
-#: dtls.c:380
+#: dtls.c:378
 msgid "Send DTLS DPD\n"
 msgstr ""
 
-#: dtls.c:385
+#: dtls.c:383
 msgid "Failed to send DPD request. Expect disconnect\n"
 msgstr ""
 
-#: dtls.c:398
+#: dtls.c:396
 msgid "Send DTLS Keepalive\n"
 msgstr ""
 
-#: dtls.c:403
+#: dtls.c:401
 msgid "Failed to send keepalive request. Expect disconnect\n"
 msgstr ""
 
-#: dtls.c:434 tun.c:541
+#: dtls.c:432 tun.c:541
 #, c-format
 msgid "Unknown packet (len %d) received: %02x %02x %02x %02x...\n"
 msgstr ""
 
-#: dtls.c:441
+#: dtls.c:439
 #, c-format
 msgid "TOS this: %d, TOS last: %d\n"
 msgstr ""
 
-#: dtls.c:445
+#: dtls.c:443
 msgid "UDP setsockopt"
 msgstr ""
 
-#: dtls.c:476
+#: dtls.c:474
 #, c-format
 msgid "DTLS got write error %d. Falling back to SSL\n"
 msgstr ""
 
-#: dtls.c:490
+#: dtls.c:488
 #, c-format
 msgid "DTLS got write error: %s. Falling back to SSL\n"
 msgstr ""
 
-#: dtls.c:505
+#: dtls.c:503
 #, c-format
 msgid "Sent DTLS packet of %d bytes; DTLS send returned %d\n"
 msgstr ""
 
-#: dtls.c:533
+#: dtls.c:531
 #, c-format
 msgid "Initiating IPv4 MTU detection (min=%d, max=%d)\n"
 msgstr ""
 
-#: dtls.c:553
+#: dtls.c:551
 msgid "Too long time in MTU detect loop; assuming negotiated MTU.\n"
 msgstr ""
 
-#: dtls.c:557
+#: dtls.c:555
 #, c-format
 msgid "Too long time in MTU detect loop; MTU set to %d.\n"
 msgstr ""
 
-#: dtls.c:566
+#: dtls.c:564
 #, c-format
 msgid "Sending MTU DPD probe (%u bytes, min=%u, max=%u)\n"
 msgstr ""
 
-#: dtls.c:570
+#: dtls.c:568
 #, c-format
 msgid "Failed to send DPD request (%d %d)\n"
 msgstr ""
 
-#: dtls.c:584 dtls.c:692
+#: dtls.c:582 dtls.c:690
 #, c-format
 msgid "Received unexpected packet (%.2x) in MTU detection; skipping.\n"
 msgstr ""
 
-#: dtls.c:596
+#: dtls.c:594
 #, c-format
 msgid "Timeout while waiting for DPD response; trying %d\n"
 msgstr ""
 
-#: dtls.c:603 dtls.c:684
+#: dtls.c:601 dtls.c:682
 msgid "Timeout while waiting for DPD response; resending probe.\n"
 msgstr ""
 
-#: dtls.c:610 dtls.c:711
+#: dtls.c:608 dtls.c:709
 #, c-format
 msgid "Failed to recv DPD request (%d)\n"
 msgstr ""
 
-#: dtls.c:615
+#: dtls.c:613
 #, c-format
 msgid "Received MTU DPD probe (%u bytes of %u)\n"
 msgstr ""
 
-#: dtls.c:653
+#: dtls.c:651
 msgid "Initiating IPv6 MTU detection\n"
 msgstr ""
 
-#: dtls.c:668
+#: dtls.c:666
 #, c-format
 msgid "Sending MTU DPD probe (%u bytes)\n"
 msgstr ""
 
-#: dtls.c:672
+#: dtls.c:670
 #, c-format
 msgid "Failed to send DPD request (%d)\n"
 msgstr ""
 
-#: dtls.c:697
+#: dtls.c:695
 #, c-format
 msgid "Received MTU DPD probe (%u bytes)\n"
 msgstr ""
 
-#: dtls.c:761
+#: dtls.c:759
 #, c-format
 msgid "Detected MTU of %d bytes (was %d)\n"
 msgstr ""
 
-#: dtls.c:764
+#: dtls.c:762
 #, c-format
 msgid "No change in MTU after detection (was %d)\n"
 msgstr ""
@@ -857,197 +857,197 @@ msgstr ""
 msgid "Accepting out-of-order ESP packet with seq %u (expected %<PRIu64>)\n"
 msgstr ""
 
-#: esp.c:70
+#: esp.c:63
 #, c-format
 msgid "Parameters for %s ESP: SPI 0x%08x\n"
 msgstr ""
 
-#: esp.c:73
+#: esp.c:66
 #, c-format
 msgid "ESP encryption type %s key 0x%s\n"
 msgstr ""
 
-#: esp.c:76
+#: esp.c:69
 #, c-format
 msgid "ESP authentication type %s key 0x%s\n"
 msgstr ""
 
-#: esp.c:94
+#: esp.c:87
 msgid "incoming"
 msgstr ""
 
-#: esp.c:95
+#: esp.c:88
 msgid "outgoing"
 msgstr ""
 
-#: esp.c:97 esp.c:120
+#: esp.c:90 esp.c:113
 msgid "Send ESP probes\n"
 msgstr ""
 
-#: esp.c:145
+#: esp.c:138
 #, c-format
 msgid "Received ESP packet of %d bytes\n"
 msgstr ""
 
-#: esp.c:162
+#: esp.c:155
 #, c-format
 msgid "Received ESP packet from old SPI 0x%x, seq %u\n"
 msgstr ""
 
-#: esp.c:168
+#: esp.c:161
 #, c-format
 msgid "Received ESP packet with invalid SPI 0x%08x\n"
 msgstr ""
 
-#: esp.c:181
+#: esp.c:174
 #, c-format
 msgid "Received ESP packet with unrecognised payload type %02x\n"
 msgstr ""
 
-#: esp.c:188
+#: esp.c:181
 #, c-format
 msgid "Invalid padding length %02x in ESP\n"
 msgstr ""
 
-#: esp.c:200
+#: esp.c:193
 msgid "Invalid padding bytes in ESP\n"
 msgstr ""
 
-#: esp.c:209
+#: esp.c:202
 msgid "ESP session established with server\n"
 msgstr ""
 
-#: esp.c:220
+#: esp.c:213
 msgid "Failed to allocate memory to decrypt ESP packet\n"
 msgstr ""
 
-#: esp.c:226
+#: esp.c:219
 msgid "LZO decompression of ESP packet failed\n"
 msgstr ""
 
-#: esp.c:232
+#: esp.c:225
 #, c-format
 msgid "LZO decompressed %d bytes into %d\n"
 msgstr ""
 
-#: esp.c:246
+#: esp.c:239
 msgid "Rekey not implemented for ESP\n"
 msgstr ""
 
-#: esp.c:250
+#: esp.c:243
 msgid "ESP detected dead peer\n"
 msgstr ""
 
-#: esp.c:258
+#: esp.c:251
 msgid "Send ESP probes for DPD\n"
 msgstr ""
 
-#: esp.c:265
+#: esp.c:258
 msgid "Keepalive not implemented for ESP\n"
 msgstr ""
 
-#: esp.c:288
+#: esp.c:281
 #, c-format
 msgid "Failed to send ESP packet: %s\n"
 msgstr ""
 
-#: esp.c:294
+#: esp.c:287
 #, c-format
 msgid "Sent ESP packet of %d bytes\n"
 msgstr ""
 
-#: gnutls-dtls.c:166
+#: gnutls-dtls.c:190
 msgid "Deferring DTLS resumption until CSTP generates a PSK\n"
 msgstr ""
 
-#: gnutls-dtls.c:174
+#: gnutls-dtls.c:198
 msgid "Failed to generate DTLS priority string\n"
 msgstr ""
 
-#: gnutls-dtls.c:183
+#: gnutls-dtls.c:207
 #, c-format
 msgid "Failed to initialize DTLS: %s\n"
 msgstr ""
 
-#: gnutls-dtls.c:192
+#: gnutls-dtls.c:216
 #, c-format
 msgid "Failed to set DTLS priority: '%s': %s\n"
 msgstr ""
 
-#: gnutls-dtls.c:216
+#: gnutls-dtls.c:240
 #, c-format
 msgid "Failed to allocate credentials: %s\n"
 msgstr ""
 
-#: gnutls-dtls.c:229
+#: gnutls-dtls.c:253
 #, c-format
 msgid "Failed to generate DTLS key: %s\n"
 msgstr ""
 
-#: gnutls-dtls.c:243
+#: gnutls-dtls.c:267
 #, c-format
 msgid "Failed to set DTLS key: %s\n"
 msgstr ""
 
-#: gnutls-dtls.c:251
+#: gnutls-dtls.c:275
 #, c-format
 msgid "Failed to set DTLS PSK credentials: %s\n"
 msgstr ""
 
-#: gnutls-dtls.c:284
+#: gnutls-dtls.c:309
 #, c-format
 msgid "Unknown DTLS parameters for requested CipherSuite '%s'\n"
 msgstr ""
 
-#: gnutls-dtls.c:299
+#: gnutls-dtls.c:324
 #, c-format
 msgid "Failed to set DTLS priority: %s\n"
 msgstr ""
 
-#: gnutls-dtls.c:320
+#: gnutls-dtls.c:345
 #, c-format
 msgid "Failed to set DTLS session parameters: %s\n"
 msgstr ""
 
-#: gnutls-dtls.c:348 openssl-dtls.c:523
+#: gnutls-dtls.c:373 openssl-dtls.c:534
 #, c-format
 msgid "Peer MTU %d too small to allow DTLS\n"
 msgstr ""
 
-#: gnutls-dtls.c:357 openssl-dtls.c:534
+#: gnutls-dtls.c:382 openssl-dtls.c:545
 #, c-format
 msgid "DTLS MTU reduced to %d\n"
 msgstr ""
 
-#: gnutls-dtls.c:367 openssl-dtls.c:543
+#: gnutls-dtls.c:392 openssl-dtls.c:554
 msgid "DTLS session resume failed; possible MITM attack. Disabling DTLS.\n"
 msgstr ""
 
-#: gnutls-dtls.c:380
+#: gnutls-dtls.c:405
 #, c-format
 msgid "Failed to set DTLS MTU: %s\n"
 msgstr ""
 
-#: gnutls-dtls.c:391
+#: gnutls-dtls.c:416
 #, c-format
 msgid "Established DTLS connection (using GnuTLS). Ciphersuite %s.\n"
 msgstr ""
 
-#: gnutls-dtls.c:397 openssl-dtls.c:561
+#: gnutls-dtls.c:422 openssl-dtls.c:572
 #, c-format
 msgid "DTLS connection compression using %s.\n"
 msgstr ""
 
-#: gnutls-dtls.c:412 openssl-dtls.c:642 openssl-dtls.c:646
+#: gnutls-dtls.c:437 openssl-dtls.c:653 openssl-dtls.c:657
 msgid "DTLS handshake timed out\n"
 msgstr ""
 
-#: gnutls-dtls.c:415
+#: gnutls-dtls.c:440
 #, c-format
 msgid "DTLS handshake failed: %s\n"
 msgstr ""
 
-#: gnutls-dtls.c:419
+#: gnutls-dtls.c:444
 msgid "(Is a firewall preventing you from sending UDP packets?)\n"
 msgstr ""
 
@@ -1464,7 +1464,7 @@ msgstr ""
 msgid "Error importing server's cert\n"
 msgstr ""
 
-#: gnutls.c:1980 main.c:1789
+#: gnutls.c:1980 main.c:1794
 msgid "Could not calculate hash of server's certificate\n"
 msgstr ""
 
@@ -1676,193 +1676,193 @@ msgstr ""
 msgid "Failed to set key PIN: %s\n"
 msgstr ""
 
-#: gnutls_tpm2.c:93 gnutls_tpm2_esys.c:473 gnutls_tpm2_ibm.c:418
+#: gnutls_tpm2.c:92 gnutls_tpm2_esys.c:474 gnutls_tpm2_ibm.c:418
 #, c-format
 msgid "Unknown TPM2 EC digest size %d\n"
 msgstr ""
 
-#: gnutls_tpm2.c:199
+#: gnutls_tpm2.c:198
 #, c-format
 msgid "Error decoding TSS2 key blob: %s\n"
 msgstr ""
 
-#: gnutls_tpm2.c:209
+#: gnutls_tpm2.c:208
 #, c-format
 msgid "Failed to create ASN.1 type for TPM2: %s\n"
 msgstr ""
 
-#: gnutls_tpm2.c:218
+#: gnutls_tpm2.c:217
 #, c-format
 msgid "Failed to decode TPM2 key ASN.1: %s\n"
 msgstr ""
 
-#: gnutls_tpm2.c:226
+#: gnutls_tpm2.c:225
 #, c-format
 msgid "Failed to parse TPM2 key type OID: %s\n"
 msgstr ""
 
-#: gnutls_tpm2.c:232
+#: gnutls_tpm2.c:231
 #, c-format
 msgid "TPM2 key has unknown type OID %s not %s\n"
 msgstr ""
 
-#: gnutls_tpm2.c:250
+#: gnutls_tpm2.c:249
 #, c-format
 msgid "Failed to parse TPM2 key parent: %s\n"
 msgstr ""
 
-#: gnutls_tpm2.c:271
+#: gnutls_tpm2.c:270
 msgid "Failed to parse TPM2 pubkey element\n"
 msgstr ""
 
-#: gnutls_tpm2.c:276
+#: gnutls_tpm2.c:275
 msgid "Failed to parse TPM2 privkey element\n"
 msgstr ""
 
-#: gnutls_tpm2.c:281
+#: gnutls_tpm2.c:280
 #, c-format
 msgid "Parsed TPM2 key with parent %x, emptyauth %d\n"
 msgstr ""
 
-#: gnutls_tpm2.c:385
+#: gnutls_tpm2.c:384
 #, c-format
 msgid "TPM2 digest too large: %d > %d\n"
 msgstr ""
 
-#: gnutls_tpm2_esys.c:172
+#: gnutls_tpm2_esys.c:173
 msgid "TPM2 password too long; truncating\n"
 msgstr ""
 
-#: gnutls_tpm2_esys.c:188
+#: gnutls_tpm2_esys.c:189
 msgid "owner"
 msgstr ""
 
-#: gnutls_tpm2_esys.c:189
+#: gnutls_tpm2_esys.c:190
 msgid "null"
 msgstr ""
 
-#: gnutls_tpm2_esys.c:190
+#: gnutls_tpm2_esys.c:191
 msgid "endorsement"
 msgstr ""
 
-#: gnutls_tpm2_esys.c:191
+#: gnutls_tpm2_esys.c:192
 msgid "platform"
 msgstr ""
 
-#: gnutls_tpm2_esys.c:195
+#: gnutls_tpm2_esys.c:196
 #, c-format
 msgid "Creating primary key under %s hierarchy.\n"
 msgstr ""
 
-#: gnutls_tpm2_esys.c:200 gnutls_tpm2_ibm.c:261
+#: gnutls_tpm2_esys.c:201 gnutls_tpm2_ibm.c:261
 #, c-format
 msgid "Enter TPM2 %s hierarchy password:"
 msgstr ""
 
-#: gnutls_tpm2_esys.c:208 gnutls_tpm2_esys.c:302 gnutls_tpm2_esys.c:373
+#: gnutls_tpm2_esys.c:209 gnutls_tpm2_esys.c:303 gnutls_tpm2_esys.c:374
 #, c-format
 msgid "TPM2 Esys_TR_SetAuth failed: 0x%x\n"
 msgstr ""
 
-#: gnutls_tpm2_esys.c:220
+#: gnutls_tpm2_esys.c:221
 msgid "TPM2 Esys_CreatePrimary owner auth failed\n"
 msgstr ""
 
-#: gnutls_tpm2_esys.c:225
+#: gnutls_tpm2_esys.c:226
 #, c-format
 msgid "TPM2 Esys_CreatePrimary failed: 0x%x\n"
 msgstr ""
 
-#: gnutls_tpm2_esys.c:244
+#: gnutls_tpm2_esys.c:245
 msgid "Establishing connection with TPM.\n"
 msgstr ""
 
-#: gnutls_tpm2_esys.c:249
+#: gnutls_tpm2_esys.c:250
 #, c-format
 msgid "TPM2 Esys_Initialize failed: 0x%x\n"
 msgstr ""
 
-#: gnutls_tpm2_esys.c:257
+#: gnutls_tpm2_esys.c:258
 msgid ""
 "TPM2 was already started up thus false positive failing in tpm2tss log.\n"
 msgstr ""
 
-#: gnutls_tpm2_esys.c:260
+#: gnutls_tpm2_esys.c:261
 #, c-format
 msgid "TPM2 Esys_Startup failed: 0x%x\n"
 msgstr ""
 
-#: gnutls_tpm2_esys.c:273
+#: gnutls_tpm2_esys.c:274
 #, c-format
 msgid "Esys_TR_FromTPMPublic failed for handle 0x%x: 0x%x\n"
 msgstr ""
 
-#: gnutls_tpm2_esys.c:294 gnutls_tpm2_ibm.c:277
+#: gnutls_tpm2_esys.c:295 gnutls_tpm2_ibm.c:277
 msgid "Enter TPM2 parent key password:"
 msgstr ""
 
-#: gnutls_tpm2_esys.c:308
+#: gnutls_tpm2_esys.c:309
 #, c-format
 msgid "Loading TPM2 key blob, parent %x.\n"
 msgstr ""
 
-#: gnutls_tpm2_esys.c:316
+#: gnutls_tpm2_esys.c:317
 msgid "TPM2 Esys_Load auth failed\n"
 msgstr ""
 
-#: gnutls_tpm2_esys.c:322
+#: gnutls_tpm2_esys.c:323
 #, c-format
 msgid "TPM2 Esys_Load failed: 0x%x\n"
 msgstr ""
 
-#: gnutls_tpm2_esys.c:332
+#: gnutls_tpm2_esys.c:333
 #, c-format
 msgid "TPM2 Esys_FlushContext for generated primary failed: 0x%x\n"
 msgstr ""
 
-#: gnutls_tpm2_esys.c:362 gnutls_tpm2_ibm.c:362 gnutls_tpm2_ibm.c:449
+#: gnutls_tpm2_esys.c:363 gnutls_tpm2_ibm.c:362 gnutls_tpm2_ibm.c:449
 msgid "Enter TPM2 key password:"
 msgstr ""
 
-#: gnutls_tpm2_esys.c:394
+#: gnutls_tpm2_esys.c:395
 #, c-format
 msgid "TPM2 RSA sign function called for %d bytes.\n"
 msgstr ""
 
-#: gnutls_tpm2_esys.c:413
+#: gnutls_tpm2_esys.c:414
 msgid "TPM2 Esys_RSA_Decrypt auth failed\n"
 msgstr ""
 
-#: gnutls_tpm2_esys.c:419 gnutls_tpm2_esys.c:499
+#: gnutls_tpm2_esys.c:420 gnutls_tpm2_esys.c:500
 #, c-format
 msgid "TPM2 failed to generate RSA signature: 0x%x\n"
 msgstr ""
 
-#: gnutls_tpm2_esys.c:463 gnutls_tpm2_ibm.c:404
+#: gnutls_tpm2_esys.c:464 gnutls_tpm2_ibm.c:404
 #, c-format
 msgid "TPM2 EC sign function called for %d bytes.\n"
 msgstr ""
 
-#: gnutls_tpm2_esys.c:493
+#: gnutls_tpm2_esys.c:494
 msgid "TPM2 Esys_Sign auth failed\n"
 msgstr ""
 
-#: gnutls_tpm2_esys.c:531 gnutls_tpm2_ibm.c:484
+#: gnutls_tpm2_esys.c:532 gnutls_tpm2_ibm.c:484
 #, c-format
 msgid "Invalid TPM2 parent handle 0x%08x\n"
 msgstr ""
 
-#: gnutls_tpm2_esys.c:545 gnutls_tpm2_ibm.c:501
+#: gnutls_tpm2_esys.c:546 gnutls_tpm2_ibm.c:501
 #, c-format
 msgid "Failed to import TPM2 private key data: 0x%x\n"
 msgstr ""
 
-#: gnutls_tpm2_esys.c:554 gnutls_tpm2_ibm.c:511
+#: gnutls_tpm2_esys.c:555 gnutls_tpm2_ibm.c:511
 #, c-format
 msgid "Failed to import TPM2 public key data: 0x%x\n"
 msgstr ""
 
-#: gnutls_tpm2_esys.c:568 gnutls_tpm2_ibm.c:522
+#: gnutls_tpm2_esys.c:569 gnutls_tpm2_ibm.c:522
 #, c-format
 msgid "Unsupported TPM2 key type %d\n"
 msgstr ""
@@ -1909,50 +1909,50 @@ msgid ""
 "(%s).\n"
 msgstr ""
 
-#: gpst.c:544
+#: gpst.c:550
 #, c-format
 msgid "GlobalProtect config sent ipsec-mode=%s (expected esp-tunnel)\n"
 msgstr ""
 
-#: gpst.c:553 oncp.c:835
+#: gpst.c:559 oncp.c:835
 msgid "Ignoring ESP keys since ESP support not available in this build\n"
 msgstr ""
 
-#: gpst.c:620
+#: gpst.c:626
 msgid "ESP disabled"
 msgstr ""
 
-#: gpst.c:622
+#: gpst.c:628
 msgid "No ESP keys received"
 msgstr ""
 
-#: gpst.c:624
+#: gpst.c:630
 msgid "ESP support not available in this build"
 msgstr ""
 
-#: gpst.c:628
+#: gpst.c:634
 #, c-format
 msgid "No MTU received. Calculated %d for %s%s\n"
 msgstr ""
 
-#: gpst.c:673
+#: gpst.c:679
 msgid "Connecting to HTTPS tunnel endpoint ...\n"
 msgstr ""
 
-#: gpst.c:695
+#: gpst.c:701
 msgid "Error fetching GET-tunnel HTTPS response.\n"
 msgstr ""
 
-#: gpst.c:704
+#: gpst.c:710
 msgid "Gateway disconnected immediately after GET-tunnel request.\n"
 msgstr ""
 
-#: gpst.c:712
+#: gpst.c:718
 #, c-format
 msgid "Got inappropriate HTTP GET-tunnel response: %.*s\n"
 msgstr ""
 
-#: gpst.c:854
+#: gpst.c:860
 #, c-format
 msgid ""
 "WARNING: Server asked us to submit HIP report with md5sum %s.\n"
@@ -1961,100 +1961,100 @@ msgid ""
 "script.\n"
 msgstr ""
 
-#: gpst.c:864
+#: gpst.c:870
 msgid ""
 "Error: Running the 'HIP Report' script on this platform is not yet "
 "implemented.\n"
 msgstr ""
 
-#: gpst.c:893
+#: gpst.c:899
 #, c-format
 msgid "HIP script '%s' exited abnormally\n"
 msgstr ""
 
-#: gpst.c:898
+#: gpst.c:904
 #, c-format
 msgid "HIP script '%s' returned non-zero status: %d\n"
 msgstr ""
 
-#: gpst.c:904
+#: gpst.c:910
 msgid "HIP report submission failed.\n"
 msgstr ""
 
-#: gpst.c:906
+#: gpst.c:912
 msgid "HIP report submitted successfully.\n"
 msgstr ""
 
-#: gpst.c:935
+#: gpst.c:941
 #, c-format
 msgid "Failed to exec HIP script %s\n"
 msgstr ""
 
-#: gpst.c:959
+#: gpst.c:965
 msgid "Gateway says HIP report submission is needed.\n"
 msgstr ""
 
-#: gpst.c:965
+#: gpst.c:971
 msgid "Gateway says no HIP report submission is needed.\n"
 msgstr ""
 
-#: gpst.c:992
+#: gpst.c:998
 msgid "ESP tunnel connected; exiting HTTPS mainloop.\n"
 msgstr ""
 
-#: gpst.c:1008
+#: gpst.c:1014
 msgid "Failed to connect ESP tunnel; using HTTPS instead.\n"
 msgstr ""
 
-#: gpst.c:1044
+#: gpst.c:1050
 #, c-format
 msgid "Packet receive error: %s\n"
 msgstr ""
 
-#: gpst.c:1065
+#: gpst.c:1071
 #, c-format
 msgid ""
 "Unexpected packet length. SSL_read returned %d (includes 16 header bytes) "
 "but header payload_len is %d\n"
 msgstr ""
 
-#: gpst.c:1075
+#: gpst.c:1081
 msgid "Got GPST DPD/keepalive response\n"
 msgstr ""
 
-#: gpst.c:1079
+#: gpst.c:1085
 msgid ""
 "Expected 0000000000000000 as last 8 bytes of DPD/keepalive packet header, "
 "but got:\n"
 msgstr ""
 
-#: gpst.c:1085
+#: gpst.c:1091
 #, c-format
 msgid "Received data packet of %d bytes\n"
 msgstr ""
 
-#: gpst.c:1094
+#: gpst.c:1100
 msgid ""
 "Expected 0100000000000000 as last 8 bytes of data packet header, but got:\n"
 msgstr ""
 
-#: gpst.c:1102
+#: gpst.c:1108
 msgid "Unknown packet. Header dump follows:\n"
 msgstr ""
 
-#: gpst.c:1150
+#: gpst.c:1156
 msgid "GlobalProtect rekey due\n"
 msgstr ""
 
-#: gpst.c:1155
+#: gpst.c:1161
 msgid "GPST Dead Peer Detection detected dead peer!\n"
 msgstr ""
 
-#: gpst.c:1175
+#: gpst.c:1181
 msgid "Send GPST DPD/keepalive request\n"
 msgstr ""
 
-#: gpst.c:1195
+#: gpst.c:1201
 #, c-format
 msgid "Sending data packet of %d bytes\n"
 msgstr ""
@@ -2469,469 +2469,469 @@ msgstr ""
 msgid "No form handler; cannot authenticate.\n"
 msgstr ""
 
-#: main.c:338
+#: main.c:340
 #, c-format
 msgid "CommandLineToArgvW() failed: %s\n"
 msgstr ""
 
-#: main.c:351
+#: main.c:353
 #, c-format
 msgid "Fatal error in command line handling\n"
 msgstr ""
 
-#: main.c:386
+#: main.c:388
 #, c-format
 msgid "ReadConsole() failed: %s\n"
 msgstr ""
 
-#: main.c:399
+#: main.c:401
 #, c-format
 msgid "fgetws() failed: %s\n"
 msgstr ""
 
-#: main.c:414 main.c:427
+#: main.c:416 main.c:429
 #, c-format
 msgid "Error converting console input: %s\n"
 msgstr ""
 
-#: main.c:421 main.c:687
+#: main.c:423 main.c:689
 #, c-format
 msgid "Allocation failure for string from stdin\n"
 msgstr ""
 
-#: main.c:582
+#: main.c:584
 #, c-format
 msgid ""
 "For assistance with OpenConnect, please see the web page at\n"
 "  http://www.infradead.org/openconnect/mail.html\n"
 msgstr ""
 
-#: main.c:591
+#: main.c:593
 #, c-format
 msgid "Using OpenSSL. Features present:"
 msgstr ""
 
-#: main.c:593
+#: main.c:595
 #, c-format
 msgid "Using GnuTLS. Features present:"
 msgstr ""
 
-#: main.c:606
+#: main.c:608
 msgid "OpenSSL ENGINE not present"
 msgstr ""
 
-#: main.c:645
+#: main.c:647
 #, c-format
 msgid ""
 "WARNING: This binary lacks DTLS and/or ESP support. Performance will be "
 "impaired.\n"
 msgstr ""
 
-#: main.c:655
+#: main.c:657
 #, c-format
 msgid "Supported protocols:"
 msgstr ""
 
-#: main.c:657 main.c:673
+#: main.c:659 main.c:675
 msgid " (default)"
 msgstr ""
 
-#: main.c:670
+#: main.c:672
 msgid "Set VPN protocol"
 msgstr ""
 
-#: main.c:711
+#: main.c:713
 msgid "fgets (stdin)"
 msgstr ""
 
-#: main.c:752
+#: main.c:754
 #, c-format
 msgid "Cannot process this executable path \"%s\""
 msgstr ""
 
-#: main.c:758
+#: main.c:760
 #, c-format
 msgid "Allocation for vpnc-script path failed\n"
 msgstr ""
 
-#: main.c:778
+#: main.c:780
 #, c-format
 msgid "Override hostname '%s' to '%s'\n"
 msgstr ""
 
-#: main.c:791
+#: main.c:793
 #, c-format
 msgid "Usage:  openconnect [options] <server>\n"
 msgstr ""
 
-#: main.c:792
+#: main.c:794
 #, c-format
 msgid ""
 "Open client for multiple VPN protocols, version %s\n"
 "\n"
 msgstr ""
 
-#: main.c:794
+#: main.c:796
 msgid "Read options from config file"
 msgstr ""
 
-#: main.c:795
+#: main.c:797
 msgid "Report version number"
 msgstr ""
 
-#: main.c:796
+#: main.c:798
 msgid "Display help text"
 msgstr ""
 
-#: main.c:800
+#: main.c:802
 msgid "Authentication"
 msgstr ""
 
-#: main.c:801
+#: main.c:803
 msgid "Set login username"
 msgstr ""
 
-#: main.c:802
+#: main.c:804
 msgid "Disable password/SecurID authentication"
 msgstr ""
 
-#: main.c:803
+#: main.c:805
 msgid "Do not expect user input; exit if it is required"
 msgstr ""
 
-#: main.c:804
+#: main.c:806
 msgid "Read password from standard input"
 msgstr ""
 
-#: main.c:805
+#: main.c:807
 msgid "Choose authentication login selection"
 msgstr ""
 
-#: main.c:806
+#: main.c:808
 msgid "Provide authentication form responses"
 msgstr ""
 
-#: main.c:807
+#: main.c:809
 msgid "Use SSL client certificate CERT"
 msgstr ""
 
-#: main.c:808
+#: main.c:810
 msgid "Use SSL private key file KEY"
 msgstr ""
 
-#: main.c:809
+#: main.c:811
 msgid "Warn when certificate lifetime < DAYS"
 msgstr ""
 
-#: main.c:810
+#: main.c:812
 msgid "Set login usergroup"
 msgstr ""
 
-#: main.c:811
+#: main.c:813
 msgid "Set key passphrase or TPM SRK PIN"
 msgstr ""
 
-#: main.c:812
+#: main.c:814
 msgid "Key passphrase is fsid of file system"
 msgstr ""
 
-#: main.c:813
+#: main.c:815
 msgid "Software token type: rsa, totp or hotp"
 msgstr ""
 
-#: main.c:814
+#: main.c:816
 msgid "Software token secret"
 msgstr ""
 
-#: main.c:816
+#: main.c:818
 msgid "(NOTE: libstoken (RSA SecurID) disabled in this build)"
 msgstr ""
 
-#: main.c:819
+#: main.c:821
 msgid "(NOTE: Yubikey OATH disabled in this build)"
 msgstr ""
 
-#: main.c:822
+#: main.c:824
 msgid "Server validation"
 msgstr ""
 
-#: main.c:823
+#: main.c:825
 msgid "Server's certificate SHA1 fingerprint"
 msgstr ""
 
-#: main.c:824
+#: main.c:826
 msgid "Do not require server SSL cert to be valid"
 msgstr ""
 
-#: main.c:825
+#: main.c:827
 msgid "Disable default system certificate authorities"
 msgstr ""
 
-#: main.c:826
+#: main.c:828
 msgid "Cert file for server verification"
 msgstr ""
 
-#: main.c:828
+#: main.c:830
 msgid "Internet connectivity"
 msgstr ""
 
-#: main.c:829
+#: main.c:831
 msgid "Set proxy server"
 msgstr ""
 
-#: main.c:830
+#: main.c:832
 msgid "Set proxy authentication methods"
 msgstr ""
 
-#: main.c:831
+#: main.c:833
 msgid "Disable proxy"
 msgstr ""
 
-#: main.c:832
+#: main.c:834
 msgid "Use libproxy to automatically configure proxy"
 msgstr ""
 
-#: main.c:834
+#: main.c:836
 msgid "(NOTE: libproxy disabled in this build)"
 msgstr ""
 
-#: main.c:836
+#: main.c:838
 msgid "Connection retry timeout in seconds"
 msgstr ""
 
-#: main.c:837
+#: main.c:839
 msgid "Use IP when connecting to HOST"
 msgstr ""
 
-#: main.c:838
+#: main.c:840
 msgid "copy TOS / TCLASS when using DTLS"
 msgstr ""
 
-#: main.c:839
+#: main.c:841
 msgid "Set local port for DTLS and ESP datagrams"
 msgstr ""
 
-#: main.c:841
+#: main.c:843
 msgid "Authentication (two-phase)"
 msgstr ""
 
-#: main.c:842
+#: main.c:844
 msgid "Use authentication cookie COOKIE"
 msgstr ""
 
-#: main.c:843
+#: main.c:845
 msgid "Read cookie from standard input"
 msgstr ""
 
-#: main.c:844
+#: main.c:846
 msgid "Authenticate only and print login info"
 msgstr ""
 
-#: main.c:845
+#: main.c:847
 msgid "Fetch and print cookie only; don't connect"
 msgstr ""
 
-#: main.c:846
+#: main.c:848
 msgid "Print cookie before connecting"
 msgstr ""
 
-#: main.c:849
+#: main.c:851
 msgid "Process control"
 msgstr ""
 
-#: main.c:850
+#: main.c:852
 msgid "Continue in background after startup"
 msgstr ""
 
-#: main.c:851
+#: main.c:853
 msgid "Write the daemon's PID to this file"
 msgstr ""
 
-#: main.c:852
+#: main.c:854
 msgid "Drop privileges after connecting"
 msgstr ""
 
-#: main.c:855
+#: main.c:857
 msgid "Logging (two-phase)"
 msgstr ""
 
-#: main.c:857
+#: main.c:859
 msgid "Use syslog for progress messages"
 msgstr ""
 
-#: main.c:859
+#: main.c:861
 msgid "More output"
 msgstr ""
 
-#: main.c:860
+#: main.c:862
 msgid "Less output"
 msgstr ""
 
-#: main.c:861
+#: main.c:863
 msgid "Dump HTTP authentication traffic (implies --verbose"
 msgstr ""
 
-#: main.c:862
+#: main.c:864
 msgid "Prepend timestamp to progress messages"
 msgstr ""
 
-#: main.c:864
+#: main.c:866
 msgid "VPN configuration script"
 msgstr ""
 
-#: main.c:865
+#: main.c:867
 msgid "Use IFNAME for tunnel interface"
 msgstr ""
 
-#: main.c:866
+#: main.c:868
 msgid "Shell command line for using a vpnc-compatible config script"
 msgstr ""
 
-#: main.c:867
+#: main.c:869
 msgid "default"
 msgstr ""
 
-#: main.c:869
+#: main.c:871
 msgid "Pass traffic to 'script' program, not tun"
 msgstr ""
 
-#: main.c:872
+#: main.c:874
 msgid "Tunnel control"
 msgstr ""
 
-#: main.c:873
+#: main.c:875
 msgid "Do not ask for IPv6 connectivity"
 msgstr ""
 
-#: main.c:874
+#: main.c:876
 msgid "XML config file"
 msgstr ""
 
-#: main.c:875
+#: main.c:877
 msgid "Request MTU from server (legacy servers only)"
 msgstr ""
 
-#: main.c:876
+#: main.c:878
 msgid "Indicate path MTU to/from server"
 msgstr ""
 
-#: main.c:877
+#: main.c:879
 msgid "Enable stateful compression (default is stateless only)"
 msgstr ""
 
-#: main.c:878
+#: main.c:880
 msgid "Disable all compression"
 msgstr ""
 
-#: main.c:879
+#: main.c:881
 msgid "Set minimum Dead Peer Detection interval"
 msgstr ""
 
-#: main.c:880
+#: main.c:882
 msgid "Require perfect forward secrecy"
 msgstr ""
 
-#: main.c:881
+#: main.c:883
 msgid "Disable DTLS and ESP"
 msgstr ""
 
-#: main.c:882
+#: main.c:884
 msgid "OpenSSL ciphers to support for DTLS"
 msgstr ""
 
-#: main.c:883
+#: main.c:885
 msgid "Set packet queue limit to LEN pkts"
 msgstr ""
 
-#: main.c:885
+#: main.c:887
 msgid "Local system information"
 msgstr ""
 
-#: main.c:886
+#: main.c:888
 msgid "HTTP header User-Agent: field"
 msgstr ""
 
-#: main.c:887
+#: main.c:889
 msgid "Local hostname to advertise to server"
 msgstr ""
 
-#: main.c:888
+#: main.c:890
 msgid "OS type (linux,linux-64,win,...) to report"
 msgstr ""
 
-#: main.c:889
+#: main.c:891
 msgid "reported version string during authentication"
 msgstr ""
 
-#: main.c:890
+#: main.c:892
 msgid "default:"
 msgstr ""
 
-#: main.c:893
+#: main.c:895
 msgid "Trojan binary (CSD) execution"
 msgstr ""
 
-#: main.c:894
+#: main.c:896
 msgid "Drop privileges during trojan execution"
 msgstr ""
 
-#: main.c:895
+#: main.c:897
 msgid "Run SCRIPT instead of trojan binary"
 msgstr ""
 
-#: main.c:898
+#: main.c:900
 msgid "Server bugs"
 msgstr ""
 
-#: main.c:899
+#: main.c:901
 msgid "Disable HTTP connection re-use"
 msgstr ""
 
-#: main.c:900
+#: main.c:902
 msgid "Do not attempt XML POST authentication"
 msgstr ""
 
-#: main.c:922
+#: main.c:924
 #, c-format
 msgid "Failed to allocate string\n"
 msgstr ""
 
-#: main.c:995
+#: main.c:997
 #, c-format
 msgid "Failed to get line from config file: %s\n"
 msgstr ""
 
-#: main.c:1035
+#: main.c:1037
 #, c-format
 msgid "Unrecognised option at line %d: '%s'\n"
 msgstr ""
 
-#: main.c:1045
+#: main.c:1047
 #, c-format
 msgid "Option '%s' does not take an argument at line %d\n"
 msgstr ""
 
-#: main.c:1049
+#: main.c:1051
 #, c-format
 msgid "Option '%s' requires an argument at line %d\n"
 msgstr ""
 
-#: main.c:1074
+#: main.c:1076
 #, c-format
 msgid "Invalid user \"%s\": %s\n"
 msgstr ""
 
-#: main.c:1084
+#: main.c:1086
 #, c-format
 msgid "Invalid user ID \"%d\": %s\n"
 msgstr ""
 
-#: main.c:1128
+#: main.c:1130
 #, c-format
 msgid "WARNING: Cannot set locale: %s\n"
 msgstr ""
 
-#: main.c:1138
+#: main.c:1140
 #, c-format
 msgid ""
 "WARNING: This version of openconnect was built without iconv\n"
@@ -2939,188 +2939,188 @@ msgid ""
 "         set \"%s\". Expect strangeness.\n"
 msgstr ""
 
-#: main.c:1145
+#: main.c:1147
 #, c-format
 msgid ""
 "WARNING: This version of openconnect is %s but\n"
 "         the libopenconnect library is %s\n"
 msgstr ""
 
-#: main.c:1155
+#: main.c:1157
 #, c-format
 msgid "Failed to allocate vpninfo structure\n"
 msgstr ""
 
-#: main.c:1213
+#: main.c:1215
 #, c-format
 msgid "Cannot use 'config' option inside config file\n"
 msgstr ""
 
-#: main.c:1221
+#: main.c:1223
 #, c-format
 msgid "Cannot open config file '%s': %s\n"
 msgstr ""
 
-#: main.c:1237
+#: main.c:1239
 #, c-format
 msgid "Invalid compression mode '%s'\n"
 msgstr ""
 
-#: main.c:1258
+#: main.c:1260
 #, c-format
 msgid "Missing colon in resolve option\n"
 msgstr ""
 
-#: main.c:1263
+#: main.c:1265
 #, c-format
 msgid "Failed to allocate memory\n"
 msgstr ""
 
-#: main.c:1344 main.c:1353
+#: main.c:1349 main.c:1358
 #, c-format
 msgid "MTU %d too small\n"
 msgstr ""
 
-#: main.c:1383
+#: main.c:1388
 #, c-format
 msgid ""
 "Disabling all HTTP connection re-use due to --no-http-keepalive option.\n"
 "If this helps, please report to <openconnect-devel@lists.infradead.org>.\n"
 msgstr ""
 
-#: main.c:1389
+#: main.c:1394
 #, c-format
 msgid ""
 "The --no-cert-check option was insecure and has been removed.\n"
 "Fix your server's certificate or use --servercert to trust it.\n"
 msgstr ""
 
-#: main.c:1406
+#: main.c:1411
 #, c-format
 msgid "Queue length zero not permitted; using 1\n"
 msgstr ""
 
-#: main.c:1420
+#: main.c:1425
 #, c-format
 msgid "OpenConnect version %s\n"
 msgstr ""
 
-#: main.c:1458
+#: main.c:1463
 #, c-format
 msgid "Invalid software token mode \"%s\"\n"
 msgstr ""
 
-#: main.c:1468
+#: main.c:1473
 #, c-format
 msgid "Invalid OS identity \"%s\"\n"
 msgstr ""
 
-#: main.c:1501
+#: main.c:1506
 #, c-format
 msgid "Too many arguments on command line\n"
 msgstr ""
 
-#: main.c:1504
+#: main.c:1509
 #, c-format
 msgid "No server specified\n"
 msgstr ""
 
-#: main.c:1520
+#: main.c:1525
 #, c-format
 msgid "This version of openconnect was built without libproxy support\n"
 msgstr ""
 
-#: main.c:1550
+#: main.c:1555
 #, c-format
 msgid "Error opening cmd pipe\n"
 msgstr ""
 
-#: main.c:1583
+#: main.c:1588
 #, c-format
 msgid "Failed to obtain WebVPN cookie\n"
 msgstr ""
 
-#: main.c:1604
+#: main.c:1609
 #, c-format
 msgid "Creating SSL connection failed\n"
 msgstr ""
 
-#: main.c:1620
+#: main.c:1625
 #, c-format
 msgid "Set up UDP failed; using SSL instead\n"
 msgstr ""
 
-#: main.c:1628
+#: main.c:1633
 #, c-format
 msgid "Connected as %s%s%s, using SSL%s%s, with %s%s%s %s\n"
 msgstr ""
 
-#: main.c:1634
+#: main.c:1639
 msgid "disabled"
 msgstr ""
 
-#: main.c:1634
+#: main.c:1639
 msgid "in progress"
 msgstr ""
 
-#: main.c:1638
+#: main.c:1643
 msgid "No --script argument provided; DNS and routing are not configured\n"
 msgstr ""
 
-#: main.c:1640
+#: main.c:1645
 msgid "See http://www.infradead.org/openconnect/vpnc-script.html\n"
 msgstr ""
 
-#: main.c:1653
+#: main.c:1658
 #, c-format
 msgid "Failed to open '%s' for write: %s\n"
 msgstr ""
 
-#: main.c:1665
+#: main.c:1670
 #, c-format
 msgid "Continuing in background; pid %d\n"
 msgstr ""
 
-#: main.c:1682
+#: main.c:1687
 msgid "User requested reconnect\n"
 msgstr ""
 
-#: main.c:1690
+#: main.c:1695
 msgid "Cookie was rejected on reconnection; exiting.\n"
 msgstr ""
 
-#: main.c:1694
+#: main.c:1699
 msgid "Session terminated by server; exiting.\n"
 msgstr ""
 
-#: main.c:1698
+#: main.c:1703
 msgid "User cancelled (SIGINT/SIGTERM); exiting.\n"
 msgstr ""
 
-#: main.c:1702
+#: main.c:1707
 msgid "User detached from session (SIGHUP); exiting.\n"
 msgstr ""
 
-#: main.c:1706
+#: main.c:1711
 msgid "Unknown error; exiting.\n"
 msgstr ""
 
-#: main.c:1725
+#: main.c:1730
 #, c-format
 msgid "Failed to open %s for write: %s\n"
 msgstr ""
 
-#: main.c:1733
+#: main.c:1738
 #, c-format
 msgid "Failed to write config to %s: %s\n"
 msgstr ""
 
-#: main.c:1792
+#: main.c:1797
 #, c-format
 msgid "Server SSL certificate didn't match: %s\n"
 msgstr ""
 
-#: main.c:1811
+#: main.c:1816
 #, c-format
 msgid ""
 "\n"
@@ -3128,100 +3128,100 @@ msgid ""
 "Reason: %s\n"
 msgstr ""
 
-#: main.c:1814
+#: main.c:1819
 #, c-format
 msgid ""
 "To trust this server in future, perhaps add this to your command line:\n"
 msgstr ""
 
-#: main.c:1815
+#: main.c:1820
 #, c-format
 msgid "    --servercert %s\n"
 msgstr ""
 
-#: main.c:1820
+#: main.c:1825
 #, c-format
 msgid "Enter '%s' to accept, '%s' to abort; anything else to view: "
 msgstr ""
 
-#: main.c:1821 main.c:1839
+#: main.c:1826 main.c:1844
 msgid "no"
 msgstr ""
 
-#: main.c:1821 main.c:1827
+#: main.c:1826 main.c:1832
 msgid "yes"
 msgstr ""
 
-#: main.c:1848
+#: main.c:1853
 #, c-format
 msgid "Server key hash: %s\n"
 msgstr ""
 
-#: main.c:1882
+#: main.c:1887
 #, c-format
 msgid "Auth choice \"%s\" matches multiple options\n"
 msgstr ""
 
-#: main.c:1885
+#: main.c:1890
 #, c-format
 msgid "Auth choice \"%s\" not available\n"
 msgstr ""
 
-#: main.c:1906
+#: main.c:1911
 msgid "User input required in non-interactive mode\n"
 msgstr ""
 
-#: main.c:2144
+#: main.c:2149
 #, c-format
 msgid "Failed to open token file for write: %s\n"
 msgstr ""
 
-#: main.c:2152
+#: main.c:2157
 #, c-format
 msgid "Failed to write token: %s\n"
 msgstr ""
 
-#: main.c:2198 main.c:2219
+#: main.c:2203 main.c:2224
 #, c-format
 msgid "Soft token string is invalid\n"
 msgstr ""
 
-#: main.c:2201
+#: main.c:2206
 #, c-format
 msgid "Can't open ~/.stokenrc file\n"
 msgstr ""
 
-#: main.c:2204
+#: main.c:2209
 #, c-format
 msgid "OpenConnect was not built with libstoken support\n"
 msgstr ""
 
-#: main.c:2207
+#: main.c:2212
 #, c-format
 msgid "General failure in libstoken\n"
 msgstr ""
 
-#: main.c:2222
+#: main.c:2227
 #, c-format
 msgid "OpenConnect was not built with liboath support\n"
 msgstr ""
 
-#: main.c:2225
+#: main.c:2230
 #, c-format
 msgid "General failure in liboath\n"
 msgstr ""
 
-#: main.c:2236
+#: main.c:2241
 #, c-format
 msgid "Yubikey token not found\n"
 msgstr ""
 
-#: main.c:2239
+#: main.c:2244
 #, c-format
 msgid "OpenConnect was not built with Yubikey support\n"
 msgstr ""
 
-#: main.c:2242
+#: main.c:2247
 #, c-format
 msgid "General Yubikey failure: %s\n"
 msgstr ""
@@ -3573,7 +3573,7 @@ msgstr ""
 msgid "Logout successful.\n"
 msgstr ""
 
-#: openconnect-internal.h:1116 openconnect-internal.h:1124
+#: openconnect-internal.h:1118 openconnect-internal.h:1126
 #, c-format
 msgid "ERROR: %s() called with invalid UTF-8 for '%s' argument\n"
 msgstr ""
@@ -3608,27 +3608,28 @@ msgstr ""
 msgid "PSK callback\n"
 msgstr ""
 
-#: openssl-dtls.c:364
+#: openssl-dtls.c:365
 msgid "Initialise DTLSv1 CTX failed\n"
 msgstr ""
 
-#: openssl-dtls.c:377
+#: openssl-dtls.c:378
 msgid "Set DTLS CTX version failed\n"
 msgstr ""
 
-#: openssl-dtls.c:394
+#: openssl-dtls.c:395
 msgid "Failed to generate DTLS key\n"
 msgstr ""
 
-#: openssl-dtls.c:412
+#: openssl-dtls.c:413
 msgid "Set DTLS cipher list failed\n"
 msgstr ""
 
-#: openssl-dtls.c:428
-msgid "Not precisely one DTLS cipher\n"
+#: openssl-dtls.c:439
+#, c-format
+msgid "DTLS cipher '%s' not found\n"
 msgstr ""
 
-#: openssl-dtls.c:449
+#: openssl-dtls.c:460
 #, c-format
 msgid ""
 "SSL_set_session() failed with old protocol version 0x%x\n"
@@ -3637,26 +3638,26 @@ msgid ""
 "Use the --no-dtls command line option to avoid this message\n"
 msgstr ""
 
-#: openssl-dtls.c:482
+#: openssl-dtls.c:493
 msgid "SSL_set_session() failed\n"
 msgstr ""
 
-#: openssl-dtls.c:555
+#: openssl-dtls.c:566
 #, c-format
 msgid "Established DTLS connection (using OpenSSL). Ciphersuite %s.\n"
 msgstr ""
 
-#: openssl-dtls.c:592
+#: openssl-dtls.c:603
 msgid "Your OpenSSL is older than the one you built against, so DTLS may fail!"
 msgstr ""
 
-#: openssl-dtls.c:643
+#: openssl-dtls.c:654
 msgid ""
 "This is probably because your OpenSSL is broken\n"
 "See http://rt.openssl.org/Ticket/Display.html?id=2984\n"
 msgstr ""
 
-#: openssl-dtls.c:650
+#: openssl-dtls.c:661
 #, c-format
 msgid "DTLS handshake failed: %d\n"
 msgstr ""
@@ -4063,167 +4064,167 @@ msgstr ""
 msgid "Script '%s' returned error %d\n"
 msgstr ""
 
-#: ssl.c:99
+#: ssl.c:108
 msgid "Socket connect cancelled\n"
 msgstr ""
 
-#: ssl.c:208
+#: ssl.c:217
 #, c-format
 msgid "Failed to reconnect to proxy %s: %s\n"
 msgstr ""
 
-#: ssl.c:212
+#: ssl.c:221
 #, c-format
 msgid "Failed to reconnect to host %s: %s\n"
 msgstr ""
 
-#: ssl.c:280
+#: ssl.c:289
 #, c-format
 msgid "Proxy from libproxy: %s://%s:%d/\n"
 msgstr ""
 
-#: ssl.c:308
+#: ssl.c:317
 #, c-format
 msgid "getaddrinfo failed for host '%s': %s\n"
 msgstr ""
 
-#: ssl.c:317 ssl.c:442
+#: ssl.c:326 ssl.c:451
 msgid "Reconnecting to DynDNS server using previously cached IP address\n"
 msgstr ""
 
-#: ssl.c:332
+#: ssl.c:341
 #, c-format
 msgid "Attempting to connect to proxy %s%s%s:%s\n"
 msgstr ""
 
-#: ssl.c:333
+#: ssl.c:342
 #, c-format
 msgid "Attempting to connect to server %s%s%s:%s\n"
 msgstr ""
 
-#: ssl.c:353
+#: ssl.c:362
 #, c-format
 msgid "Connected to %s%s%s:%s\n"
 msgstr ""
 
-#: ssl.c:365
+#: ssl.c:374
 msgid "Failed to allocate sockaddr storage\n"
 msgstr ""
 
-#: ssl.c:407
+#: ssl.c:416
 #, c-format
 msgid "Failed to connect to %s%s%s:%s: %s\n"
 msgstr ""
 
-#: ssl.c:425
+#: ssl.c:434
 msgid "Forgetting non-functional previous peer address\n"
 msgstr ""
 
-#: ssl.c:437
+#: ssl.c:446
 #, c-format
 msgid "Failed to connect to host %s\n"
 msgstr ""
 
-#: ssl.c:456
+#: ssl.c:465
 #, c-format
 msgid "Reconnecting to proxy %s\n"
 msgstr ""
 
-#: ssl.c:527
+#: ssl.c:536
 #, c-format
 msgid "statvfs: %s\n"
 msgstr ""
 
-#: ssl.c:555
+#: ssl.c:564
 msgid "Could not obtain file system ID for passphrase\n"
 msgstr ""
 
-#: ssl.c:566
+#: ssl.c:575
 #, c-format
 msgid "Failed to open private key file '%s': %s\n"
 msgstr ""
 
-#: ssl.c:594
+#: ssl.c:603
 #, c-format
 msgid "statfs: %s\n"
 msgstr ""
 
-#: ssl.c:685
+#: ssl.c:694
 msgid "No error"
 msgstr ""
 
-#: ssl.c:686
+#: ssl.c:695
 msgid "Keystore locked"
 msgstr ""
 
-#: ssl.c:687
+#: ssl.c:696
 msgid "Keystore uninitialized"
 msgstr ""
 
-#: ssl.c:688
+#: ssl.c:697
 msgid "System error"
 msgstr ""
 
-#: ssl.c:689
+#: ssl.c:698
 msgid "Protocol error"
 msgstr ""
 
-#: ssl.c:690
+#: ssl.c:699
 msgid "Permission denied"
 msgstr ""
 
-#: ssl.c:691
+#: ssl.c:700
 msgid "Key not found"
 msgstr ""
 
-#: ssl.c:692
+#: ssl.c:701
 msgid "Value corrupted"
 msgstr ""
 
-#: ssl.c:693
+#: ssl.c:702
 msgid "Undefined action"
 msgstr ""
 
-#: ssl.c:697
+#: ssl.c:706
 msgid "Wrong password"
 msgstr ""
 
-#: ssl.c:698
+#: ssl.c:707
 msgid "Unknown error"
 msgstr ""
 
-#: ssl.c:887
+#: ssl.c:896
 #, c-format
 msgid "openconnect_fopen_utf8() used with unsupported mode '%s'\n"
 msgstr ""
 
-#: ssl.c:920
+#: ssl.c:931
 #, c-format
 msgid "Unknown protocol family %d. Cannot create UDP server address\n"
 msgstr ""
 
-#: ssl.c:939
+#: ssl.c:950
 msgid "Open UDP socket"
 msgstr ""
 
-#: ssl.c:970
+#: ssl.c:981
 #, c-format
 msgid "Unknown protocol family %d. Cannot use UDP transport\n"
 msgstr ""
 
-#: ssl.c:978
+#: ssl.c:989
 msgid "Bind UDP socket"
 msgstr ""
 
-#: ssl.c:985
+#: ssl.c:996
 msgid "Connect UDP socket\n"
 msgstr ""
 
-#: ssl.c:1018
+#: ssl.c:1034
 msgid "Cookie is no longer valid, ending session\n"
 msgstr ""
 
-#: ssl.c:1022
+#: ssl.c:1038
 #, c-format
 msgid "sleep %ds, remaining timeout %ds\n"
 msgstr ""

@@ -4918,6 +4918,3 @@ msgstr "polecenie obliczania"
 #: yubikey.c:627
 msgid "Unrecognised response from Yubikey when generating tokencode\n"
 msgstr "Nierozpoznana odpowiedź z Yubikey podczas tworzenia kodu tokena\n"
-
-#~ msgid "Not precisely one DTLS cipher\n"
-#~ msgstr "Nie wynosi dokładnie jednego szyfru DTLS\n"
