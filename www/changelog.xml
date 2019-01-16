@@ -15,6 +15,12 @@
 <ul>
    <li><b>OpenConnect HEAD</b>
      <ul>
+       <li><i>No changelog entries yet</i></li>
+     </ul><br/>
+  </li>
+  <li><b><a href="ftp://ftp.infradead.org/pub/openconnect/openconnect-8.02.tar.gz">OpenConnect v8.02</a></b>
+     <i>(<a href="ftp://ftp.infradead.org/pub/openconnect/openconnect-8.02.tar.gz.asc">PGP signature</a>)</i> &#8212; 2019-01-16
+     <ul>
        <li>Fix GNU/Hurd build.</li>
        <li>Discover <tt>vpnc-script</tt> in default packaged location on FreeBSD/OpenBSD.</li>
        <li>Support split-exclude routes for GlobalProtect.</li>
