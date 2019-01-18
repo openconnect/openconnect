@@ -34,10 +34,12 @@ void gpst_common_headers(struct openconnect_info *vpninfo,
 			 struct oc_text_buf *buf)
 {
 	char *orig_ua = vpninfo->useragent;
+
+	/* XX: more recent servers don't appear to require this specific UA value,
+	 * but we don't have any good way to detect them.
+	 */
 	vpninfo->useragent = (char *)"PAN GlobalProtect";
-
 	http_common_headers(vpninfo, buf);
-
 	vpninfo->useragent = orig_ua;
 }
 
