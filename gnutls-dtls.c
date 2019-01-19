@@ -83,7 +83,7 @@ struct {
 	{ "AES128-GCM-SHA256", GNUTLS_DTLS1_2, GNUTLS_CIPHER_AES_128_GCM, GNUTLS_KX_RSA, GNUTLS_MAC_AEAD,
 	  "NONE:+VERS-DTLS1.2:+COMP-NULL:+AES-128-GCM:+AEAD:+RSA:+SIGN-ALL:%COMPAT", "3.2.7", 1 },
 	{ "AES256-GCM-SHA384", GNUTLS_DTLS1_2, GNUTLS_CIPHER_AES_256_GCM, GNUTLS_KX_RSA, GNUTLS_MAC_AEAD,
-	  "NONE:+VERS-DTLS1.2:+COMP-NULL:+AES-256-GCM:+AEAD:+RSA:%COMPAT", "3.2.7", 1 },
+	  "NONE:+VERS-DTLS1.2:+COMP-NULL:+AES-256-GCM:+AEAD:+RSA:+SIGN-ALL:%COMPAT", "3.2.7", 1 },
 	/* NB. We agreed that any new cipher suites probably shouldn't use
 	 * Cisco's session resume hack (which ties us to a specific version
 	 * of DTLS). Instead, we'll use GNUTLS_KX_PSK and let it negotiate
