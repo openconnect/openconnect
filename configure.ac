@@ -923,7 +923,9 @@ AC_CHECK_HEADER([if_tun.h],
             [AC_CHECK_HEADER([net/tun/if_tun.h],
                 [AC_DEFINE([IF_TUN_HDR], ["net/tun/if_tun.h"])])])])])
 
-AC_CHECK_HEADER([net/if_utun.h], AC_DEFINE([HAVE_NET_UTUN_H], 1, [Have net/utun.h]))
+AC_CHECK_HEADER([net/if_utun.h], AC_DEFINE([HAVE_NET_UTUN_H], 1, [Have net/if_utun.h]), ,
+		[#include <sys/types.h>])
+
 AC_CHECK_HEADER([alloca.h], AC_DEFINE([HAVE_ALLOCA_H], 1, [Have alloca.h]))
 
 AC_CHECK_HEADER([endian.h],
