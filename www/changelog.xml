@@ -15,7 +15,8 @@
 <ul>
    <li><b>OpenConnect HEAD</b>
      <ul>
-       <li><i>No changelog entries yet</i></li>
+       <li>Fix detection of <tt>utun</tt> support on OS X (<a href="https://gitlab.com/openconnect/openconnect/issues/18">#18</a>).</li>
+       <li>Fix Cisco DTLSv1.2 support for <tt>AES256-GCM-SHA384</tt>.</li>
      </ul><br/>
   </li>
   <li><b><a href="ftp://ftp.infradead.org/pub/openconnect/openconnect-8.02.tar.gz">OpenConnect v8.02</a></b>
