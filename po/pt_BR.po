@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openconnect\n"
 "Report-Msgid-Bugs-To: openconnect-devel@lists.infradead.org\n"
-"POT-Creation-Date: 2019-01-16 11:23+0200\n"
+"POT-Creation-Date: 2019-01-30 14:42+0000\n"
 "PO-Revision-Date: 2013-01-18 22:04+0000\n"
 "Last-Translator: David Woodhouse <dwmw2@infradead.org>\n"
 "Language-Team: Portuguese (Brazil) <l10n-pt-br@meego.org.br>\n"
@@ -153,12 +153,12 @@ msgstr "Recebida resposta de %s malsucedida de TNCC\n"
 
 #: auth-juniper.c:445
 msgid "TNCC response 200 OK\n"
-msgstr ""
+msgstr "TNCC resposta 200 OK\n"
 
 #: auth-juniper.c:452
 #, c-format
 msgid "Second line of TNCC response: '%s'\n"
-msgstr ""
+msgstr "Segunda linha da resposta TNCC: “%s”\n"
 
 #: auth-juniper.c:461
 #, c-format
@@ -168,7 +168,7 @@ msgstr "Obteve novo cookie DSPREAUTH do TNCC: %s\n"
 #: auth-juniper.c:471
 #, c-format
 msgid "Unexpected non-empty line from TNCC after DSPREAUTH cookie: '%s'\n"
-msgstr ""
+msgstr "Linha não vazia inesperada de TNCC após cookie DSPREAUTH: “%s”\n"
 
 #: auth-juniper.c:640
 msgid "Failed to parse HTML document\n"
@@ -1457,6 +1457,7 @@ msgstr "Adicionando AC de apoio \"%s\"\n"
 #: gnutls.c:1724
 msgid "Private key appears not to support RSA-PSS. Disabling TLSv1.3\n"
 msgstr ""
+"Chave privada parece não ter suporte a RSA-PSS. Desabilitando TLSv1.3\n"
 
 #: gnutls.c:1748
 #, c-format
@@ -1723,12 +1724,12 @@ msgstr "Falha ao decodificar ASN.1 de chave TMP2: %s\n"
 #: gnutls_tpm2.c:225
 #, c-format
 msgid "Failed to parse TPM2 key type OID: %s\n"
-msgstr ""
+msgstr "Falha ao analisar OID de tipo de chave TPM2: %s\n"
 
 #: gnutls_tpm2.c:231
 #, c-format
 msgid "TPM2 key has unknown type OID %s not %s\n"
-msgstr ""
+msgstr "Chave TPM2 possui OID de tipo desconhecido %s não %s\n"
 
 #: gnutls_tpm2.c:249
 #, c-format
@@ -2671,7 +2672,7 @@ msgstr "Escolhe a seleção de login para autenticação"
 
 #: main.c:808
 msgid "Provide authentication form responses"
-msgstr ""
+msgstr "Fornece respostas a formulário de autenticação"
 
 #: main.c:809
 msgid "Use SSL client certificate CERT"
@@ -2925,11 +2926,11 @@ msgstr "Tipo de SO (linux,linux-64,mac,win,...) para informar"
 
 #: main.c:891
 msgid "reported version string during authentication"
-msgstr ""
+msgstr "string de versão relatada durante autenticação"
 
 #: main.c:892
 msgid "default:"
-msgstr ""
+msgstr "padrão:"
 
 #: main.c:895
 msgid "Trojan binary (CSD) execution"
@@ -3172,7 +3173,7 @@ msgstr "Sessão terminada pelo servidor; saindo.\n"
 
 #: main.c:1703
 msgid "User cancelled (SIGINT/SIGTERM); exiting.\n"
-msgstr ""
+msgstr "Usuário cancelado (SIGINT/SIGTERM); saindo.\n"
 
 #: main.c:1707
 msgid "User detached from session (SIGHUP); exiting.\n"
@@ -3714,7 +3715,7 @@ msgstr "A definição da lista de cifras DTLS falhou\n"
 #: openssl-dtls.c:439
 #, c-format
 msgid "DTLS cipher '%s' not found\n"
-msgstr ""
+msgstr "Cifra DTLS “%s” não localizada\n"
 
 #: openssl-dtls.c:460
 #, c-format
