@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 #
 # Simple XML to HTML converter.
 # 
@@ -19,21 +19,24 @@ import smtplib
 import socket
 import time
 import xml.sax
-import commands
 import codecs
 
-reload(sys)
-sys.setdefaultencoding('utf-8')
+if sys.version_info >= (3,0):
+        sys.stdout = codecs.getwriter("utf-8")(sys.stdout.detach())
+else:
+        reload(sys)
+        sys.setdefaultencoding('utf-8')
+        sys.stdout = codecs.getwriter("utf-8")(sys.stdout)
 
 lookupdir = ''
 
 # Print the usage information
 def usage():
-	print "USAGE:"
-	print "html.py <-f -h file.xml>"
-	print "  -d DIR    use DIR as base directory for opening files"
-	print "  -f        write output to file.html (default is stdout)"
-	print "  -h        help"
+	print ("USAGE:")
+	print ("html.py <-f -h file.xml>")
+	print ("  -d DIR    use DIR as base directory for opening files")
+	print ("  -f        write output to file.html (default is stdout)")
+	print ("  -h        help")
 	return
 
 
@@ -98,9 +101,9 @@ class docHandler(xml.sax.ContentHandler):
 			return
 		elif name == "INCLUDE":
 			try:
-				fd = open(attrs.get('file'), 'r')
+				fd = codecs.open(attrs.get('file'), 'r', 'utf-8')
 			except:
-				fd = open(lookupdir + attrs.get('file'), 'r')
+				fd = codecs.open(lookupdir + attrs.get('file'), 'r', 'utf-8')
 			lines = fd.readlines()
 			fd.close()
 			for line in lines:
@@ -127,7 +130,7 @@ class docHandler(xml.sax.ContentHandler):
 		
 		elif name == "br":
 			writeHtml("<br")
-			if attrs.getLength > 0:
+			if attrs.getLength() > 0:
 				names = attrs.getNames()
 				for name in names:
 					writeHtml(" " + name + "=\"" + attrs.get(name) + "\"")
@@ -135,7 +138,7 @@ class docHandler(xml.sax.ContentHandler):
 			
 		else:
 			writeHtml("<" + name)
-			if attrs.getLength > 0:
+			if attrs.getLength() > 0:
 				names = attrs.getNames()
 				for name in names:
 					writeHtml(" " + name + "=\"" + attrs.get(name) + "\"")
@@ -198,9 +201,9 @@ def parseConfig(file):
 	parser.setErrorHandler(eh)
 
 	try:
-		fd = open(file, 'r')
+		fd = codecs.open(file, 'r', 'utf-8')
 	except:
-		fd = open(lookupdir + file, 'r')
+		fd = codecs.open(lookupdir + file, 'r', 'utf-8')
 
 	# Parse the file
 	parser.parse(fd)
@@ -214,10 +217,10 @@ writefile = 0
 
 try:
 	(options, arguments) = getopt.getopt(sys.argv[1:],'fhd:')
-except getopt.GetoptError, ex:
+except getopt.GetoptError as ex:
 	print
-	print "ERROR:"
-	print ex.msg
+	print ("ERROR:")
+	print (ex.msg)
 	usage()
 	sys.exit(1)
 	pass
@@ -240,7 +243,7 @@ idx = len(replace)
 replace[idx:] = [lookupdir]
 
 if not arguments:
-	print "No source file specified"
+	print ("No source file specified")
 	usage()
 	sys.exit(1)
 	pass

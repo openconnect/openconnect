@@ -936,18 +936,8 @@ AC_CHECK_HEADER([endian.h],
             [AC_DEFINE([ENDIAN_HDR], [<sys/isa_defs.h>])])])])
 
 build_www=yes
-AC_PATH_PROGS(PYTHON, [python2 python], [], $PATH:/bin:/usr/bin)
-if (test -n "${ac_cv_path_PYTHON}"); then
-   AC_MSG_CHECKING([that python is version 2.x])
-   if $PYTHON --version 2>&1 | grep "Python 2\." > /dev/null; then
-      AC_MSG_RESULT([yes])
-      AC_SUBST(PYTHON, ${ac_cv_path_PYTHON})
-   else
-      AC_MSG_RESULT([no])
-      AC_MSG_NOTICE([Python is not v2.x; not building HTML pages])
-      build_www=no
-   fi
-else
+AC_PATH_PROGS(PYTHON, [python3 python2 python], [], $PATH:/bin:/usr/bin)
+if test -z "${ac_cv_path_PYTHON}"; then
    AC_MSG_NOTICE([Python not found; not building HTML pages])
    build_www=no
 fi
