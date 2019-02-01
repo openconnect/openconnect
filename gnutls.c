@@ -2189,7 +2189,7 @@ int openconnect_open_https(struct openconnect_info *vpninfo)
 	 *
 	 * See comments above regarding COMPAT and DUMBFW.
 	 */
-	if (gtls_ver(3,2,9) && string_is_hostname(vpninfo->hostname))
+	if (string_is_hostname(vpninfo->hostname))
 		gnutls_server_name_set(vpninfo->https_sess, GNUTLS_NAME_DNS,
 				       vpninfo->hostname,
 				       strlen(vpninfo->hostname));
@@ -2221,16 +2221,7 @@ int openconnect_open_https(struct openconnect_info *vpninfo)
 #ifdef DEFAULT_PRIO
 	default_prio = DEFAULT_PRIO ":%COMPAT";
 #else
-	if (gtls_ver(3,2,9)) {
-		default_prio = "NORMAL:-VERS-SSL3.0:%COMPAT";
-	} else if (gtls_ver(3,0,0)) {
-		default_prio = "NORMAL:-VERS-TLS-ALL:+VERS-TLS1.0:" \
-			"%COMPAT:%DISABLE_SAFE_RENEGOTIATION:%LATEST_RECORD_VERSION" \
-			":-CURVE-ALL:-ECDHE-RSA:-ECDHE-ECDSA";
-	} else {
-		default_prio = "NORMAL:-VERS-TLS-ALL:+VERS-TLS1.0:"			\
-			"%COMPAT:%DISABLE_SAFE_RENEGOTIATION:%LATEST_RECORD_VERSION";
-	}
+	default_prio = "NORMAL:-VERS-SSL3.0:%COMPAT";
 #endif
 
 	snprintf(vpninfo->gnutls_prio, sizeof(vpninfo->gnutls_prio), "%s%s%s",
