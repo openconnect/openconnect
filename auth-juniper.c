@@ -346,7 +346,7 @@ static int tncc_preauth(struct openconnect_info *vpninfo)
 	struct oc_vpn_option *cookie;
 	const char *dspreauth = NULL, *dssignin = "null";
 	char recvbuf[1024];
-	int len;
+	int len, count;
 
 	for (cookie = vpninfo->cookies; cookie; cookie = cookie->next) {
 		if (!strcmp(cookie->option, "DSPREAUTH"))
@@ -463,13 +463,23 @@ static int tncc_preauth(struct openconnect_info *vpninfo)
 	http_add_cookie(vpninfo, "DSPREAUTH", recvbuf, 1);
 	vpninfo->tncc_fd = sockfd[1];
 
-	len = cancellable_gets(vpninfo, sockfd[1], recvbuf, sizeof(recvbuf));
-	if (len < 0)
-		goto respfail;
+	count = 0;
+	do {
+		len = cancellable_gets(vpninfo, sockfd[1], recvbuf,
+				       sizeof(recvbuf));
+		if (len < 0)
+			goto respfail;
+		if (len > 0)
+			vpn_progress(vpninfo, PRG_DEBUG,
+				     _("Unexpected non-empty line from TNCC "
+				       "after DSPREAUTH cookie: '%s'\n"),
+				     recvbuf);
+	} while (len && (count++ < 10));
+
 	if (len > 0) {
 		vpn_progress(vpninfo, PRG_ERR,
-			     _("Unexpected non-empty line from TNCC after DSPREAUTH cookie: '%s'\n"),
-			     recvbuf);
+			     _("Too many non-empty lines from TNCC after "
+			       "DSPREAUTH cookie\n"));
 		goto respfail;
 	}
 
