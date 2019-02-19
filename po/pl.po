@@ -2866,8 +2866,8 @@ msgid "Less output"
 msgstr "Mniej komunikatów"
 
 #: main.c:863
-msgid "Dump HTTP authentication traffic (implies --verbose"
-msgstr "Zrzuca ruch uwierzytelnienia HTTP (zakłada --verbose"
+msgid "Dump HTTP authentication traffic (implies --verbose)"
+msgstr "Zrzuca ruch uwierzytelnienia HTTP (zakłada --verbose)"
 
 #: main.c:864
 msgid "Prepend timestamp to progress messages"

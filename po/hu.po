@@ -2826,9 +2826,9 @@ msgid "Less output"
 msgstr "Kevesebb kimenet"
 
 #: main.c:863
-msgid "Dump HTTP authentication traffic (implies --verbose"
+msgid "Dump HTTP authentication traffic (implies --verbose)"
 msgstr ""
-"A HTTP hitelesítési forgalom kiírása (magába foglalja a --verbose kapcsolót"
+"A HTTP hitelesítési forgalom kiírása (magába foglalja a --verbose kapcsolót)"
 
 #: main.c:864
 msgid "Prepend timestamp to progress messages"

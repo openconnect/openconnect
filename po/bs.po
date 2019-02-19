@@ -2782,8 +2782,8 @@ msgid "Less output"
 msgstr "Nema izlaza"
 
 #: main.c:863
-msgid "Dump HTTP authentication traffic (implies --verbose"
-msgstr "Smetljište HTTP ovjera puta (implicira --verbose"
+msgid "Dump HTTP authentication traffic (implies --verbose)"
+msgstr "Smetljište HTTP ovjera puta (implicira --verbose)"
 
 #: main.c:864
 msgid "Prepend timestamp to progress messages"

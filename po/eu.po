@@ -2786,7 +2786,7 @@ msgid "Less output"
 msgstr "Irteera laburragoa"
 
 #: main.c:863
-msgid "Dump HTTP authentication traffic (implies --verbose"
+msgid "Dump HTTP authentication traffic (implies --verbose)"
 msgstr "Irauli HTTP autentifikazioaren trafikoa (--verbose inplikatzen du)"
 
 #: main.c:864

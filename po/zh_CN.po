@@ -2769,7 +2769,7 @@ msgid "Less output"
 msgstr "简化输出"
 
 #: main.c:863
-msgid "Dump HTTP authentication traffic (implies --verbose"
+msgid "Dump HTTP authentication traffic (implies --verbose)"
 msgstr ""
 
 #: main.c:864

@@ -2867,8 +2867,8 @@ msgid "Less output"
 msgstr "Menos salida"
 
 #: main.c:863
-msgid "Dump HTTP authentication traffic (implies --verbose"
-msgstr "Volcado del tráfico de autenticación HTTP (implica --verbose"
+msgid "Dump HTTP authentication traffic (implies --verbose)"
+msgstr "Volcado del tráfico de autenticación HTTP (implica --verbose)"
 
 #: main.c:864
 msgid "Prepend timestamp to progress messages"

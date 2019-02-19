@@ -2806,7 +2806,7 @@ msgid "Less output"
 msgstr "Manje izlaza"
 
 #: main.c:863
-msgid "Dump HTTP authentication traffic (implies --verbose"
+msgid "Dump HTTP authentication traffic (implies --verbose)"
 msgstr ""
 "Ispisuje saobraćaj HTTP potvrđivanja identiteta (podrazumeva „--verbose“)"
 

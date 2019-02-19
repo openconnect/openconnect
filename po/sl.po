@@ -2793,10 +2793,10 @@ msgid "Less output"
 msgstr "Manj podroben odvod"
 
 #: main.c:863
-msgid "Dump HTTP authentication traffic (implies --verbose"
+msgid "Dump HTTP authentication traffic (implies --verbose)"
 msgstr ""
 "Zapiši pretok podatkov overitve HTTP (omogoči podroben izpis z zastavico --"
-"verbose"
+"verbose)"
 
 #: main.c:864
 msgid "Prepend timestamp to progress messages"

@@ -860,7 +860,7 @@ static void usage(void)
 #endif
 	printf("  -v, --verbose                   %s\n", _("More output"));
 	printf("  -q, --quiet                     %s\n", _("Less output"));
-	printf("      --dump-http-traffic         %s\n", _("Dump HTTP authentication traffic (implies --verbose"));
+	printf("      --dump-http-traffic         %s\n", _("Dump HTTP authentication traffic (implies --verbose)"));
 	printf("      --timestamp                 %s\n", _("Prepend timestamp to progress messages"));
 
 	printf("\n%s:\n", _("VPN configuration script"));

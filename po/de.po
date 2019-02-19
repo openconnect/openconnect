@@ -2869,8 +2869,8 @@ msgid "Less output"
 msgstr "Weniger Ausgabe"
 
 #: main.c:863
-msgid "Dump HTTP authentication traffic (implies --verbose"
-msgstr "HTTP Authentifizierungs-Verkehr abspeichern (impliziert --verbose"
+msgid "Dump HTTP authentication traffic (implies --verbose)"
+msgstr "HTTP Authentifizierungs-Verkehr abspeichern (impliziert --verbose)"
 
 #: main.c:864
 msgid "Prepend timestamp to progress messages"

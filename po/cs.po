@@ -2826,8 +2826,8 @@ msgid "Less output"
 msgstr "Stručnější výstup"
 
 #: main.c:863
-msgid "Dump HTTP authentication traffic (implies --verbose"
-msgstr "Uložit autentizační provoz HTTP (vyplývá z --verbose"
+msgid "Dump HTTP authentication traffic (implies --verbose)"
+msgstr "Uložit autentizační provoz HTTP (vyplývá z --verbose)"
 
 #: main.c:864
 msgid "Prepend timestamp to progress messages"

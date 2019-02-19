@@ -2831,8 +2831,8 @@ msgid "Less output"
 msgstr "Mažiau išvesties"
 
 #: main.c:863
-msgid "Dump HTTP authentication traffic (implies --verbose"
-msgstr "Įrašyti HTTP tapatybės patvirtinimo srautą (įtraukia --verbose"
+msgid "Dump HTTP authentication traffic (implies --verbose)"
+msgstr "Įrašyti HTTP tapatybės patvirtinimo srautą (įtraukia --verbose)"
 
 #: main.c:864
 msgid "Prepend timestamp to progress messages"

@@ -2879,8 +2879,8 @@ msgid "Less output"
 msgstr "Menys sortida"
 
 #: main.c:863
-msgid "Dump HTTP authentication traffic (implies --verbose"
-msgstr "Bolca el trafic d'autenticació HTTP (implica --verbose"
+msgid "Dump HTTP authentication traffic (implies --verbose)"
+msgstr "Bolca el trafic d'autenticació HTTP (implica --verbose)"
 
 #: main.c:864
 msgid "Prepend timestamp to progress messages"

@@ -2796,8 +2796,8 @@ msgid "Less output"
 msgstr "Mindre utmatning"
 
 #: main.c:863
-msgid "Dump HTTP authentication traffic (implies --verbose"
-msgstr "Dumpa HTTP-autentiseringstrafik (implicerar --verbose"
+msgid "Dump HTTP authentication traffic (implies --verbose)"
+msgstr "Dumpa HTTP-autentiseringstrafik (implicerar --verbose)"
 
 #: main.c:864
 msgid "Prepend timestamp to progress messages"

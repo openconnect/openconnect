@@ -2792,8 +2792,8 @@ msgid "Less output"
 msgstr "Λιγότερη έξοδος"
 
 #: main.c:863
-msgid "Dump HTTP authentication traffic (implies --verbose"
-msgstr "Αποτύπωση κυκλοφορίας πιστοποίησης HTTP (υπονοεί --verbose"
+msgid "Dump HTTP authentication traffic (implies --verbose)"
+msgstr "Αποτύπωση κυκλοφορίας πιστοποίησης HTTP (υπονοεί --verbose)"
 
 #: main.c:864
 msgid "Prepend timestamp to progress messages"

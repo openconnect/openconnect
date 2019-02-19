@@ -2831,7 +2831,7 @@ msgid "Less output"
 msgstr "Menos saída"
 
 #: main.c:863
-msgid "Dump HTTP authentication traffic (implies --verbose"
+msgid "Dump HTTP authentication traffic (implies --verbose)"
 msgstr "Despeja o tráfego de autenticação HTTP (--verbose implícito)"
 
 #: main.c:864
