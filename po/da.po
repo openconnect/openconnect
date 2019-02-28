@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openconnect\n"
 "Report-Msgid-Bugs-To: openconnect-devel@lists.infradead.org\n"
-"POT-Creation-Date: 2019-01-16 11:23+0200\n"
+"POT-Creation-Date: 2019-02-28 14:00+0000\n"
 "PO-Revision-Date: 2011-09-22 22:31+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Danish (http://www.transifex.net/projects/p/meego/team/da/)\n"
@@ -78,7 +78,7 @@ msgstr "%d tilgængelige gatewayservere:\n"
 msgid "  %s (%s)\n"
 msgstr "  %s (%s)\n"
 
-#: auth-globalprotect.c:484 auth-juniper.c:720 auth.c:669
+#: auth-globalprotect.c:484 auth-juniper.c:730 auth.c:669
 msgid "Failed to generate OTP tokencode; disabling token\n"
 msgstr "Kunne ikke danne OTP-symbolkode; deaktiverer symbol\n"
 
@@ -156,41 +156,46 @@ msgstr "Modtog mislykket %s-svar fra TNCC\n"
 
 #: auth-juniper.c:445
 msgid "TNCC response 200 OK\n"
-msgstr ""
+msgstr "TNCC-svar 200 OK\n"
 
 #: auth-juniper.c:452
 #, c-format
 msgid "Second line of TNCC response: '%s'\n"
-msgstr ""
+msgstr "TNNC-svarets anden linje: “%s”\n"
 
 #: auth-juniper.c:461
 #, c-format
 msgid "Got new DSPREAUTH cookie from TNCC: %s\n"
 msgstr "Fik ny DSPREAUTH-cookie fra TNCC: %s\n"
 
-#: auth-juniper.c:471
+#: auth-juniper.c:474
 #, c-format
 msgid "Unexpected non-empty line from TNCC after DSPREAUTH cookie: '%s'\n"
 msgstr ""
+"Uventet linje, som ikke er tom, fra TNNC efter DSPREAUTH-cookie: “%s”\n"
 
-#: auth-juniper.c:640
+#: auth-juniper.c:481
+msgid "Too many non-empty lines from TNCC after DSPREAUTH cookie\n"
+msgstr ""
+
+#: auth-juniper.c:650
 msgid "Failed to parse HTML document\n"
 msgstr "Kunne ikke fortolke HTML-dokument\n"
 
-#: auth-juniper.c:657
+#: auth-juniper.c:667
 msgid "Failed to find or parse web form in login page\n"
 msgstr "Kunne ikke finde eller fortolke webformular på loginside\n"
 
-#: auth-juniper.c:665
+#: auth-juniper.c:675
 msgid "Encountered form with no ID\n"
 msgstr "Stødte på formular uden ID\n"
 
-#: auth-juniper.c:703
+#: auth-juniper.c:713
 #, c-format
 msgid "Unknown form ID '%s'\n"
 msgstr "Ukendt formular-ID \"%s\"\n"
 
-#: auth-juniper.c:706
+#: auth-juniper.c:716
 #, c-format
 msgid "Dumping unknown HTML form:\n"
 msgstr "Dumper ukendt HTML-formular:\n"
@@ -1475,6 +1480,8 @@ msgstr "Tilføjer understøttende CA \"%s\"\n"
 #: gnutls.c:1724
 msgid "Private key appears not to support RSA-PSS. Disabling TLSv1.3\n"
 msgstr ""
+"Det lader ikke til, at den private nøgle understøtter RSA-PPS. Deaktiverer "
+"TLSv1.3\n"
 
 #: gnutls.c:1748
 #, c-format
@@ -1574,66 +1581,66 @@ msgstr "Kunne ikke åbne CA-filen \"%s\": %s\n"
 msgid "Loading certificate failed. Aborting.\n"
 msgstr "Indlæsning af certifikat mislykkedes. Afbryder.\n"
 
-#: gnutls.c:2243
+#: gnutls.c:2237
 #, c-format
 msgid "Failed to set TLS priority string (\"%s\"): %s\n"
 msgstr "Kunne ikke angive TLS-prioritetsstreng (\"%s\"): %s\n"
 
-#: gnutls.c:2255 openssl.c:1796
+#: gnutls.c:2249 openssl.c:1796
 #, c-format
 msgid "SSL negotiation with %s\n"
 msgstr "SSL-forhandling med %s\n"
 
-#: gnutls.c:2302 openssl.c:1822
+#: gnutls.c:2296 openssl.c:1822
 msgid "SSL connection cancelled\n"
 msgstr "SSL-forbindelse annulleret\n"
 
-#: gnutls.c:2309
+#: gnutls.c:2303
 #, c-format
 msgid "SSL connection failure: %s\n"
 msgstr "Fejl i SSL-forbindelse: %s\n"
 
-#: gnutls.c:2318
+#: gnutls.c:2312
 #, c-format
 msgid "GnuTLS non-fatal return during handshake: %s\n"
 msgstr "GnuTLS ikke-fatal returnering under forhandling: %s\n"
 
-#: gnutls.c:2324 openssl.c:1839
+#: gnutls.c:2318 openssl.c:1839
 #, c-format
 msgid "Connected to HTTPS on %s\n"
 msgstr "Forbundet til HTTPS som %s\n"
 
-#: gnutls.c:2327
+#: gnutls.c:2321
 #, c-format
 msgid "Renegotiated SSL on %s\n"
 msgstr "Genforhandlede SSL på %s\n"
 
-#: gnutls.c:2489 openssl-pkcs11.c:199
+#: gnutls.c:2483 openssl-pkcs11.c:199
 #, c-format
 msgid "PIN required for %s"
 msgstr "PIN påkrævet til %s"
 
-#: gnutls.c:2493 openssl-pkcs11.c:202
+#: gnutls.c:2487 openssl-pkcs11.c:202
 msgid "Wrong PIN"
 msgstr "Forkert PIN"
 
-#: gnutls.c:2496
+#: gnutls.c:2490
 msgid "This is the final try before locking!"
 msgstr "Dette er sidste forsøg, før der låses!"
 
-#: gnutls.c:2498
+#: gnutls.c:2492
 msgid "Only a few tries left before locking!"
 msgstr "Kun nogle få forsøg tilbage, før der låses!"
 
-#: gnutls.c:2503 openssl-pkcs11.c:206
+#: gnutls.c:2497 openssl-pkcs11.c:206
 msgid "Enter PIN:"
 msgstr "Indtast PIN:"
 
-#: gnutls.c:2589 openssl.c:1967
+#: gnutls.c:2583 openssl.c:1967
 msgid "Unsupported OATH HMAC algorithm\n"
 msgstr "OATH HMAC-algoritmen understøttes ikke\n"
 
-#: gnutls.c:2598
+#: gnutls.c:2592
 #, c-format
 msgid "Failed to calculate OATH HMAC: %s\n"
 msgstr "Kunne ikke beregne OATH HMAC: %s\n"
@@ -1743,12 +1750,12 @@ msgstr "Kunne ikke afkode TPM2-nøgle ASN.1: %s\n"
 #: gnutls_tpm2.c:225
 #, c-format
 msgid "Failed to parse TPM2 key type OID: %s\n"
-msgstr ""
+msgstr "Kunne ikke fortolke OID for TPM2-nøgletype: %s\n"
 
 #: gnutls_tpm2.c:231
 #, c-format
 msgid "TPM2 key has unknown type OID %s not %s\n"
-msgstr ""
+msgstr "TPM2-nøgletypen har en ukendt OID %s og ikke %s\n"
 
 #: gnutls_tpm2.c:249
 #, c-format
@@ -2696,7 +2703,7 @@ msgstr "Vælg godkendelsesloginudvælgelse"
 
 #: main.c:808
 msgid "Provide authentication form responses"
-msgstr ""
+msgstr "Angiv svar til godkendelsesformular"
 
 #: main.c:809
 msgid "Use SSL client certificate CERT"
@@ -2950,11 +2957,11 @@ msgstr "OS-type (linux,linux-64,win,...) som rapporteres"
 
 #: main.c:891
 msgid "reported version string during authentication"
-msgstr ""
+msgstr "versionsstreng rapporteret under godkendelsen"
 
 #: main.c:892
 msgid "default:"
-msgstr ""
+msgstr "standard:"
 
 #: main.c:895
 msgid "Trojan binary (CSD) execution"
@@ -3198,7 +3205,7 @@ msgstr "Sessionen afsluttet af server; afslutter.\n"
 
 #: main.c:1703
 msgid "User cancelled (SIGINT/SIGTERM); exiting.\n"
-msgstr ""
+msgstr "Bruger annullerede (SIGINT/SIGTERM); afslutter.\n"
 
 #: main.c:1707
 msgid "User detached from session (SIGHUP); exiting.\n"
@@ -3738,7 +3745,7 @@ msgstr "Angivelse af DTLS-krypteringsalgoritmeliste mislykkedes\n"
 #: openssl-dtls.c:439
 #, c-format
 msgid "DTLS cipher '%s' not found\n"
-msgstr ""
+msgstr "DTLS-krypteringsalgoritmen “%s” kunne ikke findes\n"
 
 #: openssl-dtls.c:460
 #, c-format
