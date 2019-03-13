@@ -33,10 +33,6 @@ released on 2019-01-16 with the following changelog:</p>
 
 <p>For older releases and change logs, see the <a href="changelog.html">changelog page</a>.</p>
 
-<p><i>(Note: Due to a longstanding <a href="https://bugzilla.redhat.com/show_bug.cgi?id=450853">Fedora bug</a>
-you may occasionally find that the FTP server is accessible only by IPv6 and not Legacy IP. If this happens,
-please let me know by sending me an email. Or just join us in the 21st century and <a href="http://en.wikipedia.org/wiki/List_of_IPv6_tunnel_brokers">get IPv6</a>.)</i></p>
-
 <h2>Latest sources</h2>
 
 <p>The latest source code is available from the git repository at:</p>
