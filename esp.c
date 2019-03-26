@@ -261,34 +261,55 @@ int esp_mainloop(struct openconnect_info *vpninfo, int *timeout)
 	case KA_NONE:
 		break;
 	}
-	unmonitor_write_fd(vpninfo, dtls);
-	while ((this = dequeue_packet(&vpninfo->outgoing_queue))) {
+	while (1) {
 		int len;
 
-		len = encrypt_esp_packet(vpninfo, this);
-		if (len > 0) {
-			ret = send(vpninfo->dtls_fd, (void *)&this->esp, len, 0);
-			if (ret < 0) {
-				/* Not that this is likely to happen with UDP, but... */
-				if (errno == ENOBUFS || errno == EAGAIN || errno == EWOULDBLOCK) {
-					monitor_write_fd(vpninfo, dtls);
-					/* XXX: Keep the packet somewhere? */
-					free(this);
-					return work_done;
-				} else {
-					/* A real error in sending. Fall back to TCP? */
-					vpn_progress(vpninfo, PRG_ERR,
-						     _("Failed to send ESP packet: %s\n"),
-						     strerror(errno));
-				}
-			} else {
-				vpninfo->dtls_times.last_tx = time(NULL);
+		if (vpninfo->deflate_pkt) {
+			this = vpninfo->deflate_pkt;
+			len = this->len;
+		} else {
+			this = dequeue_packet(&vpninfo->outgoing_queue);
+			if (!this)
+				break;
 
-				vpn_progress(vpninfo, PRG_TRACE, _("Sent ESP packet of %d bytes\n"),
+			len = encrypt_esp_packet(vpninfo, this);
+			if (len < 0) {
+				vpn_progress(vpninfo, PRG_ERR,
+					     _("Failed to encrypt ESP packet: %d\n"),
 					     len);
+				free(this);
+				work_done = 1;
+				continue;
+			}
+		}
+
+		ret = send(vpninfo->dtls_fd, (void *)&this->esp, len, 0);
+		if (ret < 0) {
+			/* Not that this is likely to happen with UDP, but... */
+			if (errno == ENOBUFS || errno == EAGAIN || errno == EWOULDBLOCK) {
+				int err = errno;
+				vpninfo->deflate_pkt = this;
+				this->len = len;
+				vpn_progress(vpninfo, PRG_DEBUG,
+					     _("Requeueing failed ESP send: %s\n"),
+					     strerror(err));
+				monitor_write_fd(vpninfo, dtls);
+				return work_done;
+			} else {
+				/* A real error in sending. Fall back to TCP? */
+				vpn_progress(vpninfo, PRG_ERR,
+					_("Failed to send ESP packet: %s\n"),
+					strerror(errno));
 			}
 		} else {
-			/* XXX: Fall back to TCP transport? */
+			vpninfo->dtls_times.last_tx = time(NULL);
+
+			vpn_progress(vpninfo, PRG_TRACE, _("Sent ESP packet of %d bytes\n"),
+				     len);
+		}
+		if (this == vpninfo->deflate_pkt) {
+			unmonitor_write_fd(vpninfo, dtls);
+			vpninfo->deflate_pkt = NULL;
 		}
 		free(this);
 		work_done = 1;
@@ -310,6 +331,10 @@ void esp_close(struct openconnect_info *vpninfo)
 	}
 	if (vpninfo->dtls_state > DTLS_DISABLED)
 		vpninfo->dtls_state = DTLS_SLEEPING;
+	if (vpninfo->deflate_pkt) {
+		free(vpninfo->deflate_pkt);
+		vpninfo->deflate_pkt = NULL;
+	}
 }
 
 void esp_shutdown(struct openconnect_info *vpninfo)
