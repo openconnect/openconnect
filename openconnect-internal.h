@@ -263,7 +263,7 @@ struct vpn_proto {
 	/* Establish the TCP connection (and obtain configuration) */
 	int (*tcp_connect)(struct openconnect_info *vpninfo);
 
-	int (*tcp_mainloop)(struct openconnect_info *vpninfo, int *timeout);
+	int (*tcp_mainloop)(struct openconnect_info *vpninfo, int *timeout, int readable);
 
 	/* Add headers common to each HTTP request */
 	void (*add_http_headers)(struct openconnect_info *vpninfo, struct oc_text_buf *buf);
@@ -273,7 +273,7 @@ struct vpn_proto {
 
 	/* This will actually complete the UDP connection setup/handshake on the wire,
 	   as well as transporting packets */
-	int (*udp_mainloop)(struct openconnect_info *vpninfo, int *timeout);
+	int (*udp_mainloop)(struct openconnect_info *vpninfo, int *timeout, int readable);
 
 	/* Close the connection but leave the session setup so it restarts */
 	void (*udp_close)(struct openconnect_info *vpninfo);
@@ -831,7 +831,7 @@ void dtls_ssl_free(struct openconnect_info *vpninfo);
 
 /* dtls.c */
 int dtls_setup(struct openconnect_info *vpninfo, int dtls_attempt_period);
-int dtls_mainloop(struct openconnect_info *vpninfo, int *timeout);
+int dtls_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable);
 void dtls_close(struct openconnect_info *vpninfo);
 void dtls_shutdown(struct openconnect_info *vpninfo);
 void gather_dtls_ciphers(struct openconnect_info *vpninfo, struct oc_text_buf *buf, struct oc_text_buf *buf12);
@@ -844,7 +844,7 @@ char *openconnect_bin2base64(const char *prefix, const uint8_t *data, unsigned l
 /* cstp.c */
 void cstp_common_headers(struct openconnect_info *vpninfo, struct oc_text_buf *buf);
 int cstp_connect(struct openconnect_info *vpninfo);
-int cstp_mainloop(struct openconnect_info *vpninfo, int *timeout);
+int cstp_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable);
 int cstp_bye(struct openconnect_info *vpninfo, const char *reason);
 int decompress_and_queue_packet(struct openconnect_info *vpninfo, int compr_type,
 				unsigned char *buf, int len);
@@ -856,7 +856,7 @@ void oncp_common_headers(struct openconnect_info *vpninfo, struct oc_text_buf *b
 
 /* oncp.c */
 int oncp_connect(struct openconnect_info *vpninfo);
-int oncp_mainloop(struct openconnect_info *vpninfo, int *timeout);
+int oncp_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable);
 int oncp_bye(struct openconnect_info *vpninfo, const char *reason);
 void oncp_esp_close(struct openconnect_info *vpninfo);
 int oncp_esp_send_probes(struct openconnect_info *vpninfo);
@@ -873,7 +873,7 @@ int gpst_xml_or_error(struct openconnect_info *vpninfo, char *response,
 					  int (*challenge_cb)(struct openconnect_info *, char *prompt, char *inputStr, void *cb_data),
 					  void *cb_data);
 int gpst_setup(struct openconnect_info *vpninfo);
-int gpst_mainloop(struct openconnect_info *vpninfo, int *timeout);
+int gpst_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable);
 int gpst_esp_send_probes(struct openconnect_info *vpninfo);
 int gpst_esp_catch_probe(struct openconnect_info *vpninfo, struct pkt *pkt);
 
@@ -925,7 +925,7 @@ int load_pkcs11_certificate(struct openconnect_info *vpninfo);
 int verify_packet_seqno(struct openconnect_info *vpninfo,
 			struct esp *esp, uint32_t seq);
 int esp_setup(struct openconnect_info *vpninfo, int dtls_attempt_period);
-int esp_mainloop(struct openconnect_info *vpninfo, int *timeout);
+int esp_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable);
 void esp_close(struct openconnect_info *vpninfo);
 void esp_shutdown(struct openconnect_info *vpninfo);
 int print_esp_keys(struct openconnect_info *vpninfo, const char *name, struct esp *esp);
@@ -963,7 +963,7 @@ int hotp_hmac(struct openconnect_info *vpninfo, const void *challenge);
 #endif
 
 /* mainloop.c */
-int tun_mainloop(struct openconnect_info *vpninfo, int *timeout);
+int tun_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable);
 int queue_new_packet(struct pkt_q *q, void *buf, int len);
 int keepalive_action(struct keepalive_info *ka, int *timeout);
 int ka_stalled_action(struct keepalive_info *ka, int *timeout);

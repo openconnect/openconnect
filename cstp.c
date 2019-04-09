@@ -894,7 +894,7 @@ int compress_packet(struct openconnect_info *vpninfo, int compr_type, struct pkt
 	return 0;
 }
 
-int cstp_mainloop(struct openconnect_info *vpninfo, int *timeout)
+int cstp_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable)
 {
 	int ret;
 	int work_done = 0;
@@ -908,7 +908,7 @@ int cstp_mainloop(struct openconnect_info *vpninfo, int *timeout)
 	   we should probably remove POLLIN from the events we're looking for,
 	   and add POLLOUT. As it is, though, it'll just chew CPU time in that
 	   fairly unlikely situation, until the write backlog clears. */
-	while (1) {
+	while (readable) {
 		/* Some servers send us packets that are larger than
 		   negotiated MTU. We reserve some extra space to
 		   handle that */

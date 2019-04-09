@@ -242,7 +242,7 @@ int dtls_setup(struct openconnect_info *vpninfo, int dtls_attempt_period)
 	return 0;
 }
 
-int dtls_mainloop(struct openconnect_info *vpninfo, int *timeout)
+int dtls_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable)
 {
 	int work_done = 0;
 	char magic_pkt;
@@ -271,7 +271,7 @@ int dtls_mainloop(struct openconnect_info *vpninfo, int *timeout)
 		return 0;
 	}
 
-	while (1) {
+	while (readable) {
 		int len = vpninfo->ip_info.mtu;
 		unsigned char *buf;
 

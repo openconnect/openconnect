@@ -94,7 +94,7 @@ int esp_setup(struct openconnect_info *vpninfo, int dtls_attempt_period)
 	return 0;
 }
 
-int esp_mainloop(struct openconnect_info *vpninfo, int *timeout)
+int esp_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable)
 {
 	struct esp *esp = &vpninfo->esp_in[vpninfo->current_esp_in];
 	struct esp *old_esp = &vpninfo->esp_in[vpninfo->current_esp_in ^ 1];
@@ -118,7 +118,7 @@ int esp_mainloop(struct openconnect_info *vpninfo, int *timeout)
 	if (vpninfo->dtls_fd == -1)
 		return 0;
 
-	while (1) {
+	while (readable) {
 		int len = receive_mtu + vpninfo->pkt_trailer;
 		int i;
 		struct pkt *pkt;

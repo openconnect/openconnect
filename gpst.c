@@ -981,7 +981,7 @@ out:
 	return ret;
 }
 
-int gpst_mainloop(struct openconnect_info *vpninfo, int *timeout)
+int gpst_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable)
 {
 	int ret;
 	int work_done = 0;
@@ -1028,7 +1028,7 @@ int gpst_mainloop(struct openconnect_info *vpninfo, int *timeout)
 	if (vpninfo->ssl_fd == -1)
 		goto do_reconnect;
 
-	while (1) {
+	while (readable) {
 		/* Some servers send us packets that are larger than
 		   negotiated MTU. We reserve some extra space to
 		   handle that */

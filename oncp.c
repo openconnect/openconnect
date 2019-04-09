@@ -886,7 +886,7 @@ static int oncp_record_read(struct openconnect_info *vpninfo, void *buf, int len
 	return ret;
 }
 
-int oncp_mainloop(struct openconnect_info *vpninfo, int *timeout)
+int oncp_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable)
 {
 	int ret;
 	int work_done = 0;
@@ -900,7 +900,7 @@ int oncp_mainloop(struct openconnect_info *vpninfo, int *timeout)
 	   we should probably remove POLLIN from the events we're looking for,
 	   and add POLLOUT. As it is, though, it'll just chew CPU time in that
 	   fairly unlikely situation, until the write backlog clears. */
-	while (1) {
+	while (readable) {
 		int len, kmp, kmplen, iplen;
 		/* Some servers send us packets that are larger than
 		   negitiated MTU. We reserve some estra space to
