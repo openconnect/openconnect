@@ -1219,6 +1219,8 @@ static uint16_t csum(uint16_t *buf, int nwords)
 	return htons((uint16_t)(~sum));
 }
 
+static char magic_ping_payload[16] = "monitor\x00\x00pan ha ";
+
 int gpst_esp_send_probes(struct openconnect_info *vpninfo)
 {
 	/* The GlobalProtect VPN initiates and maintains the ESP connection
@@ -1239,10 +1241,8 @@ int gpst_esp_send_probes(struct openconnect_info *vpninfo)
 	 *
 	 *    Don't blame me. I didn't design this.
 	 */
-	static char magic[16] = "monitor\x00\x00pan ha ";
-
 	int pktlen, seq;
-	struct pkt *pkt = malloc(sizeof(*pkt) + sizeof(struct ip) + ICMP_MINLEN + sizeof(magic) + vpninfo->pkt_trailer);
+	struct pkt *pkt = malloc(sizeof(*pkt) + sizeof(struct ip) + ICMP_MINLEN + sizeof(magic_ping_payload) + vpninfo->pkt_trailer);
 	struct ip *iph = (void *)pkt->data;
 	struct icmp *icmph = (void *)(pkt->data + sizeof(*iph));
 	char *pmagic = (void *)(pkt->data + sizeof(*iph) + ICMP_MINLEN);
@@ -1263,13 +1263,13 @@ int gpst_esp_send_probes(struct openconnect_info *vpninfo)
 	}
 
 	for (seq=1; seq <= (vpninfo->dtls_state==DTLS_CONNECTED ? 1 : 3); seq++) {
-		memset(pkt, 0, sizeof(*pkt) + sizeof(*iph) + ICMP_MINLEN + sizeof(magic));
-		pkt->len = sizeof(struct ip) + ICMP_MINLEN + sizeof(magic);
+		memset(pkt, 0, sizeof(*pkt) + sizeof(*iph) + ICMP_MINLEN + sizeof(magic_ping_payload));
+		pkt->len = sizeof(struct ip) + ICMP_MINLEN + sizeof(magic_ping_payload);
 
 		/* IP Header */
 		iph->ip_hl = 5;
 		iph->ip_v = 4;
-		iph->ip_len = htons(sizeof(*iph) + ICMP_MINLEN + sizeof(magic));
+		iph->ip_len = htons(sizeof(*iph) + ICMP_MINLEN + sizeof(magic_ping_payload));
 		iph->ip_id = htons(0x4747); /* what the Windows client uses */
 		iph->ip_off = htons(IP_DF); /* don't fragment, frag offset = 0 */
 		iph->ip_ttl = 64; /* hops */
@@ -1282,8 +1282,8 @@ int gpst_esp_send_probes(struct openconnect_info *vpninfo)
 		icmph->icmp_type = ICMP_ECHO;
 		icmph->icmp_hun.ih_idseq.icd_id = htons(0x4747);
 		icmph->icmp_hun.ih_idseq.icd_seq = htons(seq);
-		memcpy(pmagic, magic, sizeof(magic)); /* required to get gateway to respond */
-		icmph->icmp_cksum = csum((uint16_t *)icmph, (ICMP_MINLEN+sizeof(magic))/2);
+		memcpy(pmagic, magic_ping_payload, sizeof(magic_ping_payload)); /* required to get gateway to respond */
+		icmph->icmp_cksum = csum((uint16_t *)icmph, (ICMP_MINLEN+sizeof(magic_ping_payload))/2);
 
 		pktlen = encrypt_esp_packet(vpninfo, pkt);
 		if (pktlen >= 0)
@@ -1300,10 +1300,13 @@ int gpst_esp_send_probes(struct openconnect_info *vpninfo)
 int gpst_esp_catch_probe(struct openconnect_info *vpninfo, struct pkt *pkt)
 {
 	struct ip *iph = (void *)(pkt->data);
+
 	return ( pkt->len >= 21
 		 && iph->ip_p==1 /* IPv4 protocol field == ICMP */
 		 && iph->ip_src.s_addr == vpninfo->esp_magic /* source == magic address */
-		 && pkt->len >= (iph->ip_hl<<2)+1 /* No short-packet segfaults */
-		 && pkt->data[iph->ip_hl<<2]==0 /* ICMP reply */ );
+		 && pkt->len >= (iph->ip_hl<<2) + ICMP_MINLEN + sizeof(magic_ping_payload) /* No short-packet segfaults */
+		 && pkt->data[iph->ip_hl<<2]==0 /* ICMP reply */
+		 && !memcmp(&pkt->data[(iph->ip_hl<<2) + ICMP_MINLEN], magic_ping_payload, sizeof(magic_ping_payload)) /* Same magic payload in response */
+	       );
 }
 #endif /* HAVE_ESP */
