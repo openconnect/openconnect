@@ -35,7 +35,6 @@
 #define HMAC_CTX_free(c) do {					\
 				    HMAC_CTX_cleanup(c);	\
 				    free(c); } while (0)
-#define HMAC_CTX_reset HMAC_CTX_cleanup
 
 static inline HMAC_CTX *HMAC_CTX_new(void)
 {
@@ -55,10 +54,6 @@ void destroy_esp_ciphers(struct esp *esp)
 	if (esp->hmac) {
 		HMAC_CTX_free(esp->hmac);
 		esp->hmac = NULL;
-	}
-	if (esp->pkt_hmac) {
-		HMAC_CTX_free(esp->pkt_hmac);
-		esp->pkt_hmac = NULL;
 	}
 }
 
@@ -94,8 +89,7 @@ static int init_esp_ciphers(struct openconnect_info *vpninfo, struct esp *esp,
 	EVP_CIPHER_CTX_set_padding(esp->cipher, 0);
 
 	esp->hmac = HMAC_CTX_new();
-	esp->pkt_hmac = HMAC_CTX_new();
-	if (!esp->hmac || !esp->pkt_hmac) {
+	if (!esp->hmac) {
 		destroy_esp_ciphers(esp);
 		return -ENOMEM;
 	}
@@ -187,10 +181,9 @@ int decrypt_esp_packet(struct openconnect_info *vpninfo, struct esp *esp, struct
 	unsigned int hmac_len = sizeof(hmac_buf);
 	int crypt_len = pkt->len;
 
-	HMAC_CTX_copy(esp->pkt_hmac, esp->hmac);
-	HMAC_Update(esp->pkt_hmac, (void *)&pkt->esp, sizeof(pkt->esp) + pkt->len);
-	HMAC_Final(esp->pkt_hmac, hmac_buf, &hmac_len);
-	HMAC_CTX_reset(esp->pkt_hmac);
+	HMAC_Init_ex(esp->hmac, NULL, 0, NULL, NULL);
+	HMAC_Update(esp->hmac, (void *)&pkt->esp, sizeof(pkt->esp) + pkt->len);
+	HMAC_Final(esp->hmac, hmac_buf, &hmac_len);
 
 	if (memcmp(hmac_buf, pkt->data + pkt->len, 12)) {
 		vpn_progress(vpninfo, PRG_DEBUG,
@@ -260,10 +253,9 @@ int encrypt_esp_packet(struct openconnect_info *vpninfo, struct pkt *pkt)
 		return -EINVAL;
 	}
 
-	HMAC_CTX_copy(vpninfo->esp_out.pkt_hmac, vpninfo->esp_out.hmac);
-	HMAC_Update(vpninfo->esp_out.pkt_hmac, (void *)&pkt->esp, sizeof(pkt->esp) + crypt_len);
-	HMAC_Final(vpninfo->esp_out.pkt_hmac, pkt->data + crypt_len, &hmac_len);
-	HMAC_CTX_reset(vpninfo->esp_out.pkt_hmac);
+	HMAC_Init_ex(vpninfo->esp_out.hmac, NULL, 0, NULL, NULL);
+	HMAC_Update(vpninfo->esp_out.hmac, (void *)&pkt->esp, sizeof(pkt->esp) + crypt_len);
+	HMAC_Final(vpninfo->esp_out.hmac, pkt->data + crypt_len, &hmac_len);
 
 	return sizeof(pkt->esp) + crypt_len + 12;
 }

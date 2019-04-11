@@ -336,7 +336,7 @@ struct esp {
 	gnutls_cipher_hd_t cipher;
 	gnutls_hmac_hd_t hmac;
 #elif defined(OPENCONNECT_OPENSSL)
-	HMAC_CTX *hmac, *pkt_hmac;
+	HMAC_CTX *hmac;
 	EVP_CIPHER_CTX *cipher;
 #endif
 	uint64_t seq_backlog;
