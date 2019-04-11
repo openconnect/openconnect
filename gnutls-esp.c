@@ -128,6 +128,15 @@ int setup_esp_keys(struct openconnect_info *vpninfo, int new_keys)
 	if (ret)
 		return ret;
 
+	if (gnutls_rnd(GNUTLS_RND_NONCE, vpninfo->esp_out.iv, sizeof(vpninfo->esp_out.iv))) {
+		vpn_progress(vpninfo, PRG_ERR, _("Failed to generate ESP IV\n"));
+		destroy_esp_ciphers(&vpninfo->esp_out);
+		return -EIO;
+	}
+	gnutls_cipher_set_iv(vpninfo->esp_out.cipher, vpninfo->esp_out.iv,
+			     sizeof(vpninfo->esp_out.iv));
+
+
 	ret = init_esp_ciphers(vpninfo, esp_in, macalg, encalg);
 	if (ret) {
 		destroy_esp_ciphers(&vpninfo->esp_out);
@@ -185,13 +194,6 @@ int encrypt_esp_packet(struct openconnect_info *vpninfo, struct pkt *pkt)
 	/* This gets much more fun if the IV is variable-length */
 	pkt->esp.spi = vpninfo->esp_out.spi;
 	pkt->esp.seq = htonl(vpninfo->esp_out.seq++);
-	err = gnutls_rnd(GNUTLS_RND_NONCE, pkt->esp.iv, sizeof(pkt->esp.iv));
-	if (err) {
-		vpn_progress(vpninfo, PRG_ERR,
-			     _("Failed to generate ESP packet IV: %s\n"),
-			     gnutls_strerror(err));
-		return -EIO;
-	}
 
 	padlen = blksize - 1 - ((pkt->len + 1) % blksize);
 	for (i=0; i<padlen; i++)
@@ -199,7 +201,8 @@ int encrypt_esp_packet(struct openconnect_info *vpninfo, struct pkt *pkt)
 	pkt->data[pkt->len + padlen] = padlen;
 	pkt->data[pkt->len + padlen + 1] = 0x04; /* Legacy IP */
 
-	gnutls_cipher_set_iv(vpninfo->esp_out.cipher, pkt->esp.iv, sizeof(pkt->esp.iv));
+	memcpy(pkt->esp.iv, vpninfo->esp_out.iv, sizeof(pkt->esp.iv));
+
 	err = gnutls_cipher_encrypt(vpninfo->esp_out.cipher, pkt->data, pkt->len + padlen + 2);
 	if (err) {
 		vpn_progress(vpninfo, PRG_ERR,
@@ -216,5 +219,8 @@ int encrypt_esp_packet(struct openconnect_info *vpninfo, struct pkt *pkt)
 		return -EIO;
 	}
 	gnutls_hmac_output(vpninfo->esp_out.hmac, pkt->data + pkt->len + padlen + 2);
+
+	memcpy(vpninfo->esp_out.iv, pkt->data + pkt->len + padlen + 2, blksize);
+	gnutls_cipher_encrypt(vpninfo->esp_out.cipher, vpninfo->esp_out.iv, blksize);
 	return sizeof(pkt->esp) + pkt->len + padlen + 2 + 12;
 }
