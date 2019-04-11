@@ -344,6 +344,7 @@ struct esp {
 	uint32_t spi; /* Stored network-endian */
 	unsigned char enc_key[0x40]; /* Encryption key */
 	unsigned char hmac_key[0x40]; /* HMAC key */
+	unsigned char iv[16];
 };
 
 struct oc_pcsc_ctx;

@@ -77,8 +77,10 @@ static int init_esp_ciphers(struct openconnect_info *vpninfo, struct esp *esp,
 
 	if (decrypt)
 		ret = EVP_DecryptInit_ex(esp->cipher, encalg, NULL, esp->enc_key, NULL);
-	else
-		ret = EVP_EncryptInit_ex(esp->cipher, encalg, NULL, esp->enc_key, NULL);
+	else {
+		ret = RAND_bytes((void *)&esp->iv, sizeof(esp->iv)) &&
+			EVP_EncryptInit_ex(esp->cipher, encalg, NULL, esp->enc_key, esp->iv);
+	}
 
 	if (!ret) {
 		vpn_progress(vpninfo, PRG_ERR,
@@ -216,19 +218,13 @@ int decrypt_esp_packet(struct openconnect_info *vpninfo, struct esp *esp, struct
 int encrypt_esp_packet(struct openconnect_info *vpninfo, struct pkt *pkt)
 {
 	int i, padlen;
-	const int blksize = 16;
+	int blksize = 16;
 	unsigned int hmac_len = 20;
 	int crypt_len;
 
 	/* This gets much more fun if the IV is variable-length */
 	pkt->esp.spi = vpninfo->esp_out.spi;
 	pkt->esp.seq = htonl(vpninfo->esp_out.seq++);
-	if (!RAND_bytes((void *)&pkt->esp.iv, sizeof(pkt->esp.iv))) {
-		vpn_progress(vpninfo, PRG_ERR,
-			     _("Failed to generate random IV for ESP packet:\n"));
-		openconnect_report_ssl_errors(vpninfo);
-		return -EIO;
-	}
 
 	padlen = blksize - 1 - ((pkt->len + 1) % blksize);
 	for (i=0; i<padlen; i++)
@@ -236,13 +232,7 @@ int encrypt_esp_packet(struct openconnect_info *vpninfo, struct pkt *pkt)
 	pkt->data[pkt->len + padlen] = padlen;
 	pkt->data[pkt->len + padlen + 1] = 0x04; /* Legacy IP */
 
-	if (!EVP_EncryptInit_ex(vpninfo->esp_out.cipher, NULL, NULL, NULL,
-				pkt->esp.iv)) {
-		vpn_progress(vpninfo, PRG_ERR,
-			     _("Failed to set up encryption context for ESP packet:\n"));
-		openconnect_report_ssl_errors(vpninfo);
-		return -EINVAL;
-	}
+	memcpy(pkt->esp.iv, vpninfo->esp_out.iv, 16);
 
 	crypt_len = pkt->len + padlen + 2;
 	if (!EVP_EncryptUpdate(vpninfo->esp_out.cipher, pkt->data, &crypt_len,
@@ -257,5 +247,7 @@ int encrypt_esp_packet(struct openconnect_info *vpninfo, struct pkt *pkt)
 	HMAC_Update(vpninfo->esp_out.hmac, (void *)&pkt->esp, sizeof(pkt->esp) + crypt_len);
 	HMAC_Final(vpninfo->esp_out.hmac, pkt->data + crypt_len, &hmac_len);
 
+	EVP_EncryptUpdate(vpninfo->esp_out.cipher, vpninfo->esp_out.iv, &blksize,
+			  pkt->data + crypt_len + hmac_len - blksize, blksize);
 	return sizeof(pkt->esp) + crypt_len + 12;
 }
