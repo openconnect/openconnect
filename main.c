@@ -805,7 +805,7 @@ static void usage(void)
 	printf("      --non-inter                 %s\n", _("Do not expect user input; exit if it is required"));
 	printf("      --passwd-on-stdin           %s\n", _("Read password from standard input"));
 	printf("      --authgroup=GROUP           %s\n", _("Choose authentication login selection"));
-	printf("  -F, --form-field=FORM:OPT=VALUE %s\n", _("Provide authentication form responses"));
+	printf("  -F, --form-entry=FORM:OPT=VALUE %s\n", _("Provide authentication form responses"));
 	printf("  -c, --certificate=CERT          %s\n", _("Use SSL client certificate CERT"));
 	printf("  -k, --sslkey=KEY                %s\n", _("Use SSL private key file KEY"));
 	printf("  -e, --cert-expire-warning=DAYS  %s\n", _("Warn when certificate lifetime < DAYS"));
@@ -1974,7 +1974,7 @@ static void add_form_field(char *arg)
 
 	if (!value || value == arg) {
 	bad_field:
-		fprintf(stderr, "Form field invalid. Use --form-field=FORM_ID:OPT_NAME=VALUE\n");
+		fprintf(stderr, "Form field invalid. Use --form-entry=FORM_ID:OPT_NAME=VALUE\n");
 		exit(1);
 	}
 	*(value++) = 0;
