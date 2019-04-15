@@ -550,7 +550,7 @@ static int gpst_parse_config_xml(struct openconnect_info *vpninfo, xmlNode *xml_
 					else if (!xmlnode_get_val(member, "ipsec-mode", &s) && strcmp(s, "esp-tunnel"))
 						vpn_progress(vpninfo, PRG_ERR, _("GlobalProtect config sent ipsec-mode=%s (expected esp-tunnel)\n"), s);
 				}
-				if (setup_esp_keys(vpninfo, 0))
+				if (openconnect_setup_esp_keys(vpninfo, 0))
 					vpn_progress(vpninfo, PRG_ERR, "Failed to setup ESP keys.\n");
 				else
 					/* prevent race condition between esp_mainloop() and gpst_mainloop() timers */

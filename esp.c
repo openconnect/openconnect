@@ -347,3 +347,52 @@ void esp_shutdown(struct openconnect_info *vpninfo)
 	if (vpninfo->dtls_state != DTLS_DISABLED)
 		vpninfo->dtls_state = DTLS_NOSECRET;
 }
+
+int openconnect_setup_esp_keys(struct openconnect_info *vpninfo, int new_keys)
+{
+	struct esp *esp_in;
+	int ret;
+
+	if (vpninfo->dtls_state == DTLS_DISABLED)
+		return -EOPNOTSUPP;
+	if (!vpninfo->dtls_addr)
+		return -EINVAL;
+
+	if (new_keys) {
+		vpninfo->old_esp_maxseq = vpninfo->esp_in[vpninfo->current_esp_in].seq + 32;
+		vpninfo->current_esp_in ^= 1;
+	}
+
+	esp_in = &vpninfo->esp_in[vpninfo->current_esp_in];
+
+	if (new_keys) {
+		if (openconnect_random(&esp_in->spi, sizeof(esp_in->spi)) ||
+		    openconnect_random((void *)&esp_in->enc_key, vpninfo->enc_key_len) ||
+		    openconnect_random((void *)&esp_in->hmac_key, vpninfo->hmac_key_len)) {
+			vpn_progress(vpninfo, PRG_ERR,
+				     _("Failed to generate random keys for ESP\n"));
+			return -EIO;
+		}
+	}
+
+	if (openconnect_random(vpninfo->esp_out.iv, sizeof(vpninfo->esp_out.iv))) {
+		vpn_progress(vpninfo, PRG_ERR,
+			     _("Failed to generate initial IV for ESP\n"));
+		return -EIO;
+	}
+
+	/* This is the minimum; some implementations may increase it */
+	vpninfo->pkt_trailer = 17 + 16 + 20; /* 17 for pad, 16 for IV, 20 for HMAC (of which we send 12) */
+
+	vpninfo->esp_out.seq = vpninfo->esp_out.seq_backlog = 0;
+	esp_in->seq = esp_in->seq_backlog = 0;
+
+	ret = init_esp_ciphers(vpninfo, &vpninfo->esp_out, esp_in);
+	if (ret)
+		return ret;
+
+	if (vpninfo->dtls_state == DTLS_NOSECRET)
+		vpninfo->dtls_state = DTLS_SECRET;
+
+	return 0;
+}

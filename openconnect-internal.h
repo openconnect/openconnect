@@ -930,10 +930,11 @@ int esp_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable);
 void esp_close(struct openconnect_info *vpninfo);
 void esp_shutdown(struct openconnect_info *vpninfo);
 int print_esp_keys(struct openconnect_info *vpninfo, const char *name, struct esp *esp);
+int openconnect_setup_esp_keys(struct openconnect_info *vpninfo, int new_keys);
 
 /* {gnutls,openssl}-esp.c */
-int setup_esp_keys(struct openconnect_info *vpninfo, int new_keys);
 void destroy_esp_ciphers(struct esp *esp);
+int init_esp_ciphers(struct openconnect_info *vpninfo, struct esp *out, struct esp *in);
 int decrypt_esp_packet(struct openconnect_info *vpninfo, struct esp *esp, struct pkt *pkt);
 int encrypt_esp_packet(struct openconnect_info *vpninfo, struct pkt *pkt);
 

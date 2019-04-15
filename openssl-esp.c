@@ -57,7 +57,7 @@ void destroy_esp_ciphers(struct esp *esp)
 	}
 }
 
-static int init_esp_ciphers(struct openconnect_info *vpninfo, struct esp *esp,
+static int init_esp_cipher(struct openconnect_info *vpninfo, struct esp *esp,
 			    const EVP_MD *macalg, const EVP_CIPHER *encalg, int decrypt)
 {
 	int ret;
@@ -78,8 +78,7 @@ static int init_esp_ciphers(struct openconnect_info *vpninfo, struct esp *esp,
 	if (decrypt)
 		ret = EVP_DecryptInit_ex(esp->cipher, encalg, NULL, esp->enc_key, NULL);
 	else {
-		ret = RAND_bytes((void *)&esp->iv, sizeof(esp->iv)) &&
-			EVP_EncryptInit_ex(esp->cipher, encalg, NULL, esp->enc_key, esp->iv);
+		ret = EVP_EncryptInit_ex(esp->cipher, encalg, NULL, esp->enc_key, esp->iv);
 	}
 
 	if (!ret) {
@@ -103,28 +102,21 @@ static int init_esp_ciphers(struct openconnect_info *vpninfo, struct esp *esp,
 		openconnect_report_ssl_errors(vpninfo);
 		destroy_esp_ciphers(esp);
 	}
-	esp->seq = 0;
-	esp->seq_backlog = 0;
+
 	return 0;
 }
 
-int setup_esp_keys(struct openconnect_info *vpninfo, int new_keys)
+int init_esp_ciphers(struct openconnect_info *vpninfo, struct esp *esp_out, struct esp *esp_in)
 {
-	struct esp *esp_in;
 	const EVP_CIPHER *encalg;
 	const EVP_MD *macalg;
 	int ret;
 
-	if (vpninfo->dtls_state == DTLS_DISABLED)
-		return -EOPNOTSUPP;
-	if (!vpninfo->dtls_addr)
-		return -EINVAL;
-
 	switch (vpninfo->esp_enc) {
-	case 0x02:
+	case ENC_AES_128_CBC:
 		encalg = EVP_aes_128_cbc();
 		break;
-	case 0x05:
+	case ENC_AES_256_CBC:
 		encalg = EVP_aes_256_cbc();
 		break;
 	default:
@@ -132,47 +124,26 @@ int setup_esp_keys(struct openconnect_info *vpninfo, int new_keys)
 	}
 
 	switch (vpninfo->esp_hmac) {
-	case 0x01:
+	case HMAC_MD5:
 		macalg = EVP_md5();
 		break;
-	case 0x02:
+	case HMAC_SHA1:
 		macalg = EVP_sha1();
 		break;
 	default:
 		return -EINVAL;
 	}
 
-	if (new_keys) {
-		vpninfo->old_esp_maxseq = vpninfo->esp_in[vpninfo->current_esp_in].seq + 32;
-		vpninfo->current_esp_in ^= 1;
-	}
-
-	esp_in = &vpninfo->esp_in[vpninfo->current_esp_in];
-
-	if (new_keys) {
-		if (!RAND_bytes((void *)&esp_in->spi, sizeof(esp_in->spi)) ||
-		    !RAND_bytes((void *)&esp_in->enc_key, vpninfo->enc_key_len) ||
-		    !RAND_bytes((void *)&esp_in->hmac_key, vpninfo->hmac_key_len) ) {
-			vpn_progress(vpninfo, PRG_ERR,
-				     _("Failed to generate random keys for ESP:\n"));
-			openconnect_report_ssl_errors(vpninfo);
-			return -EIO;
-		}
-	}
-
-	ret = init_esp_ciphers(vpninfo, &vpninfo->esp_out, macalg, encalg, 0);
+	ret = init_esp_cipher(vpninfo, &vpninfo->esp_out, macalg, encalg, 0);
 	if (ret)
 		return ret;
 
-	ret = init_esp_ciphers(vpninfo, esp_in, macalg, encalg, 1);
+	ret = init_esp_cipher(vpninfo, esp_in, macalg, encalg, 1);
 	if (ret) {
 		destroy_esp_ciphers(&vpninfo->esp_out);
 		return ret;
 	}
 
-	if (vpninfo->dtls_state == DTLS_NOSECRET)
-		vpninfo->dtls_state = DTLS_SECRET;
-	vpninfo->pkt_trailer = 16 + 20; /* 16 for pad, 20 for HMAC (of which we use 16) */
 	return 0;
 }
 
