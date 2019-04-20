@@ -95,23 +95,11 @@ static int process_split_xxclude(struct openconnect_info *vpninfo,
 	const char *in_ex = include ? "IN" : "EX";
 	char envname[80];
 	char *slash, *endp;
-	int masklen;
+	int masklen, result = 0;
 
 	slash = strchr(route, '/');
-	if (!slash) {
-	badinc:
-		if (include)
-			vpn_progress(vpninfo, PRG_ERR,
-				     _("Discard bad split include: \"%s\"\n"),
-				     route);
-		else
-			vpn_progress(vpninfo, PRG_ERR,
-				     _("Discard bad split exclude: \"%s\"\n"),
-				     route);
-		return -EINVAL;
-	}
-
-	*slash = 0;
+	if (slash)
+		*slash = 0;
 
 	if (strchr(route, ':')) {
 		snprintf(envname, 79, "CISCO_IPV6_SPLIT_%sC_%d_ADDR", in_ex,
@@ -120,25 +108,35 @@ static int process_split_xxclude(struct openconnect_info *vpninfo,
 
 		snprintf(envname, 79, "CISCO_IPV6_SPLIT_%sC_%d_MASKLEN", in_ex,
 			 *v6_incs);
-		script_setenv(vpninfo, envname, slash+1, 0);
+		script_setenv(vpninfo, envname, slash ? slash + 1 : "128", 0);
 
 		(*v6_incs)++;
-		return 0;
+		goto out;
 	}
 
 	if (!inet_aton(route, &addr)) {
-		*slash = '/';
-		goto badinc;
+	badinc:
+		if (include)
+			vpn_progress(vpninfo, PRG_ERR,
+					 _("Discard bad split include: \"%s\"\n"),
+					 route);
+		else
+			vpn_progress(vpninfo, PRG_ERR,
+					 _("Discard bad split exclude: \"%s\"\n"),
+					 route);
+		result = -EINVAL;
+		goto out;
 	}
 
 	envname[79] = 0;
 	snprintf(envname, 79, "CISCO_SPLIT_%sC_%d_ADDR", in_ex, *v4_incs);
 	script_setenv(vpninfo, envname, route, 0);
 
-	/* Put it back how we found it */
-	*slash = '/';
-
-	if ((masklen = strtol(slash+1, &endp, 10))<=32 && *endp!='.') {
+	if (!slash) {
+		/* no mask (same as /32) */
+		masklen = 32;
+		addr.s_addr = netmaskbits(32);
+	} else if ((masklen = strtol(slash+1, &endp, 10))<=32 && *endp!='.') {
 		/* mask is /N */
 		addr.s_addr = netmaskbits(masklen);
 	} else if (inet_aton(slash+1, &addr)) {
@@ -155,7 +153,12 @@ static int process_split_xxclude(struct openconnect_info *vpninfo,
 	script_setenv_int(vpninfo, envname, masklen);
 
 	(*v4_incs)++;
-	return 0;
+
+out:
+	/* Put it back how we found it */
+	if (slash)
+		*slash = '/';
+	return result;
 }
 
 static void setenv_cstp_opts(struct openconnect_info *vpninfo)
