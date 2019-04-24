@@ -41,6 +41,7 @@
  * (Linux and macOS already #include them within netinet/ip.h)
  */
 #include <sys/types.h>
+#include <netinet/in_systm.h>
 #include <netinet/in.h>
 #include <netinet/ip.h>
 #include <netinet/ip_icmp.h>
