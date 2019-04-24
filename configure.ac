@@ -44,6 +44,7 @@ case $host_os in
  *solaris*|*sunos*)
     AC_MSG_NOTICE([Applying workaround for broken SunOS time() function])
     AC_DEFINE(HAVE_SUNOS_BROKEN_TIME, 1, [On SunOS time() can go backwards])
+    AC_DEFINE(__STDC_WANT_LIB_EXT1__, 1, [To make memset_s() visible])
     symver_time="openconnect__time;"
     ;;
  *mingw32*|*mingw64*|*msys*)
