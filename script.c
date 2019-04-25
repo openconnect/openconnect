@@ -33,7 +33,7 @@
 #include "openconnect-internal.h"
 
 int script_setenv(struct openconnect_info *vpninfo,
-		  const char *opt, const char *val, int append)
+		  const char *opt, const char *val, int trunc, int append)
 {
 	struct oc_vpn_option *p;
 	char *str;
@@ -56,7 +56,7 @@ int script_setenv(struct openconnect_info *vpninfo,
 		return -ENOMEM;
 	p->next = vpninfo->script_env;
 	p->option = strdup(opt);
-	p->value = val ? strdup(val) : NULL;
+	p->value = val ? (trunc ? strndup(val, trunc) : strdup(val)) : NULL;
 	vpninfo->script_env = p;
 	return 0;
 }
@@ -65,7 +65,7 @@ int script_setenv_int(struct openconnect_info *vpninfo, const char *opt, int val
 {
 	char buf[16];
 	sprintf(buf, "%d", value);
-	return script_setenv(vpninfo, opt, buf, 0);
+	return script_setenv(vpninfo, opt, buf, 0, 0);
 }
 
 static int netmasklen(struct in_addr addr)
@@ -94,43 +94,25 @@ static int process_split_xxclude(struct openconnect_info *vpninfo,
 	struct in_addr addr;
 	const char *in_ex = include ? "IN" : "EX";
 	char envname[80];
-	char *slash, *endp;
-	int masklen, result = 0;
+	const char *slash;
+	char *endp;
+	int masklen;
 
 	slash = strchr(route, '/');
-	if (slash)
-		*slash = 0;
+	envname[79] = 0;
 
 	if (strchr(route, ':')) {
 		snprintf(envname, 79, "CISCO_IPV6_SPLIT_%sC_%d_ADDR", in_ex,
 			 *v6_incs);
-		script_setenv(vpninfo, envname, route, 0);
+		script_setenv(vpninfo, envname, route, slash ? slash - route : 0, 0);
 
 		snprintf(envname, 79, "CISCO_IPV6_SPLIT_%sC_%d_MASKLEN", in_ex,
 			 *v6_incs);
-		script_setenv(vpninfo, envname, slash ? slash + 1 : "128", 0);
+		script_setenv(vpninfo, envname, slash ? slash + 1 : "128", 0, 0);
 
 		(*v6_incs)++;
-		goto out;
+		return 0;
 	}
-
-	if (!inet_aton(route, &addr)) {
-	badinc:
-		if (include)
-			vpn_progress(vpninfo, PRG_ERR,
-					 _("Discard bad split include: \"%s\"\n"),
-					 route);
-		else
-			vpn_progress(vpninfo, PRG_ERR,
-					 _("Discard bad split exclude: \"%s\"\n"),
-					 route);
-		result = -EINVAL;
-		goto out;
-	}
-
-	envname[79] = 0;
-	snprintf(envname, 79, "CISCO_SPLIT_%sC_%d_ADDR", in_ex, *v4_incs);
-	script_setenv(vpninfo, envname, route, 0);
 
 	if (!slash) {
 		/* no mask (same as /32) */
@@ -143,22 +125,28 @@ static int process_split_xxclude(struct openconnect_info *vpninfo,
 		/* mask is /A.B.C.D */
 		masklen = netmasklen(addr);
 	} else {
-		goto badinc;
+		if (include)
+			vpn_progress(vpninfo, PRG_ERR,
+					 _("Discard bad split include: \"%s\"\n"),
+					 route);
+		else
+			vpn_progress(vpninfo, PRG_ERR,
+					 _("Discard bad split exclude: \"%s\"\n"),
+					 route);
+		return -EINVAL;
 	}
 
+	snprintf(envname, 79, "CISCO_SPLIT_%sC_%d_ADDR", in_ex, *v4_incs);
+	script_setenv(vpninfo, envname, route, slash ? slash - route : 0, 0);
+
 	snprintf(envname, 79, "CISCO_SPLIT_%sC_%d_MASK", in_ex, *v4_incs);
-	script_setenv(vpninfo, envname, inet_ntoa(addr), 0);
+	script_setenv(vpninfo, envname, inet_ntoa(addr), 0, 0);
 
 	snprintf(envname, 79, "CISCO_SPLIT_%sC_%d_MASKLEN", in_ex, *v4_incs);
 	script_setenv_int(vpninfo, envname, masklen);
 
 	(*v4_incs)++;
-
-out:
-	/* Put it back how we found it */
-	if (slash)
-		*slash = '/';
-	return result;
+	return 0;
 }
 
 static void setenv_cstp_opts(struct openconnect_info *vpninfo)
@@ -181,7 +169,7 @@ static void setenv_cstp_opts(struct openconnect_info *vpninfo)
 		bufofs += snprintf(env_buf + bufofs, buflen - bufofs,
 				   "%s=%s\n", opt->option, opt->value);
 
-	script_setenv(vpninfo, "CISCO_CSTP_OPTIONS", env_buf, 0);
+	script_setenv(vpninfo, "CISCO_CSTP_OPTIONS", env_buf, 0, 0);
 	free(env_buf);
 }
 
@@ -204,7 +192,7 @@ static void set_banner(struct openconnect_info *vpninfo)
 	const char *p;
 
 	if (!vpninfo->banner || !(banner = malloc(strlen(vpninfo->banner)+1))) {
-		script_setenv(vpninfo, "CISCO_BANNER", NULL, 0);
+		script_setenv(vpninfo, "CISCO_BANNER", NULL, 0, 0);
 		return;
 	}
 	p = vpninfo->banner;
@@ -220,7 +208,7 @@ static void set_banner(struct openconnect_info *vpninfo)
 	}
 	*q = 0;
 	legacy_banner = openconnect_utf8_to_legacy(vpninfo, banner);
-	script_setenv(vpninfo, "CISCO_BANNER", legacy_banner, 0);
+	script_setenv(vpninfo, "CISCO_BANNER", legacy_banner, 0, 0);
 	if (legacy_banner != banner)
 		free(legacy_banner);
 
@@ -230,16 +218,16 @@ static void set_banner(struct openconnect_info *vpninfo)
 void prepare_script_env(struct openconnect_info *vpninfo)
 {
 	if (vpninfo->ip_info.gateway_addr)
-		script_setenv(vpninfo, "VPNGATEWAY", vpninfo->ip_info.gateway_addr, 0);
+		script_setenv(vpninfo, "VPNGATEWAY", vpninfo->ip_info.gateway_addr, 0, 0);
 
 	set_banner(vpninfo);
-	script_setenv(vpninfo, "CISCO_SPLIT_INC", NULL, 0);
-	script_setenv(vpninfo, "CISCO_SPLIT_EXC", NULL, 0);
+	script_setenv(vpninfo, "CISCO_SPLIT_INC", NULL, 0, 0);
+	script_setenv(vpninfo, "CISCO_SPLIT_EXC", NULL, 0, 0);
 
 	script_setenv_int(vpninfo, "INTERNAL_IP4_MTU", vpninfo->ip_info.mtu);
 
 	if (vpninfo->ip_info.addr) {
-		script_setenv(vpninfo, "INTERNAL_IP4_ADDRESS", vpninfo->ip_info.addr, 0);
+		script_setenv(vpninfo, "INTERNAL_IP4_ADDRESS", vpninfo->ip_info.addr, 0, 0);
 		if (vpninfo->ip_info.netmask) {
 			struct in_addr addr;
 			struct in_addr mask;
@@ -251,50 +239,48 @@ void prepare_script_env(struct openconnect_info *vpninfo)
 				addr.s_addr &= mask.s_addr;
 				netaddr = inet_ntoa(addr);
 
-				script_setenv(vpninfo, "INTERNAL_IP4_NETADDR", netaddr, 0);
-				script_setenv(vpninfo, "INTERNAL_IP4_NETMASK", vpninfo->ip_info.netmask, 0);
+				script_setenv(vpninfo, "INTERNAL_IP4_NETADDR", netaddr, 0, 0);
+				script_setenv(vpninfo, "INTERNAL_IP4_NETMASK", vpninfo->ip_info.netmask, 0, 0);
 				script_setenv_int(vpninfo, "INTERNAL_IP4_NETMASKLEN", netmasklen(mask));
 			}
 		}
 	}
 	if (vpninfo->ip_info.addr6) {
-		script_setenv(vpninfo, "INTERNAL_IP6_ADDRESS", vpninfo->ip_info.addr6, 0);
-		script_setenv(vpninfo, "INTERNAL_IP6_NETMASK", vpninfo->ip_info.netmask6, 0);
+		script_setenv(vpninfo, "INTERNAL_IP6_ADDRESS", vpninfo->ip_info.addr6, 0, 0);
+		script_setenv(vpninfo, "INTERNAL_IP6_NETMASK", vpninfo->ip_info.netmask6, 0, 0);
 	} else if (vpninfo->ip_info.netmask6) {
                char *slash = strchr(vpninfo->ip_info.netmask6, '/');
-               script_setenv(vpninfo, "INTERNAL_IP6_NETMASK", vpninfo->ip_info.netmask6, 0);
-               if (slash) {
-                       *slash = 0;
-                       script_setenv(vpninfo, "INTERNAL_IP6_ADDRESS", vpninfo->ip_info.netmask6, 0);
-                       *slash = '/';
-               }
+               script_setenv(vpninfo, "INTERNAL_IP6_NETMASK", vpninfo->ip_info.netmask6, 0, 0);
+               if (slash)
+                       script_setenv(vpninfo, "INTERNAL_IP6_ADDRESS", vpninfo->ip_info.netmask6,
+				     slash - vpninfo->ip_info.netmask6, 0);
 	}
 
 	if (vpninfo->ip_info.dns[0])
-		script_setenv(vpninfo, "INTERNAL_IP4_DNS", vpninfo->ip_info.dns[0], 0);
+		script_setenv(vpninfo, "INTERNAL_IP4_DNS", vpninfo->ip_info.dns[0], 0, 0);
 	else
-		script_setenv(vpninfo, "INTERNAL_IP4_DNS", NULL, 0);
+		script_setenv(vpninfo, "INTERNAL_IP4_DNS", NULL, 0, 0);
 	if (vpninfo->ip_info.dns[1])
-		script_setenv(vpninfo, "INTERNAL_IP4_DNS", vpninfo->ip_info.dns[1], 1);
+		script_setenv(vpninfo, "INTERNAL_IP4_DNS", vpninfo->ip_info.dns[1], 0, 1);
 	if (vpninfo->ip_info.dns[2])
-		script_setenv(vpninfo, "INTERNAL_IP4_DNS", vpninfo->ip_info.dns[2], 1);
+		script_setenv(vpninfo, "INTERNAL_IP4_DNS", vpninfo->ip_info.dns[2], 0, 1);
 
 	if (vpninfo->ip_info.nbns[0])
-		script_setenv(vpninfo, "INTERNAL_IP4_NBNS", vpninfo->ip_info.nbns[0], 0);
+		script_setenv(vpninfo, "INTERNAL_IP4_NBNS", vpninfo->ip_info.nbns[0], 0, 0);
 	else
-		script_setenv(vpninfo, "INTERNAL_IP4_NBNS", NULL, 0);
+		script_setenv(vpninfo, "INTERNAL_IP4_NBNS", NULL, 0, 0);
 	if (vpninfo->ip_info.nbns[1])
-		script_setenv(vpninfo, "INTERNAL_IP4_NBNS", vpninfo->ip_info.nbns[1], 1);
+		script_setenv(vpninfo, "INTERNAL_IP4_NBNS", vpninfo->ip_info.nbns[1], 0, 1);
 	if (vpninfo->ip_info.nbns[2])
-		script_setenv(vpninfo, "INTERNAL_IP4_NBNS", vpninfo->ip_info.nbns[2], 1);
+		script_setenv(vpninfo, "INTERNAL_IP4_NBNS", vpninfo->ip_info.nbns[2], 0, 1);
 
 	if (vpninfo->ip_info.domain)
-		script_setenv(vpninfo, "CISCO_DEF_DOMAIN", vpninfo->ip_info.domain, 0);
+		script_setenv(vpninfo, "CISCO_DEF_DOMAIN", vpninfo->ip_info.domain, 0, 0);
 	else
-		script_setenv(vpninfo, "CISCO_DEF_DOMAIN", NULL, 0);
+		script_setenv(vpninfo, "CISCO_DEF_DOMAIN", NULL, 0, 0);
 
 	if (vpninfo->ip_info.proxy_pac)
-		script_setenv(vpninfo, "CISCO_PROXY_PAC", vpninfo->ip_info.proxy_pac, 0);
+		script_setenv(vpninfo, "CISCO_PROXY_PAC", vpninfo->ip_info.proxy_pac, 0, 0);
 
 	if (vpninfo->ip_info.split_dns) {
 		char *list;
@@ -318,10 +304,11 @@ void prepare_script_env(struct openconnect_info *vpninfo)
 					break;
 				*(p++) = ',';
 			}
-			script_setenv(vpninfo, "CISCO_SPLIT_DNS", list, 0);
+			script_setenv(vpninfo, "CISCO_SPLIT_DNS", list, 0, 0);
 			free(list);
 		}
 	}
+
 	if (vpninfo->ip_info.split_includes) {
 		struct oc_split_include *this = vpninfo->ip_info.split_includes;
 		int nr_split_includes = 0;
@@ -338,6 +325,7 @@ void prepare_script_env(struct openconnect_info *vpninfo)
 		if (nr_v6_split_includes)
 			script_setenv_int(vpninfo, "CISCO_IPV6_SPLIT_INC", nr_v6_split_includes);
 	}
+
 	if (vpninfo->ip_info.split_excludes) {
 		struct oc_split_include *this = vpninfo->ip_info.split_excludes;
 		int nr_split_excludes = 0;
@@ -474,7 +462,7 @@ int script_config_tun(struct openconnect_info *vpninfo, const char *reason)
 	si.dwFlags = STARTF_USESHOWWINDOW;
 	si.wShowWindow = SW_HIDE;
 
-	script_setenv(vpninfo, "reason", reason, 0);
+	script_setenv(vpninfo, "reason", reason, 0, 0);
 
 	if (asprintf(&cmd, "cscript.exe \"%s\"", vpninfo->vpnc_script) == -1)
 		return 0;

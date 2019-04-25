@@ -810,7 +810,7 @@ char *openconnect_legacy_to_utf8(struct openconnect_info *vpninfo, const char *l
 
 /* script.c */
 unsigned char unhex(const char *data);
-int script_setenv(struct openconnect_info *vpninfo, const char *opt, const char *val, int append);
+int script_setenv(struct openconnect_info *vpninfo, const char *opt, const char *val, int trunc, int append);
 int script_setenv_int(struct openconnect_info *vpninfo, const char *opt, int value);
 void prepare_script_env(struct openconnect_info *vpninfo);
 int script_config_tun(struct openconnect_info *vpninfo, const char *reason);
