@@ -44,7 +44,6 @@ case $host_os in
  *solaris*|*sunos*)
     AC_MSG_NOTICE([Applying workaround for broken SunOS time() function])
     AC_DEFINE(HAVE_SUNOS_BROKEN_TIME, 1, [On SunOS time() can go backwards])
-    AC_DEFINE(__STDC_WANT_LIB_EXT1__, 1, [To make memset_s() visible])
     symver_time="openconnect__time;"
     ;;
  *mingw32*|*mingw64*|*msys*)
@@ -119,16 +118,6 @@ fi
 AC_DEFINE_UNQUOTED(DEFAULT_VPNCSCRIPT, "${with_vpnc_script}", [Default vpnc-script locatin])
 AC_SUBST(DEFAULT_VPNCSCRIPT, "${with_vpnc_script}")
 
-AC_CHECK_FUNC(memset_s,
-	      [AC_DEFINE(HAVE_MEMSET_S, 1, [Have memset_s() function])],
-	      [AC_CHECK_FUNC(explicit_memset,
-	                    [AC_DEFINE(HAVE_EXPLICIT_MEMSET, 1, [Have explicit_memset() function])],
-			    [AC_CHECK_FUNC(explicit_bzero,
-					   [AC_DEFINE(HAVE_EXPLICIT_BZERO, 1, [Have explicit_bzero() function])],
-					   [])
-			    ])
-	      ])
-
 AC_CHECK_FUNC(fdevname_r, [AC_DEFINE(HAVE_FDEVNAME_R, 1, [Have fdevname_r() function])], [])
 AC_CHECK_FUNC(statfs, [AC_DEFINE(HAVE_STATFS, 1, [Have statfs() function])], [])
 AC_CHECK_FUNC(getline, [AC_DEFINE(HAVE_GETLINE, 1, [Have getline() function])],
@@ -186,6 +175,27 @@ AS_COMPILER_FLAGS(WFLAGS,
          -Wpointer-arith
          -Wwrite-strings")
 AC_SUBST(WFLAGS, [$WFLAGS])
+
+oldCFLAGS="$CFLAGS"
+CFLAGS="$CFLAGS $WFLAGS"
+AC_MSG_CHECKING([For memset_s])
+AC_LINK_IFELSE([AC_LANG_PROGRAM([
+	#define __STDC_WANT_LIB_EXT1__ 1
+	#include <string.h>],[[
+	unsigned char *foo[16];
+	memset_s(foo, 16, 0, 16);]])],
+	       [AC_MSG_RESULT([yes])
+	        AC_DEFINE(__STDC_WANT_LIB_EXT1__, 1, [To request memset_s])
+	        AC_DEFINE(HAVE_MEMSET_S, 1, [Have memset_s() function])],
+	       [AC_MSG_RESULT([no])
+	        AC_CHECK_FUNC(explicit_memset,
+			      [AC_DEFINE(HAVE_EXPLICIT_MEMSET, 1, [Have explicit_memset() function])],
+			      [AC_CHECK_FUNC(explicit_bzero,
+					     [AC_DEFINE(HAVE_EXPLICIT_BZERO, 1, [Have explicit_bzero() function])],
+					     [])
+			      ])
+	       ])
+CFLAGS="$oldCFLAGS"
 
 if test "$have_win" = yes; then
    # Checking "properly" for __attribute__((dllimport,stdcall)) functions is non-trivial
