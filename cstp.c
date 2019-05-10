@@ -604,7 +604,8 @@ static int start_cstp_connection(struct openconnect_info *vpninfo)
 			vpn_progress(vpninfo, PRG_ERR,
 				     _("Reconnect gave different Legacy IP address (%s != %s)\n"),
 				     vpninfo->ip_info.addr, old_addr);
-			return -EINVAL;
+			/* EPERM means that the retry loop will abort and won't keep trying. */
+			return -EPERM;
 		}
 	}
 	if (old_netmask) {
@@ -612,7 +613,7 @@ static int start_cstp_connection(struct openconnect_info *vpninfo)
 			vpn_progress(vpninfo, PRG_ERR,
 				     _("Reconnect gave different Legacy IP netmask (%s != %s)\n"),
 				     vpninfo->ip_info.netmask, old_netmask);
-			return -EINVAL;
+			return -EPERM;
 		}
 	}
 	if (old_addr6) {
@@ -620,7 +621,7 @@ static int start_cstp_connection(struct openconnect_info *vpninfo)
 			vpn_progress(vpninfo, PRG_ERR,
 				     _("Reconnect gave different IPv6 address (%s != %s)\n"),
 				     vpninfo->ip_info.addr6, old_addr6);
-			return -EINVAL;
+			return -EPERM;
 		}
 	}
 	if (old_netmask6) {
@@ -628,7 +629,7 @@ static int start_cstp_connection(struct openconnect_info *vpninfo)
 			vpn_progress(vpninfo, PRG_ERR,
 				     _("Reconnect gave different IPv6 netmask (%s != %s)\n"),
 				     vpninfo->ip_info.netmask6, old_netmask6);
-			return -EINVAL;
+			return -EPERM;
 		}
 	}
 
