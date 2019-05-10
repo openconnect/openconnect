@@ -29,8 +29,8 @@ user interface. Other ConnMan UI front ends may lack VPN support.</p>
 
 <h2>OpenConnect-gui</h2>
 
-<p><a href="https://github.com/openconnect/openconnect-gui/wiki">OpenConnect-gui</a>
-is a Windows port of OpenConnect.</p>
+<p><a href="https://openconnect.github.io/openconnect-gui/">OpenConnect-gui</a>
+is a graphical (Windows and MacOSX) port of OpenConnect.</p>
 
 <INCLUDE file="inc/footer.tmpl" />
 </PAGE>
