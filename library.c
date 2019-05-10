@@ -943,7 +943,7 @@ int openconnect_setup_tun_device(struct openconnect_info *vpninfo,
 		script_setenv_int(vpninfo, "TUNIDX", vpninfo->tun_idx);
 #endif
 	legacy_ifname = openconnect_utf8_to_legacy(vpninfo, vpninfo->ifname);
-	script_setenv(vpninfo, "TUNDEV", legacy_ifname, 0);
+	script_setenv(vpninfo, "TUNDEV", legacy_ifname, 0, 0);
 	if (legacy_ifname != vpninfo->ifname)
 		free(legacy_ifname);
 	script_config_tun(vpninfo, "connect");
