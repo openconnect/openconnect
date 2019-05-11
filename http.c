@@ -33,7 +33,6 @@
 static int proxy_write(struct openconnect_info *vpninfo, char *buf, size_t len);
 static int proxy_read(struct openconnect_info *vpninfo, char *buf, size_t len);
 
-#define MAX_BUF_LEN 131072
 #define BUF_CHUNK_SIZE 4096
 
 struct oc_text_buf *buf_alloc(void)
@@ -89,14 +88,14 @@ void buf_truncate(struct oc_text_buf *buf)
 
 int buf_ensure_space(struct oc_text_buf *buf, int len)
 {
-	int new_buf_len;
+	unsigned int new_buf_len;
 
 	new_buf_len = (buf->pos + len + BUF_CHUNK_SIZE - 1) & ~(BUF_CHUNK_SIZE - 1);
 
 	if (new_buf_len <= buf->buf_len)
 		return 0;
 
-	if (new_buf_len > MAX_BUF_LEN) {
+	if (new_buf_len > INT_MAX) {
 		buf->error = -E2BIG;
 		return buf->error;
 	} else {
@@ -371,7 +370,7 @@ int process_http_response(struct openconnect_info *vpninfo, int connect,
 			  int (*header_cb)(struct openconnect_info *, char *, char *),
 			  struct oc_text_buf *body)
 {
-	char buf[MAX_BUF_LEN];
+	char buf[8192];
 	int bodylen = BODY_HTTP10;
 	int closeconn = 0;
 	int result;
