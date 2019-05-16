@@ -24,6 +24,7 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <errno.h>
 
 #define TSSINCLUDE(x) < HAVE_TSS2/x >
 #include TSSINCLUDE(tss.h)
