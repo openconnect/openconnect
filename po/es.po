@@ -4921,12 +4921,3 @@ msgstr "calcular comando"
 #: yubikey.c:627
 msgid "Unrecognised response from Yubikey when generating tokencode\n"
 msgstr "Respuesta de Yubikey desconocida al generar el código del testigo\n"
-
-#~ msgid "Failed to set up encryption context for ESP packet:\n"
-#~ msgstr "Falló al establecer el contexto de cifrado para el paquete ESP:\n"
-
-#~ msgid "Failed to generate random IV for ESP packet:\n"
-#~ msgstr "Falló al generar el VI aleatorio para el paquete ESP:\n"
-
-#~ msgid "Failed to generate ESP packet IV: %s\n"
-#~ msgstr "Falló al generar el VI del paquete ESP: %s\n"

@@ -4961,12 +4961,3 @@ msgstr "ordre calcula"
 msgid "Unrecognised response from Yubikey when generating tokencode\n"
 msgstr ""
 "Resposta no reconeguda de Yubikey mentre s'està generant el codi testimoni\n"
-
-#~ msgid "Failed to set up encryption context for ESP packet:\n"
-#~ msgstr "Error en configurar el context de xifrat per al paquet ESP:\n"
-
-#~ msgid "Failed to generate random IV for ESP packet:\n"
-#~ msgstr "Error en generar aleatori IV per al paquet ESP:\n"
-
-#~ msgid "Failed to generate ESP packet IV: %s\n"
-#~ msgstr "Error en generar el paquet IV ESP: %s\n"
