@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openconnect\n"
 "Report-Msgid-Bugs-To: openconnect-devel@lists.infradead.org\n"
-"POT-Creation-Date: 2019-01-16 11:23+0200\n"
+"POT-Creation-Date: 2019-05-18 10:44-0700\n"
 "Last-Translator: David Woodhouse <dwmw2@infradead.org>\n"
 "Language-Team: Spanish (Castilian) (http://www.transifex.net/projects/p/"
 "meego/language/es/)\n"
@@ -77,7 +77,7 @@ msgstr "%d servidores de puerta de enlace disponibles:\n"
 msgid "  %s (%s)\n"
 msgstr "  %s (%s)\n"
 
-#: auth-globalprotect.c:484 auth-juniper.c:720 auth.c:669
+#: auth-globalprotect.c:484 auth-juniper.c:730 auth.c:669
 msgid "Failed to generate OTP tokencode; disabling token\n"
 msgstr "Falló al generar el código de testigo OTP; desactivando testigo\n"
 
@@ -155,43 +155,48 @@ msgstr "Se recibió respuesta fallida %s de TNCC\n"
 
 #: auth-juniper.c:445
 msgid "TNCC response 200 OK\n"
-msgstr ""
+msgstr "Respuesta TNCC 200 OK\n"
 
 #: auth-juniper.c:452
 #, c-format
 msgid "Second line of TNCC response: '%s'\n"
-msgstr ""
+msgstr "Segunda línea de la respuesta TNCC: «%s»\n"
 
 #: auth-juniper.c:461
 #, c-format
 msgid "Got new DSPREAUTH cookie from TNCC: %s\n"
 msgstr "Se ha obtenido una nueva cookie DSPREAUTH de TNCC: %s\n"
 
-#: auth-juniper.c:471
+#: auth-juniper.c:474
 #, c-format
 msgid "Unexpected non-empty line from TNCC after DSPREAUTH cookie: '%s'\n"
 msgstr ""
+"Línea no vacía inesperada de TNCC después de la cookie DSPREAUTH: «%s»\n"
 
-#: auth-juniper.c:640
+#: auth-juniper.c:481
+msgid "Too many non-empty lines from TNCC after DSPREAUTH cookie\n"
+msgstr ""
+
+#: auth-juniper.c:650
 msgid "Failed to parse HTML document\n"
 msgstr "Falló al analizar el documento HTML\n"
 
-#: auth-juniper.c:657
+#: auth-juniper.c:667
 msgid "Failed to find or parse web form in login page\n"
 msgstr ""
 "Falló al encontrar o analizar el formulario web en la página de inicio de "
 "sesión\n"
 
-#: auth-juniper.c:665
+#: auth-juniper.c:675
 msgid "Encountered form with no ID\n"
 msgstr "Encontrado formulario sin ID\n"
 
-#: auth-juniper.c:703
+#: auth-juniper.c:713
 #, c-format
 msgid "Unknown form ID '%s'\n"
 msgstr "ID de formulario desconocido «%s»\n"
 
-#: auth-juniper.c:706
+#: auth-juniper.c:716
 #, c-format
 msgid "Dumping unknown HTML form:\n"
 msgstr "Volcando formulario HTML desconocido:\n"
@@ -218,15 +223,15 @@ msgstr "No hay nombre de entrada en el formulario\n"
 msgid "Unknown input type %s in form\n"
 msgstr "Tipo de entrada %s desconocido en el formulario\n"
 
-#: auth.c:540 gpst.c:213
+#: auth.c:540 gpst.c:214
 msgid "Empty response from server\n"
 msgstr "Respuesta desde el servidor vacía\n"
 
-#: auth.c:551 gpst.c:288
+#: auth.c:551 gpst.c:289
 msgid "Failed to parse server response\n"
 msgstr "Falló al analizar la respuesta del servidor\n"
 
-#: auth.c:553 gpst.c:290
+#: auth.c:553 gpst.c:291
 #, c-format
 msgid "Response was:%s\n"
 msgstr "La respuesta fue:%s\n"
@@ -247,7 +252,7 @@ msgstr "Se pidió la contraseña, pero se estableció '--no-passwd'\n"
 msgid "Not downloading XML profile because SHA1 already matches\n"
 msgstr "No se descarga el perfil XML porque ya SHA1 ya coincide\n"
 
-#: auth.c:931 cstp.c:335 http.c:917
+#: auth.c:931 cstp.c:335 http.c:916
 #, c-format
 msgid "Failed to open HTTPS connection to %s\n"
 msgstr "Falló al abrir una conexión HTTPS con %s\n"
@@ -389,12 +394,12 @@ msgstr "(¡Error al describir el error!)"
 msgid "ERROR: Cannot initialize sockets\n"
 msgstr "Error: no se pueden inicializar los sockets\n"
 
-#: cstp.c:112 gpst.c:340
+#: cstp.c:112 gpst.c:341
 #, c-format
 msgid "TCP_INFO rcv mss %d, snd mss %d, adv mss %d, pmtu %d\n"
 msgstr "TCP_INFO rcv mss %d, snd mss %d, adv mss %d, pmtu %d\n"
 
-#: cstp.c:134 gpst.c:359
+#: cstp.c:134 gpst.c:360
 #, c-format
 msgid "TCP_MAXSEG %d\n"
 msgstr "TCP_MAXSEG %d\n"
@@ -410,7 +415,7 @@ msgstr ""
 msgid "Error creating HTTPS CONNECT request\n"
 msgstr "Error al crear la solicitud HTTPS CONNECT\n"
 
-#: cstp.c:328 http.c:385
+#: cstp.c:328 http.c:384
 msgid "Error fetching HTTPS response\n"
 msgstr "Error al obtener respuesta HTTPS\n"
 
@@ -433,7 +438,7 @@ msgstr "Se obtuvo la respuesta CONNECT: %s\n"
 msgid "No memory for options\n"
 msgstr "No hay memoria para opciones\n"
 
-#: cstp.c:413 http.c:445
+#: cstp.c:413 http.c:444
 msgid "<elided>"
 msgstr "<omitido>"
 
@@ -461,7 +466,7 @@ msgstr "CSTP-Content-Encoding %s desconocido\n"
 msgid "No MTU received. Aborting\n"
 msgstr "No se recibió MTU. Abortando\n"
 
-#: cstp.c:593 gpst.c:640
+#: cstp.c:593 gpst.c:641
 msgid "No IP address received. Aborting\n"
 msgstr "No se recibió dirección IP. Abortando\n"
 
@@ -470,171 +475,171 @@ msgstr "No se recibió dirección IP. Abortando\n"
 msgid "IPv6 configuration received but MTU %d is too small.\n"
 msgstr "Configuración de IPv6 recibida pero la MTU %d es demasiado pequeña.\n"
 
-#: cstp.c:605 gpst.c:647
+#: cstp.c:605 gpst.c:648
 #, c-format
 msgid "Reconnect gave different Legacy IP address (%s != %s)\n"
 msgstr "La reconexión dio una dirección IP heredada distinta (%s != %s)\n"
 
-#: cstp.c:613 gpst.c:656
+#: cstp.c:614 gpst.c:657
 #, c-format
 msgid "Reconnect gave different Legacy IP netmask (%s != %s)\n"
 msgstr "La reconexión dio una máscara de red heredada distinta (%s != %s)\n"
 
-#: cstp.c:621
+#: cstp.c:622
 #, c-format
 msgid "Reconnect gave different IPv6 address (%s != %s)\n"
 msgstr "La reconexión dio una dirección IPv6 heredada distinta (%s != %s)\n"
 
-#: cstp.c:629
+#: cstp.c:630
 #, c-format
 msgid "Reconnect gave different IPv6 netmask (%s != %s)\n"
 msgstr ""
 "La reconexión dio una máscara de red IPv6 heredada distinta (%s != %s)\n"
 
-#: cstp.c:637
+#: cstp.c:638
 #, c-format
 msgid "CSTP connected. DPD %d, Keepalive %d\n"
 msgstr "CSTP conectado. DPD %d, Keepalive %d\n"
 
-#: cstp.c:639
+#: cstp.c:640
 #, c-format
 msgid "CSTP Ciphersuite: %s\n"
 msgstr "Conjunto de cifrado CSTP: %s\n"
 
-#: cstp.c:701
+#: cstp.c:702
 msgid "Compression setup failed\n"
 msgstr "Falló la configuración de compresión\n"
 
-#: cstp.c:718
+#: cstp.c:719
 msgid "Allocation of deflate buffer failed\n"
 msgstr "Falló la localización del buffer vacío\n"
 
-#: cstp.c:780
+#: cstp.c:781
 msgid "inflate failed\n"
 msgstr "falló el llenado\n"
 
-#: cstp.c:803
+#: cstp.c:804
 #, c-format
 msgid "LZS decompression failed: %s\n"
 msgstr "Fallo de la descompresión LZS: %s\n"
 
-#: cstp.c:816
+#: cstp.c:817
 msgid "LZ4 decompression failed\n"
 msgstr "Falló la descompresión LZ4\n"
 
-#: cstp.c:823
+#: cstp.c:824
 #, c-format
 msgid "Unknown compression type %d\n"
 msgstr "Tipo de compresión %d desconocido\n"
 
-#: cstp.c:828
+#: cstp.c:829
 #, c-format
 msgid "Received %s compressed data packet of %d bytes (was %d)\n"
 msgstr "Paquete de datos comprimidos %s de %d bytes recibido (eran %d)\n"
 
-#: cstp.c:848
+#: cstp.c:849
 #, c-format
 msgid "deflate failed %d\n"
 msgstr "falló el vaciado %d\n"
 
-#: cstp.c:921 dtls.c:281 dtls.c:740 esp.c:129 gpst.c:1041 mainloop.c:69
+#: cstp.c:922 dtls.c:281 dtls.c:740 esp.c:129 gpst.c:1042 mainloop.c:69
 #: oncp.c:914
 msgid "Allocation failed\n"
 msgstr "Falló la reserva\n"
 
-#: cstp.c:932 gpst.c:1054
+#: cstp.c:933 gpst.c:1055
 #, c-format
 msgid "Short packet received (%d bytes)\n"
 msgstr "Paquete corto recibido (%d bytes)\n"
 
-#: cstp.c:945
+#: cstp.c:946
 #, c-format
 msgid "Unexpected packet length. SSL_read returned %d but packet is\n"
 msgstr ""
 "Longitud de paquete inesperada. SSL_read devolvió %d pero el paquete es\n"
 
-#: cstp.c:959
+#: cstp.c:960
 msgid "Got CSTP DPD request\n"
 msgstr "Se obtuvo la petición CSTP DPD\n"
 
-#: cstp.c:965
+#: cstp.c:966
 msgid "Got CSTP DPD response\n"
 msgstr "Se obtuvo la respuesta CSTP DPD\n"
 
-#: cstp.c:970
+#: cstp.c:971
 msgid "Got CSTP Keepalive\n"
 msgstr "Se obtuvo Keppalive CSTP\n"
 
-#: cstp.c:975 oncp.c:1003
+#: cstp.c:976 oncp.c:1003
 #, c-format
 msgid "Received uncompressed data packet of %d bytes\n"
 msgstr "Se recibió el paquete de datos sin comprimir de %d bytes\n"
 
-#: cstp.c:992
+#: cstp.c:993
 #, c-format
 msgid "Received server disconnect: %02x '%s'\n"
 msgstr "Se recibió el una desconexión del servidor: %02x '%s'\n"
 
-#: cstp.c:995
+#: cstp.c:996
 msgid "Received server disconnect\n"
 msgstr "Recibida una desconexión del servidor\n"
 
-#: cstp.c:1003
+#: cstp.c:1004
 msgid "Compressed packet received in !deflate mode\n"
 msgstr "Se recibió el paquete comprimido en modo !vacío\n"
 
-#: cstp.c:1012
+#: cstp.c:1013
 msgid "received server terminate packet\n"
 msgstr "se recibió el paquete de fin del servidor\n"
 
-#: cstp.c:1019
+#: cstp.c:1020
 #, c-format
 msgid "Unknown packet %02x %02x %02x %02x %02x %02x %02x %02x\n"
 msgstr "Paquete desconocido %02x %02x %02x %02x %02x %02x %02x %02x\n"
 
-#: cstp.c:1062 gpst.c:1141 oncp.c:1121
+#: cstp.c:1063 gpst.c:1142 oncp.c:1121
 #, c-format
 msgid "SSL wrote too few bytes! Asked for %d, sent %d\n"
 msgstr "SSL escribió demasiados pocos bytes. Se pidieron %d, se enviaron %d\n"
 
 #. Not that this will ever happen; we don't even process
 #. the setting when we're asked for it.
-#: cstp.c:1090 oncp.c:1155
+#: cstp.c:1091 oncp.c:1155
 msgid "CSTP rekey due\n"
 msgstr "Renegociación de clave CSTP pendiente\n"
 
 #. if we failed rehandshake try establishing a new-tunnel instead of failing
-#: cstp.c:1097 oncp.c:1162
+#: cstp.c:1098 oncp.c:1162
 msgid "Rehandshake failed; attempting new-tunnel\n"
 msgstr "Renegociación fallida; intentando un túnel nuevo\n"
 
-#: cstp.c:1108 oncp.c:1173
+#: cstp.c:1109 oncp.c:1173
 msgid "CSTP Dead Peer Detection detected dead peer!\n"
 msgstr "La detección de muerte del par CSTP detectó la muerte del par\n"
 
-#: cstp.c:1112 gpst.c:1165 oncp.c:1091 oncp.c:1177
+#: cstp.c:1113 gpst.c:1166 oncp.c:1091 oncp.c:1177
 msgid "Reconnect failed\n"
 msgstr "Falló al reconectar\n"
 
-#: cstp.c:1128 oncp.c:1193
+#: cstp.c:1129 oncp.c:1193
 msgid "Send CSTP DPD\n"
 msgstr "Enviar CSTP DPD\n"
 
-#: cstp.c:1140 oncp.c:1204
+#: cstp.c:1141 oncp.c:1204
 msgid "Send CSTP Keepalive\n"
 msgstr "Enviar CSTP Keepalive\n"
 
-#: cstp.c:1165
+#: cstp.c:1166
 #, c-format
 msgid "Sending compressed data packet of %d bytes (was %d)\n"
 msgstr "Enviando paquete de datos comprimidos de %d bytes (eran %d)\n"
 
-#: cstp.c:1176 oncp.c:1238
+#: cstp.c:1177 oncp.c:1238
 #, c-format
 msgid "Sending uncompressed data packet of %d bytes\n"
 msgstr "Enviando paquete de datos sin comprimir de %d bytes\n"
 
-#: cstp.c:1215
+#: cstp.c:1216
 #, c-format
 msgid "Send BYE packet: %s\n"
 msgstr "Enviar paquete BYE: %s\n"
@@ -984,12 +989,22 @@ msgstr "Enviar pruebas ESP para DPD\n"
 msgid "Keepalive not implemented for ESP\n"
 msgstr "Keepalive no está implementado para ESP\n"
 
-#: esp.c:281
+#: esp.c:278
+#, c-format
+msgid "Failed to encrypt ESP packet: %d\n"
+msgstr ""
+
+#: esp.c:294
+#, c-format
+msgid "Requeueing failed ESP send: %s\n"
+msgstr ""
+
+#: esp.c:301
 #, c-format
 msgid "Failed to send ESP packet: %s\n"
 msgstr "Falló al enviar el paquete ESP: %s\n"
 
-#: esp.c:287
+#: esp.c:307
 #, c-format
 msgid "Sent ESP packet of %d bytes\n"
 msgstr "Enviando paquete ESP de %d bytes\n"
@@ -1108,26 +1123,25 @@ msgstr "Falló al inicializar ESP HMAC: %s\n"
 msgid "Failed to generate random keys for ESP: %s\n"
 msgstr "Falló al generar las claves aleatorias para ESP: %s\n"
 
-#: gnutls-esp.c:152 gnutls-esp.c:214
+#: gnutls-esp.c:132
+msgid "Failed to generate ESP IV\n"
+msgstr ""
+
+#: gnutls-esp.c:161 gnutls-esp.c:217
 #, c-format
 msgid "Failed to calculate HMAC for ESP packet: %s\n"
 msgstr "Falló al calcular HMAC para el paquete ESP: %s\n"
 
-#: gnutls-esp.c:159 openssl-esp.c:197
+#: gnutls-esp.c:168 openssl-esp.c:192
 msgid "Received ESP packet with invalid HMAC\n"
 msgstr "Paquete ESP recibido con HMAC no válida\n"
 
-#: gnutls-esp.c:171
+#: gnutls-esp.c:180
 #, c-format
 msgid "Decrypting ESP packet failed: %s\n"
 msgstr "Falló al descifrar el paquete ESP: %s\n"
 
-#: gnutls-esp.c:191
-#, c-format
-msgid "Failed to generate ESP packet IV: %s\n"
-msgstr "Falló al generar el VI del paquete ESP: %s\n"
-
-#: gnutls-esp.c:206
+#: gnutls-esp.c:209
 #, c-format
 msgid "Failed to encrypt ESP packet: %s\n"
 msgstr "Falló al cifrar el paquete ESP: %s\n"
@@ -1480,6 +1494,7 @@ msgstr "Añadiendo soporte CA '%s'\n"
 #: gnutls.c:1724
 msgid "Private key appears not to support RSA-PSS. Disabling TLSv1.3\n"
 msgstr ""
+"La clave privada parece no ser compatible con RSA-PSS. Desactivando TLSv1.3\n"
 
 #: gnutls.c:1748
 #, c-format
@@ -1581,66 +1596,66 @@ msgstr "Falló al abrir el archivo CA '%s': %s\n"
 msgid "Loading certificate failed. Aborting.\n"
 msgstr "Carga de certificado fallida. Abortando.\n"
 
-#: gnutls.c:2243
+#: gnutls.c:2237
 #, c-format
 msgid "Failed to set TLS priority string (\"%s\"): %s\n"
 msgstr "Falló al establecer la cadena de prioridad TLS («%s»): %s\n"
 
-#: gnutls.c:2255 openssl.c:1796
+#: gnutls.c:2249 openssl.c:1796
 #, c-format
 msgid "SSL negotiation with %s\n"
 msgstr "Negociación SSL con «%s»\n"
 
-#: gnutls.c:2302 openssl.c:1822
+#: gnutls.c:2296 openssl.c:1822
 msgid "SSL connection cancelled\n"
 msgstr "Conexión SSL cancelada\n"
 
-#: gnutls.c:2309
+#: gnutls.c:2303
 #, c-format
 msgid "SSL connection failure: %s\n"
 msgstr "Fallo de la conexión TLS: %s\n"
 
-#: gnutls.c:2318
+#: gnutls.c:2312
 #, c-format
 msgid "GnuTLS non-fatal return during handshake: %s\n"
 msgstr "Retorno no fatal de GnuTLS durante la negociación: %s\n"
 
-#: gnutls.c:2324 openssl.c:1839
+#: gnutls.c:2318 openssl.c:1839
 #, c-format
 msgid "Connected to HTTPS on %s\n"
 msgstr "Conectó a HTTPS en %s\n"
 
-#: gnutls.c:2327
+#: gnutls.c:2321
 #, c-format
 msgid "Renegotiated SSL on %s\n"
 msgstr "Renegociar SSL en %s\n"
 
-#: gnutls.c:2489 openssl-pkcs11.c:199
+#: gnutls.c:2483 openssl-pkcs11.c:199
 #, c-format
 msgid "PIN required for %s"
 msgstr "PIN requerido por %s"
 
-#: gnutls.c:2493 openssl-pkcs11.c:202
+#: gnutls.c:2487 openssl-pkcs11.c:202
 msgid "Wrong PIN"
 msgstr "PIN incorrecto"
 
-#: gnutls.c:2496
+#: gnutls.c:2490
 msgid "This is the final try before locking!"
 msgstr "¡Éste es el último intento antes de bloquear!"
 
-#: gnutls.c:2498
+#: gnutls.c:2492
 msgid "Only a few tries left before locking!"
 msgstr "¡Sólo quedan unos pocos intentos antes de bloquear!"
 
-#: gnutls.c:2503 openssl-pkcs11.c:206
+#: gnutls.c:2497 openssl-pkcs11.c:206
 msgid "Enter PIN:"
 msgstr "Introducir PIN:"
 
-#: gnutls.c:2589 openssl.c:1967
+#: gnutls.c:2583 openssl.c:1967
 msgid "Unsupported OATH HMAC algorithm\n"
 msgstr "Algoritmo OATH HMAC no soportado\n"
 
-#: gnutls.c:2598
+#: gnutls.c:2592
 #, c-format
 msgid "Failed to calculate OATH HMAC: %s\n"
 msgstr "Falló al calcular OATH HMAC: %s\n"
@@ -1727,7 +1742,7 @@ msgstr "Introduzca el PIN de la clave TPM:"
 msgid "Failed to set key PIN: %s\n"
 msgstr "Falló al establecer el PIN de la clave: %s\n"
 
-#: gnutls_tpm2.c:92 gnutls_tpm2_esys.c:474 gnutls_tpm2_ibm.c:418
+#: gnutls_tpm2.c:92 gnutls_tpm2_esys.c:474 gnutls_tpm2_ibm.c:419
 #, c-format
 msgid "Unknown TPM2 EC digest size %d\n"
 msgstr "Resumen EC TPM2 desconocido de tamaño %d\n"
@@ -1747,15 +1762,16 @@ msgstr "Falló al crear el tipo ASN.1 para TPM2: %s\n"
 msgid "Failed to decode TPM2 key ASN.1: %s\n"
 msgstr "Falló al decodificar la clave TPM2 ASN.1: %s\n"
 
+# A public key OID is an object identifier (OID) identifying the algorithm of the public-private key pair associated with the certificate.
 #: gnutls_tpm2.c:225
 #, c-format
 msgid "Failed to parse TPM2 key type OID: %s\n"
-msgstr ""
+msgstr "Falló al analizar el tipo de OID de la clave TPM2: %s\n"
 
 #: gnutls_tpm2.c:231
 #, c-format
 msgid "TPM2 key has unknown type OID %s not %s\n"
-msgstr ""
+msgstr "La clave TPM2 tiene un OID de tipo desconocido %s no %s\n"
 
 #: gnutls_tpm2.c:249
 #, c-format
@@ -1806,7 +1822,7 @@ msgstr "plataforma"
 msgid "Creating primary key under %s hierarchy.\n"
 msgstr "Creando clave primaria bajo jerarquía %s.\n"
 
-#: gnutls_tpm2_esys.c:201 gnutls_tpm2_ibm.c:261
+#: gnutls_tpm2_esys.c:201 gnutls_tpm2_ibm.c:262
 #, c-format
 msgid "Enter TPM2 %s hierarchy password:"
 msgstr "Introduzca la contraseña TPM2 bajo jerarquía %s:"
@@ -1851,7 +1867,7 @@ msgstr "TPM2 Esys_Startup falló: 0x%x\n"
 msgid "Esys_TR_FromTPMPublic failed for handle 0x%x: 0x%x\n"
 msgstr "Esys_TR_FromTPMPublic falló para el gestor 0x%x: 0x%x\n"
 
-#: gnutls_tpm2_esys.c:295 gnutls_tpm2_ibm.c:277
+#: gnutls_tpm2_esys.c:295 gnutls_tpm2_ibm.c:278
 msgid "Enter TPM2 parent key password:"
 msgstr "Introduzca la contraseña de la clave TPM del padre:"
 
@@ -1872,91 +1888,91 @@ msgstr "TPM2 Esys_Load falló: 0x%x\n"
 #: gnutls_tpm2_esys.c:333
 #, c-format
 msgid "TPM2 Esys_FlushContext for generated primary failed: 0x%x\n"
-msgstr ""
+msgstr "TPM2 Esys_FlushContext para el primario generado falló: 0x%x\n"
 
-#: gnutls_tpm2_esys.c:363 gnutls_tpm2_ibm.c:362 gnutls_tpm2_ibm.c:449
+#: gnutls_tpm2_esys.c:363 gnutls_tpm2_ibm.c:363 gnutls_tpm2_ibm.c:450
 msgid "Enter TPM2 key password:"
-msgstr ""
+msgstr "Introduzca la contraseña de la clave TPM2:"
 
 #: gnutls_tpm2_esys.c:395
 #, c-format
 msgid "TPM2 RSA sign function called for %d bytes.\n"
-msgstr ""
+msgstr "Función de firma TPM2 RSA llamada para %d bytes.\n"
 
 #: gnutls_tpm2_esys.c:414
 msgid "TPM2 Esys_RSA_Decrypt auth failed\n"
-msgstr ""
+msgstr "La autenticación de TPM2 Esys_RSA_Decrypt falló\n"
 
 #: gnutls_tpm2_esys.c:420 gnutls_tpm2_esys.c:500
 #, c-format
 msgid "TPM2 failed to generate RSA signature: 0x%x\n"
-msgstr ""
+msgstr "TPM2 falló al generar la firma RSA: 0x%x\n"
 
-#: gnutls_tpm2_esys.c:464 gnutls_tpm2_ibm.c:404
+#: gnutls_tpm2_esys.c:464 gnutls_tpm2_ibm.c:405
 #, c-format
 msgid "TPM2 EC sign function called for %d bytes.\n"
-msgstr ""
+msgstr "Función de firma TPM2 EC llamada para %d bytes.\n"
 
 #: gnutls_tpm2_esys.c:494
 msgid "TPM2 Esys_Sign auth failed\n"
-msgstr ""
+msgstr "Falló la autenticación de TPM2 Esys_Sign\n"
 
-#: gnutls_tpm2_esys.c:532 gnutls_tpm2_ibm.c:484
+#: gnutls_tpm2_esys.c:532 gnutls_tpm2_ibm.c:485
 #, c-format
 msgid "Invalid TPM2 parent handle 0x%08x\n"
-msgstr ""
+msgstr "Gestor padre de TPM2 no válido 0x%08x\n"
 
-#: gnutls_tpm2_esys.c:546 gnutls_tpm2_ibm.c:501
+#: gnutls_tpm2_esys.c:546 gnutls_tpm2_ibm.c:502
 #, c-format
 msgid "Failed to import TPM2 private key data: 0x%x\n"
-msgstr ""
+msgstr "Falló al importar los datos de la clave privada TPM2: 0x%x\n"
 
-#: gnutls_tpm2_esys.c:555 gnutls_tpm2_ibm.c:511
+#: gnutls_tpm2_esys.c:555 gnutls_tpm2_ibm.c:512
 #, c-format
 msgid "Failed to import TPM2 public key data: 0x%x\n"
-msgstr ""
+msgstr "Falló al importar los datos de la clave pública TPM2: 0x%x\n"
 
-#: gnutls_tpm2_esys.c:569 gnutls_tpm2_ibm.c:522
+#: gnutls_tpm2_esys.c:569 gnutls_tpm2_ibm.c:523
 #, c-format
 msgid "Unsupported TPM2 key type %d\n"
-msgstr ""
+msgstr "Tipo de clave TPM2 no soportado %d\n"
 
-#: gnutls_tpm2_ibm.c:53
+#: gnutls_tpm2_ibm.c:54
 #, c-format
 msgid "TPM2 operation %s failed (%d): %s%s%s\n"
-msgstr ""
+msgstr "La operación de TPM2 %s falló (%d): %s%s%s\n"
 
-#: gpst.c:225
+#: gpst.c:226
 #, c-format
 msgid "%s\n"
 msgstr "%s\n"
 
-#: gpst.c:228
+#: gpst.c:229
 #, c-format
 msgid "Challenge: %s\n"
 msgstr "Desafío: %s\n"
 
-#: gpst.c:416
+#: gpst.c:417
 #, c-format
 msgid "Unknown ESP %s algorithm: %s"
 msgstr "Algoritmo ESP %s desconocido: %s"
 
-#: gpst.c:476
+#: gpst.c:477
 #, c-format
 msgid "Idle timeout is %d minutes.\n"
 msgstr "El tiempo de espera de inactividad es de %d minutos.\n"
 
-#: gpst.c:482
+#: gpst.c:483
 #, c-format
 msgid "Non-standard SSL tunnel path: %s\n"
 msgstr "Ruta de túnel SSL no estándar: %s\n"
 
-#: gpst.c:486
+#: gpst.c:487
 #, c-format
 msgid "Tunnel timeout (rekey interval) is %d minutes.\n"
 msgstr "El tiempo de espera del túnel (intervalo rekey) es de %d minutos.\n"
 
-#: gpst.c:497
+#: gpst.c:498
 #, c-format
 msgid ""
 "Gateway address in config XML (%s) differs from external gateway address "
@@ -1965,56 +1981,56 @@ msgstr ""
 "La dirección de la puerta de enlace en el XML de configuración (%s) difiere "
 "de la dirección externa de la puerta de enlace (%s).\n"
 
-#: gpst.c:550
+#: gpst.c:551
 #, c-format
 msgid "GlobalProtect config sent ipsec-mode=%s (expected esp-tunnel)\n"
 msgstr ""
 "La configuración de GlobalProtect envió ipsec-mode=%s (se esperaba esp-"
 "tunnel)\n"
 
-#: gpst.c:559 oncp.c:835
+#: gpst.c:560 oncp.c:835
 msgid "Ignoring ESP keys since ESP support not available in this build\n"
 msgstr ""
 "Ignorando las claves ESP ya que el soporte ESP no está disponible en esta "
 "versión\n"
 
-#: gpst.c:626
+#: gpst.c:627
 msgid "ESP disabled"
 msgstr "ESP desactivado"
 
-#: gpst.c:628
+#: gpst.c:629
 msgid "No ESP keys received"
 msgstr "No se recibieron claves ESP"
 
-#: gpst.c:630
+#: gpst.c:631
 msgid "ESP support not available in this build"
 msgstr "El soporte de ESP no está disponible en esta versión"
 
-#: gpst.c:634
+#: gpst.c:635
 #, c-format
 msgid "No MTU received. Calculated %d for %s%s\n"
 msgstr "No se recibió MTU. Se calculó %d para %s%s\n"
 
-#: gpst.c:679
+#: gpst.c:680
 msgid "Connecting to HTTPS tunnel endpoint ...\n"
 msgstr "Conectando al extremo del túnel HTTPS ...\n"
 
-#: gpst.c:701
+#: gpst.c:702
 msgid "Error fetching GET-tunnel HTTPS response.\n"
 msgstr "Error al obtener respuesta HTTPS del GET-tunnel.\n"
 
-#: gpst.c:710
+#: gpst.c:711
 msgid "Gateway disconnected immediately after GET-tunnel request.\n"
 msgstr ""
 "La puerta de enlace se desconectó inmediatamente después de la solicitud GET-"
 "tunnel.\n"
 
-#: gpst.c:718
+#: gpst.c:719
 #, c-format
 msgid "Got inappropriate HTTP GET-tunnel response: %.*s\n"
 msgstr "Se obtuvo una respuesta HTTP GET-tunnel inadecuada: %.*s\n"
 
-#: gpst.c:860
+#: gpst.c:861
 #, c-format
 msgid ""
 "WARNING: Server asked us to submit HIP report with md5sum %s.\n"
@@ -2028,7 +2044,7 @@ msgstr ""
 "Necesita proporcionar un argumento --csd-wrapper con el script de envío del "
 "informe HIP.\n"
 
-#: gpst.c:870
+#: gpst.c:871
 msgid ""
 "Error: Running the 'HIP Report' script on this platform is not yet "
 "implemented.\n"
@@ -2036,52 +2052,52 @@ msgstr ""
 "Error: La ejecución del script de «Informe HIP» no se ha implementado en "
 "esta plataforma.\n"
 
-#: gpst.c:899
+#: gpst.c:900
 #, c-format
 msgid "HIP script '%s' exited abnormally\n"
 msgstr "El script HIP «%s» salió anormalmente\n"
 
-#: gpst.c:904
+#: gpst.c:905
 #, c-format
 msgid "HIP script '%s' returned non-zero status: %d\n"
 msgstr "El script HIP «%s» devolvió un estado distinto de cero: %d\n"
 
-#: gpst.c:910
+#: gpst.c:911
 msgid "HIP report submission failed.\n"
 msgstr "Falló el envío del informe HIP.\n"
 
-#: gpst.c:912
+#: gpst.c:913
 msgid "HIP report submitted successfully.\n"
 msgstr "El informe HIP se envió correctamente.\n"
 
-#: gpst.c:941
+#: gpst.c:942
 #, c-format
 msgid "Failed to exec HIP script %s\n"
 msgstr "Falló al ejecutar el script HIP %s\n"
 
-#: gpst.c:965
+#: gpst.c:966
 msgid "Gateway says HIP report submission is needed.\n"
 msgstr "La puerta de enlace dice que se necesita el envío del informe HIP.\n"
 
-#: gpst.c:971
+#: gpst.c:972
 msgid "Gateway says no HIP report submission is needed.\n"
 msgstr ""
 "La puerta de enlace dice que no se necesita el envío del informe HIP.\n"
 
-#: gpst.c:998
+#: gpst.c:999
 msgid "ESP tunnel connected; exiting HTTPS mainloop.\n"
 msgstr "Túnel ESP conectado; saliendo del bucle principal HTTPS.\n"
 
-#: gpst.c:1014
+#: gpst.c:1015
 msgid "Failed to connect ESP tunnel; using HTTPS instead.\n"
 msgstr "Falló al conectar al túnel ESP; se usa HTTPS en su lugar.\n"
 
-#: gpst.c:1050
+#: gpst.c:1051
 #, c-format
 msgid "Packet receive error: %s\n"
 msgstr "Error al recibir el paquete: %s\n"
 
-#: gpst.c:1071
+#: gpst.c:1072
 #, c-format
 msgid ""
 "Unexpected packet length. SSL_read returned %d (includes 16 header bytes) "
@@ -2090,11 +2106,11 @@ msgstr ""
 "Longitud de paquete inesperada. SSL_read devolvió %d (incluye 16 bytes de "
 "cabecera) pero la cabecera payload_len es %d\n"
 
-#: gpst.c:1081
+#: gpst.c:1082
 msgid "Got GPST DPD/keepalive response\n"
 msgstr "Se obtuvo la respuesta GPST DPD/keepalive\n"
 
-#: gpst.c:1085
+#: gpst.c:1086
 msgid ""
 "Expected 0000000000000000 as last 8 bytes of DPD/keepalive packet header, "
 "but got:\n"
@@ -2102,35 +2118,35 @@ msgstr ""
 "Se esperaba 0000000000000000 como últimos 8 bytes del encabezado de paquete "
 "DPD/keepalive, pero se obtuvo:\n"
 
-#: gpst.c:1091
+#: gpst.c:1092
 #, c-format
 msgid "Received data packet of %d bytes\n"
 msgstr "Paquete de datos recibido de %d bytes\n"
 
-#: gpst.c:1100
+#: gpst.c:1101
 msgid ""
 "Expected 0100000000000000 as last 8 bytes of data packet header, but got:\n"
 msgstr ""
 "Se esperaba 0100000000000000 como últimos 8 bytes del encabezado del paquete "
 "de datos, pero se obtuvo:\n"
 
-#: gpst.c:1108
+#: gpst.c:1109
 msgid "Unknown packet. Header dump follows:\n"
 msgstr "Paquete desconocido. El volcado de la cabecera es el siguiente:\n"
 
-#: gpst.c:1156
+#: gpst.c:1157
 msgid "GlobalProtect rekey due\n"
 msgstr "La rekey de GlobalProtect está pendiente\n"
 
-#: gpst.c:1161
+#: gpst.c:1162
 msgid "GPST Dead Peer Detection detected dead peer!\n"
 msgstr "La detección de muerte del par GPST detectó la muerte del par\n"
 
-#: gpst.c:1181
+#: gpst.c:1182
 msgid "Send GPST DPD/keepalive request\n"
 msgstr "Enviar solicitud GPST DPD/keepalive\n"
 
-#: gpst.c:1201
+#: gpst.c:1202
 #, c-format
 msgid "Sending data packet of %d bytes\n"
 msgstr "Enviando paquete de datos de %d bytes\n"
@@ -2240,7 +2256,7 @@ msgstr "Intentando la autenticación HTTP Bacis en el proxy\n"
 msgid "Attempting HTTP Basic authentication to server '%s'\n"
 msgstr "Intentando la autenticación HTTP básica en el servidor «%s»\n"
 
-#: http-auth.c:200 http.c:1166
+#: http-auth.c:200 http.c:1165
 msgid "This version of OpenConnect was built without GSSAPI support\n"
 msgstr "Esta versión de OpenConnect se compiló sin soporte GSSAPI\n"
 
@@ -2262,242 +2278,242 @@ msgstr ""
 msgid "No more authentication methods to try\n"
 msgstr "No hay más métodos de autenticación que usar\n"
 
-#: http.c:320
+#: http.c:319
 msgid "No memory for allocating cookies\n"
 msgstr "Sin memoria para asignar cookies\n"
 
-#: http.c:395
+#: http.c:394
 #, c-format
 msgid "Failed to parse HTTP response '%s'\n"
 msgstr "Falló al analizar la respuesta HTTP '%s'\n"
 
-#: http.c:401
+#: http.c:400
 #, c-format
 msgid "Got HTTP response: %s\n"
 msgstr "Se obtuvo la respuesta HTTP: %s\n"
 
-#: http.c:409
+#: http.c:408
 msgid "Error processing HTTP response\n"
 msgstr "Error al procesar la respuesta HTTP\n"
 
-#: http.c:416
+#: http.c:415
 #, c-format
 msgid "Ignoring unknown HTTP response line '%s'\n"
 msgstr "Ignorando línea no reconocida de la respuesta HTTP '%s'\n"
 
-#: http.c:436
+#: http.c:435
 #, c-format
 msgid "Invalid cookie offered: %s\n"
 msgstr "Cookie ofrecida no válida: %s\n"
 
-#: http.c:455
+#: http.c:454
 msgid "SSL certificate authentication failed\n"
 msgstr "Falló la autenticación del certificado SSL\n"
 
-#: http.c:486
+#: http.c:485
 #, c-format
 msgid "Response body has negative size (%d)\n"
 msgstr "El cuerpo de la respuesta tiene un tamaño negativo (%d)\n"
 
-#: http.c:497
+#: http.c:496
 #, c-format
 msgid "Unknown Transfer-Encoding: %s\n"
 msgstr "Codificación de transferencia desconocida: %s\n"
 
 #. Now the body, if there is one
-#: http.c:516
+#: http.c:515
 #, c-format
 msgid "HTTP body %s (%d)\n"
 msgstr "Cuerpo HTTP %s (%d)\n"
 
-#: http.c:530 http.c:557
+#: http.c:529 http.c:556
 msgid "Error reading HTTP response body\n"
 msgstr "Error leyendo el cuerpo de la respuesta HTTP\n"
 
-#: http.c:543
+#: http.c:542
 msgid "Error fetching chunk header\n"
 msgstr "Error recuperando el fragmento de la cabecera\n"
 
-#: http.c:567
+#: http.c:566
 msgid "Error fetching HTTP response body\n"
 msgstr "Error recuperando el cuerpo de la respuesta HTTP\n"
 
-#: http.c:570
+#: http.c:569
 #, c-format
 msgid "Error in chunked decoding. Expected '', got: '%s'"
 msgstr ""
 "Error en el fragmentado de la decodificación. Se esperaba '', se obtuvo: '%s'"
 
-#: http.c:582
+#: http.c:581
 msgid "Cannot receive HTTP 1.0 body without closing connection\n"
 msgstr "No se pudo recibir el cuerpo HTTP 1.0 sin cerrar la conexión\n"
 
-#: http.c:709
+#: http.c:708
 #, c-format
 msgid "Failed to parse redirected URL '%s': %s\n"
 msgstr "Falló al analizar el URL redirigido '%s': %s\n"
 
-#: http.c:733
+#: http.c:732
 #, c-format
 msgid "Cannot follow redirection to non-https URL '%s'\n"
 msgstr "No se pudo seguir el redireccionamiento al URL no https '%s'\n"
 
-#: http.c:761
+#: http.c:760
 #, c-format
 msgid "Allocating new path for relative redirect failed: %s\n"
 msgstr ""
 "Asignando una nueva ruta para el redireccionamiento relativo fallido: %s\n"
 
-#: http.c:974 oncp.c:591
+#: http.c:973 oncp.c:591
 #, c-format
 msgid "Unexpected %d result from server\n"
 msgstr "Resultado %d del servidor inesperado\n"
 
-#: http.c:1022
+#: http.c:1021
 msgid "request granted"
 msgstr "petición concedida"
 
-#: http.c:1023
+#: http.c:1022
 msgid "general failure"
 msgstr "fallo general"
 
-#: http.c:1024
+#: http.c:1023
 msgid "connection not allowed by ruleset"
 msgstr "conexión no permitida por el conjunto de reglas"
 
-#: http.c:1025
+#: http.c:1024
 msgid "network unreachable"
 msgstr "red inaccesible"
 
-#: http.c:1026
+#: http.c:1025
 msgid "host unreachable"
 msgstr "servidor inaccesible"
 
-#: http.c:1027
+#: http.c:1026
 msgid "connection refused by destination host"
 msgstr "conexión rechazada por el servidor de destino"
 
-#: http.c:1028
+#: http.c:1027
 msgid "TTL expired"
 msgstr "TTL caducado"
 
-#: http.c:1029
+#: http.c:1028
 msgid "command not supported / protocol error"
 msgstr "comando no soportado / error de protocolo"
 
-#: http.c:1030
+#: http.c:1029
 msgid "address type not supported"
 msgstr "tipo de dirección no soportada"
 
-#: http.c:1040
+#: http.c:1039
 msgid "SOCKS server requested username/password but we have none\n"
 msgstr ""
 "El servidor SOCKS requiere un nombre de usuario y una contraseña, pero no "
 "hay ninguno\n"
 
-#: http.c:1048
+#: http.c:1047
 msgid "Username and password for SOCKS authentication must be < 255 bytes\n"
 msgstr ""
 "El nombre de usuario y la contraseña para la autenticación SOCKS deben ser < "
 "255 bytes\n"
 
-#: http.c:1063 http.c:1119
+#: http.c:1062 http.c:1118
 #, c-format
 msgid "Error writing auth request to SOCKS proxy: %s\n"
 msgstr "Error al escribir petición auth al proxy SOCKS: %s\n"
 
-#: http.c:1071 http.c:1126
+#: http.c:1070 http.c:1125
 #, c-format
 msgid "Error reading auth response from SOCKS proxy: %s\n"
 msgstr "Error al leer respuesta auth desde el proxy SOCKS: %s\n"
 
-#: http.c:1078 http.c:1132
+#: http.c:1077 http.c:1131
 #, c-format
 msgid "Unexpected auth response from SOCKS proxy: %02x %02x\n"
 msgstr "Respuesta auth inesperada desde el proxy SOCKS: %02x %02x\n"
 
-#: http.c:1084
+#: http.c:1083
 msgid "Authenticated to SOCKS server using password\n"
 msgstr "Autenticado en el servidor SOCKS usando una contraseña\n"
 
-#: http.c:1088
+#: http.c:1087
 msgid "Password authentication to SOCKS server failed\n"
 msgstr "Falló la autenticación con contraseña en el servidor SOCKS\n"
 
-#: http.c:1144 http.c:1151
+#: http.c:1143 http.c:1150
 msgid "SOCKS server requested GSSAPI authentication\n"
 msgstr "El servidor SOCKS ha solicitado autenticación GSSAPI\n"
 
-#: http.c:1157
+#: http.c:1156
 msgid "SOCKS server requested password authentication\n"
 msgstr "El servidor SOCKS solicita autenticación por contraseña\n"
 
-#: http.c:1164
+#: http.c:1163
 msgid "SOCKS server requires authentication\n"
 msgstr "El servidor SOCKS requiere autenticación\n"
 
-#: http.c:1171
+#: http.c:1170
 #, c-format
 msgid "SOCKS server requested unknown authentication type %02x\n"
 msgstr ""
 "El servidor SOCKS ha solicitado una autenticación de tipo %02x desconocida\n"
 
-#: http.c:1177
+#: http.c:1176
 #, c-format
 msgid "Requesting SOCKS proxy connection to %s:%d\n"
 msgstr "Solicitando conexión al proxy SOCKS a %s:%d\n"
 
-#: http.c:1192
+#: http.c:1191
 #, c-format
 msgid "Error writing connect request to SOCKS proxy: %s\n"
 msgstr "Error al escribir la petición de conectar al proxy SOCKS: %s\n"
 
-#: http.c:1200 http.c:1242
+#: http.c:1199 http.c:1241
 #, c-format
 msgid "Error reading connect response from SOCKS proxy: %s\n"
 msgstr "Error al leer la respuesta de conexión desde el proxy SOCKS: %s\n"
 
-#: http.c:1206
+#: http.c:1205
 #, c-format
 msgid "Unexpected connect response from SOCKS proxy: %02x %02x...\n"
 msgstr "Respuesta de conexión inesperada desde el proxy SOCKS: %02x %02x…\n"
 
-#: http.c:1214
+#: http.c:1213
 #, c-format
 msgid "SOCKS proxy error %02x: %s\n"
 msgstr "Error del proxy SOCKS %02x: %s\n"
 
-#: http.c:1218
+#: http.c:1217
 #, c-format
 msgid "SOCKS proxy error %02x\n"
 msgstr "Error del proxy SOCKS %02x\n"
 
-#: http.c:1235
+#: http.c:1234
 #, c-format
 msgid "Unexpected address type %02x in SOCKS connect response\n"
 msgstr "Tipo de dirección inesperado %02x en la respuesta de conexión SOCKS\n"
 
-#: http.c:1258
+#: http.c:1257
 #, c-format
 msgid "Requesting HTTP proxy connection to %s:%d\n"
 msgstr "Solicitando conexión HTTP proxy a %s:%d\n"
 
-#: http.c:1293
+#: http.c:1292
 #, c-format
 msgid "Sending proxy request failed: %s\n"
 msgstr "Falló al enviar petición de proxy: %s\n"
 
-#: http.c:1316
+#: http.c:1315
 #, c-format
 msgid "Proxy CONNECT request failed: %d\n"
 msgstr "Falló la petición CONNECT del proxy: %d\n"
 
-#: http.c:1335
+#: http.c:1334
 #, c-format
 msgid "Unknown proxy type '%s'\n"
 msgstr "Tipo de proxy desconocido '%s'\n"
 
-#: http.c:1384
+#: http.c:1383
 msgid "Only http or socks(5) proxies supported\n"
 msgstr "Sólo se soportan proxies HTTP o socks(5)\n"
 
@@ -2706,7 +2722,7 @@ msgstr "Elegir autenticación de selección de inicio de sesión"
 
 #: main.c:808
 msgid "Provide authentication form responses"
-msgstr ""
+msgstr "Proporcionar autenticación a partir de las respuestas"
 
 #: main.c:809
 msgid "Use SSL client certificate CERT"
@@ -2962,11 +2978,11 @@ msgstr "Tipo de SO (linux, linux-64, win...) que informar"
 
 #: main.c:891
 msgid "reported version string during authentication"
-msgstr ""
+msgstr "cadena de versión informada durante la autenticación"
 
 #: main.c:892
 msgid "default:"
-msgstr ""
+msgstr "predeterminado:"
 
 #: main.c:895
 msgid "Trojan binary (CSD) execution"
@@ -3211,7 +3227,7 @@ msgstr "Sesión terminada por el servidor; saliendo.\n"
 
 #: main.c:1703
 msgid "User cancelled (SIGINT/SIGTERM); exiting.\n"
-msgstr ""
+msgstr "Cancelado por el usuario (SIGINT/SIGTERM); saliendo.\n"
 
 #: main.c:1707
 msgid "User detached from session (SIGHUP); exiting.\n"
@@ -3703,7 +3719,7 @@ msgstr "Enviado paquete de control de activación\n"
 msgid "Logout successful.\n"
 msgstr "Sesión cerrada con éxito.\n"
 
-#: openconnect-internal.h:1118 openconnect-internal.h:1126
+#: openconnect-internal.h:1119 openconnect-internal.h:1127
 #, c-format
 msgid "ERROR: %s() called with invalid UTF-8 for '%s' argument\n"
 msgstr "Error: llamada a %s() con UTF-8 no válido para el argumento «%s»\n"
@@ -3718,7 +3734,7 @@ msgstr "No se puede calcular el exceso para %s\n"
 
 #: openssl-dtls.c:210 openssl-dtls.c:269
 msgid "Failed to generate random key\n"
-msgstr ""
+msgstr "Falló al generar la clave aleatoria\n"
 
 #: openssl-dtls.c:232
 #, c-format
@@ -3735,7 +3751,7 @@ msgstr "Falló al inicializar la sesión DTLSv1\n"
 
 #: openssl-dtls.c:275
 msgid "Too large application ID size\n"
-msgstr ""
+msgstr "Tamaño de ID de aplicación demasiado grande\n"
 
 #: openssl-dtls.c:308
 msgid "PSK callback\n"
@@ -3760,7 +3776,7 @@ msgstr "Falló al establecer la lista de cifrado DTLS\n"
 #: openssl-dtls.c:439
 #, c-format
 msgid "DTLS cipher '%s' not found\n"
-msgstr ""
+msgstr "Cifrado DTLS «%s» no encontrado\n"
 
 #: openssl-dtls.c:460
 #, c-format
@@ -3777,7 +3793,7 @@ msgstr ""
 
 #: openssl-dtls.c:493
 msgid "SSL_set_session() failed\n"
-msgstr ""
+msgstr "SSL_set_session() falló\n"
 
 #: openssl-dtls.c:566
 #, c-format
@@ -3803,36 +3819,28 @@ msgstr ""
 msgid "DTLS handshake failed: %d\n"
 msgstr "Falló la negociación DTLS: %d\n"
 
-#: openssl-esp.c:90
+#: openssl-esp.c:87
 msgid "Failed to initialise ESP cipher:\n"
 msgstr "Falló al inicializar el cifrado ESP\n"
 
-#: openssl-esp.c:105
+#: openssl-esp.c:101
 msgid "Failed to initialize ESP HMAC\n"
 msgstr "Falló al inicializar ESP HMAC\n"
 
-#: openssl-esp.c:161
+#: openssl-esp.c:157
 msgid "Failed to generate random keys for ESP:\n"
 msgstr "Falló al generar las claves aleatorias para ESP:\n"
 
-#: openssl-esp.c:207
+#: openssl-esp.c:202
 msgid "Failed to set up decryption context for ESP packet:\n"
 msgstr ""
 "Falló al establecer el contexto para el descifrado de el paquete ESP:\n"
 
-#: openssl-esp.c:215
+#: openssl-esp.c:210
 msgid "Failed to decrypt ESP packet:\n"
 msgstr "Falló al descifrar el paquete ESP:\n"
 
-#: openssl-esp.c:235
-msgid "Failed to generate random IV for ESP packet:\n"
-msgstr "Falló al generar el VI aleatorio para el paquete ESP:\n"
-
-#: openssl-esp.c:249
-msgid "Failed to set up encryption context for ESP packet:\n"
-msgstr "Falló al establecer el contexto de cifrado para el paquete ESP:\n"
-
-#: openssl-esp.c:258
+#: openssl-esp.c:241
 msgid "Failed to encrypt ESP packet:\n"
 msgstr "Falló al cifrar el paquete ESP:\n"
 
@@ -4185,27 +4193,27 @@ msgstr "Fallo en conexión SSL\n"
 msgid "Failed to calculate OATH HMAC\n"
 msgstr "Falló al calcular OATH HMAC\n"
 
-#: script.c:105
+#: script.c:130
 #, c-format
 msgid "Discard bad split include: \"%s\"\n"
 msgstr "Descartar mala división que incluir: «%s»\n"
 
-#: script.c:109
+#: script.c:134
 #, c-format
 msgid "Discard bad split exclude: \"%s\"\n"
 msgstr "Descartar mala división que excluir: «%s»\n"
 
-#: script.c:516 script.c:564
+#: script.c:507 script.c:555
 #, c-format
 msgid "Failed to spawn script '%s' for %s: %s\n"
 msgstr "Falló al generar el script '%s' para %s: %s\n"
 
-#: script.c:571
+#: script.c:562
 #, c-format
 msgid "Script '%s' exited abnormally (%x)\n"
 msgstr "El script '%s' terminó anormalmente (%x)\n"
 
-#: script.c:579
+#: script.c:570
 #, c-format
 msgid "Script '%s' returned error %d\n"
 msgstr "El script '%s' devolvió el error %d\n"
@@ -4913,3 +4921,12 @@ msgstr "calcular comando"
 #: yubikey.c:627
 msgid "Unrecognised response from Yubikey when generating tokencode\n"
 msgstr "Respuesta de Yubikey desconocida al generar el código del testigo\n"
+
+#~ msgid "Failed to set up encryption context for ESP packet:\n"
+#~ msgstr "Falló al establecer el contexto de cifrado para el paquete ESP:\n"
+
+#~ msgid "Failed to generate random IV for ESP packet:\n"
+#~ msgstr "Falló al generar el VI aleatorio para el paquete ESP:\n"
+
+#~ msgid "Failed to generate ESP packet IV: %s\n"
+#~ msgstr "Falló al generar el VI del paquete ESP: %s\n"

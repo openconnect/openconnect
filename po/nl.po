@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openconnect\n"
 "Report-Msgid-Bugs-To: openconnect-devel@lists.infradead.org\n"
-"POT-Creation-Date: 2019-01-16 11:23+0200\n"
+"POT-Creation-Date: 2019-05-18 10:44-0700\n"
 "PO-Revision-Date: 2012-12-20 19:06+0000\n"
 "Last-Translator: André Koot <meneer@tken.net>\n"
 "Language-Team: Dutch (http://www.transifex.com/projects/p/meego/language/"
@@ -25,87 +25,89 @@ msgid ""
 "SAML login is required via %s to this URL:\n"
 "\t%s"
 msgstr ""
+"SAML-aanmelding vereist via %s voor deze URL:\n"
+"\t%s"
 
 #: auth-globalprotect.c:110
 msgid "Please enter your username and password"
-msgstr ""
+msgstr "Voer uw gebruikersnaam en wachtwoord in"
 
 #: auth-globalprotect.c:119
 msgid "Username"
-msgstr ""
+msgstr "Gebruikersnaam"
 
 #: auth-globalprotect.c:134
 msgid "Password"
-msgstr ""
+msgstr "Wachtwoord"
 
 #: auth-globalprotect.c:181
 msgid "Challenge: "
-msgstr ""
+msgstr "Uitdaging: "
 
 #: auth-globalprotect.c:260
 #, c-format
 msgid "GlobalProtect login returned %s=%s (expected %s)\n"
-msgstr ""
+msgstr "GlobalProtect-aanmelding gaf %s=%s weer (%s verwacht)\n"
 
 #: auth-globalprotect.c:266
 #, c-format
 msgid "GlobalProtect login returned empty or missing %s\n"
-msgstr ""
+msgstr "GlobalProtect-aanmelding gaf lege of ontbrekende %s weer\n"
 
 #: auth-globalprotect.c:272
 #, c-format
 msgid "GlobalProtect login returned %s=%s\n"
-msgstr ""
+msgstr "GlobalProtect-aanmelding gaf %s=%s weer\n"
 
 #: auth-globalprotect.c:315
 msgid "Please select GlobalProtect gateway."
-msgstr ""
+msgstr "Selecteer een GlobalProtect-gateway."
 
 #: auth-globalprotect.c:325
 msgid "GATEWAY:"
-msgstr ""
+msgstr "GATEWAY:"
 
 #. each entry looks like <entry name="host[:443]"><description>Label</description></entry>
 #: auth-globalprotect.c:379
 #, c-format
 msgid "%d gateway servers available:\n"
-msgstr ""
+msgstr "%d gatewayservers beschikbaar:\n"
 
 #: auth-globalprotect.c:400
 #, c-format
 msgid "  %s (%s)\n"
-msgstr ""
+msgstr "  %s (%s)\n"
 
-#: auth-globalprotect.c:484 auth-juniper.c:720 auth.c:669
+#: auth-globalprotect.c:484 auth-juniper.c:730 auth.c:669
 msgid "Failed to generate OTP tokencode; disabling token\n"
-msgstr ""
+msgstr "Genereren van OTP-tokencode mislukt; token wordt uitgeschakeld\n"
 
 #: auth-globalprotect.c:584
 msgid "Server is neither a GlobalProtect portal nor a gateway.\n"
-msgstr ""
+msgstr "Server is geen GlobalProtect-portaal, noch een gateway.\n"
 
 #: auth-globalprotect.c:636 oncp.c:1266
 msgid "Logout failed.\n"
-msgstr ""
+msgstr "Afmelden mislukt.\n"
 
 #: auth-globalprotect.c:638
 msgid "Logout successful\n"
-msgstr ""
+msgstr "Afgemeld\n"
 
 #: auth-juniper.c:142
 #, c-format
 msgid "Ignoring unknown form submit item '%s'\n"
-msgstr ""
+msgstr "Onbekend submit-item '%s' van formulier wordt genegeerd\n"
 
 #: auth-juniper.c:153
 #, c-format
 msgid "Ignoring unknown form input type '%s'\n"
-msgstr ""
+msgstr "Onbekend invoertype '%s' van formulier wordt genegeerd\n"
 
 #: auth-juniper.c:163
 #, c-format
 msgid "Discarding duplicate option '%s'\n"
-msgstr ""
+msgstr "Dubbele optie '%s' wordt verworpen\n"
 
 #: auth-juniper.c:236 auth.c:408
 #, c-format
@@ -115,82 +117,86 @@ msgstr "Kan niet overweg met formuliermethode = '%s', actie = '%s'\n"
 #: auth-juniper.c:267
 #, c-format
 msgid "Unknown textarea field: '%s'\n"
-msgstr ""
+msgstr "Onbekend tekstveld: ‘%s’\n"
 
 #: auth-juniper.c:337
 msgid "TNCC support not implemented yet on Windows\n"
-msgstr ""
+msgstr "TNCC-ondersteuning is nog niet geïmplementeerd op Windows\n"
 
 #: auth-juniper.c:359
 msgid "No DSPREAUTH cookie; not attempting TNCC\n"
-msgstr ""
+msgstr "Geen DSPREAUTH-cookie; TNCC wordt niet geprobeerd\n"
 
 #: auth-juniper.c:397
 #, c-format
 msgid "Failed to exec TNCC script %s: %s\n"
-msgstr ""
+msgstr "Uitvoeren van TNCC-script %s mislukt: %s\n"
 
 #: auth-juniper.c:411
 msgid "Failed to allocate memory for communication with TNCC\n"
-msgstr ""
+msgstr "Toewijzen van geheugen voor communicatie met TNCC mislukt\n"
 
 #: auth-juniper.c:418
 msgid "Failed to send start command to TNCC\n"
-msgstr ""
+msgstr "Verzenden van startopdracht aan TNCC mislukt\n"
 
 #: auth-juniper.c:425
 msgid "Sent start; waiting for response from TNCC\n"
-msgstr ""
+msgstr "Start verzonden; wachten op antwoord van TNCC\n"
 
 #: auth-juniper.c:432
 msgid "Failed to read response from TNCC\n"
-msgstr ""
+msgstr "Lezen van antwoord van TNCC mislukt\n"
 
 #: auth-juniper.c:439
 #, c-format
 msgid "Received unsuccessful %s response from TNCC\n"
-msgstr ""
+msgstr "Onsuccesvol %s-antwoord ontvangen van TNCC\n"
 
 #: auth-juniper.c:445
 msgid "TNCC response 200 OK\n"
-msgstr ""
+msgstr "TNCC-antwoord 200 oké\n"
 
 #: auth-juniper.c:452
 #, c-format
 msgid "Second line of TNCC response: '%s'\n"
-msgstr ""
+msgstr "Tweede regel van TNCC-reactie: '%s'\n"
 
 #: auth-juniper.c:461
 #, c-format
 msgid "Got new DSPREAUTH cookie from TNCC: %s\n"
-msgstr ""
+msgstr "Nieuwe DSPREAUTH-cookie gekregen van TNCC: %s\n"
 
-#: auth-juniper.c:471
+#: auth-juniper.c:474
 #, c-format
 msgid "Unexpected non-empty line from TNCC after DSPREAUTH cookie: '%s'\n"
+msgstr "Onverwachte niet-lege regel van TNCC na DSPREAUTH-cookie: '%s'\n"
+
+#: auth-juniper.c:481
+msgid "Too many non-empty lines from TNCC after DSPREAUTH cookie\n"
 msgstr ""
 
-#: auth-juniper.c:640
+#: auth-juniper.c:650
 msgid "Failed to parse HTML document\n"
-msgstr ""
+msgstr "Ontleden van HTML-document mislukt\n"
 
-#: auth-juniper.c:657
+#: auth-juniper.c:667
 msgid "Failed to find or parse web form in login page\n"
-msgstr ""
+msgstr "Vinden of ontleden van webformulier op aanmeldingspagina mislukt\n"
 
-#: auth-juniper.c:665
+#: auth-juniper.c:675
 msgid "Encountered form with no ID\n"
-msgstr ""
+msgstr "Formulier zonder ID tegengekomen\n"
 
-#: auth-juniper.c:703
+#: auth-juniper.c:713
 #, c-format
 msgid "Unknown form ID '%s'\n"
-msgstr ""
+msgstr "Onbekende formulier-ID ‘%s’\n"
 
-#: auth-juniper.c:706
+#: auth-juniper.c:716
 #, c-format
 msgid "Dumping unknown HTML form:\n"
-msgstr ""
+msgstr "Onbekend HTML-formulier wordt gedumpt:\n"
 
 #: auth.c:96
 msgid "Form choice has no name\n"
@@ -214,22 +220,22 @@ msgstr "Geen invoernaam in het formulier\n"
 msgid "Unknown input type %s in form\n"
 msgstr "Onbekend inputtype %s in het formulier\n"
 
-#: auth.c:540 gpst.c:213
+#: auth.c:540 gpst.c:214
 msgid "Empty response from server\n"
-msgstr ""
+msgstr "Leeg antwoord van server\n"
 
-#: auth.c:551 gpst.c:288
+#: auth.c:551 gpst.c:289
 msgid "Failed to parse server response\n"
 msgstr "Vertalen van de serverreactie mislukt\n"
 
-#: auth.c:553 gpst.c:290
+#: auth.c:553 gpst.c:291
 #, c-format
 msgid "Response was:%s\n"
 msgstr "Reactie was: %s\n"
 
 #: auth.c:575
 msgid "Received <client-cert-request> when not expected.\n"
-msgstr ""
+msgstr "<client-cert-request> ontvangen, maar niet verwacht.\n"
 
 #: auth.c:603
 msgid "XML response has no \"auth\" node\n"
@@ -241,9 +247,9 @@ msgstr "Vroeg naar wachtwoord, maar '- no-passwd' is ingesteld\n"
 
 #: auth.c:925
 msgid "Not downloading XML profile because SHA1 already matches\n"
-msgstr ""
+msgstr "XML-profiel wordt niet gedownload, want SHA1 komt reeds overeen\n"
 
-#: auth.c:931 cstp.c:335 http.c:917
+#: auth.c:931 cstp.c:335 http.c:916
 #, c-format
 msgid "Failed to open HTTPS connection to %s\n"
 msgstr "Kan geen HTTPS-verbinding openen met %s\n"
@@ -258,33 +264,35 @@ msgstr "Gedownloade config-bestand komt niet overeen bedoelde SHA1\n"
 
 #: auth.c:981
 msgid "Downloaded new XML profile\n"
-msgstr ""
+msgstr "Nieuw XML-profiel gedownload\n"
 
 #: auth.c:992 auth.c:1044
 msgid ""
 "Error: Running the 'Cisco Secure Desktop' trojan on this platform is not yet "
 "implemented.\n"
 msgstr ""
+"Fout: uitvoeren van het ‘Cisco Secure Desktop’-Trojaans paard wordt op dit "
+"platform nog niet ondersteund.\n"
 
 #: auth.c:1003 mainloop.c:144
 #, c-format
 msgid "Failed to set gid %ld: %s\n"
-msgstr ""
+msgstr "Instellen van gid %ld mislukt: %s\n"
 
 #: auth.c:1010 mainloop.c:151
 #, c-format
 msgid "Failed to set groups to %ld: %s\n"
-msgstr ""
+msgstr "Instellen van groepen op %ld mislukt: %s\n"
 
 #: auth.c:1017 mainloop.c:158
 #, c-format
 msgid "Failed to set uid %ld: %s\n"
-msgstr ""
+msgstr "Instellen van uid %ld: %s\n"
 
 #: auth.c:1024
 #, c-format
 msgid "Invalid user uid=%ld: %s\n"
-msgstr ""
+msgstr "Ongeldige gebruikers-uid=%ld: %s\n"
 
 #: auth.c:1031
 #, c-format
@@ -296,6 +304,8 @@ msgid ""
 "Error: Server asked us to run CSD hostscan.\n"
 "You need to provide a suitable --csd-wrapper argument.\n"
 msgstr ""
+"Fout: server vroeg ons om CSD-hostscan uit te voeren.\n"
+"U dient een geschikte parameter voor --csd-wrapper op te geven.\n"
 
 #: auth.c:1060
 msgid ""
@@ -314,7 +324,7 @@ msgstr "Poging Linux CSD trojan script uit te voeren.\n"
 #: auth.c:1094
 #, c-format
 msgid "Temporary directory '%s' is not writable: %s\n"
-msgstr ""
+msgstr "Tijdelijke map ‘%s’ is niet schrijfbaar: %s\n"
 
 #: auth.c:1102
 #, c-format
@@ -346,11 +356,11 @@ msgstr "Onbekende reactie van de server\n"
 
 #: auth.c:1342
 msgid "Server requested SSL client certificate after one was provided\n"
-msgstr ""
+msgstr "Server vroeg om SSL-cliëntcertificaat nadat er een werd gegeven\n"
 
 #: auth.c:1346
 msgid "Server requested SSL client certificate; none was configured\n"
-msgstr ""
+msgstr "Server vroeg om SSL-cliëntcertificaat; geen ingesteld\n"
 
 #: auth.c:1362
 msgid "XML POST enabled\n"
@@ -364,23 +374,23 @@ msgstr "Verversing %s na 1 seconde ...\n"
 #: compat.c:207
 #, c-format
 msgid "(error 0x%lx)"
-msgstr ""
+msgstr "(fout 0x%lx)"
 
 #: compat.c:210
 msgid "(Error while describing error!)"
-msgstr ""
+msgstr "(Fout bij beschrijven van fout!)"
 
 #: compat.c:233
 #, c-format
 msgid "ERROR: Cannot initialize sockets\n"
-msgstr ""
+msgstr "FOUT: kan sockets niet initialiseren\n"
 
-#: cstp.c:112 gpst.c:340
+#: cstp.c:112 gpst.c:341
 #, c-format
 msgid "TCP_INFO rcv mss %d, snd mss %d, adv mss %d, pmtu %d\n"
 msgstr "TCP_INFO rcv mss %d, snd mss %d, adv mss %d, pmtu %d\n"
 
-#: cstp.c:134 gpst.c:359
+#: cstp.c:134 gpst.c:360
 #, c-format
 msgid "TCP_MAXSEG %d\n"
 msgstr "TCP_MAXSEG %d\n"
@@ -389,12 +399,14 @@ msgstr "TCP_MAXSEG %d\n"
 msgid ""
 "CRITICAL ERROR: DTLS master secret is uninitialised. Please report this.\n"
 msgstr ""
+"KRITIEKE FOUT: DTLS-hoofdgeheim is ongeïnitialiseerd. Gelieve dit te "
+"melden.\n"
 
 #: cstp.c:312
 msgid "Error creating HTTPS CONNECT request\n"
-msgstr ""
+msgstr "Fout bij aanmaken van HTTPS CONNECT-verzoek\n"
 
-#: cstp.c:328 http.c:385
+#: cstp.c:328 http.c:384
 msgid "Error fetching HTTPS response\n"
 msgstr "Fout bij het ophalen HTTPS reactie\n"
 
@@ -417,7 +429,7 @@ msgstr "CONNECT reactie: %s\n"
 msgid "No memory for options\n"
 msgstr "Geen geheugen voor opties\n"
 
-#: cstp.c:413 http.c:445
+#: cstp.c:413 http.c:444
 msgid "<elided>"
 msgstr "<elided>"
 
@@ -429,12 +441,12 @@ msgstr "X-DTLS-Session-ID niet 64 tekens; is: \"%s\"\n"
 #: cstp.c:450
 #, c-format
 msgid "X-DTLS-Session-ID is invalid; is: \"%s\"\n"
-msgstr ""
+msgstr "X-DTLS-Session-ID is ongeldig; is: '%s'\n"
 
 #: cstp.c:468
 #, c-format
 msgid "Unknown DTLS-Content-Encoding %s\n"
-msgstr ""
+msgstr "Onbekende DTLS-Content-codering %s\n"
 
 #: cstp.c:510
 #, c-format
@@ -445,194 +457,194 @@ msgstr "Onbekende CSTP-Content-Encoding %s\n"
 msgid "No MTU received. Aborting\n"
 msgstr "Geen MTU ontvangen. Afbreken\n"
 
-#: cstp.c:593 gpst.c:640
+#: cstp.c:593 gpst.c:641
 msgid "No IP address received. Aborting\n"
 msgstr "Geen IP-adres ontvangen. Afbreken\n"
 
 #: cstp.c:599
 #, c-format
 msgid "IPv6 configuration received but MTU %d is too small.\n"
-msgstr ""
+msgstr "IPv6-configuratie ontvangen maar MTU %d is te klein.\n"
 
-#: cstp.c:605 gpst.c:647
+#: cstp.c:605 gpst.c:648
 #, c-format
 msgid "Reconnect gave different Legacy IP address (%s != %s)\n"
 msgstr "Herverbinden gaf verschillende Legacy IP-adressen (%s != %s)\n"
 
-#: cstp.c:613 gpst.c:656
+#: cstp.c:614 gpst.c:657
 #, c-format
 msgid "Reconnect gave different Legacy IP netmask (%s != %s)\n"
 msgstr "Herverbinden gaf verschillende Legacy IP-netmasks (%s != %s)\n"
 
-#: cstp.c:621
+#: cstp.c:622
 #, c-format
 msgid "Reconnect gave different IPv6 address (%s != %s)\n"
 msgstr "Herverbinden gaf verschillende IP-adressen (%s != %s)\n"
 
-#: cstp.c:629
+#: cstp.c:630
 #, c-format
 msgid "Reconnect gave different IPv6 netmask (%s != %s)\n"
 msgstr "Herverbinden gaf verschillende IPv6-netmasks (%s != %s)\n"
 
-#: cstp.c:637
+#: cstp.c:638
 #, c-format
 msgid "CSTP connected. DPD %d, Keepalive %d\n"
 msgstr "CSTP aangesloten. DPD %d, Keepalive %d\n"
 
-#: cstp.c:639
+#: cstp.c:640
 #, c-format
 msgid "CSTP Ciphersuite: %s\n"
-msgstr ""
+msgstr "CSTP-ciphersuite: %s\n"
 
-#: cstp.c:701
+#: cstp.c:702
 msgid "Compression setup failed\n"
 msgstr "Compressie setup is mislukt\n"
 
-#: cstp.c:718
+#: cstp.c:719
 msgid "Allocation of deflate buffer failed\n"
 msgstr "Toewijzing van leegloop buffer is mislukt\n"
 
-#: cstp.c:780
+#: cstp.c:781
 msgid "inflate failed\n"
 msgstr "decomprimeren mislukt\n"
 
-#: cstp.c:803
+#: cstp.c:804
 #, c-format
 msgid "LZS decompression failed: %s\n"
-msgstr ""
+msgstr "LZS-decompressie mislukt: %s\n"
 
-#: cstp.c:816
+#: cstp.c:817
 msgid "LZ4 decompression failed\n"
-msgstr ""
+msgstr "LZ4-decompressie mislukt\n"
 
-#: cstp.c:823
+#: cstp.c:824
 #, c-format
 msgid "Unknown compression type %d\n"
-msgstr ""
+msgstr "Onbekend compressietype %d\n"
 
-#: cstp.c:828
+#: cstp.c:829
 #, c-format
 msgid "Received %s compressed data packet of %d bytes (was %d)\n"
-msgstr ""
+msgstr "%s gecomprimeerd datapakket ontvangen van %d bytes (was %d)\n"
 
-#: cstp.c:848
+#: cstp.c:849
 #, c-format
 msgid "deflate failed %d\n"
 msgstr "compressie mislukt %d\n"
 
-#: cstp.c:921 dtls.c:281 dtls.c:740 esp.c:129 gpst.c:1041 mainloop.c:69
+#: cstp.c:922 dtls.c:281 dtls.c:740 esp.c:129 gpst.c:1042 mainloop.c:69
 #: oncp.c:914
 msgid "Allocation failed\n"
-msgstr ""
+msgstr "Toewijzing mislukt\n"
 
-#: cstp.c:932 gpst.c:1054
+#: cstp.c:933 gpst.c:1055
 #, c-format
 msgid "Short packet received (%d bytes)\n"
-msgstr ""
+msgstr "Kort pakket ontvangen (%d bytes)\n"
 
-#: cstp.c:945
+#: cstp.c:946
 #, c-format
 msgid "Unexpected packet length. SSL_read returned %d but packet is\n"
 msgstr "Onverwachte pakket lengte. SSL_read meldde %d, maar pakket is\n"
 
-#: cstp.c:959
+#: cstp.c:960
 msgid "Got CSTP DPD request\n"
 msgstr "Ontvangen CSTP DPD aanvraag\n"
 
-#: cstp.c:965
+#: cstp.c:966
 msgid "Got CSTP DPD response\n"
 msgstr "Ontvangen CSTP DPD reactie\n"
 
-#: cstp.c:970
+#: cstp.c:971
 msgid "Got CSTP Keepalive\n"
 msgstr "Ontvangen CSTP Keepalive\n"
 
-#: cstp.c:975 oncp.c:1003
+#: cstp.c:976 oncp.c:1003
 #, c-format
 msgid "Received uncompressed data packet of %d bytes\n"
 msgstr "Ontvangen datapakket ongecomprimeerd %d bytes\n"
 
-#: cstp.c:992
+#: cstp.c:993
 #, c-format
 msgid "Received server disconnect: %02x '%s'\n"
 msgstr "Ontvangen servermelding ontkoppeling: %02x '%s'\n"
 
-#: cstp.c:995
+#: cstp.c:996
 msgid "Received server disconnect\n"
-msgstr ""
+msgstr "Verbindingsverbreking van server ontvangen\n"
 
-#: cstp.c:1003
+#: cstp.c:1004
 msgid "Compressed packet received in !deflate mode\n"
 msgstr "Gecomprimeerd pakket ontvangen in !deflate mode\n"
 
-#: cstp.c:1012
+#: cstp.c:1013
 msgid "received server terminate packet\n"
 msgstr "ontvangen server beëindigingspakket\n"
 
-#: cstp.c:1019
+#: cstp.c:1020
 #, c-format
 msgid "Unknown packet %02x %02x %02x %02x %02x %02x %02x %02x\n"
 msgstr "Onbekend packet %02x %02x %02x %02x %02x %02x %02x %02x\n"
 
-#: cstp.c:1062 gpst.c:1141 oncp.c:1121
+#: cstp.c:1063 gpst.c:1142 oncp.c:1121
 #, c-format
 msgid "SSL wrote too few bytes! Asked for %d, sent %d\n"
 msgstr "SSL schreef te weinig bytes! Gevraagd om %d, verstuurde %d\n"
 
 #. Not that this will ever happen; we don't even process
 #. the setting when we're asked for it.
-#: cstp.c:1090 oncp.c:1155
+#: cstp.c:1091 oncp.c:1155
 msgid "CSTP rekey due\n"
 msgstr "CSTP rekey verwacht\n"
 
 #. if we failed rehandshake try establishing a new-tunnel instead of failing
-#: cstp.c:1097 oncp.c:1162
+#: cstp.c:1098 oncp.c:1162
 msgid "Rehandshake failed; attempting new-tunnel\n"
-msgstr ""
+msgstr "Rehandshake mislukt; new-tunnel proberen\n"
 
-#: cstp.c:1108 oncp.c:1173
+#: cstp.c:1109 oncp.c:1173
 msgid "CSTP Dead Peer Detection detected dead peer!\n"
 msgstr "CSTP Dead Peer Detection ontdekte dode host!\n"
 
-#: cstp.c:1112 gpst.c:1165 oncp.c:1091 oncp.c:1177
+#: cstp.c:1113 gpst.c:1166 oncp.c:1091 oncp.c:1177
 msgid "Reconnect failed\n"
 msgstr "Herverbinden mislukte\n"
 
-#: cstp.c:1128 oncp.c:1193
+#: cstp.c:1129 oncp.c:1193
 msgid "Send CSTP DPD\n"
 msgstr "Stuur CSTP DPD\n"
 
-#: cstp.c:1140 oncp.c:1204
+#: cstp.c:1141 oncp.c:1204
 msgid "Send CSTP Keepalive\n"
 msgstr "Stuur CSTP Keepalive\n"
 
-#: cstp.c:1165
+#: cstp.c:1166
 #, c-format
 msgid "Sending compressed data packet of %d bytes (was %d)\n"
-msgstr ""
+msgstr "Gecomprimeerd datapakket van %d bytes (was %d) verzenden\n"
 
-#: cstp.c:1176 oncp.c:1238
+#: cstp.c:1177 oncp.c:1238
 #, c-format
 msgid "Sending uncompressed data packet of %d bytes\n"
 msgstr "Verzenden van gedecomprimeerd datapakket van %d bytes\n"
 
-#: cstp.c:1215
+#: cstp.c:1216
 #, c-format
 msgid "Send BYE packet: %s\n"
 msgstr "Stuur BYE pakket: %s\n"
 
 #: digest.c:252
 msgid "Attempting Digest authentication to proxy\n"
-msgstr ""
+msgstr "Digest-aanmeldingscontrole bij proxy proberen\n"
 
 #: digest.c:255
 #, c-format
 msgid "Attempting Digest authentication to server '%s'\n"
-msgstr ""
+msgstr "Digest-aanmeldingscontrole bij server '%s' proberen\n"
 
 #: dtls.c:113
 msgid "DTLS connection attempted with an existing fd\n"
-msgstr ""
+msgstr "DTLS-verbinding geprobeerd met bestaande fd\n"
 
 #: dtls.c:119
 msgid "No DTLS address\n"
@@ -656,7 +668,7 @@ msgstr "DTLS optie %s:%s\n"
 #: dtls.c:239
 #, c-format
 msgid "DTLS initialised. DPD %d, Keepalive %d\n"
-msgstr ""
+msgstr "DTLS geïnitialiseerd. DPD %d, Keepalive %d\n"
 
 #: dtls.c:265
 msgid "Attempt new DTLS connection\n"
@@ -686,6 +698,7 @@ msgstr "Ontving DTLS Keepalive\n"
 #: dtls.c:326
 msgid "Compressed DTLS packet received when compression not enabled\n"
 msgstr ""
+"Gecomprimeerd DTLS-pakket ontvangen, maar compressie niet ingeschakeld\n"
 
 #: dtls.c:334
 #, c-format
@@ -698,7 +711,7 @@ msgstr "DTLS rekey verwacht\n"
 
 #: dtls.c:363
 msgid "DTLS Rehandshake failed; reconnecting.\n"
-msgstr ""
+msgstr "DTLS-rehandshake mislukt; opnieuw verbinden.\n"
 
 #: dtls.c:372
 msgid "DTLS Dead Peer Detection detected dead peer!\n"
@@ -718,7 +731,7 @@ msgstr "Stuur DTLS Keepalive\n"
 
 #: dtls.c:401
 msgid "Failed to send keepalive request. Expect disconnect\n"
-msgstr ""
+msgstr "Verzenden van keepalive-verzoek mislukt. Verbinding wordt verbroken\n"
 
 #: dtls.c:432 tun.c:541
 #, c-format
@@ -728,11 +741,11 @@ msgstr "Onbekend pakket (len %d) ontvangen: %02x %02x %02x %02x...\n"
 #: dtls.c:439
 #, c-format
 msgid "TOS this: %d, TOS last: %d\n"
-msgstr ""
+msgstr "TOS dit: %d, TOS laatst: %d\n"
 
 #: dtls.c:443
 msgid "UDP setsockopt"
-msgstr ""
+msgstr "UDP-setsockopt"
 
 #: dtls.c:474
 #, c-format
@@ -752,252 +765,264 @@ msgstr "Verstuurd DTLS packet van %d bytes; DTLS verzending retourneerde %d\n"
 #: dtls.c:531
 #, c-format
 msgid "Initiating IPv4 MTU detection (min=%d, max=%d)\n"
-msgstr ""
+msgstr "IPv4-MTU-detectie starten (min=%d, max=%d)\n"
 
 #: dtls.c:551
 msgid "Too long time in MTU detect loop; assuming negotiated MTU.\n"
-msgstr ""
+msgstr "Te lange tijd in MTU-detectielus; onderhandelde MTU veronderstellen.\n"
 
 #: dtls.c:555
 #, c-format
 msgid "Too long time in MTU detect loop; MTU set to %d.\n"
-msgstr ""
+msgstr "Te lange tijd in MTU-detectiemodus; MTU ingesteld op %d.\n"
 
 #: dtls.c:564
 #, c-format
 msgid "Sending MTU DPD probe (%u bytes, min=%u, max=%u)\n"
-msgstr ""
+msgstr "MTU DPD-sonde verzenden (%u bytes, min=%u, max=%u)\n"
 
 #: dtls.c:568
 #, c-format
 msgid "Failed to send DPD request (%d %d)\n"
-msgstr ""
+msgstr "Verzenden van DPD-verzoek mislukt (%d %d)\n"
 
 #: dtls.c:582 dtls.c:690
 #, c-format
 msgid "Received unexpected packet (%.2x) in MTU detection; skipping.\n"
-msgstr ""
+msgstr "Onverwacht pakket (%.2x) ontvangen in MTU-detectie; overslaan.\n"
 
 #: dtls.c:594
 #, c-format
 msgid "Timeout while waiting for DPD response; trying %d\n"
-msgstr ""
+msgstr "Time-out bij wachten op DPD-reactie; %d proberen\n"
 
 #: dtls.c:601 dtls.c:682
 msgid "Timeout while waiting for DPD response; resending probe.\n"
-msgstr ""
+msgstr "Time-out bij wachten op DPD-reactie; sonde wordt opnieuw verzonden.\n"
 
 #: dtls.c:608 dtls.c:709
 #, c-format
 msgid "Failed to recv DPD request (%d)\n"
-msgstr ""
+msgstr "Ontvangen van DPD-verzoek mislukt (%d)\n"
 
 #: dtls.c:613
 #, c-format
 msgid "Received MTU DPD probe (%u bytes of %u)\n"
-msgstr ""
+msgstr "MTU DPD-sonde ontvangen (%u van %u bytes)\n"
 
 #: dtls.c:651
 msgid "Initiating IPv6 MTU detection\n"
-msgstr ""
+msgstr "IPv6-MTU-detectie initialiseren\n"
 
 #: dtls.c:666
 #, c-format
 msgid "Sending MTU DPD probe (%u bytes)\n"
-msgstr ""
+msgstr "MTU DPD-sonde verzenden (%u bytes)\n"
 
 #: dtls.c:670
 #, c-format
 msgid "Failed to send DPD request (%d)\n"
-msgstr ""
+msgstr "Verzenden van DPD-verzoek mislukt (%d)\n"
 
 #: dtls.c:695
 #, c-format
 msgid "Received MTU DPD probe (%u bytes)\n"
-msgstr ""
+msgstr "MTU DPD-sonde ontvangen (%u bytes)\n"
 
 #: dtls.c:759
 #, c-format
 msgid "Detected MTU of %d bytes (was %d)\n"
-msgstr ""
+msgstr "MTU van %d bytes gedetecteerd (was %d)\n"
 
 #: dtls.c:762
 #, c-format
 msgid "No change in MTU after detection (was %d)\n"
-msgstr ""
+msgstr "Geen wijziging in MTU na detectie (was %d)\n"
 
 #: esp-seqno.c:61
 #, c-format
 msgid "Accepting expected ESP packet with seq %u\n"
-msgstr ""
+msgstr "Verwacht ESP-pakket aanvaarden met seq %u\n"
 
 #: esp-seqno.c:91
 #, c-format
 msgid ""
 "Accepting later-than-expected ESP packet with seq %u (expected %<PRIu64>)\n"
 msgstr ""
+"Later-dan-verwacht ESP-pakket aanvaarden met seq %u (%<PRIu64> verwacht)\n"
 
 #: esp-seqno.c:104
 #, c-format
 msgid "Discarding ancient ESP packet with seq %u (expected %<PRIu64>)\n"
-msgstr ""
+msgstr "Stokoud ESP-pakket verwerpen met seq %u (%<PRIu64> verwacht)\n"
 
 #: esp-seqno.c:109
 #, c-format
 msgid "Tolerating ancient ESP packet with seq %u (expected %<PRIu64>)\n"
-msgstr ""
+msgstr "Stokoud ESP-pakket verdragen met seq %u (%<PRIu64> verwacht)\n"
 
 #: esp-seqno.c:118
 #, c-format
 msgid "Discarding replayed ESP packet with seq %u\n"
-msgstr ""
+msgstr "Herspeeld ESP-pakket verwerpen met seq %u\n"
 
 #: esp-seqno.c:123
 #, c-format
 msgid "Tolerating replayed ESP packet with seq %u\n"
-msgstr ""
+msgstr "Herspeeld ESP-pakket verdragen met seq %u\n"
 
 #: esp-seqno.c:136
 #, c-format
 msgid "Accepting out-of-order ESP packet with seq %u (expected %<PRIu64>)\n"
 msgstr ""
+"Buiten-volgorde ESP-pakket aanvaarden met seq %u (%<PRIu64> verwacht)\n"
 
 #: esp.c:63
 #, c-format
 msgid "Parameters for %s ESP: SPI 0x%08x\n"
-msgstr ""
+msgstr "Parameters voor %s ESP: SPI 0x%08x\n"
 
 #: esp.c:66
 #, c-format
 msgid "ESP encryption type %s key 0x%s\n"
-msgstr ""
+msgstr "ESP-versleutelingstype %s sleutel 0x%s\n"
 
 #: esp.c:69
 #, c-format
 msgid "ESP authentication type %s key 0x%s\n"
-msgstr ""
+msgstr "ESP-authenticatietype %s sleutel 0x%s\n"
 
 #: esp.c:87
 msgid "incoming"
-msgstr ""
+msgstr "inkomend"
 
 #: esp.c:88
 msgid "outgoing"
-msgstr ""
+msgstr "uitgaand"
 
 #: esp.c:90 esp.c:113
 msgid "Send ESP probes\n"
-msgstr ""
+msgstr "ESP-probes verzenden\n"
 
 #: esp.c:138
 #, c-format
 msgid "Received ESP packet of %d bytes\n"
-msgstr ""
+msgstr "ESP-pakket van %d bytes ontvangen\n"
 
 #: esp.c:155
 #, c-format
 msgid "Received ESP packet from old SPI 0x%x, seq %u\n"
-msgstr ""
+msgstr "ESP-pakket ontvangen van oude SPI 0x%x, seq %u\n"
 
 #: esp.c:161
 #, c-format
 msgid "Received ESP packet with invalid SPI 0x%08x\n"
-msgstr ""
+msgstr "ESP-pakket met ongeldige SPI 0x%08x ontvangen\n"
 
 #: esp.c:174
 #, c-format
 msgid "Received ESP packet with unrecognised payload type %02x\n"
-msgstr ""
+msgstr "ESP-pakket met niet-herkend payloadtype %02x ontvangen\n"
 
 #: esp.c:181
 #, c-format
 msgid "Invalid padding length %02x in ESP\n"
-msgstr ""
+msgstr "Ongeldige opvullingslengte %02x in ESP\n"
 
 #: esp.c:193
 msgid "Invalid padding bytes in ESP\n"
-msgstr ""
+msgstr "Ongeldige opvullingsbytes in ESP\n"
 
 #: esp.c:202
 msgid "ESP session established with server\n"
-msgstr ""
+msgstr "ESP-sessie met server tot stand gebracht\n"
 
 #: esp.c:213
 msgid "Failed to allocate memory to decrypt ESP packet\n"
-msgstr ""
+msgstr "Toewijzen van geheugen voor ontsleutelen van ESP-pakket mislukt\n"
 
 #: esp.c:219
 msgid "LZO decompression of ESP packet failed\n"
-msgstr ""
+msgstr "LZO-decompressie van ESP-pakket mislukt\n"
 
 #: esp.c:225
 #, c-format
 msgid "LZO decompressed %d bytes into %d\n"
-msgstr ""
+msgstr "LZO heeft %d bytes gedecomprimeerd in %d\n"
 
 #: esp.c:239
 msgid "Rekey not implemented for ESP\n"
-msgstr ""
+msgstr "Rekey niet geïmplementeerd voor ESP\n"
 
 #: esp.c:243
 msgid "ESP detected dead peer\n"
-msgstr ""
+msgstr "ESP bespeurde een dode peer\n"
 
 #: esp.c:251
 msgid "Send ESP probes for DPD\n"
-msgstr ""
+msgstr "ESP-sondes voor DPD verzenden\n"
 
 #: esp.c:258
 msgid "Keepalive not implemented for ESP\n"
+msgstr "Keepalive niet geïmplementeerd voor ESP\n"
+
+#: esp.c:278
+#, c-format
+msgid "Failed to encrypt ESP packet: %d\n"
 msgstr ""
 
-#: esp.c:281
+#: esp.c:294
+#, c-format
+msgid "Requeueing failed ESP send: %s\n"
+msgstr ""
+
+#: esp.c:301
 #, c-format
 msgid "Failed to send ESP packet: %s\n"
-msgstr ""
+msgstr "Verzenden van ESP-pakket mislukt: %s\n"
 
-#: esp.c:287
+#: esp.c:307
 #, c-format
 msgid "Sent ESP packet of %d bytes\n"
-msgstr ""
+msgstr "ESP-pakket van %d bytes verzonden\n"
 
 #: gnutls-dtls.c:190
 msgid "Deferring DTLS resumption until CSTP generates a PSK\n"
-msgstr ""
+msgstr "DTLS-hervatting uitstellen totdat CSTP een PSK genereert\n"
 
 #: gnutls-dtls.c:198
 msgid "Failed to generate DTLS priority string\n"
-msgstr ""
+msgstr "Genereren van DTLS-prioriteitstekenreeks mislukt\n"
 
 #: gnutls-dtls.c:207
 #, c-format
 msgid "Failed to initialize DTLS: %s\n"
-msgstr ""
+msgstr "Initialiseren van DTLS mislukt: %s\n"
 
 #: gnutls-dtls.c:216
 #, c-format
 msgid "Failed to set DTLS priority: '%s': %s\n"
-msgstr ""
+msgstr "Instellen van DTLS-prioriteit '%s' mislukt: %s\n"
 
 #: gnutls-dtls.c:240
 #, c-format
 msgid "Failed to allocate credentials: %s\n"
-msgstr ""
+msgstr "Toewijzen van gebruikersreferenties mislukt: %s\n"
 
 #: gnutls-dtls.c:253
 #, c-format
 msgid "Failed to generate DTLS key: %s\n"
-msgstr ""
+msgstr "Genereren van DTLS-sleutel mislukt: %s\n"
 
 #: gnutls-dtls.c:267
 #, c-format
 msgid "Failed to set DTLS key: %s\n"
-msgstr ""
+msgstr "Instellen van DTLS-sleutel mislukt: %s\n"
 
 #: gnutls-dtls.c:275
 #, c-format
 msgid "Failed to set DTLS PSK credentials: %s\n"
-msgstr ""
+msgstr "Instellen van DTLS-PSK-gebruikersreferenties mislukt: %s\n"
 
 #: gnutls-dtls.c:309
 #, c-format
@@ -1017,16 +1042,18 @@ msgstr "Niet geslaagd in instellen DTLS sessie parameters: %s\n"
 #: gnutls-dtls.c:373 openssl-dtls.c:534
 #, c-format
 msgid "Peer MTU %d too small to allow DTLS\n"
-msgstr ""
+msgstr "Peer-MTU %d te klein om DTLS toe te staan\n"
 
 #: gnutls-dtls.c:382 openssl-dtls.c:545
 #, c-format
 msgid "DTLS MTU reduced to %d\n"
-msgstr ""
+msgstr "DTLS MTU beperkt tot %d\n"
 
 #: gnutls-dtls.c:392 openssl-dtls.c:554
 msgid "DTLS session resume failed; possible MITM attack. Disabling DTLS.\n"
 msgstr ""
+"Hervatten van DTLS-sessie mislukt; mogelijke MITM-aanval. DTLS wordt "
+"uitgeschakeld.\n"
 
 #: gnutls-dtls.c:405
 #, c-format
@@ -1036,12 +1063,12 @@ msgstr "Instellen DTLS MTU mislukt: %s\n"
 #: gnutls-dtls.c:416
 #, c-format
 msgid "Established DTLS connection (using GnuTLS). Ciphersuite %s.\n"
-msgstr ""
+msgstr "DTLS-verbinding gemaakt (met GnuTLS). Ciphersuite %s.\n"
 
 #: gnutls-dtls.c:422 openssl-dtls.c:572
 #, c-format
 msgid "DTLS connection compression using %s.\n"
-msgstr ""
+msgstr "DTLS-verbindingscompressie met %s.\n"
 
 #: gnutls-dtls.c:437 openssl-dtls.c:653 openssl-dtls.c:657
 msgid "DTLS handshake timed out\n"
@@ -1054,46 +1081,45 @@ msgstr "DTLS handshake mislukt: %s\n"
 
 #: gnutls-dtls.c:444
 msgid "(Is a firewall preventing you from sending UDP packets?)\n"
-msgstr ""
+msgstr "(Probeert een firewall u te verhinderen UDP-pakketten te verzenden?)\n"
 
 #: gnutls-esp.c:56
 #, c-format
 msgid "Failed to initialise ESP cipher: %s\n"
-msgstr ""
+msgstr "Initialiseren van ESP-cipher mislukt: %s\n"
 
 #: gnutls-esp.c:66
 #, c-format
 msgid "Failed to initialize ESP HMAC: %s\n"
-msgstr ""
+msgstr "Initialiseren van ESP-HMAC mislukt: %s\n"
 
 #: gnutls-esp.c:121
 #, c-format
 msgid "Failed to generate random keys for ESP: %s\n"
+msgstr "Genereren van willekeurige sleutels voor ESP mislukt: %s\n"
+
+#: gnutls-esp.c:132
+msgid "Failed to generate ESP IV\n"
 msgstr ""
 
-#: gnutls-esp.c:152 gnutls-esp.c:214
+#: gnutls-esp.c:161 gnutls-esp.c:217
 #, c-format
 msgid "Failed to calculate HMAC for ESP packet: %s\n"
-msgstr ""
+msgstr "Berekenen van HMAC voor ESP-pakket mislukt: %s\n"
 
-#: gnutls-esp.c:159 openssl-esp.c:197
+#: gnutls-esp.c:168 openssl-esp.c:192
 msgid "Received ESP packet with invalid HMAC\n"
-msgstr ""
+msgstr "ESP-pakket met ongeldige HMAC ontvangen\n"
 
-#: gnutls-esp.c:171
+#: gnutls-esp.c:180
 #, c-format
 msgid "Decrypting ESP packet failed: %s\n"
-msgstr ""
+msgstr "Ontsleutelen van ESP-pakket mislukt: %s\n"
 
-#: gnutls-esp.c:191
-#, c-format
-msgid "Failed to generate ESP packet IV: %s\n"
-msgstr ""
-
-#: gnutls-esp.c:206
+#: gnutls-esp.c:209
 #, c-format
 msgid "Failed to encrypt ESP packet: %s\n"
-msgstr ""
+msgstr "Versleutelen van ESP-pakket mislukt: %s\n"
 
 #: gnutls.c:95 openssl.c:154
 msgid "SSL write cancelled\n"
@@ -1113,7 +1139,7 @@ msgstr "SSL lezen geannuleerd\n"
 #. https://bugs.launchpad.net/bugs/1225276
 #: gnutls.c:158
 msgid "SSL socket closed uncleanly\n"
-msgstr ""
+msgstr "SSL-socket onjuist afgesloten\n"
 
 #: gnutls.c:168 gnutls.c:246
 #, c-format
@@ -1145,7 +1171,7 @@ msgstr "Client certificaat vervalt al snel op"
 #: gnutls.c:371 openssl.c:771
 #, c-format
 msgid "Failed to load item '%s' from keystore: %s\n"
-msgstr ""
+msgstr "Load van item '%s' uit sleutelopslag mislukt: %s\n"
 
 #: gnutls.c:384
 #, c-format
@@ -1155,7 +1181,7 @@ msgstr "Openen sleutel/certificaat bestand %s: %s mislukt\n"
 #: gnutls.c:391
 #, c-format
 msgid "Failed to stat key/certificate file %s: %s\n"
-msgstr ""
+msgstr "Status van sleutel-/certificaatsbestand %s verkrijgen mislukt: %s\n"
 
 #: gnutls.c:400
 msgid "Failed to allocate certificate buffer\n"
@@ -1211,7 +1237,7 @@ msgstr "MD5 hash error: %s\n"
 
 #: gnutls.c:696
 msgid "Missing DEK-Info: header from OpenSSL encrypted key\n"
-msgstr ""
+msgstr "DEK-Info ontbreeks: header uit OpenSSL-versleutelde sleutel\n"
 
 #: gnutls.c:703
 msgid "Cannot determine PEM encryption type\n"
@@ -1239,6 +1265,7 @@ msgstr "versleutelde PEM bestand te kort\n"
 #, c-format
 msgid "Failed to initialise cipher for decrypting PEM file: %s\n"
 msgstr ""
+"Initialiseren van cipher voor ontsleutelen van PEM-bestand mislukt: %s\n"
 
 #: gnutls.c:825
 #, c-format
@@ -1256,6 +1283,7 @@ msgstr "Invoeren PEM wachtwoord:"
 #: gnutls.c:942
 msgid "This binary built without system key support\n"
 msgstr ""
+"Dit binair bestand is gecompileerd zonder systeemsleutelondersteuning\n"
 
 #: gnutls.c:949
 msgid "This binary built without PKCS#11 support\n"
@@ -1269,7 +1297,7 @@ msgstr "Gebruikmaken van PKCS#11 certificaat %s\n"
 #: gnutls.c:994
 #, c-format
 msgid "Using system certificate %s\n"
-msgstr ""
+msgstr "Gebruiken van systeemcertificaat %s\n"
 
 #: gnutls.c:1012
 #, c-format
@@ -1279,7 +1307,7 @@ msgstr "Fout bij het laden van het certificaat van PKCS#11: %s\n"
 #: gnutls.c:1013
 #, c-format
 msgid "Error loading system certificate: %s\n"
-msgstr ""
+msgstr "Fout bij laden van systeemcertificaat: %s\n"
 
 #: gnutls.c:1024 openssl.c:827
 #, c-format
@@ -1302,7 +1330,7 @@ msgstr "Laden van het certificaat mislukt: %s\n"
 #: gnutls.c:1098
 #, c-format
 msgid "Using system key %s\n"
-msgstr ""
+msgstr "Gebruiken van systeemsleutel %s\n"
 
 #: gnutls.c:1103 gnutls.c:1271
 #, c-format
@@ -1312,12 +1340,12 @@ msgstr "Fout bij initialiseren privésleutel structuur: %s\n"
 #: gnutls.c:1114
 #, c-format
 msgid "Error importing system key %s: %s\n"
-msgstr ""
+msgstr "Fout bij importeren van systeemsleutel %s: %s\n"
 
 #: gnutls.c:1125 gnutls.c:1219 gnutls.c:1247
 #, c-format
 msgid "Trying PKCS#11 key URL %s\n"
-msgstr ""
+msgstr "PKCS#11-sleutel-URL %s proberen\n"
 
 #: gnutls.c:1130
 #, c-format
@@ -1351,6 +1379,7 @@ msgstr "Deze versie van OpenConnect werd gebouwd zonder TPM ondersteuning\n"
 #: gnutls.c:1326
 msgid "This version of OpenConnect was built without TPM2 support\n"
 msgstr ""
+"Deze versie van OpenConnect is gecompileerd zonder TPM2-ondersteuning\n"
 
 #: gnutls.c:1347
 msgid "Failed to interpret PEM file\n"
@@ -1373,7 +1402,7 @@ msgstr "Ontcijferen PKCS#8 certificaatbestand mislukt\n"
 #: gnutls.c:1426
 #, c-format
 msgid "Failed to determine type of private key %s\n"
-msgstr ""
+msgstr "Type privésleutel %s bepalen mislukt\n"
 
 #: gnutls.c:1438 openssl.c:1008
 msgid "Enter PKCS#8 pass phrase:"
@@ -1410,7 +1439,7 @@ msgstr "Instellen van de certificate revocation list mislukte: %s\n"
 
 #: gnutls.c:1579 gnutls.c:1589
 msgid "Failed to allocate memory for certificate\n"
-msgstr ""
+msgstr "Toewijzen van geheugen voor certificaat mislukt\n"
 
 #: gnutls.c:1625
 msgid ""
@@ -1421,12 +1450,12 @@ msgstr ""
 
 #: gnutls.c:1648
 msgid "Got no issuer from PKCS#11\n"
-msgstr ""
+msgstr "Geen uitgever verkregen van PKCS#11\n"
 
 #: gnutls.c:1653
 #, c-format
 msgid "Got next CA '%s' from PKCS11\n"
-msgstr ""
+msgstr "Volgende CA '%s' verkregen van PKCS11\n"
 
 #: gnutls.c:1679
 msgid "Failed to allocate memory for supporting certificates\n"
@@ -1440,6 +1469,8 @@ msgstr "Toevogen ondersteunde CA '%s'\n"
 #: gnutls.c:1724
 msgid "Private key appears not to support RSA-PSS. Disabling TLSv1.3\n"
 msgstr ""
+"Privésleutel lijkt geen ondersteuning te bieden voor RSA-PSS. TLSv1.3 wordt "
+"uitgeschakeld\n"
 
 #: gnutls.c:1748
 #, c-format
@@ -1453,15 +1484,15 @@ msgstr "Server presenteerde geen certificaat\n"
 #: gnutls.c:1949
 #, c-format
 msgid "Error comparing server's cert on rehandshake: %s\n"
-msgstr ""
+msgstr "Fout bij vergelijken van servercertificaat bij rehandshake: %s\n"
 
 #: gnutls.c:1954 openssl.c:1515
 msgid "Server presented different cert on rehandshake\n"
-msgstr ""
+msgstr "Server bood verschillend certificaat aan bij rehandshake\n"
 
 #: gnutls.c:1959 openssl.c:1518
 msgid "Server presented identical cert on rehandshake\n"
-msgstr ""
+msgstr "Server bood identiek certificaat aan bij rehandshake\n"
 
 #: gnutls.c:1965
 msgid "Error initialising X509 cert structure\n"
@@ -1473,7 +1504,7 @@ msgstr "Fout bij importeren server cert\n"
 
 #: gnutls.c:1980 main.c:1794
 msgid "Could not calculate hash of server's certificate\n"
-msgstr ""
+msgstr "Kon hash van servercertificaat niet berekenen\n"
 
 #: gnutls.c:1985
 msgid "Error checking server cert status\n"
@@ -1521,7 +1552,7 @@ msgstr "Servercertificaat verificatie mislukt: %s\n"
 
 #: gnutls.c:2126
 msgid "Failed to allocate memory for cafile certs\n"
-msgstr ""
+msgstr "Toewijzen van geheugen voor cafile-certificaten mislukt\n"
 
 #: gnutls.c:2147
 #, c-format
@@ -1537,84 +1568,84 @@ msgstr "Open CA bestand '%s' mislukt: %s\n"
 msgid "Loading certificate failed. Aborting.\n"
 msgstr "Laden van certificaat is mislukt. Afbreken.\n"
 
-#: gnutls.c:2243
+#: gnutls.c:2237
 #, c-format
 msgid "Failed to set TLS priority string (\"%s\"): %s\n"
-msgstr ""
+msgstr "Instellen van TLS-prioriteitstekenreeks ('%s') mislukt: %s\n"
 
-#: gnutls.c:2255 openssl.c:1796
+#: gnutls.c:2249 openssl.c:1796
 #, c-format
 msgid "SSL negotiation with %s\n"
 msgstr "SSL afstemmen met %s\n"
 
-#: gnutls.c:2302 openssl.c:1822
+#: gnutls.c:2296 openssl.c:1822
 msgid "SSL connection cancelled\n"
 msgstr "SSL verbinding geannuleerd\n"
 
-#: gnutls.c:2309
+#: gnutls.c:2303
 #, c-format
 msgid "SSL connection failure: %s\n"
 msgstr "SSL verbindingsfout: %s\n"
 
-#: gnutls.c:2318
+#: gnutls.c:2312
 #, c-format
 msgid "GnuTLS non-fatal return during handshake: %s\n"
-msgstr ""
+msgstr "GnuTLS niet-fatale return tijdens handshake: %s\n"
 
-#: gnutls.c:2324 openssl.c:1839
+#: gnutls.c:2318 openssl.c:1839
 #, c-format
 msgid "Connected to HTTPS on %s\n"
 msgstr "Verbonden met HTTPS op %s\n"
 
-#: gnutls.c:2327
+#: gnutls.c:2321
 #, c-format
 msgid "Renegotiated SSL on %s\n"
-msgstr ""
+msgstr "SSL heronderhandeld op %s\n"
 
-#: gnutls.c:2489 openssl-pkcs11.c:199
+#: gnutls.c:2483 openssl-pkcs11.c:199
 #, c-format
 msgid "PIN required for %s"
 msgstr "PIN nodig voor %s"
 
-#: gnutls.c:2493 openssl-pkcs11.c:202
+#: gnutls.c:2487 openssl-pkcs11.c:202
 msgid "Wrong PIN"
 msgstr "Verkeerde PIN"
 
-#: gnutls.c:2496
+#: gnutls.c:2490
 msgid "This is the final try before locking!"
 msgstr "Dit is de laatste poging voor blokkeren!"
 
-#: gnutls.c:2498
+#: gnutls.c:2492
 msgid "Only a few tries left before locking!"
 msgstr "Nog maar een paar pogingen voor blokkeren!"
 
-#: gnutls.c:2503 openssl-pkcs11.c:206
+#: gnutls.c:2497 openssl-pkcs11.c:206
 msgid "Enter PIN:"
 msgstr "Invoeren PIN:"
 
-#: gnutls.c:2589 openssl.c:1967
+#: gnutls.c:2583 openssl.c:1967
 msgid "Unsupported OATH HMAC algorithm\n"
-msgstr ""
+msgstr "Niet-ondersteund OATH-HMAC-algoritme\n"
 
-#: gnutls.c:2598
+#: gnutls.c:2592
 #, c-format
 msgid "Failed to calculate OATH HMAC: %s\n"
-msgstr ""
+msgstr "Berekenen van OATH HMAC mislukt: %s\n"
 
 #: gnutls_tpm.c:54
 #, c-format
 msgid "TPM sign function called for %d bytes.\n"
-msgstr ""
+msgstr "TPM-ondertekeningsfunctie vroeg %d bytes.\n"
 
 #: gnutls_tpm.c:61
 #, c-format
 msgid "Failed to create TPM hash object: %s\n"
-msgstr ""
+msgstr "Aanmaken van TPM-hashobject mislukt: %s\n"
 
 #: gnutls_tpm.c:68
 #, c-format
 msgid "Failed to set value in TPM hash object: %s\n"
-msgstr ""
+msgstr "Instellen van waarde in TPM-hashobject mislukt: %s\n"
 
 #: gnutls_tpm.c:78
 #, c-format
@@ -1683,283 +1714,292 @@ msgstr "InvoerenTPM sleutel PIN:"
 msgid "Failed to set key PIN: %s\n"
 msgstr "Instellen sleutel PIN mislukt: %s\n"
 
-#: gnutls_tpm2.c:92 gnutls_tpm2_esys.c:474 gnutls_tpm2_ibm.c:418
+#: gnutls_tpm2.c:92 gnutls_tpm2_esys.c:474 gnutls_tpm2_ibm.c:419
 #, c-format
 msgid "Unknown TPM2 EC digest size %d\n"
-msgstr ""
+msgstr "Onbekende TPM2-EC-digestgrootte %d\n"
 
 #: gnutls_tpm2.c:198
 #, c-format
 msgid "Error decoding TSS2 key blob: %s\n"
-msgstr ""
+msgstr "Fout bij decoderen van TSS2-sleutelblob: %s\n"
 
 #: gnutls_tpm2.c:208
 #, c-format
 msgid "Failed to create ASN.1 type for TPM2: %s\n"
-msgstr ""
+msgstr "Aanmaken van ASN.1-type voor TPM2 mislukt: %s\n"
 
 #: gnutls_tpm2.c:217
 #, c-format
 msgid "Failed to decode TPM2 key ASN.1: %s\n"
-msgstr ""
+msgstr "Decoderen van TPM2-sleutel ASN.1 mislukt: %s\n"
 
 #: gnutls_tpm2.c:225
 #, c-format
 msgid "Failed to parse TPM2 key type OID: %s\n"
-msgstr ""
+msgstr "Ontleden van TPM2-sleuteltype-OID mislukt: %s\n"
 
 #: gnutls_tpm2.c:231
 #, c-format
 msgid "TPM2 key has unknown type OID %s not %s\n"
-msgstr ""
+msgstr "TPM2-sleutel heeft onbekend type OID %s, niet %s\n"
 
 #: gnutls_tpm2.c:249
 #, c-format
 msgid "Failed to parse TPM2 key parent: %s\n"
-msgstr ""
+msgstr "Ontleden van TPM2-sleutelouder mislukt: %s\n"
 
 #: gnutls_tpm2.c:270
 msgid "Failed to parse TPM2 pubkey element\n"
-msgstr ""
+msgstr "Ontleden van TPM2-pubkey-element mislukt\n"
 
 #: gnutls_tpm2.c:275
 msgid "Failed to parse TPM2 privkey element\n"
-msgstr ""
+msgstr "Ontleden van TPM2-privkey-element mislukt\n"
 
 #: gnutls_tpm2.c:280
 #, c-format
 msgid "Parsed TPM2 key with parent %x, emptyauth %d\n"
-msgstr ""
+msgstr "Ontlede TPM2-sleutel met ouder %x, emptyauth %d\n"
 
 #: gnutls_tpm2.c:384
 #, c-format
 msgid "TPM2 digest too large: %d > %d\n"
-msgstr ""
+msgstr "TPM2-digest te groot: %d > %d\n"
 
 #: gnutls_tpm2_esys.c:173
 msgid "TPM2 password too long; truncating\n"
-msgstr ""
+msgstr "TPM2-wachtwoord te lang; wordt ingekort\n"
 
 #: gnutls_tpm2_esys.c:189
 msgid "owner"
-msgstr ""
+msgstr "eigenaar"
 
 #: gnutls_tpm2_esys.c:190
 msgid "null"
-msgstr ""
+msgstr "null"
 
 #: gnutls_tpm2_esys.c:191
 msgid "endorsement"
-msgstr ""
+msgstr "goedkeuring"
 
 #: gnutls_tpm2_esys.c:192
 msgid "platform"
-msgstr ""
+msgstr "platform"
 
 #: gnutls_tpm2_esys.c:196
 #, c-format
 msgid "Creating primary key under %s hierarchy.\n"
-msgstr ""
+msgstr "Aanmaken van primaire sleutel onder %s-hiërarchie.\n"
 
-#: gnutls_tpm2_esys.c:201 gnutls_tpm2_ibm.c:261
+#: gnutls_tpm2_esys.c:201 gnutls_tpm2_ibm.c:262
 #, c-format
 msgid "Enter TPM2 %s hierarchy password:"
-msgstr ""
+msgstr "Voer TPM2-%s-hiërarchiewachtwoord in:"
 
 #: gnutls_tpm2_esys.c:209 gnutls_tpm2_esys.c:303 gnutls_tpm2_esys.c:374
 #, c-format
 msgid "TPM2 Esys_TR_SetAuth failed: 0x%x\n"
-msgstr ""
+msgstr "TPM2 Esys_TR_SetAuth mislukt: 0x%x\n"
 
 #: gnutls_tpm2_esys.c:221
 msgid "TPM2 Esys_CreatePrimary owner auth failed\n"
-msgstr ""
+msgstr "TPM2 Esys_CreatePrimary-gebruikersauth mislukt\n"
 
 #: gnutls_tpm2_esys.c:226
 #, c-format
 msgid "TPM2 Esys_CreatePrimary failed: 0x%x\n"
-msgstr ""
+msgstr "TPM2 Esys_CreatePrimary mislukt: 0x%x\n"
 
 #: gnutls_tpm2_esys.c:245
 msgid "Establishing connection with TPM.\n"
-msgstr ""
+msgstr "Verbinding met TPM wordt tot stand gebracht.\n"
 
 #: gnutls_tpm2_esys.c:250
 #, c-format
 msgid "TPM2 Esys_Initialize failed: 0x%x\n"
-msgstr ""
+msgstr "TPM2 Esys_Initialize mislukt: 0x%x\n"
 
 #: gnutls_tpm2_esys.c:258
 msgid ""
 "TPM2 was already started up thus false positive failing in tpm2tss log.\n"
 msgstr ""
+"TPM2 is al gestart, vandaar de foutpositieve mislukking in het tpm2tss-"
+"logboek. \n"
 
 #: gnutls_tpm2_esys.c:261
 #, c-format
 msgid "TPM2 Esys_Startup failed: 0x%x\n"
-msgstr ""
+msgstr "TPM2 Esys_Startup mislukt: 0x%x\n"
 
 #: gnutls_tpm2_esys.c:274
 #, c-format
 msgid "Esys_TR_FromTPMPublic failed for handle 0x%x: 0x%x\n"
-msgstr ""
+msgstr "Esys_TR_FromTPMPublic mislukt voor handle 0x%x: 0x%x\n"
 
-#: gnutls_tpm2_esys.c:295 gnutls_tpm2_ibm.c:277
+#: gnutls_tpm2_esys.c:295 gnutls_tpm2_ibm.c:278
 msgid "Enter TPM2 parent key password:"
-msgstr ""
+msgstr "Voer TPM2-oudersleutelwachtwoord in:"
 
 #: gnutls_tpm2_esys.c:309
 #, c-format
 msgid "Loading TPM2 key blob, parent %x.\n"
-msgstr ""
+msgstr "Laden van TPM2-sleutelblob, ouder %x.\n"
 
 #: gnutls_tpm2_esys.c:317
 msgid "TPM2 Esys_Load auth failed\n"
-msgstr ""
+msgstr "TPM2-Esys_Load-authenticatie mislukt\n"
 
 #: gnutls_tpm2_esys.c:323
 #, c-format
 msgid "TPM2 Esys_Load failed: 0x%x\n"
-msgstr ""
+msgstr "TPM2 Esys_Load mislukt: 0x%x\n"
 
+# Primary = primaire sleutel?
 #: gnutls_tpm2_esys.c:333
 #, c-format
 msgid "TPM2 Esys_FlushContext for generated primary failed: 0x%x\n"
 msgstr ""
+"TPM2 Esys_FlushContext voor gegenereerde primaire sleutel mislukt: 0x%x\n"
 
-#: gnutls_tpm2_esys.c:363 gnutls_tpm2_ibm.c:362 gnutls_tpm2_ibm.c:449
+#: gnutls_tpm2_esys.c:363 gnutls_tpm2_ibm.c:363 gnutls_tpm2_ibm.c:450
 msgid "Enter TPM2 key password:"
-msgstr ""
+msgstr "Voer TPM2-sleutelwachtwoord in:"
 
 #: gnutls_tpm2_esys.c:395
 #, c-format
 msgid "TPM2 RSA sign function called for %d bytes.\n"
-msgstr ""
+msgstr "TPM2 RSA-ondertekeningsfunctie gevraagd voor %d bytes.\n"
 
 #: gnutls_tpm2_esys.c:414
 msgid "TPM2 Esys_RSA_Decrypt auth failed\n"
-msgstr ""
+msgstr "TPM2 Esys_RSA_Decrypt-auth mislukt\n"
 
 #: gnutls_tpm2_esys.c:420 gnutls_tpm2_esys.c:500
 #, c-format
 msgid "TPM2 failed to generate RSA signature: 0x%x\n"
-msgstr ""
+msgstr "TPM2 kon RSA-handtekening niet genereren: 0x%x\n"
 
-#: gnutls_tpm2_esys.c:464 gnutls_tpm2_ibm.c:404
+#: gnutls_tpm2_esys.c:464 gnutls_tpm2_ibm.c:405
 #, c-format
 msgid "TPM2 EC sign function called for %d bytes.\n"
-msgstr ""
+msgstr "TPM2 EC-ondertekeningsfunctie gevraagd voor %d bytes.\n"
 
 #: gnutls_tpm2_esys.c:494
 msgid "TPM2 Esys_Sign auth failed\n"
-msgstr ""
+msgstr "TPM2 Esys_Sign-auth mislukt\n"
 
-#: gnutls_tpm2_esys.c:532 gnutls_tpm2_ibm.c:484
+#: gnutls_tpm2_esys.c:532 gnutls_tpm2_ibm.c:485
 #, c-format
 msgid "Invalid TPM2 parent handle 0x%08x\n"
-msgstr ""
+msgstr "Ongeldige TPM2-parent-handle 0x%08x\n"
 
-#: gnutls_tpm2_esys.c:546 gnutls_tpm2_ibm.c:501
+#: gnutls_tpm2_esys.c:546 gnutls_tpm2_ibm.c:502
 #, c-format
 msgid "Failed to import TPM2 private key data: 0x%x\n"
-msgstr ""
+msgstr "Importeren van TPM2-privésleutelgegevens mislukt: 0x%x\n"
 
-#: gnutls_tpm2_esys.c:555 gnutls_tpm2_ibm.c:511
+#: gnutls_tpm2_esys.c:555 gnutls_tpm2_ibm.c:512
 #, c-format
 msgid "Failed to import TPM2 public key data: 0x%x\n"
-msgstr ""
+msgstr "Importeren van TPM2-publiekesleutelgegevens mislukt: 0x%x\n"
 
-#: gnutls_tpm2_esys.c:569 gnutls_tpm2_ibm.c:522
+#: gnutls_tpm2_esys.c:569 gnutls_tpm2_ibm.c:523
 #, c-format
 msgid "Unsupported TPM2 key type %d\n"
-msgstr ""
+msgstr "Niet-ondersteund TPM2-sleuteltype %d\n"
 
-#: gnutls_tpm2_ibm.c:53
+#: gnutls_tpm2_ibm.c:54
 #, c-format
 msgid "TPM2 operation %s failed (%d): %s%s%s\n"
-msgstr ""
+msgstr "TPM2-handeling %s mislukt (%d): %s%s%s\n"
 
-#: gpst.c:225
+#: gpst.c:226
 #, c-format
 msgid "%s\n"
-msgstr ""
+msgstr "%s\n"
 
-#: gpst.c:228
+#: gpst.c:229
 #, c-format
 msgid "Challenge: %s\n"
-msgstr ""
+msgstr "Uitdaging: %s\n"
 
-#: gpst.c:416
+#: gpst.c:417
 #, c-format
 msgid "Unknown ESP %s algorithm: %s"
-msgstr ""
+msgstr "Onbekend ESP %s-algoritme: %s"
 
-#: gpst.c:476
+#: gpst.c:477
 #, c-format
 msgid "Idle timeout is %d minutes.\n"
-msgstr ""
+msgstr "Inactiviteitstime-out is %d minuten.\n"
 
-#: gpst.c:482
+#: gpst.c:483
 #, c-format
 msgid "Non-standard SSL tunnel path: %s\n"
-msgstr ""
+msgstr "Niet-standaard SSL-tunnelpad: %s\n"
 
-#: gpst.c:486
+#: gpst.c:487
 #, c-format
 msgid "Tunnel timeout (rekey interval) is %d minutes.\n"
-msgstr ""
+msgstr "Tunneltime-out (rekey-interval) is %d minuten.\n"
 
-#: gpst.c:497
+#: gpst.c:498
 #, c-format
 msgid ""
 "Gateway address in config XML (%s) differs from external gateway address "
 "(%s).\n"
 msgstr ""
+"Gatewayadres in configuratie-XML (%s) verschilt van extern gatewayadres "
+"(%s).\n"
 
-#: gpst.c:550
+#: gpst.c:551
 #, c-format
 msgid "GlobalProtect config sent ipsec-mode=%s (expected esp-tunnel)\n"
 msgstr ""
+"GlobalProtect-configuratie stuurde ipsec-modus=%s (esp-tunnel verwacht)\n"
 
-#: gpst.c:559 oncp.c:835
+#: gpst.c:560 oncp.c:835
 msgid "Ignoring ESP keys since ESP support not available in this build\n"
 msgstr ""
+"ESP-sleutels worden genegeerd, want ESP-ondersteuning is niet beschikbaar in "
+"deze versie\n"
 
-#: gpst.c:626
+#: gpst.c:627
 msgid "ESP disabled"
-msgstr ""
+msgstr "ESP uitgeschakeld"
 
-#: gpst.c:628
+#: gpst.c:629
 msgid "No ESP keys received"
-msgstr ""
+msgstr "Geen ESP-sleutels ontvangen"
 
-#: gpst.c:630
+#: gpst.c:631
 msgid "ESP support not available in this build"
-msgstr ""
+msgstr "ESP-ondersteuning niet beschikbaar in deze versie"
 
-#: gpst.c:634
+#: gpst.c:635
 #, c-format
 msgid "No MTU received. Calculated %d for %s%s\n"
-msgstr ""
+msgstr "Geen MTU ontvangen. %d berekend voor %s%s\n"
 
-#: gpst.c:679
+#: gpst.c:680
 msgid "Connecting to HTTPS tunnel endpoint ...\n"
-msgstr ""
+msgstr "Verbinding maken met HTTPS-tunneleindpunt…\n"
 
-#: gpst.c:701
+#: gpst.c:702
 msgid "Error fetching GET-tunnel HTTPS response.\n"
-msgstr ""
+msgstr "Fout bij ophalen van  GET-tunnel-HTTPS-reactie.\n"
 
-#: gpst.c:710
+#: gpst.c:711
 msgid "Gateway disconnected immediately after GET-tunnel request.\n"
-msgstr ""
+msgstr "Gateway verbrak verbinding onmiddellijk na GET-tunnel-verzoek.\n"
 
-#: gpst.c:718
+#: gpst.c:719
 #, c-format
 msgid "Got inappropriate HTTP GET-tunnel response: %.*s\n"
-msgstr ""
+msgstr "Verkeerde HTTP-GET-tunnelreactie gekregen: %.*s\n"
 
-#: gpst.c:860
+#: gpst.c:861
 #, c-format
 msgid ""
 "WARNING: Server asked us to submit HIP report with md5sum %s.\n"
@@ -1967,486 +2007,507 @@ msgid ""
 "You need to provide a --csd-wrapper argument with the HIP report submission "
 "script.\n"
 msgstr ""
+"LET OP: server vroeg ons een HIP-rapportage met md5sum %s in te dienen.\n"
+"VPN-connectiviteit kan uitgeschakeld of beperkt zijn zonder HIP-rapportage "
+"in te dienen.\n"
+"U dient een parameter --csd-wrapper op te geven met het HIP-"
+"rapportageindienscript.\n"
 
-#: gpst.c:870
+#: gpst.c:871
 msgid ""
 "Error: Running the 'HIP Report' script on this platform is not yet "
 "implemented.\n"
 msgstr ""
+"Four: uitvoeren van ‘HIP-rapportage’-script is op dit platform nog niet "
+"geïmplementeerd.\n"
 
-#: gpst.c:899
+#: gpst.c:900
 #, c-format
 msgid "HIP script '%s' exited abnormally\n"
-msgstr ""
+msgstr "HIP-script '%s' sloot onjuist af\n"
 
-#: gpst.c:904
+#: gpst.c:905
 #, c-format
 msgid "HIP script '%s' returned non-zero status: %d\n"
-msgstr ""
+msgstr "HIP-script '%s' gaf niet-nul-status weer: %d\n"
 
-#: gpst.c:910
+#: gpst.c:911
 msgid "HIP report submission failed.\n"
-msgstr ""
+msgstr "Indienen van HIP-rapportage mislukt.\n"
 
-#: gpst.c:912
+#: gpst.c:913
 msgid "HIP report submitted successfully.\n"
-msgstr ""
+msgstr "HIP-rapportage ingediend.\n"
 
-#: gpst.c:941
+#: gpst.c:942
 #, c-format
 msgid "Failed to exec HIP script %s\n"
-msgstr ""
+msgstr "Uitvoeren van HIP-script %s mislukt\n"
 
-#: gpst.c:965
+#: gpst.c:966
 msgid "Gateway says HIP report submission is needed.\n"
-msgstr ""
+msgstr "Gateway zegt dat indienen van HIP-rapportage vereist is.\n"
 
-#: gpst.c:971
+#: gpst.c:972
 msgid "Gateway says no HIP report submission is needed.\n"
-msgstr ""
+msgstr "Gateway zegt dat indienen van HIP-rapportage niet vereist is.\n"
 
-#: gpst.c:998
+#: gpst.c:999
 msgid "ESP tunnel connected; exiting HTTPS mainloop.\n"
-msgstr ""
+msgstr "ESP-tunnel verbonden; HTTPS-mainloop wordt afgesloten.\n"
 
-#: gpst.c:1014
+#: gpst.c:1015
 msgid "Failed to connect ESP tunnel; using HTTPS instead.\n"
-msgstr ""
+msgstr "Verbinden met ESP-tunnel mislukt; HTTPS wordt gebruikt.\n"
 
-#: gpst.c:1050
+#: gpst.c:1051
 #, c-format
 msgid "Packet receive error: %s\n"
-msgstr ""
+msgstr "Fout bij ontvangen van pakket: %s\n"
 
-#: gpst.c:1071
+#: gpst.c:1072
 #, c-format
 msgid ""
 "Unexpected packet length. SSL_read returned %d (includes 16 header bytes) "
 "but header payload_len is %d\n"
 msgstr ""
+"Onverwachte pakketlengte. SSL_read gaf %d weer (inclusief 16 headerbytes), "
+"maar payload_len van header is %d\n"
 
-#: gpst.c:1081
+#: gpst.c:1082
 msgid "Got GPST DPD/keepalive response\n"
-msgstr ""
+msgstr "GPST DPD-/keepalive-reactie gekregen\n"
 
-#: gpst.c:1085
+#: gpst.c:1086
 msgid ""
 "Expected 0000000000000000 as last 8 bytes of DPD/keepalive packet header, "
 "but got:\n"
 msgstr ""
+"0000000000000000 verwacht als laatste 8 bytes van DPD-/keepalive-"
+"pakketheader, maar we kregen:\n"
 
-#: gpst.c:1091
+#: gpst.c:1092
 #, c-format
 msgid "Received data packet of %d bytes\n"
-msgstr ""
+msgstr "Datapakket van %d bytes ontvangen\n"
 
-#: gpst.c:1100
+#: gpst.c:1101
 msgid ""
 "Expected 0100000000000000 as last 8 bytes of data packet header, but got:\n"
 msgstr ""
+"0100000000000000 verwacht als laatste 8 bytes van datapakketheader, maar we "
+"kregen:\n"
 
-#: gpst.c:1108
+#: gpst.c:1109
 msgid "Unknown packet. Header dump follows:\n"
-msgstr ""
+msgstr "Onbekend pakket. Headerdump volgt:\n"
 
-#: gpst.c:1156
+#: gpst.c:1157
 msgid "GlobalProtect rekey due\n"
-msgstr ""
+msgstr "GlobalProtect-rekey verwacht\n"
 
-#: gpst.c:1161
+#: gpst.c:1162
 msgid "GPST Dead Peer Detection detected dead peer!\n"
-msgstr ""
+msgstr "GPST Dead Peer Detection ontdekte dode peer!\n"
 
-#: gpst.c:1181
+#: gpst.c:1182
 msgid "Send GPST DPD/keepalive request\n"
-msgstr ""
+msgstr "GPST DPD-/keepalive-verzoek verzenden\n"
 
-#: gpst.c:1201
+#: gpst.c:1202
 #, c-format
 msgid "Sending data packet of %d bytes\n"
-msgstr ""
+msgstr "Datapakket van %d bytes verzenden\n"
 
 #: gssapi.c:75
 msgid "Error importing GSSAPI name for authentication:\n"
-msgstr ""
+msgstr "Fout bij importeren van GSSAPI-naam voor aanmeldingscontrole:\n"
 
 #: gssapi.c:128
 msgid "Error generating GSSAPI response:\n"
-msgstr ""
+msgstr "Fout bij genereren van GSSAPI-reactie:\n"
 
 #: gssapi.c:145
 msgid "Attempting GSSAPI authentication to proxy\n"
-msgstr ""
+msgstr "GSSAPI-aanmeldingscontrole bij proxy proberen\n"
 
 #: gssapi.c:148
 #, c-format
 msgid "Attempting GSSAPI authentication to server '%s'\n"
-msgstr ""
+msgstr "GSSAPI-aanmeldingscontrole bij server '%s' proberen\n"
 
 #: gssapi.c:200 gssapi.c:256 sspi.c:191 sspi.c:249
 msgid "GSSAPI authentication completed\n"
-msgstr ""
+msgstr "GSSAPI-aanmeldingscontrole voltooid\n"
 
 #: gssapi.c:211
 #, c-format
 msgid "GSSAPI token too large (%zd bytes)\n"
-msgstr ""
+msgstr "GSSAPI-token te groot (%zd bytes)\n"
 
 #: gssapi.c:224
 #, c-format
 msgid "Sending GSSAPI token of %zu bytes\n"
-msgstr ""
+msgstr "GSSAPI-token van %zu bytes verzenden\n"
 
 #: gssapi.c:229
 #, c-format
 msgid "Failed to send GSSAPI authentication token to proxy: %s\n"
-msgstr ""
+msgstr "Verzenden van GSSAPI-aanmeldingstoken naar proxy mislukt: %s\n"
 
 #: gssapi.c:237 gssapi.c:264
 #, c-format
 msgid "Failed to receive GSSAPI authentication token from proxy: %s\n"
-msgstr ""
+msgstr "Ontvangen van GSSAPI-aanmeldingstoken van proxy mislukt: %s\n"
 
 #: gssapi.c:243
 msgid "SOCKS server reported GSSAPI context failure\n"
-msgstr ""
+msgstr "SOCKS-server meldde GSSAPI-contextfout\n"
 
 #: gssapi.c:247
 #, c-format
 msgid "Unknown GSSAPI status response (0x%02x) from SOCKS server\n"
-msgstr ""
+msgstr "Onbekende GSSAPI-statusreactie (0x%02x) van SOCKS-server\n"
 
 #: gssapi.c:268
 #, c-format
 msgid "Got GSSAPI token of %zu bytes: %02x %02x %02x %02x\n"
-msgstr ""
+msgstr "GSSAPI-token van %zu bytes verkregen %02x %02x %02x %02x\n"
 
 #: gssapi.c:294
 #, c-format
 msgid "Sending GSSAPI protection negotiation of %zu bytes\n"
-msgstr ""
+msgstr "GSSAPI-beschermingsonderhandeling van %zu bytes verzenden\n"
 
 #: gssapi.c:299
 #, c-format
 msgid "Failed to send GSSAPI protection response to proxy: %s\n"
-msgstr ""
+msgstr "Verzenden van GSSAPI-beschermingsreactie naar proxy mislukt: %s\n"
 
 #: gssapi.c:307 gssapi.c:317
 #, c-format
 msgid "Failed to receive GSSAPI protection response from proxy: %s\n"
-msgstr ""
+msgstr "Ontvangen van GSSAPI-beschermingsreactie van proxy mislukt: %s\n"
 
 #: gssapi.c:322
 #, c-format
 msgid "Got GSSAPI protection response of %zu bytes: %02x %02x %02x %02x\n"
 msgstr ""
+"GSSAPI-beschermingsreactie van %zu bytes ontvangen: %02x %02x %02x %02x\n"
 
 #: gssapi.c:332
 #, c-format
 msgid "Invalid GSSAPI protection response from proxy (%zu bytes)\n"
-msgstr ""
+msgstr "Ongeldige GSSAPI-beschermingsreactie ontvangen van proxy (%zu bytes)\n"
 
 #: gssapi.c:341 sspi.c:408
 msgid "SOCKS proxy demands message integrity, which is not supported\n"
-msgstr ""
+msgstr "SOCKS-proxy vereist berichtintegriteit, wat niet wordt ondersteund\n"
 
 #: gssapi.c:345 sspi.c:412
 msgid "SOCKS proxy demands message confidentiality, which is not supported\n"
-msgstr ""
+msgstr "SOCKS-proxy vereist berichtgeheimhouding, wat niet wordt ondersteund\n"
 
 #: gssapi.c:349 sspi.c:416
 #, c-format
 msgid "SOCKS proxy demands protection unknown type 0x%02x\n"
-msgstr ""
+msgstr "SOCKS-proxy vereist bescherming van onbekend type 0x%02x\n"
 
 #: http-auth.c:184
 msgid "Attempting HTTP Basic authentication to proxy\n"
-msgstr ""
+msgstr "HTTP-basic-aanmeldingscontrole bij proxy proberen\n"
 
 #: http-auth.c:186
 #, c-format
 msgid "Attempting HTTP Basic authentication to server '%s'\n"
-msgstr ""
+msgstr "HTTP-basic-aanmeldingscontrole bij server '%s' proberen\n"
 
-#: http-auth.c:200 http.c:1166
+#: http-auth.c:200 http.c:1165
 msgid "This version of OpenConnect was built without GSSAPI support\n"
 msgstr ""
+"Deze versie van OpenConnect is gecompileerd zonder GSSAPI-ondersteuning\n"
 
 #: http-auth.c:240
 msgid "Proxy requested Basic authentication which is disabled by default\n"
 msgstr ""
+"Proxy vroeg om Basic-aanmeldingscontrole, wat standaard is uitgeschakeld\n"
 
 #: http-auth.c:243
 #, c-format
 msgid ""
 "Server '%s' requested Basic authentication which is disabled by default\n"
 msgstr ""
+"Server '%s' vroeg om Basic-aanmeldingscontrole, wat standaard is "
+"uitgeschakeld\n"
 
 #: http-auth.c:256
 msgid "No more authentication methods to try\n"
-msgstr ""
+msgstr "Geen aanmeldingscontrolemethode meer\n"
 
-#: http.c:320
+#: http.c:319
 msgid "No memory for allocating cookies\n"
 msgstr "Geen geheugen voor de toewijzing van cookies\n"
 
-#: http.c:395
+#: http.c:394
 #, c-format
 msgid "Failed to parse HTTP response '%s'\n"
 msgstr "Mislukte poging HTTP reactie '%s' te ontleden\n"
 
-#: http.c:401
+#: http.c:400
 #, c-format
 msgid "Got HTTP response: %s\n"
 msgstr "Ontving HTTP reactie: %s\n"
 
-#: http.c:409
+#: http.c:408
 msgid "Error processing HTTP response\n"
 msgstr "Fout bij de verwerking van HTTP-reactie\n"
 
-#: http.c:416
+#: http.c:415
 #, c-format
 msgid "Ignoring unknown HTTP response line '%s'\n"
 msgstr "Onbekende HTTP response lijn '%s' genegeerd\n"
 
-#: http.c:436
+#: http.c:435
 #, c-format
 msgid "Invalid cookie offered: %s\n"
 msgstr "Ongeldige koekje aangeboden: %s\n"
 
-#: http.c:455
+#: http.c:454
 msgid "SSL certificate authentication failed\n"
 msgstr "SSL certificaat authenticatie mislukt\n"
 
-#: http.c:486
+#: http.c:485
 #, c-format
 msgid "Response body has negative size (%d)\n"
 msgstr "Reactie heeft negatieve grootte (%d)\n"
 
-#: http.c:497
+#: http.c:496
 #, c-format
 msgid "Unknown Transfer-Encoding: %s\n"
 msgstr "Onbekend Transfer-Encoding: %s\n"
 
 #. Now the body, if there is one
-#: http.c:516
+#: http.c:515
 #, c-format
 msgid "HTTP body %s (%d)\n"
 msgstr "HTTP body %s (%d)\n"
 
-#: http.c:530 http.c:557
+#: http.c:529 http.c:556
 msgid "Error reading HTTP response body\n"
 msgstr "Fout bij het lezen van HTTP reactie\n"
 
-#: http.c:543
+#: http.c:542
 msgid "Error fetching chunk header\n"
 msgstr "Fout bij het ophalen brok header\n"
 
-#: http.c:567
+#: http.c:566
 msgid "Error fetching HTTP response body\n"
 msgstr "Fout bij het ophalen HTTP reactietekst\n"
 
-#: http.c:570
+#: http.c:569
 #, c-format
 msgid "Error in chunked decoding. Expected '', got: '%s'"
 msgstr "Fout in chunked decodering. Verwacht '', ontving: '%s'"
 
-#: http.c:582
+#: http.c:581
 msgid "Cannot receive HTTP 1.0 body without closing connection\n"
 msgstr ""
 "Kan HTTP 1.0 content niet ontvangen zonder het sluiten van de verbinding\n"
 
-#: http.c:709
+#: http.c:708
 #, c-format
 msgid "Failed to parse redirected URL '%s': %s\n"
 msgstr "Niet geslaagd om doorgestuurd URL '%s' te vertalen: %s\n"
 
-#: http.c:733
+#: http.c:732
 #, c-format
 msgid "Cannot follow redirection to non-https URL '%s'\n"
 msgstr "Kan niet doorverwijzen naar non-https URL '%s'\n"
 
-#: http.c:761
+#: http.c:760
 #, c-format
 msgid "Allocating new path for relative redirect failed: %s\n"
 msgstr "Toewijzing van nieuwe pad voor de relatieve redirect is mislukt: %s\n"
 
-#: http.c:974 oncp.c:591
+#: http.c:973 oncp.c:591
 #, c-format
 msgid "Unexpected %d result from server\n"
 msgstr "Onverwacht %d resultaat van de server\n"
 
-#: http.c:1022
+#: http.c:1021
 msgid "request granted"
 msgstr "verzoek ingewilligd"
 
-#: http.c:1023
+#: http.c:1022
 msgid "general failure"
 msgstr "algemene storing"
 
-#: http.c:1024
+#: http.c:1023
 msgid "connection not allowed by ruleset"
 msgstr "verbinding niet toegestaan ​​door regelset"
 
-#: http.c:1025
+#: http.c:1024
 msgid "network unreachable"
 msgstr "netwerk onbereikbaar"
 
-#: http.c:1026
+#: http.c:1025
 msgid "host unreachable"
 msgstr "host onbereikbaar"
 
-#: http.c:1027
+#: http.c:1026
 msgid "connection refused by destination host"
 msgstr "verbinding geweigerd door doelhost"
 
-#: http.c:1028
+#: http.c:1027
 msgid "TTL expired"
 msgstr "TTL verlopen"
 
-#: http.c:1029
+#: http.c:1028
 msgid "command not supported / protocol error"
 msgstr "commando niet ondersteund / protocol fout"
 
-#: http.c:1030
+#: http.c:1029
 msgid "address type not supported"
 msgstr "adres type niet ondersteund"
 
-#: http.c:1040
+#: http.c:1039
 msgid "SOCKS server requested username/password but we have none\n"
 msgstr ""
+"SOCKS-server vroeg om gebruikersnaam/wachtwoord, maar we hebben er geen\n"
 
-#: http.c:1048
+#: http.c:1047
 msgid "Username and password for SOCKS authentication must be < 255 bytes\n"
 msgstr ""
+"Gebruikersnaam en wachtwoord voor SOCKS-aanmeldingscontrole moeten kleiner "
+"zijn dan 255 bytes\n"
 
-#: http.c:1063 http.c:1119
+#: http.c:1062 http.c:1118
 #, c-format
 msgid "Error writing auth request to SOCKS proxy: %s\n"
 msgstr "Fout bij het schrijven auth verzoek aan SOCKS proxy: %s\n"
 
-#: http.c:1071 http.c:1126
+#: http.c:1070 http.c:1125
 #, c-format
 msgid "Error reading auth response from SOCKS proxy: %s\n"
 msgstr "Fout bij het lezen van auth reactie van SOCKS proxy: %s\n"
 
-#: http.c:1078 http.c:1132
+#: http.c:1077 http.c:1131
 #, c-format
 msgid "Unexpected auth response from SOCKS proxy: %02x %02x\n"
 msgstr "Onverwachte auth reactie van SOCKS proxy: %02x %02x\n"
 
-#: http.c:1084
+#: http.c:1083
 msgid "Authenticated to SOCKS server using password\n"
-msgstr ""
+msgstr "Aangemeld bij SOCKS-server met wachtwoord\n"
 
-#: http.c:1088
+#: http.c:1087
 msgid "Password authentication to SOCKS server failed\n"
-msgstr ""
+msgstr "Wachtwoordaanmelding bij SOCKS-server mislukt\n"
 
-#: http.c:1144 http.c:1151
+#: http.c:1143 http.c:1150
 msgid "SOCKS server requested GSSAPI authentication\n"
-msgstr ""
+msgstr "SOCKS-server vroeg om GSSAPI-aanmeldingscontrole\n"
 
-#: http.c:1157
+#: http.c:1156
 msgid "SOCKS server requested password authentication\n"
-msgstr ""
+msgstr "SOCKS-server vroeg om wachtwoordaanmeldingscontrole\n"
 
-#: http.c:1164
+#: http.c:1163
 msgid "SOCKS server requires authentication\n"
-msgstr ""
+msgstr "SOCKS-server vereist aanmeldingscontrole\n"
 
-#: http.c:1171
+#: http.c:1170
 #, c-format
 msgid "SOCKS server requested unknown authentication type %02x\n"
-msgstr ""
+msgstr "SOCKS-server vroeg om onbekend type aanmeldingscontrole %02x\n"
 
-#: http.c:1177
+#: http.c:1176
 #, c-format
 msgid "Requesting SOCKS proxy connection to %s:%d\n"
 msgstr "Het aanvragen van SOCKS proxy verbinding met %s:%d\n"
 
-#: http.c:1192
+#: http.c:1191
 #, c-format
 msgid "Error writing connect request to SOCKS proxy: %s\n"
 msgstr "Fout bij het schrijven verbindingsverzoek aan SOCKS proxy: %s\n"
 
-#: http.c:1200 http.c:1242
+#: http.c:1199 http.c:1241
 #, c-format
 msgid "Error reading connect response from SOCKS proxy: %s\n"
 msgstr "Fout bij het lezen van verbindingsreactie van SOCKS proxy: %s\n"
 
-#: http.c:1206
+#: http.c:1205
 #, c-format
 msgid "Unexpected connect response from SOCKS proxy: %02x %02x...\n"
 msgstr "Onverwachte verbindingsreactie van SOCKS proxy: %02x %02x...\n"
 
-#: http.c:1214
+#: http.c:1213
 #, c-format
 msgid "SOCKS proxy error %02x: %s\n"
 msgstr "SOCKS proxy fout %02x: %s\n"
 
-#: http.c:1218
+#: http.c:1217
 #, c-format
 msgid "SOCKS proxy error %02x\n"
 msgstr "SOCKS proxy fout %02x\n"
 
-#: http.c:1235
+#: http.c:1234
 #, c-format
 msgid "Unexpected address type %02x in SOCKS connect response\n"
 msgstr "Onverwacht adres type %02x in SOCKS aansluitreactie\n"
 
-#: http.c:1258
+#: http.c:1257
 #, c-format
 msgid "Requesting HTTP proxy connection to %s:%d\n"
 msgstr "Aanvragen van HTTP-proxy verbinding met %s:%d\n"
 
-#: http.c:1293
+#: http.c:1292
 #, c-format
 msgid "Sending proxy request failed: %s\n"
 msgstr "Het verzenden van het proxy verzoek is mislukt: %s\n"
 
-#: http.c:1316
+#: http.c:1315
 #, c-format
 msgid "Proxy CONNECT request failed: %d\n"
-msgstr ""
+msgstr "Proxy-CONNECT-verzoek mislukt: %d\n"
 
-#: http.c:1335
+#: http.c:1334
 #, c-format
 msgid "Unknown proxy type '%s'\n"
 msgstr "Onbekend proxy-type '%s'\n"
 
-#: http.c:1384
+#: http.c:1383
 msgid "Only http or socks(5) proxies supported\n"
 msgstr "Alleen http of socks(5) proxies ondersteund\n"
 
 #: library.c:112
 msgid "Cisco AnyConnect or openconnect"
-msgstr ""
+msgstr "Cisco AnyConnect of openconnect"
 
 #: library.c:113
 msgid "Compatible with Cisco AnyConnect SSL VPN, as well as ocserv"
-msgstr ""
+msgstr "Compatibel met Cisco AnyConnect SSL VPN en ocserv"
 
 #: library.c:129
 msgid "Juniper Network Connect"
-msgstr ""
+msgstr "Juniper Network Connect"
 
 #: library.c:130
 msgid "Compatible with Juniper Network Connect / Pulse Secure SSL VPN"
-msgstr ""
+msgstr "Compatibel met Juniper Network Connect / Pulse Secure SSL VPN"
 
 #: library.c:148
 msgid "Palo Alto Networks GlobalProtect"
-msgstr ""
+msgstr "Palo Alto Networks GlobalProtect"
 
 #: library.c:149
 msgid "Compatible with Palo Alto Networks (PAN) GlobalProtect SSL VPN"
-msgstr ""
+msgstr "Compatibel met Palo Alto Networks (PAN) GlobalProtect SSL VPN"
 
 #: library.c:211
 #, c-format
 msgid "Unknown VPN protocol '%s'\n"
-msgstr ""
+msgstr "Onbekend VPN-protocol '%s'\n"
 
 #: library.c:233
 msgid "Built against SSL library with no Cisco DTLS support\n"
@@ -2464,7 +2525,7 @@ msgstr "Alleen https:// toegestaan ​​voor server-URL\n"
 #: library.c:1056
 #, c-format
 msgid "Unknown certificate hash: %s.\n"
-msgstr ""
+msgstr "Onbekende certificaathash: %s.\n"
 
 #: library.c:1085
 #, c-format
@@ -2472,6 +2533,8 @@ msgid ""
 "The size of the provided fingerprint is less than the minimum required "
 "(%u).\n"
 msgstr ""
+"De grootte van de gegeven vingerafdruk is kleiner dan het vereiste minimum "
+"(%u).\n"
 
 #: library.c:1146
 msgid "No form handler; cannot authenticate.\n"
@@ -2480,27 +2543,27 @@ msgstr "Geen formulier afhandelaar; kon niet authenticeren.\n"
 #: main.c:340
 #, c-format
 msgid "CommandLineToArgvW() failed: %s\n"
-msgstr ""
+msgstr "CommandLineToArgvW() mislukt: %s\n"
 
 #: main.c:353
 #, c-format
 msgid "Fatal error in command line handling\n"
-msgstr ""
+msgstr "Fatale fout in verwerking van opdrachtregel\n"
 
 #: main.c:388
 #, c-format
 msgid "ReadConsole() failed: %s\n"
-msgstr ""
+msgstr "ReadConsole() mislukt: %s\n"
 
 #: main.c:401
 #, c-format
 msgid "fgetws() failed: %s\n"
-msgstr ""
+msgstr "fgetws() mislukt: %s\n"
 
 #: main.c:416 main.c:429
 #, c-format
 msgid "Error converting console input: %s\n"
-msgstr ""
+msgstr "Fout bij converteren van consoleinvoer: %s\n"
 
 #: main.c:423 main.c:689
 #, c-format
@@ -2536,19 +2599,21 @@ msgid ""
 "WARNING: This binary lacks DTLS and/or ESP support. Performance will be "
 "impaired.\n"
 msgstr ""
+"LET OP: dit binair bestand bevat DTLS- noch ESP-ondersteuning. Prestaties "
+"worden beïnvloed.\n"
 
 #: main.c:657
 #, c-format
 msgid "Supported protocols:"
-msgstr ""
+msgstr "Ondersteunde protocollen:"
 
 #: main.c:659 main.c:675
 msgid " (default)"
-msgstr ""
+msgstr "(standaard)"
 
 #: main.c:672
 msgid "Set VPN protocol"
-msgstr ""
+msgstr "VPN-protocol instellen"
 
 #: main.c:713
 msgid "fgets (stdin)"
@@ -2557,17 +2622,17 @@ msgstr "fgets (stdin)"
 #: main.c:754
 #, c-format
 msgid "Cannot process this executable path \"%s\""
-msgstr ""
+msgstr "Kan pad van dit uitvoerbaar bestand niet verwerken '%s'"
 
 #: main.c:760
 #, c-format
 msgid "Allocation for vpnc-script path failed\n"
-msgstr ""
+msgstr "Toewijzing voor vpnc-scriptpad mislukt\n"
 
 #: main.c:780
 #, c-format
 msgid "Override hostname '%s' to '%s'\n"
-msgstr ""
+msgstr "Hostnaam '%s' overschrijven naar '%s'\n"
 
 #: main.c:793
 #, c-format
@@ -2580,6 +2645,8 @@ msgid ""
 "Open client for multiple VPN protocols, version %s\n"
 "\n"
 msgstr ""
+"Open cliënt voor meerdere VPN-protocollen, versie %s\n"
+"\n"
 
 #: main.c:796
 msgid "Read options from config file"
@@ -2595,7 +2662,7 @@ msgstr "Weergeven helptekst"
 
 #: main.c:802
 msgid "Authentication"
-msgstr ""
+msgstr "Aanmeldingscontrole"
 
 #: main.c:803
 msgid "Set login username"
@@ -2619,7 +2686,7 @@ msgstr "Kies authenticatie login selectie"
 
 #: main.c:808
 msgid "Provide authentication form responses"
-msgstr ""
+msgstr "Aanmeldingsformulierreacties aanbieden"
 
 #: main.c:809
 msgid "Use SSL client certificate CERT"
@@ -2647,23 +2714,23 @@ msgstr "Sleutelwoord is fsid van het bestandssysteem"
 
 #: main.c:815
 msgid "Software token type: rsa, totp or hotp"
-msgstr ""
+msgstr "Softwaretokentype: rsa, totp of hotp"
 
 #: main.c:816
 msgid "Software token secret"
-msgstr ""
+msgstr "Softwaretokengeheim"
 
 #: main.c:818
 msgid "(NOTE: libstoken (RSA SecurID) disabled in this build)"
-msgstr ""
+msgstr "(LET OP: libstoken (RSA SecurID) uitgeschakeld in deze versie)"
 
 #: main.c:821
 msgid "(NOTE: Yubikey OATH disabled in this build)"
-msgstr ""
+msgstr "(LET OP: Yubikey-OATH uitgeschakeld in deze versie)"
 
 #: main.c:824
 msgid "Server validation"
-msgstr ""
+msgstr "Servervalidatie"
 
 #: main.c:825
 msgid "Server's certificate SHA1 fingerprint"
@@ -2675,7 +2742,7 @@ msgstr "Geen geldig server SSL cert vereist"
 
 #: main.c:827
 msgid "Disable default system certificate authorities"
-msgstr ""
+msgstr "Standaardsysteemcertificaatautoriteiten uitschakelen"
 
 #: main.c:828
 msgid "Cert file for server verification"
@@ -2683,7 +2750,7 @@ msgstr "Cert file voor serververificatie"
 
 #: main.c:830
 msgid "Internet connectivity"
-msgstr ""
+msgstr "Internetconnectiviteit"
 
 #: main.c:831
 msgid "Set proxy server"
@@ -2691,7 +2758,7 @@ msgstr "Instellen proxyserver"
 
 #: main.c:832
 msgid "Set proxy authentication methods"
-msgstr ""
+msgstr "Stel proxyaanmeldingsmethodes in"
 
 #: main.c:833
 msgid "Disable proxy"
@@ -2711,23 +2778,23 @@ msgstr "Opnieuw proberen verbindingstime-out in seconden"
 
 #: main.c:839
 msgid "Use IP when connecting to HOST"
-msgstr ""
+msgstr "IP gebruiken bij verbinden met HOST"
 
 #: main.c:840
 msgid "copy TOS / TCLASS when using DTLS"
-msgstr ""
+msgstr "TOS / TCLASS kopiëren bij gebruik van DTLS"
 
 #: main.c:841
 msgid "Set local port for DTLS and ESP datagrams"
-msgstr ""
+msgstr "Lokale poort voor DTLS- en ESP-datagrammen instellen"
 
 #: main.c:843
 msgid "Authentication (two-phase)"
-msgstr ""
+msgstr "Aanmeldingscontrole (tweestaps)"
 
 #: main.c:844
 msgid "Use authentication cookie COOKIE"
-msgstr ""
+msgstr "Aanmeldingscontrolecookie COOKIE gebruiken"
 
 #: main.c:845
 msgid "Read cookie from standard input"
@@ -2739,15 +2806,15 @@ msgstr "Alleen authenticeren en tonen inloginformatie"
 
 #: main.c:847
 msgid "Fetch and print cookie only; don't connect"
-msgstr ""
+msgstr "Enkel cookie ophalen en afdrukken; niet verbinden"
 
 #: main.c:848
 msgid "Print cookie before connecting"
-msgstr ""
+msgstr "Cookie afdrukken vóór verbindne"
 
 #: main.c:851
 msgid "Process control"
-msgstr ""
+msgstr "Procescontrole"
 
 #: main.c:852
 msgid "Continue in background after startup"
@@ -2763,7 +2830,7 @@ msgstr "Laat privileges vallen na verbinden"
 
 #: main.c:857
 msgid "Logging (two-phase)"
-msgstr ""
+msgstr "Loggen (tweestaps)"
 
 #: main.c:859
 msgid "Use syslog for progress messages"
@@ -2783,11 +2850,11 @@ msgstr ""
 
 #: main.c:864
 msgid "Prepend timestamp to progress messages"
-msgstr ""
+msgstr "Tijdstempel voorvoegen aan voortgangsberichten"
 
 #: main.c:866
 msgid "VPN configuration script"
-msgstr ""
+msgstr "VPN-configuratiescript"
 
 #: main.c:867
 msgid "Use IFNAME for tunnel interface"
@@ -2808,7 +2875,7 @@ msgstr "Leidt het verkeer naar 'script' programma, niet tun"
 
 #: main.c:874
 msgid "Tunnel control"
-msgstr ""
+msgstr "Tunnelcontrole"
 
 #: main.c:875
 msgid "Do not ask for IPv6 connectivity"
@@ -2820,7 +2887,7 @@ msgstr "XML-configuratiebestand"
 
 #: main.c:877
 msgid "Request MTU from server (legacy servers only)"
-msgstr ""
+msgstr "MTU vereisen van server (enkel voor verouderde servers)"
 
 #: main.c:878
 msgid "Indicate path MTU to/from server"
@@ -2828,11 +2895,11 @@ msgstr "Aangeven pad MTU van/naar server"
 
 #: main.c:879
 msgid "Enable stateful compression (default is stateless only)"
-msgstr ""
+msgstr "Staatvolle compressie inschakelen (standaard is enkel staatloos)"
 
 #: main.c:880
 msgid "Disable all compression"
-msgstr ""
+msgstr "Alle compressie uitschakelen"
 
 #: main.c:881
 msgid "Set minimum Dead Peer Detection interval"
@@ -2840,11 +2907,11 @@ msgstr "Instellen minimale Dead Peer Detection interval"
 
 #: main.c:882
 msgid "Require perfect forward secrecy"
-msgstr ""
+msgstr "Perfect forward secrecy vereisen"
 
 #: main.c:883
 msgid "Disable DTLS and ESP"
-msgstr ""
+msgstr "DTLS en ESP uitschakelen"
 
 #: main.c:884
 msgid "OpenSSL ciphers to support for DTLS"
@@ -2856,7 +2923,7 @@ msgstr "Instellen maximale packet lengte tot LEN pkts"
 
 #: main.c:887
 msgid "Local system information"
-msgstr ""
+msgstr "Lokale systeeminformatie"
 
 #: main.c:888
 msgid "HTTP header User-Agent: field"
@@ -2864,35 +2931,35 @@ msgstr "HTTP header User-agent: veld"
 
 #: main.c:889
 msgid "Local hostname to advertise to server"
-msgstr ""
+msgstr "Lokale hostnaam die aan server wordt getoond"
 
 #: main.c:890
 msgid "OS type (linux,linux-64,win,...) to report"
-msgstr ""
+msgstr "Te rapporteren besturingssysteemtype (linux, linux-64, win, …)"
 
 #: main.c:891
 msgid "reported version string during authentication"
-msgstr ""
+msgstr "gemelde versietekenreeks bij aanmelding"
 
 #: main.c:892
 msgid "default:"
-msgstr ""
+msgstr "standaard:"
 
 #: main.c:895
 msgid "Trojan binary (CSD) execution"
-msgstr ""
+msgstr "Uitvoeren van Trojaans-paard-binair bestand (CSD)"
 
 #: main.c:896
 msgid "Drop privileges during trojan execution"
-msgstr ""
+msgstr "Privileges laten vallen tijdens uitvoeren van Trojaans paard"
 
 #: main.c:897
 msgid "Run SCRIPT instead of trojan binary"
-msgstr ""
+msgstr "SCRIPT uitvoeren in plaats van Trojaans paard-binair bestand"
 
 #: main.c:900
 msgid "Server bugs"
-msgstr ""
+msgstr "Serverbugs"
 
 #: main.c:901
 msgid "Disable HTTP connection re-use"
@@ -2900,12 +2967,12 @@ msgstr "Deactiveer hergebruiken HTTP-verbinding"
 
 #: main.c:902
 msgid "Do not attempt XML POST authentication"
-msgstr ""
+msgstr "XML-POST-aanmeldingscontrole niet proberen"
 
 #: main.c:924
 #, c-format
 msgid "Failed to allocate string\n"
-msgstr ""
+msgstr "Toewijzen van tekenreeks mislukt\n"
 
 #: main.c:997
 #, c-format
@@ -2930,17 +2997,17 @@ msgstr "Optie '%s' heeft een argument nodig in regel %d\n"
 #: main.c:1076
 #, c-format
 msgid "Invalid user \"%s\": %s\n"
-msgstr ""
+msgstr "Ongeldige gebruiker '%s': %s\n"
 
 #: main.c:1086
 #, c-format
 msgid "Invalid user ID \"%d\": %s\n"
-msgstr ""
+msgstr "Ongeldige gebruikers-ID '%d': %s\n"
 
 #: main.c:1130
 #, c-format
 msgid "WARNING: Cannot set locale: %s\n"
-msgstr ""
+msgstr "WAARSCHUWING: kan locale niet instellen: %s\n"
 
 #: main.c:1140
 #, c-format
@@ -2949,6 +3016,10 @@ msgid ""
 "         support but you appear to be using the legacy character\n"
 "         set \"%s\". Expect strangeness.\n"
 msgstr ""
+"WAARSCHUWING: deze versie van openconnect is gecompileerd zonder "
+"ondersteuning\n"
+"         voor iconv, maar u blijkt de verouderde tekenset '%s'\n"
+"         te gebruiken. Verwacht vreemde dingen.\n"
 
 #: main.c:1147
 #, c-format
@@ -2977,17 +3048,17 @@ msgstr "Kan niet openen configuratiebestand '%s': %s\n"
 #: main.c:1239
 #, c-format
 msgid "Invalid compression mode '%s'\n"
-msgstr ""
+msgstr "Ongeldige compressiemodus '%s'\n"
 
 #: main.c:1260
 #, c-format
 msgid "Missing colon in resolve option\n"
-msgstr ""
+msgstr "Ontbrekende dubbelpunt in resolve-optie\n"
 
 #: main.c:1265
 #, c-format
 msgid "Failed to allocate memory\n"
-msgstr ""
+msgstr "Toewijzen van geheugen mislukt\n"
 
 #: main.c:1349 main.c:1358
 #, c-format
@@ -3010,6 +3081,9 @@ msgid ""
 "The --no-cert-check option was insecure and has been removed.\n"
 "Fix your server's certificate or use --servercert to trust it.\n"
 msgstr ""
+"De optie --no-cert-check was onveilig en is daarom verwijderd.\n"
+"Herstel het certificaat van uw server of gebruik --servercert om het te "
+"vertrouwen.\n"
 
 #: main.c:1411
 #, c-format
@@ -3024,7 +3098,7 @@ msgstr "OpenConnect versie %s\n"
 #: main.c:1463
 #, c-format
 msgid "Invalid software token mode \"%s\"\n"
-msgstr ""
+msgstr "Ongeldige softwaretokenmodus '%s'\n"
 
 #: main.c:1473
 #, c-format
@@ -3050,7 +3124,7 @@ msgstr ""
 #: main.c:1555
 #, c-format
 msgid "Error opening cmd pipe\n"
-msgstr ""
+msgstr "Fout bij openen van cmd-pipe\n"
 
 #: main.c:1588
 #, c-format
@@ -3065,20 +3139,20 @@ msgstr "Het maken van SSL-verbinding is mislukt\n"
 #: main.c:1625
 #, c-format
 msgid "Set up UDP failed; using SSL instead\n"
-msgstr ""
+msgstr "Instellen van UDP mislukt; gebruik SSL in plaats daarvan\n"
 
 #: main.c:1633
 #, c-format
 msgid "Connected as %s%s%s, using SSL%s%s, with %s%s%s %s\n"
-msgstr ""
+msgstr "Verbonden als %s%s%s, met SSL%s%s, met %s%s%s %s\n"
 
 #: main.c:1639
 msgid "disabled"
-msgstr ""
+msgstr "uitgeschakeld"
 
 #: main.c:1639
 msgid "in progress"
-msgstr ""
+msgstr "bezig"
 
 #: main.c:1643
 msgid "No --script argument provided; DNS and routing are not configured\n"
@@ -3101,27 +3175,27 @@ msgstr "Voortgezet in achtergrond; pid %d\n"
 
 #: main.c:1687
 msgid "User requested reconnect\n"
-msgstr ""
+msgstr "Gebruiker vroeg om herverbinding\n"
 
 #: main.c:1695
 msgid "Cookie was rejected on reconnection; exiting.\n"
-msgstr ""
+msgstr "Cookie geweigerd bij herverbinding; wordt afgesloten.\n"
 
 #: main.c:1699
 msgid "Session terminated by server; exiting.\n"
-msgstr ""
+msgstr "Sessie beëindigd door server; wordt afgesloten.\n"
 
 #: main.c:1703
 msgid "User cancelled (SIGINT/SIGTERM); exiting.\n"
-msgstr ""
+msgstr "Gebruiker heeft geannuleerd (SIGINT/SIGTERM); wordt afgesloten.\n"
 
 #: main.c:1707
 msgid "User detached from session (SIGHUP); exiting.\n"
-msgstr ""
+msgstr "Gebruiker losgekoppeld van sessie (SIGHUP); wordt afgesloten.\n"
 
 #: main.c:1711
 msgid "Unknown error; exiting.\n"
-msgstr ""
+msgstr "Onbekende fout; wordt afgesloten.\n"
 
 #: main.c:1730
 #, c-format
@@ -3154,11 +3228,13 @@ msgstr ""
 msgid ""
 "To trust this server in future, perhaps add this to your command line:\n"
 msgstr ""
+"Om deze server in de toekomst te vertrouwen, kunt u dit toevoegen aan uw "
+"opdrachtregel:\n"
 
 #: main.c:1820
 #, c-format
 msgid "    --servercert %s\n"
-msgstr ""
+msgstr "    --servercert %s\n"
 
 #: main.c:1825
 #, c-format
@@ -3178,12 +3254,12 @@ msgstr "ja"
 #: main.c:1853
 #, c-format
 msgid "Server key hash: %s\n"
-msgstr ""
+msgstr "Serversleutelhash: %s\n"
 
 #: main.c:1887
 #, c-format
 msgid "Auth choice \"%s\" matches multiple options\n"
-msgstr ""
+msgstr "Auth-keuze '%s' komt overeen met meerdere opties\n"
 
 #: main.c:1890
 #, c-format
@@ -3197,12 +3273,12 @@ msgstr "Gebruikersinvoer vereist in niet-interactieve modus\n"
 #: main.c:2149
 #, c-format
 msgid "Failed to open token file for write: %s\n"
-msgstr ""
+msgstr "Openen van tokenbestand voor schrijven mislukt: %s\n"
 
 #: main.c:2157
 #, c-format
 msgid "Failed to write token: %s\n"
-msgstr ""
+msgstr "Schrijven van token mislukt: %s\n"
 
 #: main.c:2203 main.c:2224
 #, c-format
@@ -3219,7 +3295,7 @@ msgstr ""
 #: main.c:2209
 #, c-format
 msgid "OpenConnect was not built with libstoken support\n"
-msgstr ""
+msgstr "OpenConnect is niet gecompileerd met libstoken-ondersteuning\n"
 
 #: main.c:2212
 #, c-format
@@ -3229,32 +3305,32 @@ msgstr "Algemene fout in libstoken\n"
 #: main.c:2227
 #, c-format
 msgid "OpenConnect was not built with liboath support\n"
-msgstr ""
+msgstr "OpenConnect is niet gecompileerd met liboath-ondersteuning\n"
 
 #: main.c:2230
 #, c-format
 msgid "General failure in liboath\n"
-msgstr ""
+msgstr "Algemene fout in liboath\n"
 
 #: main.c:2241
 #, c-format
 msgid "Yubikey token not found\n"
-msgstr ""
+msgstr "Yubikey-token niet gevonden\n"
 
 #: main.c:2244
 #, c-format
 msgid "OpenConnect was not built with Yubikey support\n"
-msgstr ""
+msgstr "OpenConnect niet gecompileerd met Yubikey-ondersteuning\n"
 
 #: main.c:2247
 #, c-format
 msgid "General Yubikey failure: %s\n"
-msgstr ""
+msgstr "Algemene Yubikey-fout: %s\n"
 
 #: mainloop.c:127
 #, c-format
 msgid "Set up tun script failed\n"
-msgstr ""
+msgstr "Instellen van tun-script mislukt\n"
 
 #: mainloop.c:134
 #, c-format
@@ -3263,7 +3339,7 @@ msgstr "Instellen tun apparaat is mislukt\n"
 
 #: mainloop.c:265
 msgid "Caller paused the connection\n"
-msgstr ""
+msgstr "Beller heeft verbinding gepauzeerd\n"
 
 #: mainloop.c:273
 #, c-format
@@ -3273,52 +3349,54 @@ msgstr "Niets te doen, slapen %d ms...\n"
 #: mainloop.c:294
 #, c-format
 msgid "WaitForMultipleObjects failed: %s\n"
-msgstr ""
+msgstr "WaitForMultipleObjects mislukt: %s\n"
 
 #: ntlm.c:87 sspi.c:114 sspi.c:197
 #, c-format
 msgid "InitializeSecurityContext() failed: %lx\n"
-msgstr ""
+msgstr "InitializeSecurityContext() mislukt: %lx\n"
 
 #: ntlm.c:113 sspi.c:48
 #, c-format
 msgid "AcquireCredentialsHandle() failed: %lx\n"
-msgstr ""
+msgstr "AcquireCredentialsHandle() mislukt: %lx\n"
 
 #: ntlm.c:246
 msgid "Error communicating with ntlm_auth helper\n"
-msgstr ""
+msgstr "Fout bij communiceren met ntlm_auth-helper\n"
 
 #: ntlm.c:265
 msgid "Attempting HTTP NTLM authentication to proxy (single-sign-on)\n"
-msgstr ""
+msgstr "HTTP NTLM-aanmeldingscontrole bij proxy proberen (single-sign-on)\n"
 
 #: ntlm.c:268
 #, c-format
 msgid "Attempting HTTP NTLM authentication to server '%s' (single-sign-on)\n"
 msgstr ""
+"HTTP NTLM-aanmeldingscontrole bij server '%s' proberen (single-sign-on)\n"
 
 #: ntlm.c:978
 #, c-format
 msgid "Attempting HTTP NTLMv%d authentication to proxy\n"
-msgstr ""
+msgstr "HTTP NTLMv%d-aanmeldingscontrole bij proxy proberen\n"
 
 #: ntlm.c:982
 #, c-format
 msgid "Attempting HTTP NTLMv%d authentication to server '%s'\n"
-msgstr ""
+msgstr "HTTP NTLMv%d-aanmeldingscontrole bij server '%s' proberen\n"
 
 #: oath.c:97
 msgid "Invalid base32 token string\n"
-msgstr ""
+msgstr "Ongeldige base32-token-tekenreeks\n"
 
 #: oath.c:105
 msgid "Failed to allocate memory to decode OATH secret\n"
-msgstr ""
+msgstr "Toewijzen van geheugen voor decoderen van OATH-geheim mislukt\n"
 
 #: oath.c:208
 msgid "This version of OpenConnect was built without PSKC support\n"
 msgstr ""
+"Deze versie van OpenConnect is gecompileerd zonder PSKC-ondersteuning\n"
 
 #: oath.c:353 oath.c:378 stoken.c:272 yubikey.c:507
 msgid "OK to generate INITIAL tokencode\n"
@@ -3334,292 +3412,295 @@ msgstr "Server weigert soft token; omschakelen naar handmatige invoer\n"
 
 #: oath.c:419
 msgid "Generating OATH TOTP token code\n"
-msgstr ""
+msgstr "Genereren van OATH-TOTP-tokencode\n"
 
 #: oath.c:565
 msgid "Generating OATH HOTP token code\n"
-msgstr ""
+msgstr "Genereren van OATH-HOTP-tokencode\n"
 
 #: oncp.c:56
 #, c-format
 msgid "Invalid cookie '%s'\n"
-msgstr ""
+msgstr "Ongeldige cookie '%s'\n"
 
 #: oncp.c:160
 #, c-format
 msgid "Unexpected length %d for TLV %d/%d\n"
-msgstr ""
+msgstr "Onverwachte lengte %d voor TLV %d/%d\n"
 
 #: oncp.c:166
 #, c-format
 msgid "Received MTU %d from server\n"
-msgstr ""
+msgstr "MTU %d ontvangen van server\n"
 
 #: oncp.c:175
 #, c-format
 msgid "Received DNS server %s\n"
-msgstr ""
+msgstr "DNS-server %s ontvangen\n"
 
 #: oncp.c:186
 #, c-format
 msgid "Received DNS search domain %.*s\n"
-msgstr ""
+msgstr "DNS-zoekdomein %.*s ontvangen\n"
 
 #: oncp.c:201
 #, c-format
 msgid "Received internal IP address %s\n"
-msgstr ""
+msgstr "Intern IP-adres %s ontvangen\n"
 
 #: oncp.c:210
 #, c-format
 msgid "Received netmask %s\n"
-msgstr ""
+msgstr "Netmask %s ontvangen\n"
 
 #: oncp.c:219
 #, c-format
 msgid "Received internal gateway address %s\n"
-msgstr ""
+msgstr "Intern gatewayadres %s ontvangen\n"
 
 #: oncp.c:232
 #, c-format
 msgid "Received split include route %s\n"
-msgstr ""
+msgstr "Split-include-route %s ontvangen\n"
 
 #: oncp.c:254
 #, c-format
 msgid "Received split exclude route %s\n"
-msgstr ""
+msgstr "Split-exclude-route %s ontvangen\n"
 
 #: oncp.c:274
 #, c-format
 msgid "Received WINS server %s\n"
-msgstr ""
+msgstr "WINS-server %s ontvangen\n"
 
 #: oncp.c:297
 #, c-format
 msgid "ESP encryption: 0x%02x (%s)\n"
-msgstr ""
+msgstr "ESP-versleuteling: 0x%02x (%s)\n"
 
 #: oncp.c:316
 #, c-format
 msgid "ESP HMAC: 0x%02x (%s)\n"
-msgstr ""
+msgstr "ESP HMAC: 0x%02x (%s)\n"
 
 #: oncp.c:327
 #, c-format
 msgid "ESP compression: %d\n"
-msgstr ""
+msgstr "ESP-compressie: %d\n"
 
 #: oncp.c:335
 #, c-format
 msgid "ESP port: %d\n"
-msgstr ""
+msgstr "ESP-poort: %d\n"
 
 #: oncp.c:342
 #, c-format
 msgid "ESP key lifetime: %u bytes\n"
-msgstr ""
+msgstr "ESP-sleutellevensduur: %u bytes\n"
 
 #: oncp.c:350
 #, c-format
 msgid "ESP key lifetime: %u seconds\n"
-msgstr ""
+msgstr "ESP-sleutellevensduur: %u seconden\n"
 
 #: oncp.c:358
 #, c-format
 msgid "ESP to SSL fallback: %u seconds\n"
-msgstr ""
+msgstr "ESP-naar-SSL-fallback: %u seconden\n"
 
 #: oncp.c:366
 #, c-format
 msgid "ESP replay protection: %d\n"
-msgstr ""
+msgstr "ESP-replaybescherming: %d\n"
 
 #: oncp.c:374
 #, c-format
 msgid "ESP SPI (outbound): %x\n"
-msgstr ""
+msgstr "ESP SPI (uitgaand): %x\n"
 
 #: oncp.c:383
 #, c-format
 msgid "%d bytes of ESP secrets\n"
-msgstr ""
+msgstr "%d bytes aan ESP-geheimen\n"
 
 #: oncp.c:395
 #, c-format
 msgid "Unknown TLV group %d attr %d len %d:%s\n"
-msgstr ""
+msgstr "Onbekende TLV-groep %d attr %d len %d:%s\n"
 
 #: oncp.c:473
 msgid "Failed to parse KMP header\n"
-msgstr ""
+msgstr "Ontleden van KMP-header mislukt\n"
 
 #: oncp.c:490
 msgid "Failed to parse KMP message\n"
-msgstr ""
+msgstr "Ontleden van KMP-bericht mislukt\n"
 
 #: oncp.c:496
 #, c-format
 msgid "Got KMP message %d of size %d\n"
-msgstr ""
+msgstr "KMP-bericht %d met grootte %d ontvangen\n"
 
 #: oncp.c:512
 #, c-format
 msgid "Received non-ESP TLVs (group %d) in ESP negotiation KMP\n"
-msgstr ""
+msgstr "Niet-ESP-TLV's ontvangen (groep %d) in ESP-onderhandelings-KMP\n"
 
 #: oncp.c:577 oncp.c:609 oncp.c:747
 msgid "Error creating oNCP negotiation request\n"
-msgstr ""
+msgstr "Fout bij aanmaken van oNCP-onderhandelingsverzoek\n"
 
+# ?????? - Nathan
 #: oncp.c:618 oncp.c:783
 msgid "Short write in oNCP negotiation\n"
-msgstr ""
+msgstr "Kort schrijven in oNCP-onderhandeling\n"
 
 #: oncp.c:631 oncp.c:666
 #, c-format
 msgid "Read %d bytes of SSL record\n"
-msgstr ""
+msgstr "%d bytes gelezen uit SSL-record\n"
 
 #: oncp.c:636
 #, c-format
 msgid "Unexpected response of size %d after hostname packet\n"
-msgstr ""
+msgstr "Onverwacht antwoord van grootte %d na hostnaampakket\n"
 
 #: oncp.c:643
 #, c-format
 msgid "Server response to hostname packet is error 0x%02x\n"
-msgstr ""
+msgstr "Antwoord van server op hostnaampakket is fout 0x%02x\n"
 
 #: oncp.c:670
 msgid "Invalid packet waiting for KMP 301\n"
-msgstr ""
+msgstr "Ongeldig pakket in wacht voor KMP 301\n"
 
 #: oncp.c:683
 #, c-format
 msgid "Expected KMP message 301 from server but got %d\n"
-msgstr ""
+msgstr "KMP-bericht 301 verwacht van server, maar %d ontvangen\n"
 
 #: oncp.c:692
 #, c-format
 msgid "KMP message 301 from server too large (%d bytes)\n"
-msgstr ""
+msgstr "KMP-bericht 301 van server te groot (%d bytes)\n"
 
 #: oncp.c:698
 #, c-format
 msgid "Got KMP message 301 of length %d\n"
-msgstr ""
+msgstr "KMP-bericht 301 van lengte %d ontvangen\n"
 
 #: oncp.c:705
 msgid "Failed to read continuation record length\n"
-msgstr ""
+msgstr "Lezen van voortzettings-record-lengte mislukt\n"
 
 #: oncp.c:711
 #, c-format
 msgid "Record of additional %d bytes too large; would make %d\n"
-msgstr ""
+msgstr "Record van %d extra bytes te groot; zou %d zijn\n"
 
 #: oncp.c:720
 #, c-format
 msgid "Failed to read continuation record of length %d\n"
-msgstr ""
+msgstr "Lezen van voortzettings-record met lengte %d mislukt\n"
 
 #: oncp.c:726
 #, c-format
 msgid "Read additional %d bytes of KMP 301 message\n"
-msgstr ""
+msgstr "%d extra bytes van KMP-301-bericht lezen\n"
 
 #: oncp.c:767
 msgid "Error negotiating ESP keys\n"
-msgstr ""
+msgstr "Fout bij onderhandelen over ESP-sleutels\n"
 
 #: oncp.c:776
 msgid "oNCP negotiation request outgoing:\n"
-msgstr ""
+msgstr "Uitgaand oNCP-onderhandelingsverzoek:\n"
 
 #: oncp.c:829
 msgid "new incoming"
-msgstr ""
+msgstr "nieuw inkomend"
 
 #: oncp.c:830
 msgid "new outgoing"
-msgstr ""
+msgstr "nieuw uitgaand"
 
 #: oncp.c:855
 msgid "Read only 1 byte of oNCP length field\n"
-msgstr ""
+msgstr "Slechts 1 byte van oNCP-lengte-veld lezen\n"
 
 #: oncp.c:864
 msgid "Server terminated connection (session expired)\n"
-msgstr ""
+msgstr "Verbinding beëindigd door server (sessie verlopen)\n"
 
 #: oncp.c:868
 #, c-format
 msgid "Server terminated connection (reason: %d)\n"
-msgstr ""
+msgstr "Verbinding beëindigd door server (reden: %d)\n"
 
 #: oncp.c:874
 msgid "Server sent zero-length oNCP record\n"
-msgstr ""
+msgstr "Server stuurde oNCP-record met nul-lengte\n"
 
 #: oncp.c:969
 #, c-format
 msgid "Incoming KMP message %d of size %d (got %d)\n"
-msgstr ""
+msgstr "Inkomend KMP-bericht %d met grootte %d (%d ontvangen)\n"
 
 #: oncp.c:972
 #, c-format
 msgid "Continuing to process KMP message %d now size %d (got %d)\n"
 msgstr ""
+"Verdergaan met verwerken van KMP-bericht %d, nu met grootte %d (%d "
+"gekregen)\n"
 
 #: oncp.c:991
 msgid "Unrecognised data packet\n"
-msgstr ""
+msgstr "Niet-herkend datapakket\n"
 
 #: oncp.c:1053
 #, c-format
 msgid "Unknown KMP message %d of size %d:\n"
-msgstr ""
+msgstr "Onbekend KMP-bericht %d met grootte %d:\n"
 
 #: oncp.c:1058
 #, c-format
 msgid ".... + %d more bytes unreceived\n"
-msgstr ""
+msgstr ".... + nog %d bytes niet ontvangen\n"
 
 #: oncp.c:1073
 msgid "Packet outgoing:\n"
-msgstr ""
+msgstr "Pakket uitgaand:\n"
 
 #: oncp.c:1134
 msgid "Sent ESP enable control packet\n"
-msgstr ""
+msgstr "ESP-pakket voor inschakelen controle verzonden\n"
 
 #: oncp.c:1268
 msgid "Logout successful.\n"
-msgstr ""
+msgstr "Afgemeld.\n"
 
-#: openconnect-internal.h:1118 openconnect-internal.h:1126
+#: openconnect-internal.h:1119 openconnect-internal.h:1127
 #, c-format
 msgid "ERROR: %s() called with invalid UTF-8 for '%s' argument\n"
-msgstr ""
+msgstr "FOUT: %s() gevraagd met ongeldige UTF-8 voor parameter '%s'\n"
 
 #: openssl-dtls.c:94
 #, c-format
 msgid "Unable to calculate DTLS overhead for %s\n"
-msgstr ""
+msgstr "Kan DTLS-overhead niet berekenen voor %s\n"
 
 #: openssl-dtls.c:210 openssl-dtls.c:269
 msgid "Failed to generate random key\n"
-msgstr ""
+msgstr "Genereren van willekeurige sleutel mislukt\n"
 
 #: openssl-dtls.c:232
 #, c-format
 msgid "Failed to create SSL_SESSION ASN.1 for OpenSSL: %s\n"
-msgstr ""
+msgstr "Aanmaken van SSL_SESSION ASN.1 voor OpenSSL mislukt: %s\n"
 
 #: openssl-dtls.c:243
 msgid "OpenSSL failed to parse SSL_SESSION ASN.1\n"
-msgstr ""
+msgstr "OpenSSL kon SSL_SESSION ASN.1 niet ontleden\n"
 
 #: openssl-dtls.c:259
 msgid "Initialise DTLSv1 session failed\n"
@@ -3627,11 +3708,11 @@ msgstr "Initialiseren DTLSv1 sessie is mislukt\n"
 
 #: openssl-dtls.c:275
 msgid "Too large application ID size\n"
-msgstr ""
+msgstr "Toepassings-ID-grootte te groot\n"
 
 #: openssl-dtls.c:308
 msgid "PSK callback\n"
-msgstr ""
+msgstr "PSK-callback\n"
 
 #: openssl-dtls.c:365
 msgid "Initialise DTLSv1 CTX failed\n"
@@ -3639,11 +3720,11 @@ msgstr "Initialiseren DTLSv1 CTX is mislukt\n"
 
 #: openssl-dtls.c:378
 msgid "Set DTLS CTX version failed\n"
-msgstr ""
+msgstr "Instellen van DTLS CTX-versie mislukt\n"
 
 #: openssl-dtls.c:395
 msgid "Failed to generate DTLS key\n"
-msgstr ""
+msgstr "Genereren van DTLS-sleutel mislukt\n"
 
 #: openssl-dtls.c:413
 msgid "Set DTLS cipher list failed\n"
@@ -3652,7 +3733,7 @@ msgstr "Instellen DTLS cipher lijst is mislukt\n"
 #: openssl-dtls.c:439
 #, c-format
 msgid "DTLS cipher '%s' not found\n"
-msgstr ""
+msgstr "DTLS-cipher '%s' niet gevonden\n"
 
 #: openssl-dtls.c:460
 #, c-format
@@ -3669,12 +3750,12 @@ msgstr ""
 
 #: openssl-dtls.c:493
 msgid "SSL_set_session() failed\n"
-msgstr ""
+msgstr "SSL_set_session() mislukt\n"
 
 #: openssl-dtls.c:566
 #, c-format
 msgid "Established DTLS connection (using OpenSSL). Ciphersuite %s.\n"
-msgstr ""
+msgstr "DTLS-verbinding gemaakt (met OpenSSL). Ciphersuite %s.\n"
 
 #: openssl-dtls.c:603
 msgid "Your OpenSSL is older than the one you built against, so DTLS may fail!"
@@ -3687,157 +3768,152 @@ msgid ""
 "This is probably because your OpenSSL is broken\n"
 "See http://rt.openssl.org/Ticket/Display.html?id=2984\n"
 msgstr ""
+"Uw OpenSSL-installatie is waarschijnlijk beschadigd\n"
+"Bekijk http://rt.openssl.org/Ticket/Display.html?id=2984\n"
 
 #: openssl-dtls.c:661
 #, c-format
 msgid "DTLS handshake failed: %d\n"
 msgstr "DTLS handshake mislukt: %d\n"
 
-#: openssl-esp.c:90
+#: openssl-esp.c:87
 msgid "Failed to initialise ESP cipher:\n"
-msgstr ""
+msgstr "Initialiseren van ESP-cipher mislukt:\n"
 
-#: openssl-esp.c:105
+#: openssl-esp.c:101
 msgid "Failed to initialize ESP HMAC\n"
-msgstr ""
+msgstr "Initialiseren van ESP-HMAC mislukt\n"
 
-#: openssl-esp.c:161
+#: openssl-esp.c:157
 msgid "Failed to generate random keys for ESP:\n"
-msgstr ""
+msgstr "Genereren van willekeurige sleutels voor ESP mislukt:\n"
 
-#: openssl-esp.c:207
+#: openssl-esp.c:202
 msgid "Failed to set up decryption context for ESP packet:\n"
-msgstr ""
+msgstr "Instellen van ontsleutelingscontext voor ESP-pakket mislukt:\n"
 
-#: openssl-esp.c:215
+#: openssl-esp.c:210
 msgid "Failed to decrypt ESP packet:\n"
-msgstr ""
+msgstr "Ontsleutelen van ESP-pakket mislukt:\n"
 
-#: openssl-esp.c:235
-msgid "Failed to generate random IV for ESP packet:\n"
-msgstr ""
-
-#: openssl-esp.c:249
-msgid "Failed to set up encryption context for ESP packet:\n"
-msgstr ""
-
-#: openssl-esp.c:258
+#: openssl-esp.c:241
 msgid "Failed to encrypt ESP packet:\n"
-msgstr ""
+msgstr "Versleutelen van ESP-pakket mislukt:\n"
 
 #: openssl-pkcs11.c:43
 msgid "Failed to establish libp11 PKCS#11 context:\n"
-msgstr ""
+msgstr "Opzetten van libp11-PKCS#11-context mislukt:\n"
 
 #: openssl-pkcs11.c:49
 #, c-format
 msgid "Failed to load PKCS#11 provider module (%s):\n"
-msgstr ""
+msgstr "Laden van PKCS#11-providermodule mislukt (%s):\n"
 
 #: openssl-pkcs11.c:269
 msgid "PIN locked\n"
-msgstr ""
+msgstr "Pincode vergrendeld\n"
 
 #: openssl-pkcs11.c:272
 msgid "PIN expired\n"
-msgstr ""
+msgstr "Pincode verlopen\n"
 
 #: openssl-pkcs11.c:275
 msgid "Another user already logged in\n"
-msgstr ""
+msgstr "Er is al een andere gebruiker aangemeld\n"
 
 #: openssl-pkcs11.c:279
 msgid "Unknown error logging in to PKCS#11 token\n"
-msgstr ""
+msgstr "Onbekende fout bij aanmelden met PKCS#11-token\n"
 
 #: openssl-pkcs11.c:286
 #, c-format
 msgid "Logged in to PKCS#11 slot '%s'\n"
-msgstr ""
+msgstr "Aangemeld bij PKCS#11-slot ‘%s’\n"
 
 #: openssl-pkcs11.c:300
 #, c-format
 msgid "Failed to enumerate certs in PKCS#11 slot '%s'\n"
-msgstr ""
+msgstr "Oplijsten van certificaten in PKCS#11-slot ‘%s’ mislukt\n"
 
 #: openssl-pkcs11.c:306
 #, c-format
 msgid "Found %d certs in slot '%s'\n"
-msgstr ""
+msgstr "%d certificaten gevonden in slot ‘%s’\n"
 
 #: openssl-pkcs11.c:342 openssl-pkcs11.c:565
 #, c-format
 msgid "Failed to parse PKCS#11 URI '%s'\n"
-msgstr ""
+msgstr "Ontleden van PKCS#11-URI ‘%s’ mislukt\n"
 
 #: openssl-pkcs11.c:349 openssl-pkcs11.c:575
 msgid "Failed to enumerate PKCS#11 slots\n"
-msgstr ""
+msgstr "Oplijsten van PKCS#11-slots mislukt\n"
 
 #: openssl-pkcs11.c:383 openssl-pkcs11.c:617
 #, c-format
 msgid "Logging in to PKCS#11 slot '%s'\n"
-msgstr ""
+msgstr "Aanmelden bij PKCS#11-slot ‘%s’\n"
 
 #: openssl-pkcs11.c:393
 #, c-format
 msgid "Failed to find PKCS#11 cert '%s'\n"
-msgstr ""
+msgstr "Vinden van PKCS#11-certificaat '%s' mislukt\n"
 
 #: openssl-pkcs11.c:401
 msgid "Certificate X.509 content not fetched by libp11\n"
-msgstr ""
+msgstr "X.509-certificaatsinhoud niet verkregen van libp11\n"
 
 #: openssl-pkcs11.c:412 openssl.c:713
 msgid "Failed to install certificate in OpenSSL context\n"
-msgstr ""
+msgstr "Installeren van certificaat in OpenSSL-context mislukt\n"
 
 #: openssl-pkcs11.c:458
 #, c-format
 msgid "Failed to enumerate keys in PKCS#11 slot '%s'\n"
-msgstr ""
+msgstr "Oplijsten van sleutels in PKCS#11-slot '%s' mislukt\n"
 
 #: openssl-pkcs11.c:464
 #, c-format
 msgid "Found %d keys in slot '%s'\n"
-msgstr ""
+msgstr "%d sleutels gevonden in slot '%s'\n"
 
 #: openssl-pkcs11.c:497
 msgid "Certificate has no public key\n"
-msgstr ""
+msgstr "Certificaat heeft geen publieke sleutel\n"
 
 #: openssl-pkcs11.c:503 openssl-pkcs11.c:526
 msgid "Certificate does not match private key\n"
-msgstr ""
+msgstr "Certificaat komt niet overeen met privésleutel\n"
 
 #: openssl-pkcs11.c:506
 msgid "Checking EC key matches cert\n"
-msgstr ""
+msgstr "Bezig met controleren of EC-sleutel overeenkomt met certificaat\n"
 
 #: openssl-pkcs11.c:510
 msgid "Failed to allocate signature buffer\n"
-msgstr ""
+msgstr "Toewijzen van handtekeningsbuffer mislukt\n"
 
 #: openssl-pkcs11.c:520
 msgid "Failed to sign dummy data to validate EC key\n"
-msgstr ""
+msgstr "Ondertekenen van dummygegevens voor valideren van EC-sleutel mislukt\n"
 
 #: openssl-pkcs11.c:638
 #, c-format
 msgid "Failed to find PKCS#11 key '%s'\n"
-msgstr ""
+msgstr "Vinden van PKCS#11-sleutel '%s' mislukt\n"
 
 #: openssl-pkcs11.c:649
 msgid "Failed to instantiated private key from PKCS#11\n"
-msgstr ""
+msgstr "Instellen van privésleutel van PKCS#11 mislukt\n"
 
 #: openssl-pkcs11.c:678
 msgid "Add key from PKCS#11 failed\n"
-msgstr ""
+msgstr "Toevoegen van sleutel uit PKCS#11 mislukt\n"
 
 #: openssl-pkcs11.c:710 openssl-pkcs11.c:716
 msgid "This version of OpenConnect was built without PKCS#11 support\n"
 msgstr ""
+"Deze versie van OpenConnect werd gecompileerd zonder PKCS#11-ondersteuning\n"
 
 #: openssl.c:147
 msgid "Failed to write to SSL socket\n"
@@ -3862,7 +3938,7 @@ msgstr "SSL_write is mislukt: %d\n"
 #: openssl.c:389
 #, c-format
 msgid "Unhandled SSL UI request type %d\n"
-msgstr ""
+msgstr "Onverwerkt SSL-UI-verzoekstype %d\n"
 
 #: openssl.c:465
 #, c-format
@@ -3888,7 +3964,7 @@ msgstr "PKCS # 12 bevatte geen privé-sleutel!\n"
 
 #: openssl.c:577
 msgid "PKCS#12"
-msgstr ""
+msgstr "PKCS#12"
 
 #: openssl.c:600
 msgid "Can't load TPM engine.\n"
@@ -3922,15 +3998,16 @@ msgstr "Laden van certificaat is mislukt\n"
 #: openssl.c:735
 msgid "Failed to process all supporting certs. Trying anyway...\n"
 msgstr ""
+"Verwerken van alle ondersteunende certificaten mislukt. Toch proberen…\n"
 
 #: openssl.c:748
 msgid "PEM file"
-msgstr ""
+msgstr "PEM-bestand"
 
 #: openssl.c:777
 #, c-format
 msgid "Failed to create BIO for keystore item '%s'\n"
-msgstr ""
+msgstr "Aanmaken van BIO voor sleutelopslagitem ‘%s’ mislukt\n"
 
 #: openssl.c:802
 msgid "Loading private key failed (wrong passphrase?)\n"
@@ -3959,11 +4036,11 @@ msgstr "Niet geslaagd in het openen van private key bestand %s: %s\n"
 
 #: openssl.c:936 openssl.c:951 openssl.c:972 openssl.c:1038
 msgid "Loading private key failed\n"
-msgstr ""
+msgstr "Laden van privésleutel mislukt\n"
 
 #: openssl.c:1032
 msgid "Failed to convert PKCS#8 to OpenSSL EVP_PKEY\n"
-msgstr ""
+msgstr "Omzetten van PKCS#8 naar OpenSSL EVP_PKEY mislukt\n"
 
 #: openssl.c:1049
 #, c-format
@@ -4048,11 +4125,11 @@ msgstr "<error>"
 
 #: openssl.c:1655
 msgid "Create TLSv1 CTX failed\n"
-msgstr ""
+msgstr "Aanmaken van TLSv1-CTX mislukt\n"
 
 #: openssl.c:1674
 msgid "SSL certificate and key do not match\n"
-msgstr ""
+msgstr "SSL-certificaat en sleutel komen niet overeen\n"
 
 #: openssl.c:1719
 #, c-format
@@ -4070,29 +4147,29 @@ msgstr "SSL-verbinding niet geslaagd\n"
 
 #: openssl.c:1973
 msgid "Failed to calculate OATH HMAC\n"
-msgstr ""
+msgstr "Berekenen van OATH-HMAC mislukt\n"
 
-#: script.c:105
+#: script.c:130
 #, c-format
 msgid "Discard bad split include: \"%s\"\n"
 msgstr "Negeren slechte split waaronder: ​​\"%s\"\n"
 
-#: script.c:109
+#: script.c:134
 #, c-format
 msgid "Discard bad split exclude: \"%s\"\n"
 msgstr "Negeren slechte split zonder: \"%s\"\n"
 
-#: script.c:516 script.c:564
+#: script.c:507 script.c:555
 #, c-format
 msgid "Failed to spawn script '%s' for %s: %s\n"
 msgstr "Niet gelukt om script '%s' te starten voor %s: %s\n"
 
-#: script.c:571
+#: script.c:562
 #, c-format
 msgid "Script '%s' exited abnormally (%x)\n"
 msgstr "Script '%s' eindigde abnormaal (%x)\n"
 
-#: script.c:579
+#: script.c:570
 #, c-format
 msgid "Script '%s' returned error %d\n"
 msgstr "Script '%s' retourneerde fout %d\n"
@@ -4104,12 +4181,12 @@ msgstr "Socket verbinding geannuleerd\n"
 #: ssl.c:217
 #, c-format
 msgid "Failed to reconnect to proxy %s: %s\n"
-msgstr ""
+msgstr "Opnieuw verbinden met proxy %s mislukt: %s\n"
 
 #: ssl.c:221
 #, c-format
 msgid "Failed to reconnect to host %s: %s\n"
-msgstr ""
+msgstr "Opnieuw verbinden met host %s mislukt: %s\n"
 
 #: ssl.c:289
 #, c-format
@@ -4124,6 +4201,7 @@ msgstr "getaddrinfo mislukt voor '%s' host: %s\n"
 #: ssl.c:326 ssl.c:451
 msgid "Reconnecting to DynDNS server using previously cached IP address\n"
 msgstr ""
+"Opnieuw verbinden met DynDNS-server met IP-adressen uit cachegeheugen\n"
 
 #: ssl.c:341
 #, c-format
@@ -4138,7 +4216,7 @@ msgstr "Poging te verbinden met server %s%s%s:%s\n"
 #: ssl.c:362
 #, c-format
 msgid "Connected to %s%s%s:%s\n"
-msgstr ""
+msgstr "Verbonden met %s%s%s:%s\n"
 
 #: ssl.c:374
 msgid "Failed to allocate sockaddr storage\n"
@@ -4147,11 +4225,11 @@ msgstr "Niet gelukt om sockaddr opslag toe te wijzen\n"
 #: ssl.c:416
 #, c-format
 msgid "Failed to connect to %s%s%s:%s: %s\n"
-msgstr ""
+msgstr "Verbinding maken met %s%s%s:%s mislukt: %s\n"
 
 #: ssl.c:434
 msgid "Forgetting non-functional previous peer address\n"
-msgstr ""
+msgstr "Niet-functionele vorige peeradressen vergeten\n"
 
 #: ssl.c:446
 #, c-format
@@ -4161,7 +4239,7 @@ msgstr "Niet geslaagd in maken verbinding met host %s\n"
 #: ssl.c:465
 #, c-format
 msgid "Reconnecting to proxy %s\n"
-msgstr ""
+msgstr "Herverbinden met proxy %s\n"
 
 #: ssl.c:536
 #, c-format
@@ -4170,12 +4248,12 @@ msgstr "statvfs: %s\n"
 
 #: ssl.c:564
 msgid "Could not obtain file system ID for passphrase\n"
-msgstr ""
+msgstr "Kon bestandssysteem-ID niet verkrijgen voor wachtwoord\n"
 
 #: ssl.c:575
 #, c-format
 msgid "Failed to open private key file '%s': %s\n"
-msgstr ""
+msgstr "Openen van privésleutelbestand '%s' mislukt: %s\n"
 
 #: ssl.c:603
 #, c-format
@@ -4229,33 +4307,33 @@ msgstr "Onbekende fout"
 #: ssl.c:896
 #, c-format
 msgid "openconnect_fopen_utf8() used with unsupported mode '%s'\n"
-msgstr ""
+msgstr "openconnect_fopen_utf8() gebruikt met niet-ondersteunde modus '%s'\n"
 
 #: ssl.c:931
 #, c-format
 msgid "Unknown protocol family %d. Cannot create UDP server address\n"
-msgstr ""
+msgstr "Onbekende protocolfamilie %d. Kan UDP-serveradres niet aanmaken\n"
 
 #: ssl.c:950
 msgid "Open UDP socket"
-msgstr ""
+msgstr "UDP-socket openen"
 
 #: ssl.c:981
 #, c-format
 msgid "Unknown protocol family %d. Cannot use UDP transport\n"
-msgstr ""
+msgstr "Onbekende protocolfamilie %d. Kan UDP-transport niet gebruiken\n"
 
 #: ssl.c:989
 msgid "Bind UDP socket"
-msgstr ""
+msgstr "UDP-socket binden"
 
 #: ssl.c:996
 msgid "Connect UDP socket\n"
-msgstr ""
+msgstr "UDP-socket verbinden\n"
 
 #: ssl.c:1034
 msgid "Cookie is no longer valid, ending session\n"
-msgstr ""
+msgstr "Cookie is niet meer geldig, sessie wordt beëindigd\n"
 
 #: ssl.c:1038
 #, c-format
@@ -4265,81 +4343,81 @@ msgstr "slaap %ds, resterende time-out %ds\n"
 #: sspi.c:203
 #, c-format
 msgid "SSPI token too large (%ld bytes)\n"
-msgstr ""
+msgstr "SSPI-token te groot (%ld bytes)\n"
 
 #: sspi.c:216
 #, c-format
 msgid "Sending SSPI token of %lu bytes\n"
-msgstr ""
+msgstr "SSPI-token van %lu bytes verzenden\n"
 
 #: sspi.c:221
 #, c-format
 msgid "Failed to send SSPI authentication token to proxy: %s\n"
-msgstr ""
+msgstr "Verzenden van SSPI-aanmeldingstoken naar proxy mislukt: %s\n"
 
 #: sspi.c:229 sspi.c:257
 #, c-format
 msgid "Failed to receive SSPI authentication token from proxy: %s\n"
-msgstr ""
+msgstr "Ontvangen van SSPI-aanmeldingstoken van proxy mislukt: %s\n"
 
 #: sspi.c:235
 msgid "SOCKS server reported SSPI context failure\n"
-msgstr ""
+msgstr "SOCKS-server meldde SSPI-contextfout\n"
 
 #: sspi.c:239
 #, c-format
 msgid "Unknown SSPI status response (0x%02x) from SOCKS server\n"
-msgstr ""
+msgstr "Onbekende SSPI-statusreactie (0x%02x) van SOCKS-server\n"
 
 #: sspi.c:261
 #, c-format
 msgid "Got SSPI token of %lu bytes: %02x %02x %02x %02x\n"
-msgstr ""
+msgstr "SSPI-token van %lu bytes verkregen: %02x %02x %02x %02x\n"
 
 #: sspi.c:277
 #, c-format
 msgid "QueryContextAttributes() failed: %lx\n"
-msgstr ""
+msgstr "QueryContextAttributes() mislukt: %lx\n"
 
 #: sspi.c:313
 #, c-format
 msgid "EncryptMessage() failed: %lx\n"
-msgstr ""
+msgstr "EncryptMessage() mislukt: %lx\n"
 
 #: sspi.c:325
 #, c-format
 msgid "EncryptMessage() result too large (%lu + %lu + %lu)\n"
-msgstr ""
+msgstr "EncryptMessage()-resultaat te groot (%lu + %lu + %lu)\n"
 
 #: sspi.c:350
 #, c-format
 msgid "Sending SSPI protection negotiation of %u bytes\n"
-msgstr ""
+msgstr "SSPI-beschermingsonderhandeling van %u bytes verzenden\n"
 
 #: sspi.c:355
 #, c-format
 msgid "Failed to send SSPI protection response to proxy: %s\n"
-msgstr ""
+msgstr "Verzenden van SSPI-beschermingsreactie naar proxy mislukt: %s\n"
 
 #: sspi.c:363 sspi.c:373
 #, c-format
 msgid "Failed to receive SSPI protection response from proxy: %s\n"
-msgstr ""
+msgstr "Ontvangen van SSPI-beschermingsreactie van proxy mislukt: %s\n"
 
 #: sspi.c:378
 #, c-format
 msgid "Got SSPI protection response of %d bytes: %02x %02x %02x %02x\n"
-msgstr ""
+msgstr "SSPI-beschermingsreactie van %d bytes ontvangen: %02x %02x %02x %02x\n"
 
 #: sspi.c:394
 #, c-format
 msgid "DecryptMessage failed: %lx\n"
-msgstr ""
+msgstr "DecryptMessage mislukt: %lx\n"
 
 #: sspi.c:399
 #, c-format
 msgid "Invalid SSPI protection response from proxy (%lu bytes)\n"
-msgstr ""
+msgstr "Ongeldige SSPI-beschermingsreactie ontvangen van proxy (%lu bytes)\n"
 
 #: stoken.c:77
 msgid "Enter credentials to unlock software token."
@@ -4375,7 +4453,7 @@ msgstr "Soft token init was succesvol.\n"
 
 #: stoken.c:185
 msgid "Enter software token PIN."
-msgstr ""
+msgstr "Voer softwaretokenpincode in."
 
 #: stoken.c:189
 msgid "PIN:"
@@ -4387,20 +4465,20 @@ msgstr "Ongeldig PIN formaat; probeer het nogmaals.\n"
 
 #: stoken.c:296
 msgid "Generating RSA token code\n"
-msgstr ""
+msgstr "Genereren van RSA-tokencode\n"
 
 #: tun-win32.c:76
 msgid "Error accessing registry key for network adapters\n"
-msgstr ""
+msgstr "Fout bij benaderen van registersleutel voor netwerkadapters\n"
 
 #: tun-win32.c:139
 #, c-format
 msgid "Ignoring non-matching TAP interface \"%s\"\n"
-msgstr ""
+msgstr "Niet-overeenkomstige TAP-interface '%s' wordt genegeerd\n"
 
 #: tun-win32.c:154
 msgid "No Windows-TAP adapters found. Is the driver installed?\n"
-msgstr ""
+msgstr "Geen Windows-TAP-adapters gevonden. Is de driver geïnstalleerd?\n"
 
 #: tun-win32.c:186
 #, c-format
@@ -4408,78 +4486,81 @@ msgid ""
 "GetAdapterIndex() failed: %s\n"
 "Falling back to GetAdaptersInfo()\n"
 msgstr ""
+"GetAdapterIndex() mislukt: %s\n"
+"Terugvallen op GetAdaptersInfo()\n"
 
 #: tun-win32.c:200
 #, c-format
 msgid "GetAdaptersInfo() failed: %s\n"
-msgstr ""
+msgstr "GetAdaptersInfo() mislukt: %s\n"
 
 #: tun-win32.c:231
 #, c-format
 msgid "Failed to open %s\n"
-msgstr ""
+msgstr "Openen van %s mislukt\n"
 
 #: tun-win32.c:236
 #, c-format
 msgid "Opened tun device %s\n"
-msgstr ""
+msgstr "Tun-apparaat %s geopend\n"
 
 #: tun-win32.c:244
 #, c-format
 msgid "Failed to obtain TAP driver version: %s\n"
-msgstr ""
+msgstr "Verkrijgen van TAP-driverversie mislukt: %s\n"
 
 #: tun-win32.c:250
 #, c-format
 msgid "Error: TAP-Windows driver v9.9 or greater is required (found %ld.%ld)\n"
 msgstr ""
+"Fout: TAP-Windows-driver v9.9 of hoger is vereist (v%ld.%ld gevonden)\n"
 
 #: tun-win32.c:271
 #, c-format
 msgid "Failed to set TAP IP addresses: %s\n"
-msgstr ""
+msgstr "Instellen van TAP-IP-adressen mislukt: %s\n"
 
 #: tun-win32.c:283 tun-win32.c:406
 #, c-format
 msgid "Failed to set TAP media status: %s\n"
-msgstr ""
+msgstr "Instellen van TAP-mediastatus mislukt: %s\n"
 
 #: tun-win32.c:316
 msgid "TAP device aborted connectivity. Disconnecting.\n"
-msgstr ""
+msgstr "TAP-apparaat verbrak connectiviteit. Verbinding wordt verbroken.\n"
 
 #: tun-win32.c:321
 #, c-format
 msgid "Failed to read from TAP device: %s\n"
-msgstr ""
+msgstr "Lezen van TAP-apparaat mislukt: %s\n"
 
 #: tun-win32.c:335
 #, c-format
 msgid "Failed to complete read from TAP device: %s\n"
-msgstr ""
+msgstr "Voltooien van lezen van TAP-apparaat mislukt: %s\n"
 
 #: tun-win32.c:358
 #, c-format
 msgid "Wrote %ld bytes to tun\n"
-msgstr ""
+msgstr "%ld bytes geschreven naar tun\n"
 
 #: tun-win32.c:368
 msgid "Waiting for tun write...\n"
-msgstr ""
+msgstr "Wachten op tun-schrijven…\n"
 
 #: tun-win32.c:371
 #, c-format
 msgid "Wrote %ld bytes to tun after waiting\n"
-msgstr ""
+msgstr "%ld bytes geschreven naar tun na wachten\n"
 
 #: tun-win32.c:378
 #, c-format
 msgid "Failed to write to TAP device: %s\n"
-msgstr ""
+msgstr "Schrijven naar TAP-apparaat mislukt: %s\n"
 
 #: tun-win32.c:423
 msgid "Spawning tunnel scripts is not yet supported on Windows\n"
-msgstr ""
+msgstr "Starten van tunnelscripts wordt nog niet ondersteund op Windows\n"
 
 #: tun.c:88
 msgid "Could not open /dev/tun for plumbing"
@@ -4517,7 +4598,7 @@ msgstr "Kon tun bestandsbeschrijving niet in message-discard mode plaatsen"
 
 #: tun.c:183
 msgid "tun device is unsupported on this platform\n"
-msgstr ""
+msgstr "tun-apparaat is niet ondersteund op dit platform\n"
 
 #: tun.c:205
 msgid "open net"
@@ -4535,37 +4616,42 @@ msgstr "Niet gelukt om tun apparaat te openen: %s\n"
 #: tun.c:253
 #, c-format
 msgid "Failed to bind local tun device (TUNSETIFF): %s\n"
-msgstr ""
+msgstr "Binden van lokaal tun-apparaat mislukt (TUNSETIFF): %s\n"
 
 #: tun.c:257
 msgid ""
 "To configure local networking, openconnect must be running as root\n"
 "See http://www.infradead.org/openconnect/nonroot.html for more information\n"
 msgstr ""
+"Om lokale netwerken te configureren, moet openconnect worden uitgevoerd als "
+"root\n"
+"Bekijk http://www.infradead.org/openconnect/nonroot.html voor meer "
+"informatie\n"
 
 #: tun.c:322
 #, c-format
 msgid "Invalid interface name '%s'; must match 'utun%%d' or 'tun%%d'\n"
 msgstr ""
+"Ongeldige interfacenaam '%s'; moet overeenkomen met 'utun%%d' of 'tun%%d'\n"
 
 #: tun.c:331
 #, c-format
 msgid "Failed to open SYSPROTO_CONTROL socket: %s\n"
-msgstr ""
+msgstr "Openen van SYSPROTO_CONTROL-socket mislukt: %s\n"
 
 #: tun.c:340
 #, c-format
 msgid "Failed to query utun control id: %s\n"
-msgstr ""
+msgstr "Opvragen van utun-controle-ID mislukt: %s\n"
 
 #: tun.c:358
 msgid "Failed to allocate utun device name\n"
-msgstr ""
+msgstr "Toewijzen van utun-apparaatsnaam mislukt\n"
 
 #: tun.c:369
 #, c-format
 msgid "Failed to connect utun unit: %s\n"
-msgstr ""
+msgstr "Verbinding met utun-eenheid mislukt: %s\n"
 
 #: tun.c:388
 #, c-format
@@ -4584,12 +4670,12 @@ msgstr "TUNSIFHEAD"
 #: tun.c:479
 #, c-format
 msgid "socketpair failed: %s\n"
-msgstr ""
+msgstr "socketpair mislukt: %s\n"
 
 #: tun.c:484
 #, c-format
 msgid "fork failed: %s\n"
-msgstr ""
+msgstr "fork mislukt: %s\n"
 
 #: tun.c:488
 msgid "setpgid"
@@ -4611,22 +4697,22 @@ msgstr "Niet geslaag in wegschrijven inkomend pakket: %s/n\n"
 #: xml.c:45
 #, c-format
 msgid "Failed to open %s: %s\n"
-msgstr ""
+msgstr "Openen van %s mislukt: %s\n"
 
 #: xml.c:52
 #, c-format
 msgid "Failed to fstat() %s: %s\n"
-msgstr ""
+msgstr "fstat() %s mislukt: %s\n"
 
 #: xml.c:62
 #, c-format
 msgid "Failed to allocate %d bytes for %s\n"
-msgstr ""
+msgstr "Toewijzen van %d bytes voor %s mislukt\n"
 
 #: xml.c:70
 #, c-format
 msgid "Failed to read %s: %s\n"
-msgstr ""
+msgstr "Lezen van %s mislukt: %s\n"
 
 #: xml.c:124 xml.c:149
 #, c-format
@@ -4668,114 +4754,115 @@ msgstr ""
 #: yubikey.c:96
 #, c-format
 msgid "Failed to send \"%s\" to ykneo-oath applet: %s\n"
-msgstr ""
+msgstr "Verzenden van '%s' naar ykneo-oath-applet mislukt: %s\n"
 
 #: yubikey.c:103
 #, c-format
 msgid "Invalid short response to \"%s\" from ykneo-oath applet\n"
-msgstr ""
+msgstr "Ongeldige korte reactie aan '%s' van ykneo-oath-applet\n"
 
 #: yubikey.c:120
 #, c-format
 msgid "Failure response to \"%s\": %04x\n"
-msgstr ""
+msgstr "Verkeerde reactie aan '%s': %04x\n"
 
 #: yubikey.c:174
 msgid "select applet command"
-msgstr ""
+msgstr "applet-opdracht selecteren"
 
 #: yubikey.c:185 yubikey.c:424
 msgid "Unrecognised response from ykneo-oath applet\n"
-msgstr ""
+msgstr "Reactie van ykneo-oath-applet niet herkend\n"
 
 #: yubikey.c:201
 #, c-format
 msgid "Found ykneo-oath applet v%d.%d.%d.\n"
-msgstr ""
+msgstr "ykneo-oath-applet  v%d.%d.%d gevonden.\n"
 
 #: yubikey.c:225
 msgid "PIN required for Yubikey OATH applet"
-msgstr ""
+msgstr "Pincode vereist voor Yubikey-OATH-applet"
 
 #: yubikey.c:230
 msgid "Yubikey PIN:"
-msgstr ""
+msgstr "Yubikey-pincode:"
 
 #: yubikey.c:257
 msgid "Failed to calculate Yubikey unlock response\n"
-msgstr ""
+msgstr "Berekenen van Yubikey-ontgrendelingsreactie mislukt\n"
 
 #: yubikey.c:274
 msgid "unlock command"
-msgstr ""
+msgstr "opdracht voor ontgrendelen"
 
 #: yubikey.c:306
 msgid "Trying truncated-char PBKBF2 variant of Yubikey PIN\n"
-msgstr ""
+msgstr "Ingekorteteken-PBKBF2-variant van Yubikey-pincode proberen\n"
 
 #: yubikey.c:342
 #, c-format
 msgid "Failed to establish PC/SC context: %s\n"
-msgstr ""
+msgstr "Opstellen van PC/SC-context mislukt: %s\n"
 
 #: yubikey.c:347
 msgid "Established PC/SC context\n"
-msgstr ""
+msgstr "PS/SC-context opgesteld\n"
 
 #: yubikey.c:353 yubikey.c:365
 #, c-format
 msgid "Failed to query reader list: %s\n"
-msgstr ""
+msgstr "Opvragen van lezerlijst mislukt: %s\n"
 
 #: yubikey.c:392
 #, c-format
 msgid "Failed to connect to PC/SC reader '%s': %s\n"
-msgstr ""
+msgstr "Verbinden met PC/SC-lezer '%s' mislukt: %s\n"
 
 #: yubikey.c:397
 #, c-format
 msgid "Connected PC/SC reader '%s'\n"
-msgstr ""
+msgstr "PC/SC-lezer '%s' verbonden\n"
 
 #: yubikey.c:402
 #, c-format
 msgid "Failed to obtain exclusive access to reader '%s': %s\n"
-msgstr ""
+msgstr "Verkrijgen van exclusieve toegang tot lezer '%s' mislukt: %s\n"
 
 #: yubikey.c:412
 msgid "list keys command"
-msgstr ""
+msgstr "opdracht voor oplijsten van sleutels"
 
 #. Translators: This is filled in with mode and hash type, and the key identifier.
 #. e.g. "Found HOTP/SHA1 key: 'Work VPN key'\n"
 #: yubikey.c:445
 #, c-format
 msgid "Found %s/%s key '%s' on '%s'\n"
-msgstr ""
+msgstr "%s/%s sleutel ‘%s’ op ‘%s’ gevonden\n"
 
 #: yubikey.c:468
 #, c-format
 msgid ""
 "Token '%s' not found on Yubikey '%s'. Searching for another Yubikey...\n"
 msgstr ""
+"Token '%s' niet gevonden op Yubikey '%s'. Zoeken naar andere Yubikey...\n"
 
 #: yubikey.c:516
 msgid "Server is rejecting the Yubikey token; switching to manual entry\n"
-msgstr ""
+msgstr "Server weigert Yubikey-token; omschakelen naar handmatige invoer\n"
 
 #: yubikey.c:570
 msgid "Generating Yubikey token code\n"
-msgstr ""
+msgstr "Bezig met genereren van Yubikey-tokencode\n"
 
 #: yubikey.c:575
 #, c-format
 msgid "Failed to obtain exclusive access to Yubikey: %s\n"
-msgstr ""
+msgstr "Verkrijgen van exclusieve toegang tot Yubikey mislukt: %s\n"
 
 #: yubikey.c:619
 msgid "calculate command"
-msgstr ""
+msgstr "opdracht voor berekenen"
 
 #: yubikey.c:627
 msgid "Unrecognised response from Yubikey when generating tokencode\n"
-msgstr ""
+msgstr "Niet-herkende reactie van Yubikey bij genereren van tokencode\n"
