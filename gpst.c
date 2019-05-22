@@ -679,7 +679,7 @@ static int gpst_get_config(struct openconnect_info *vpninfo)
 			vpn_progress(vpninfo, PRG_ERR,
 				     _("Reconnect gave different Legacy IP address (%s != %s)\n"),
 				     vpninfo->ip_info.addr, old_addr);
-			result = -EINVAL;
+			result = -EPERM;
 			goto out;
 		}
 	}
@@ -688,7 +688,7 @@ static int gpst_get_config(struct openconnect_info *vpninfo)
 			vpn_progress(vpninfo, PRG_ERR,
 				     _("Reconnect gave different Legacy IP netmask (%s != %s)\n"),
 				     vpninfo->ip_info.netmask, old_netmask);
-			result = -EINVAL;
+			result = -EPERM;
 			goto out;
 		}
 	}
