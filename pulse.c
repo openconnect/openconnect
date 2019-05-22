@@ -1382,9 +1382,6 @@ static int pulse_authenticate(struct openconnect_info *vpninfo, int connecting)
 	char *user2_prompt = NULL, *pass2_prompt = NULL;
 	int prompt_flags = PROMPT_PRIMARY | PROMPT_USERNAME | PROMPT_PASSWORD;
 
-	/* XXX: We should do what cstp_connect() does to check that configuration
-	   hasn't changed on a reconnect. */
-
 	ret = openconnect_open_https(vpninfo);
 	if (ret)
 		return ret;
@@ -2290,6 +2287,10 @@ static int handle_main_config_packet(struct openconnect_info *vpninfo,
 	int routes_len = 0;
 	int l;
 	unsigned char *p;
+	const char *old_addr = vpninfo->ip_info.addr;
+	const char *old_netmask = vpninfo->ip_info.netmask;
+	const char *old_addr6 = vpninfo->ip_info.addr6;
+	const char *old_netmask6 = vpninfo->ip_info.netmask6;
 
 	/* First part of header, similar to ESP, has already been checked */
 	if (len < 0x31 ||
@@ -2393,7 +2394,8 @@ static int handle_main_config_packet(struct openconnect_info *vpninfo,
 		if (l && l < 4)
 			goto bad_config;
 	}
-	return 0;
+
+	return check_address_sanity(vpninfo, old_addr, old_netmask, old_addr6, old_netmask6);
 }
 
 /* Example ESP config packet:
