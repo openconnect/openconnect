@@ -30,7 +30,7 @@ while [ "$1" ]; do
 done
 
 if [ -z "$COOKIE" -o -z "$IP" -o -z "$MD5" ]; then
-    echo "Parameters --cookie, --computer, --client-ip, and --md5 are required" >&2
+    echo "Parameters --cookie, --client-ip, and --md5 are required" >&2
     exit 1;
 fi
 
@@ -41,9 +41,14 @@ COMPUTER=$(echo "$COOKIE" | sed -rn 's/(.+&|^)computer=([^&]+)(&.+|$)/\2/p')
 
 # Timestamp in the format expected by GlobalProtect server
 NOW=$(date +'%m/%d/%Y %H:%M:%S')
+DAY=$(date +'%d')
+MONTH=$(date +'%m')
+YEAR=$(date +'%Y')
 
 # This value may need to be extracted from the official HIP report, if a made-up value is not accepted.
 HOSTID="deadbeef-dead-beef-dead-beefdeadbeef"
+# Many VPNs seem to require trailing backslash, others don't accept it
+ENCDRIVE='C:\\'
 
 cat <<EOF
 <hip-report name="hip-report">
@@ -80,15 +85,15 @@ cat <<EOF
 			<list>
 				<entry>
 					<ProductInfo>
-						<Prod name="McAfee VirusScan Enterprise" version="8.8.0.1804" defver="8682.0" prodType="1" engver="5900.7806" osType="1" vendor="McAfee, Inc." dateday="12" dateyear="2017" datemon="10">
+						<Prod name="McAfee VirusScan Enterprise" version="8.8.0.1804" defver="8682.0" prodType="1" engver="5900.7806" osType="1" vendor="McAfee, Inc." dateday="$DAY" dateyear="$YEAR" datemon="$MONTH">
 						</Prod>
 						<real-time-protection>yes</real-time-protection>
-						<last-full-scan-time>10/11/2017 15:23:41</last-full-scan-time>
+						<last-full-scan-time>$NOW</last-full-scan-time>
 					</ProductInfo>
 				</entry>
 				<entry>
 					<ProductInfo>
-						<Prod name="Windows Defender" version="4.11.15063.332" defver="1.245.683.0" prodType="1" engver="1.1.13804.0" osType="1" vendor="Microsoft Corp." dateday="8" dateyear="2017" datemon="6">
+						<Prod name="Windows Defender" version="4.11.15063.332" defver="1.245.683.0" prodType="1" engver="1.1.13804.0" osType="1" vendor="Microsoft Corp." dateday="$DAY" dateyear="$YEAR" datemon="$MONTH">
 						</Prod>
 						<real-time-protection>no</real-time-protection>
 						<last-full-scan-time>n/a</last-full-scan-time>
@@ -100,15 +105,15 @@ cat <<EOF
 			<list>
 				<entry>
 					<ProductInfo>
-						<Prod name="McAfee VirusScan Enterprise" version="8.8.0.1804" defver="8682.0" prodType="2" engver="5900.7806" osType="1" vendor="McAfee, Inc." dateday="12" dateyear="2017" datemon="10">
+						<Prod name="McAfee VirusScan Enterprise" version="8.8.0.1804" defver="8682.0" prodType="2" engver="5900.7806" osType="1" vendor="McAfee, Inc." dateday="$DAY" dateyear="$YEAR" datemon="$MONTH">
 						</Prod>
 						<real-time-protection>yes</real-time-protection>
-						<last-full-scan-time>10/11/2017 15:23:41</last-full-scan-time>
+						<last-full-scan-time>$NOW</last-full-scan-time>
 					</ProductInfo>
 				</entry>
 				<entry>
 					<ProductInfo>
-						<Prod name="Windows Defender" version="4.11.15063.332" defver="1.245.683.0" prodType="2" engver="1.1.13804.0" osType="1" vendor="Microsoft Corp." dateday="8" dateyear="2017" datemon="6">
+						<Prod name="Windows Defender" version="4.11.15063.332" defver="1.245.683.0" prodType="2" engver="1.1.13804.0" osType="1" vendor="Microsoft Corp." dateday="$DAY" dateyear="$YEAR" datemon="$MONTH">
 						</Prod>
 						<real-time-protection>no</real-time-protection>
 						<last-full-scan-time>n/a</last-full-scan-time>
@@ -135,7 +140,7 @@ cat <<EOF
 						</Prod>
 						<drives>
 							<entry>
-								<drive-name>C:</drive-name>
+								<drive-name>$ENCDRIVE</drive-name>
 								<enc-state>full</enc-state>
 							</entry>
 						</drives>
