@@ -1309,9 +1309,10 @@ int gpst_esp_send_probes(struct openconnect_info *vpninfo)
 
 	if (vpninfo->dtls_fd == -1) {
 		int fd = udp_connect(vpninfo);
-		if (fd < 0)
+		if (fd < 0) {
+			free(pkt);
 			return fd;
-
+		}
 		/* We are not connected until we get an ESP packet back */
 		vpninfo->dtls_state = DTLS_SLEEPING;
 		vpninfo->dtls_fd = fd;
