@@ -16,6 +16,11 @@
 #          exactly what this is the md5 digest *of*, but all that
 #          really matters is that the value in the HIP report
 #          submission should match the value in the HIP report check.
+#
+# This hipreport.sh does not work as-is on Android. The large here-doc
+# (cat <<EOF) does not appear to work with Android's /system/bin/sh,
+# likely due to an insufficient read buffer size.
+# Try hipreport-android.sh instead.
 
 # Read command line arguments into variables
 COOKIE=

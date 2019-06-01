@@ -137,7 +137,8 @@ EXTRA_DIST += $(shell cd "$(top_srcdir)" && \
 
 DISTCLEANFILES = $(pkgconfig_DATA)
 
-pkglibexec_SCRIPTS = trojans/csd-post.sh trojans/csd-wrapper.sh trojans/hipreport.sh trojans/tncc-wrapper.py
+pkglibexec_SCRIPTS = trojans/csd-post.sh trojans/csd-wrapper.sh trojans/tncc-wrapper.py \
+	trojans/hipreport.sh trojans/hipreport-android.sh
 
 # main.c includes version.c
 openconnect-main.$(OBJEXT): version.c
