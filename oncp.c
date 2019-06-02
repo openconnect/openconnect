@@ -642,6 +642,12 @@ int oncp_connect(struct openconnect_info *vpninfo)
 		vpn_progress(vpninfo, PRG_ERR,
 			     _("Server response to hostname packet is error 0x%02x\n"),
 			     bytes[2]);
+		if (bytes[2] == 0x08)
+			vpn_progress(vpninfo, PRG_ERR,
+			             _("This seems to indicate that the server has disabled support for\n"
+			               "Juniper's older oNCP protocol, and only allows connections using\n"
+			               "the newer Junos Pulse protocol. This version of OpenConnect has\n"
+			               "EXPERIMENTAL support for Pulse using --prot=pulse\n"));
 		ret = -EINVAL;
 		goto out;
 	}
