@@ -557,6 +557,11 @@ void openconnect_disable_ipv6(struct openconnect_info *vpninfo)
 	vpninfo->disable_ipv6 = 1;
 }
 
+void openconnect_disable_dtls(struct openconnect_info *vpninfo)
+{
+	vpninfo->dtls_state = DTLS_DISABLED;
+}
+
 int openconnect_set_cafile(struct openconnect_info *vpninfo, const char *cafile)
 {
 	UTF8CHECK(cafile);

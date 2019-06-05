@@ -1011,6 +1011,16 @@ JNIEXPORT void JNICALL Java_org_infradead_libopenconnect_LibOpenConnect_disableI
 	openconnect_disable_ipv6(ctx->vpninfo);
 }
 
+JNIEXPORT void JNICALL Java_org_infradead_libopenconnect_LibOpenConnect_disableDTLS(
+	JNIEnv *jenv, jobject jobj)
+{
+	struct libctx *ctx = getctx(jenv, jobj);
+
+	if (!ctx)
+		return;
+	openconnect_disable_dtls(ctx->vpninfo);
+}
+
 JNIEXPORT void JNICALL Java_org_infradead_libopenconnect_LibOpenConnect_setCertExpiryWarning(
 	JNIEnv *jenv, jobject jobj, jint arg)
 {
