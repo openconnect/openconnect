@@ -3,5 +3,6 @@
         <MENU topic="AnyConnect" link="anyconnect.html" mode="VAR_SEL_ANYCONNECT" />
         <MENU topic="Juniper" link="juniper.html" mode="VAR_SEL_JUNIPER" />
         <MENU topic="GlobalProtect" link="globalprotect.html" mode="VAR_SEL_GLOBALPROTECT" />
+        <MENU topic="Pulse Secure" link="pulse.html" mode="VAR_SEL_PULSE" />
 	<ENDMENU />
 </PAGE>

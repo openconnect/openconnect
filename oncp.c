@@ -1126,6 +1126,7 @@ int oncp_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable)
 		/* Don't free the 'special' packets */
 		if (vpninfo->current_ssl_pkt == vpninfo->deflate_pkt) {
 			free(vpninfo->pending_deflated_pkt);
+			vpninfo->pending_deflated_pkt = NULL;
 		} else if (vpninfo->current_ssl_pkt == &esp_enable_pkt) {
 			/* Only set the ESP state to connected and actually start
 			   sending packets on it once the enable message has been

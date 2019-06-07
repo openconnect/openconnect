@@ -127,7 +127,7 @@ const struct vpn_proto openconnect_protos[] = {
 	}, {
 		.name = "nc",
 		.pretty_name = N_("Juniper Network Connect"),
-		.description = N_("Compatible with Juniper Network Connect / Pulse Secure SSL VPN"),
+		.description = N_("Compatible with Juniper Network Connect"),
 		.flags = OC_PROTO_PROXY | OC_PROTO_CSD | OC_PROTO_AUTH_CERT | OC_PROTO_AUTH_OTP,
 		.vpn_close_session = oncp_bye,
 		.tcp_connect = oncp_connect,
@@ -161,6 +161,25 @@ const struct vpn_proto openconnect_protos[] = {
 		.udp_shutdown = esp_shutdown,
 		.udp_send_probes = gpst_esp_send_probes,
 		.udp_catch_probe = gpst_esp_catch_probe,
+#endif
+	}, {
+		.name = "pulse",
+		.pretty_name = N_("Pulse Connect Secure"),
+		.description = N_("Compatible with Pulse Connect Secure SSL VPN"),
+		.flags = OC_PROTO_PROXY,
+		.vpn_close_session = pulse_bye,
+		.tcp_connect = pulse_connect,
+		.tcp_mainloop = pulse_mainloop,
+		.add_http_headers = http_common_headers,
+		.obtain_cookie = pulse_obtain_cookie,
+		.udp_protocol = "ESP",
+#ifdef HAVE_ESPx
+		.udp_setup = esp_setup,
+		.udp_mainloop = esp_mainloop,
+		.udp_close = esp_close,
+		.udp_shutdown = esp_shutdown,
+		.udp_send_probes = pulse_esp_send_probes,
+		.udp_catch_probe = pulse_esp_catch_probe,
 #endif
 	},
 	{ /* NULL */ }
@@ -363,7 +382,10 @@ void openconnect_vpninfo_free(struct openconnect_info *vpninfo)
 	free(vpninfo->ifname);
 	free(vpninfo->dtls_cipher);
 	free(vpninfo->peer_cert_hash);
-#ifdef OPENCONNECT_GNUTLS
+#if defined(OPENCONNECT_OPENSSL)
+	if (vpninfo->ttls_bio_meth)
+		BIO_meth_free(vpninfo->ttls_bio_meth);
+#elif defined(OPENCONNECT_GNUTLS)
 	gnutls_free(vpninfo->cstp_cipher); /* In OpenSSL this is const */
 #ifdef HAVE_DTLS
 	gnutls_free(vpninfo->gnutls_dtls_cipher);

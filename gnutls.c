@@ -2597,3 +2597,63 @@ int hotp_hmac(struct openconnect_info *vpninfo, const void *challenge)
 	hpos = hash[hpos] & 15;
 	return load_be32(&hash[hpos]) & 0x7fffffff;
 }
+
+
+static int ttls_pull_timeout_func(gnutls_transport_ptr_t t, unsigned int ms)
+{
+	struct openconnect_info *vpninfo = t;
+
+	vpn_progress(vpninfo, PRG_TRACE, _("ttls_pull_timeout_func %dms\n"), ms);
+	return 0;
+}
+
+static ssize_t ttls_pull_func(gnutls_transport_ptr_t t, void *buf, size_t len)
+{
+	int ret = pulse_eap_ttls_recv(t, buf, len);
+	if (ret >= 0)
+		return ret;
+	else
+		return GNUTLS_E_PULL_ERROR;
+}
+
+static ssize_t ttls_push_func(gnutls_transport_ptr_t t, const void *buf, size_t len)
+{
+	int ret = pulse_eap_ttls_send(t, buf, len);
+	if (ret >= 0)
+		return ret;
+	else
+		return GNUTLS_E_PUSH_ERROR;
+}
+
+void *establish_eap_ttls(struct openconnect_info *vpninfo)
+{
+	gnutls_session_t ttls_sess = NULL;
+	int err;
+
+	gnutls_init(&ttls_sess, GNUTLS_CLIENT);
+	gnutls_session_set_ptr(ttls_sess, (void *) vpninfo);
+	gnutls_transport_set_ptr(ttls_sess, (void *) vpninfo);
+
+	gnutls_transport_set_push_function(ttls_sess, ttls_push_func);
+	gnutls_transport_set_pull_function(ttls_sess, ttls_pull_func);
+	gnutls_transport_set_pull_timeout_function(ttls_sess, ttls_pull_timeout_func);
+
+	gnutls_credentials_set(ttls_sess, GNUTLS_CRD_CERTIFICATE, vpninfo->https_cred);
+
+	err = gnutls_priority_set_direct(ttls_sess,
+				   vpninfo->gnutls_prio, NULL);
+
+	err = gnutls_handshake(ttls_sess);
+	if (!err) {
+		vpn_progress(vpninfo, PRG_TRACE,
+			     _("Established EAP-TTLS session\n"));
+		return ttls_sess;
+	}
+	gnutls_deinit(ttls_sess);
+	return NULL;
+}
+
+void destroy_eap_ttls(struct openconnect_info *vpninfo, void *sess)
+{
+	gnutls_deinit(sess);
+}

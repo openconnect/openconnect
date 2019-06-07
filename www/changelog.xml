@@ -16,6 +16,7 @@
    <li><b>OpenConnect HEAD</b>
      <ul>
        <li>Rework DTLS MTU detection. (<a href="https://gitlab.com/openconnect/openconnect/issues/10">#10</a>)</li>
+       <li>Add Pulse Connect Secure support.</li>
      </ul><br/>
   </li>
   <li><b><a href="ftp://ftp.infradead.org/pub/openconnect/openconnect-8.03.tar.gz">OpenConnect v8.03</a></b>

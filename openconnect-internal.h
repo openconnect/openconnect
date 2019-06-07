@@ -137,6 +137,13 @@ struct pkt {
 			unsigned char pad[8];
 			unsigned char hdr[16];
 		} gpst;
+		struct {
+			unsigned char pad[8];
+			uint32_t vendor;
+			uint32_t type;
+			uint32_t len;
+			uint32_t ident;
+		} pulse;
 	};
 	unsigned char data[];
 };
@@ -500,8 +507,10 @@ struct openconnect_info {
 	X509 *cert_x509;
 	SSL_CTX *https_ctx;
 	SSL *https_ssl;
+	BIO_METHOD *ttls_bio_meth;
 #elif defined(OPENCONNECT_GNUTLS)
 	gnutls_session_t https_sess;
+	gnutls_session_t eap_ttls_sess;
 	gnutls_certificate_credentials_t https_cred;
 	gnutls_psk_client_credentials_t psk_cred;
 	char local_cert_md5[MD5_SIZE * 2 + 1]; /* For CSD */
@@ -513,6 +522,12 @@ struct openconnect_info {
 	struct oc_tpm2_ctx *tpm2;
 #endif
 #endif /* OPENCONNECT_GNUTLS */
+	struct oc_text_buf *ttls_pushbuf;
+	uint8_t ttls_eap_ident;
+	unsigned char *ttls_recvbuf;
+	int ttls_recvpos;
+	int ttls_recvlen;
+
 	struct pin_cache *pin_cache;
 	struct keepalive_info ssl_times;
 	int owe_ssl_dpd_response;
@@ -559,6 +574,8 @@ struct openconnect_info {
 	unsigned char dtls_secret[TLS_MASTER_KEY_SIZE];
 	unsigned char dtls_app_id[32];
 	unsigned dtls_app_id_size;
+
+	uint32_t ift_seq;
 
 	int cisco_dtls12;
 	char *dtls_cipher;
@@ -830,6 +847,9 @@ int dtls_try_handshake(struct openconnect_info *vpninfo);
 unsigned dtls_set_mtu(struct openconnect_info *vpninfo, unsigned mtu);
 void dtls_ssl_free(struct openconnect_info *vpninfo);
 
+void *establish_eap_ttls(struct openconnect_info *vpninfo);
+void destroy_eap_ttls(struct openconnect_info *vpninfo, void *sess);
+
 /* dtls.c */
 int dtls_setup(struct openconnect_info *vpninfo, int dtls_attempt_period);
 int dtls_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable);
@@ -862,6 +882,15 @@ int oncp_bye(struct openconnect_info *vpninfo, const char *reason);
 void oncp_esp_close(struct openconnect_info *vpninfo);
 int oncp_esp_send_probes(struct openconnect_info *vpninfo);
 int oncp_esp_catch_probe(struct openconnect_info *vpninfo, struct pkt *pkt);
+
+/* pulse.c */
+int pulse_obtain_cookie(struct openconnect_info *vpninfo);
+void pulse_common_headers(struct openconnect_info *vpninfo, struct oc_text_buf *buf);
+int pulse_connect(struct openconnect_info *vpninfo);
+int pulse_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable);
+int pulse_bye(struct openconnect_info *vpninfo, const char *reason);
+int pulse_eap_ttls_send(struct openconnect_info *vpninfo, const void *data, int len);
+int pulse_eap_ttls_recv(struct openconnect_info *vpninfo, void *data, int len);
 
 /* auth-globalprotect.c */
 int gpst_obtain_cookie(struct openconnect_info *vpninfo);

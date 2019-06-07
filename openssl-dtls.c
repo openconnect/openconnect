@@ -524,7 +524,7 @@ int dtls_try_handshake(struct openconnect_info *vpninfo)
 			/* For PSK-NEGOTIATE, we have to determine the tunnel MTU
 			 * for ourselves based on the base MTU */
 			int data_mtu = vpninfo->cstp_basemtu;
-			if (vpninfo->peer_addr->sa_family == IPPROTO_IPV6)
+			if (vpninfo->peer_addr->sa_family == AF_INET6)
 				data_mtu -= 40; /* IPv6 header */
 			else
 				data_mtu -= 20; /* Legacy IP header */

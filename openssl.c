@@ -1978,3 +1978,81 @@ int hotp_hmac(struct openconnect_info *vpninfo, const void *challenge)
 	hashlen = hash[hashlen - 1] & 15;
 	return load_be32(&hash[hashlen]) & 0x7fffffff;
 }
+
+static int ttls_push_func(BIO *b, const char *buf, int len)
+{
+	struct openconnect_info *vpninfo = BIO_get_data(b);
+	int ret = pulse_eap_ttls_send(vpninfo, buf, len);
+	if (ret >= 0)
+		return ret;
+
+	return 0;
+}
+
+static int ttls_pull_func(BIO *b, char *buf, int len)
+{
+	struct openconnect_info *vpninfo = BIO_get_data(b);
+	int ret = pulse_eap_ttls_recv(vpninfo, buf, len);
+	if (ret >= 0)
+		return ret;
+
+	return 0;
+}
+
+static long ttls_ctrl_func(BIO *b, int cmd, long larg, void *iarg)
+{
+	switch(cmd) {
+	case BIO_CTRL_FLUSH:
+		return 1;
+	default:
+		return 0;
+	}
+}
+
+void *establish_eap_ttls(struct openconnect_info *vpninfo)
+{
+	SSL *ttls_ssl = NULL;
+	BIO *bio;
+	int err;
+
+
+	if (!vpninfo->ttls_bio_meth) {
+		vpninfo->ttls_bio_meth = BIO_meth_new(BIO_get_new_index(), "EAP-TTLS");
+		BIO_meth_set_write(vpninfo->ttls_bio_meth, ttls_push_func);
+		BIO_meth_set_read(vpninfo->ttls_bio_meth, ttls_pull_func);
+		BIO_meth_set_ctrl(vpninfo->ttls_bio_meth, ttls_ctrl_func);
+	}
+
+	bio = BIO_new(vpninfo->ttls_bio_meth);
+	BIO_set_data(bio, vpninfo);
+	BIO_set_init(bio, 1);
+	ttls_ssl = SSL_new(vpninfo->https_ctx);
+	workaround_openssl_certchain_bug(vpninfo, ttls_ssl);
+
+	SSL_set_bio(ttls_ssl, bio, bio);
+
+	SSL_set_verify(ttls_ssl, SSL_VERIFY_PEER, NULL);
+
+	vpn_progress(vpninfo, PRG_INFO, _("EAP-TTLS negotiation with %s\n"),
+		     vpninfo->hostname);
+
+	err = SSL_connect(ttls_ssl);
+	if (err == 1) {
+		vpn_progress(vpninfo, PRG_TRACE,
+			     _("Established EAP-TTLS session\n"));
+		return ttls_ssl;
+	}
+
+	err = SSL_get_error(ttls_ssl, err);
+	vpn_progress(vpninfo, PRG_ERR, _("EAP-TTLS connection failure %d\n"), err);
+	openconnect_report_ssl_errors(vpninfo);
+	SSL_free(ttls_ssl);
+	return NULL;
+}
+
+void destroy_eap_ttls(struct openconnect_info *vpninfo, void *ttls)
+{
+	SSL_free(ttls);
+	/* Leave the BIO_METH for now. It may get reused and we don't want to
+	 * have to call BIO_get_new_index() more times than is necessary */
+}

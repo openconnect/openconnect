@@ -507,8 +507,8 @@ int process_http_response(struct openconnect_info *vpninfo, int connect,
 	if (result == 100)
 		goto cont;
 
-	/* On successful CONNECT, there is no body. Return success */
-	if (connect && result == 200)
+	/* On successful CONNECT or upgrade, there is no body. Return success */
+	if (connect && (result == 200 || result == 101))
 		return result;
 
 	/* Now the body, if there is one */
