@@ -362,6 +362,7 @@ void openconnect_vpninfo_free(struct openconnect_info *vpninfo)
 	free(vpninfo->cafile);
 	free(vpninfo->ifname);
 	free(vpninfo->dtls_cipher);
+	free(vpninfo->peer_cert_hash);
 #ifdef OPENCONNECT_GNUTLS
 	gnutls_free(vpninfo->cstp_cipher); /* In OpenSSL this is const */
 #ifdef HAVE_DTLS
@@ -1041,6 +1042,7 @@ int openconnect_check_peer_cert_hash(struct openconnect_info *vpninfo,
 	unsigned min_match_len;
 	unsigned real_min_match_len = 4;
 	unsigned old_len, fingerprint_len;
+	int ret = 0;
 
 	if (strchr(old_hash, ':')) {
 		if (strncmp(old_hash, "sha1:", 5) == 0) {
@@ -1084,14 +1086,14 @@ int openconnect_check_peer_cert_hash(struct openconnect_info *vpninfo,
 			if (old_len < min_match_len) {
 				vpn_progress(vpninfo, PRG_ERR, _("The size of the provided fingerprint is less than the minimum required (%u).\n"), real_min_match_len);
 			}
-			return 1;
+			ret = 1;
 		}
-	} else {
-		if (strcasecmp(old_hash, fingerprint))
-			return 1;
+	} else if (strcasecmp(old_hash, fingerprint)) {
+		ret = 1;
 	}
 
-	return 0;
+	free(fingerprint);
+	return ret;
 }
 
 const char *openconnect_get_cstp_cipher(struct openconnect_info *vpninfo)
