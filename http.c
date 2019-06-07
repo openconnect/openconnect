@@ -797,23 +797,30 @@ void dump_buf(struct openconnect_info *vpninfo, char prefix, char *buf)
 
 void dump_buf_hex(struct openconnect_info *vpninfo, int loglevel, char prefix, unsigned char *buf, int len)
 {
-	char linebuf[80];
+	struct oc_text_buf *line = buf_alloc();
 	int i, j;
 
 	for (i = 0; i < len; i+=16) {
-		sprintf(linebuf, "%04x:", i);
+		buf_truncate(line);
+		buf_append(line, "%04x:", i);
 		for (j = i; j < i+16; j++) {
+			if (!(j & 7))
+				buf_append(line, " ");
+
 			if (j < len)
-				sprintf(linebuf + strlen(linebuf), " %02x", buf[j]);
+				buf_append(line, " %02x", buf[j]);
 			else
-				sprintf(linebuf + strlen(linebuf), "   ");
+				buf_append(line, "   ");
 		}
-		sprintf(linebuf + strlen(linebuf), " |");
+		buf_append(line, "  |");
 		for (j = i; j < i+16 && j < len; j++)
-			sprintf(linebuf + strlen(linebuf), "%c", isprint(buf[j]) || buf[j]==' ' ? buf[j] : '.');
-		sprintf(linebuf + strlen(linebuf), "|");
-		vpn_progress(vpninfo, loglevel, "%c %s\n", prefix, linebuf);
+			buf_append(line, "%c", isprint(buf[j])? buf[j] : '.');
+		buf_append(line, "|");
+		if (buf_error(line))
+			break;
+		vpn_progress(vpninfo, loglevel, "%c %s\n", prefix, line->data);
 	}
+	buf_free(line);
 }
 
 /* Inputs:
