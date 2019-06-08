@@ -94,6 +94,9 @@ int init_esp_ciphers(struct openconnect_info *vpninfo, struct esp *esp_out, stru
 	case HMAC_SHA1:
 		macalg = GNUTLS_MAC_SHA1;
 		break;
+	case HMAC_SHA256:
+		macalg = GNUTLS_MAC_SHA256;
+		break;
 	default:
 		return -EINVAL;
 	}
@@ -116,7 +119,7 @@ int init_esp_ciphers(struct openconnect_info *vpninfo, struct esp *esp_out, stru
 /* pkt->len shall be the *payload* length. Omitting the header and the 12-byte HMAC */
 int decrypt_esp_packet(struct openconnect_info *vpninfo, struct esp *esp, struct pkt *pkt)
 {
-	unsigned char hmac_buf[20];
+	unsigned char hmac_buf[MAX_HMAC_SIZE];
 	int err;
 
 	err = gnutls_hmac(esp->hmac, &pkt->esp, sizeof(pkt->esp) + pkt->len);
@@ -127,7 +130,7 @@ int decrypt_esp_packet(struct openconnect_info *vpninfo, struct esp *esp, struct
 		return -EIO;
 	}
 	gnutls_hmac_output(esp->hmac, hmac_buf);
-	if (memcmp(hmac_buf, pkt->data + pkt->len, 12)) {
+	if (memcmp(hmac_buf, pkt->data + pkt->len, vpninfo->hmac_out_len)) {
 		vpn_progress(vpninfo, PRG_DEBUG,
 			     _("Received ESP packet with invalid HMAC\n"));
 		return -EINVAL;
@@ -186,5 +189,5 @@ int encrypt_esp_packet(struct openconnect_info *vpninfo, struct pkt *pkt)
 
 	memcpy(vpninfo->esp_out.iv, pkt->data + pkt->len + padlen + 2, blksize);
 	gnutls_cipher_encrypt(vpninfo->esp_out.cipher, vpninfo->esp_out.iv, blksize);
-	return sizeof(pkt->esp) + pkt->len + padlen + 2 + 12;
+	return sizeof(pkt->esp) + pkt->len + padlen + 2 + vpninfo->hmac_out_len;
 }

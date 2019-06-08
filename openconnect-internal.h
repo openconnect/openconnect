@@ -381,6 +381,7 @@ struct openconnect_info {
 	struct esp esp_out;
 	int enc_key_len;
 	int hmac_key_len;
+	int hmac_out_len;
 	uint32_t esp_magic;  /* GlobalProtect magic ping address (network-endian) */
 
 	int tncc_fd; /* For Juniper TNCC */
@@ -713,11 +714,17 @@ struct openconnect_info {
 #define AC_PKT_COMPRESSED	8	/* Compressed data */
 #define AC_PKT_TERM_SERVER	9	/* Server kick */
 
-/* Encryption and HMAC algorithms (matching Juniper's binary encoding) */
+/* Encryption and HMAC algorithms (matching Juniper/Pulse binary encoding) */
 #define ENC_AES_128_CBC		2
 #define ENC_AES_256_CBC		5
+
 #define HMAC_MD5		1
 #define HMAC_SHA1		2
+#define HMAC_SHA256		3
+
+#define MAX_HMAC_SIZE		32	/* SHA256 */
+#define MAX_IV_SIZE		16
+#define MAX_ESP_PAD		17	/* Including the next-header field */
 
 #define vpn_progress(_v, lvl, ...) do {					\
 	if ((_v)->verbose >= (lvl))					\

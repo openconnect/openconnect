@@ -378,6 +378,9 @@ static int process_attr(struct openconnect_info *vpninfo, uint16_t type,
 		} else if (val == HMAC_SHA1) {
 			mactype = "SHA1";
 			vpninfo->hmac_key_len = 20;
+		} else if (val == HMAC_SHA256) {
+			mactype = "SHA256";
+			vpninfo->hmac_key_len = 32;
 		} else
 			mactype = "unknown";
 		vpn_progress(vpninfo, PRG_DEBUG, _("ESP HMAC: 0x%04x (%s)\n"),
@@ -1049,8 +1052,10 @@ static int pulse_authenticate(struct openconnect_info *vpninfo, int connecting)
 	/* IF-T version request. */
 	buf_truncate(reqbuf);
 	buf_append_ift_hdr(reqbuf, VENDOR_TCG, IFT_VERSION_REQUEST);
-	/* min=1, max=1, preferred version=1 */
-	buf_append_be32(reqbuf, 0x00010101);
+	/* Min version 1, max 2, preferred 2. Not that we actually do v2; the auth is
+	 * still all IF-T/TLS v1. But the server won't offer us HMAC-SHA256 unless we
+	 * advertise v2 */
+	buf_append_be32(reqbuf, 0x00010202);
 	ret = send_ift_packet(vpninfo, reqbuf);
 	if (ret)
 		goto out;

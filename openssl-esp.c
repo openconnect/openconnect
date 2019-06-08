@@ -130,6 +130,9 @@ int init_esp_ciphers(struct openconnect_info *vpninfo, struct esp *esp_out, stru
 	case HMAC_SHA1:
 		macalg = EVP_sha1();
 		break;
+	case HMAC_SHA256:
+		macalg = EVP_sha256();
+		break;
 	default:
 		return -EINVAL;
 	}
@@ -150,7 +153,7 @@ int init_esp_ciphers(struct openconnect_info *vpninfo, struct esp *esp_out, stru
 /* pkt->len shall be the *payload* length. Omitting the header and the 12-byte HMAC */
 int decrypt_esp_packet(struct openconnect_info *vpninfo, struct esp *esp, struct pkt *pkt)
 {
-	unsigned char hmac_buf[20];
+	unsigned char hmac_buf[MAX_HMAC_SIZE];
 	unsigned int hmac_len = sizeof(hmac_buf);
 	int crypt_len = pkt->len;
 
@@ -158,7 +161,7 @@ int decrypt_esp_packet(struct openconnect_info *vpninfo, struct esp *esp, struct
 	HMAC_Update(esp->hmac, (void *)&pkt->esp, sizeof(pkt->esp) + pkt->len);
 	HMAC_Final(esp->hmac, hmac_buf, &hmac_len);
 
-	if (memcmp(hmac_buf, pkt->data + pkt->len, 12)) {
+	if (memcmp(hmac_buf, pkt->data + pkt->len, vpninfo->hmac_out_len)) {
 		vpn_progress(vpninfo, PRG_DEBUG,
 			     _("Received ESP packet with invalid HMAC\n"));
 		return -EINVAL;
@@ -190,7 +193,7 @@ int encrypt_esp_packet(struct openconnect_info *vpninfo, struct pkt *pkt)
 {
 	int i, padlen;
 	int blksize = 16;
-	unsigned int hmac_len = 20;
+	unsigned int hmac_len = vpninfo->hmac_out_len;
 	int crypt_len;
 
 	/* This gets much more fun if the IV is variable-length */
@@ -220,5 +223,5 @@ int encrypt_esp_packet(struct openconnect_info *vpninfo, struct pkt *pkt)
 
 	EVP_EncryptUpdate(vpninfo->esp_out.cipher, vpninfo->esp_out.iv, &blksize,
 			  pkt->data + crypt_len + hmac_len - blksize, blksize);
-	return sizeof(pkt->esp) + crypt_len + 12;
+	return sizeof(pkt->esp) + crypt_len + vpninfo->hmac_out_len;
 }
