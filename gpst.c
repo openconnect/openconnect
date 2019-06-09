@@ -406,8 +406,9 @@ static int calculate_mtu(struct openconnect_info *vpninfo, int can_use_esp)
 #ifdef HAVE_ESP
 static int check_hmac_algo(struct openconnect_info *v, const char *s)
 {
-	if (!strcmp(s, "sha1"))	return HMAC_SHA1;
-	if (!strcmp(s, "md5"))  return HMAC_MD5;
+	if (!strcmp(s, "sha1"))	  return HMAC_SHA1;
+	if (!strcmp(s, "md5"))    return HMAC_MD5;
+	if (!strcmp(s, "sha256")) return HMAC_SHA256;
 	vpn_progress(v, PRG_ERR, _("Unknown ESP MAC algorithm: %s"), s);
 	return -ENOENT;
 }
@@ -622,7 +623,7 @@ static int gpst_get_config(struct openconnect_info *vpninfo)
 	buf_append(request_body, "client-type=1&protocol-version=p1&app-version=4.0.5-8");
 	append_opt(request_body, "clientos", gpst_os_name(vpninfo));
 	append_opt(request_body, "os-version", vpninfo->platname);
-	append_opt(request_body, "hmac-algo", "sha1,md5");
+	append_opt(request_body, "hmac-algo", "sha1,md5,sha256");
 	append_opt(request_body, "enc-algo", "aes-128-cbc,aes-256-cbc");
 	if (old_addr || old_addr6) {
 		append_opt(request_body, "preferred-ip", old_addr);
