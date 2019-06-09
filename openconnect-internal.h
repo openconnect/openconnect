@@ -967,12 +967,13 @@ void esp_close(struct openconnect_info *vpninfo);
 void esp_shutdown(struct openconnect_info *vpninfo);
 int print_esp_keys(struct openconnect_info *vpninfo, const char *name, struct esp *esp);
 int openconnect_setup_esp_keys(struct openconnect_info *vpninfo, int new_keys);
+int construct_esp_packet(struct openconnect_info *vpninfo, struct pkt *pkt);
 
 /* {gnutls,openssl}-esp.c */
 void destroy_esp_ciphers(struct esp *esp);
 int init_esp_ciphers(struct openconnect_info *vpninfo, struct esp *out, struct esp *in);
 int decrypt_esp_packet(struct openconnect_info *vpninfo, struct esp *esp, struct pkt *pkt);
-int encrypt_esp_packet(struct openconnect_info *vpninfo, struct pkt *pkt);
+int encrypt_esp_packet(struct openconnect_info *vpninfo, struct pkt *pkt, int crypt_len);
 
 /* {gnutls,openssl}.c */
 int ssl_nonblock_read(struct openconnect_info *vpninfo, void *buf, int maxlen);

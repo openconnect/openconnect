@@ -97,6 +97,30 @@ int esp_setup(struct openconnect_info *vpninfo, int dtls_attempt_period)
 	return 0;
 }
 
+int construct_esp_packet(struct openconnect_info *vpninfo, struct pkt *pkt)
+{
+	const int blksize = 16;
+	int i, padlen, ret;
+
+	/* This gets much more fun if the IV is variable-length */
+	pkt->esp.spi = vpninfo->esp_out.spi;
+	pkt->esp.seq = htonl(vpninfo->esp_out.seq++);
+
+	padlen = blksize - 1 - ((pkt->len + 1) % blksize);
+	for (i=0; i<padlen; i++)
+		pkt->data[pkt->len + i] = i + 1;
+	pkt->data[pkt->len + padlen] = padlen;
+	pkt->data[pkt->len + padlen + 1] = 0x04; /* Legacy IP */
+
+	memcpy(pkt->esp.iv, vpninfo->esp_out.iv, sizeof(pkt->esp.iv));
+
+	ret = encrypt_esp_packet(vpninfo, pkt, pkt->len + padlen + 2);
+	if (ret)
+		return ret;
+
+	return sizeof(pkt->esp) + pkt->len + padlen + 2 + vpninfo->hmac_out_len;
+}
+
 int esp_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable)
 {
 	struct esp *esp = &vpninfo->esp_in[vpninfo->current_esp_in];
@@ -275,11 +299,9 @@ int esp_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable)
 			if (!this)
 				break;
 
-			len = encrypt_esp_packet(vpninfo, this);
+			len = construct_esp_packet(vpninfo, this);
 			if (len < 0) {
-				vpn_progress(vpninfo, PRG_ERR,
-					     _("Failed to encrypt ESP packet: %d\n"),
-					     len);
+				/* Should we disable ESP? */
 				free(this);
 				work_done = 1;
 				continue;

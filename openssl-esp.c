@@ -189,26 +189,11 @@ int decrypt_esp_packet(struct openconnect_info *vpninfo, struct esp *esp, struct
 	return 0;
 }
 
-int encrypt_esp_packet(struct openconnect_info *vpninfo, struct pkt *pkt)
+int encrypt_esp_packet(struct openconnect_info *vpninfo, struct pkt *pkt, int crypt_len)
 {
-	int i, padlen;
 	int blksize = 16;
 	unsigned int hmac_len = vpninfo->hmac_out_len;
-	int crypt_len;
 
-	/* This gets much more fun if the IV is variable-length */
-	pkt->esp.spi = vpninfo->esp_out.spi;
-	pkt->esp.seq = htonl(vpninfo->esp_out.seq++);
-
-	padlen = blksize - 1 - ((pkt->len + 1) % blksize);
-	for (i=0; i<padlen; i++)
-		pkt->data[pkt->len + i] = i + 1;
-	pkt->data[pkt->len + padlen] = padlen;
-	pkt->data[pkt->len + padlen + 1] = 0x04; /* Legacy IP */
-
-	memcpy(pkt->esp.iv, vpninfo->esp_out.iv, 16);
-
-	crypt_len = pkt->len + padlen + 2;
 	if (!EVP_EncryptUpdate(vpninfo->esp_out.cipher, pkt->data, &crypt_len,
 			       pkt->data, crypt_len)) {
 		vpn_progress(vpninfo, PRG_ERR,
@@ -223,5 +208,5 @@ int encrypt_esp_packet(struct openconnect_info *vpninfo, struct pkt *pkt)
 
 	EVP_EncryptUpdate(vpninfo->esp_out.cipher, vpninfo->esp_out.iv, &blksize,
 			  pkt->data + crypt_len + hmac_len - blksize, blksize);
-	return sizeof(pkt->esp) + crypt_len + vpninfo->hmac_out_len;
+	return 0;
 }
