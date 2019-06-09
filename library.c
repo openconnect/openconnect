@@ -173,13 +173,13 @@ const struct vpn_proto openconnect_protos[] = {
 		.add_http_headers = http_common_headers,
 		.obtain_cookie = pulse_obtain_cookie,
 		.udp_protocol = "ESP",
-#ifdef HAVE_ESPx
+#ifdef HAVE_ESP
 		.udp_setup = esp_setup,
 		.udp_mainloop = esp_mainloop,
 		.udp_close = esp_close,
 		.udp_shutdown = esp_shutdown,
-		.udp_send_probes = pulse_esp_send_probes,
-		.udp_catch_probe = pulse_esp_catch_probe,
+		.udp_send_probes = oncp_esp_send_probes,
+		.udp_catch_probe = oncp_esp_catch_probe,
 #endif
 	},
 	{ /* NULL */ }

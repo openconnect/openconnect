@@ -492,10 +492,28 @@ static int recv_ift_packet(struct openconnect_info *vpninfo, void *buf, int len)
 	return ret;
 }
 
-static int send_ift_packet(struct openconnect_info *vpninfo, struct oc_text_buf *buf)
+static int send_ift_bytes(struct openconnect_info *vpninfo, void *bytes, int len)
 {
 	int ret;
 
+	store_be32(((char *)bytes) + 12, vpninfo->ift_seq++);
+
+	dump_buf_hex(vpninfo, PRG_DEBUG, '>', (void *)bytes, len);
+	ret = vpninfo->ssl_write(vpninfo, bytes, len);
+	if (ret != len) {
+		if (ret >= 0) {
+			vpn_progress(vpninfo, PRG_ERR,
+				     _("Short write to IF-T/TLS\n"));
+			ret = -EIO;
+		}
+		return ret;
+	}
+	return 0;
+
+}
+
+static int send_ift_packet(struct openconnect_info *vpninfo, struct oc_text_buf *buf)
+{
 	if (buf_error(buf) || buf->pos < 16) {
 		vpn_progress(vpninfo, PRG_ERR,
 			     _("Error creating IF-T packet\n"));
@@ -505,19 +523,8 @@ static int send_ift_packet(struct openconnect_info *vpninfo, struct oc_text_buf 
 	/* Fill in the length word in the header with the full length of the buffer.
 	 * Also populate the sequence number. */
 	store_be32(buf->data + 8, buf->pos);
-	store_be32(buf->data + 12, vpninfo->ift_seq++);
 
-	dump_buf_hex(vpninfo, PRG_DEBUG, '>', (void *)buf->data, buf->pos);
-	ret = vpninfo->ssl_write(vpninfo, buf->data, buf->pos);
-	if (ret != buf->pos) {
-		if (ret >= 0) {
-			vpn_progress(vpninfo, PRG_ERR,
-				     _("Short write to IF-T/TLS\n"));
-			ret = -EIO;
-		}
-		return ret;
-	}
-	return 0;
+	return send_ift_bytes(vpninfo, buf->data, buf->pos);
 }
 
 /* We create packets with IF-T/TLS headers prepended because that's the
@@ -1735,11 +1742,80 @@ static int handle_main_config_packet(struct openconnect_info *vpninfo,
 static int handle_esp_config_packet(struct openconnect_info *vpninfo,
 				    unsigned char *bytes, int len)
 {
+	struct esp *esp;
+	int secretslen;
+	uint32_t spi;
+	int ret;
+
+	if (len < 0x6a ||
+	    load_be32(bytes + 0x2c) != len - 0x2c ||
+	    load_be32(bytes + 0x30) != 0x01000000 ||
+	    load_be16(bytes + 0x38) != 0x40) {
+		vpn_progress(vpninfo, PRG_ERR,
+			     _("Invalid ESP config packet:\n"));
+		dump_buf_hex(vpninfo, PRG_ERR, '<', bytes, len);
+		return -EINVAL;
+	}
+
+	/* We insist on this being 0x40 for now. But just in case it later changes... */
+	secretslen = load_be16(bytes + 0x38);
+	vpn_progress(vpninfo, PRG_DEBUG, _("%d bytes of ESP secrets\n"), secretslen);
+
+	if (!vpninfo->enc_key_len || !vpninfo->hmac_key_len ||
+	    vpninfo->enc_key_len + vpninfo->hmac_key_len > secretslen) {
+		vpn_progress(vpninfo, PRG_ERR,
+			     _("Invalid ESP setup\n"));
+		return -EINVAL;
+	}
+
+	/* Yes, bizarrely this is little-endian on the wire. I have no idea
+	 * what made them do this. */
+	spi = load_le32(bytes + 0x34);
+	vpn_progress(vpninfo, PRG_DEBUG, _("ESP SPI (outbound): %x\n"), spi);
+	/* But we store it internally as big-endian because we never do any
+	 * calculations on it; it's only set into outbound packets and matched
+	 * on incoming ones... and we've NEVER had to see it in little-endian
+	 * form ever before because that's insane! */
+	store_be32(&vpninfo->esp_out.spi, spi);
+
+	memcpy(vpninfo->esp_out.enc_key, bytes + 0x3a, vpninfo->enc_key_len);
+	memcpy(vpninfo->esp_out.hmac_key, bytes + 0x3a + vpninfo->enc_key_len,
+	       vpninfo->hmac_key_len);
+
+	ret = openconnect_setup_esp_keys(vpninfo, 1);
+	if (ret)
+		return ret;
+
+	esp = &vpninfo->esp_in[vpninfo->current_esp_in];
+
+	/* Now, using the buffer in which we received the original packet (which
+	 * we trust our caller made large enough), create an appropriate reply.
+	 * A reply packet contains two sets of ESP information, as we are expected
+	 * to send our own followed by a copy of what the server sent to us. */
+
+	/* Adjust the length in the IF-T/TLS header */
+	store_be32(bytes + 8, 0x40 + 2 * secretslen);
+
+	/* Copy the server's own ESP information into place */
+	memmove(bytes + secretslen + 0x3a, bytes + 0x34, secretslen + 0x06);
+
+	/* Adjust other length fields. */
+	store_be32(bytes + 0x28, 0x30 + 2 * secretslen);
+	store_be32(bytes + 0x2c, 0x14 + 2 * secretslen);
+
+	/* Store the SPI. Bizarrely little-endian again. */
+	store_le32(bytes + 0x34, load_be32(&esp->spi));
+	memcpy(bytes + 0x3a, esp->enc_key, vpninfo->enc_key_len);
+	memcpy(bytes + 0x3a + vpninfo->enc_key_len, esp->hmac_key, vpninfo->hmac_key_len);
+	memset(bytes + 0x3a + vpninfo->enc_key_len + vpninfo->hmac_key_len,
+	       0, 0x40 - vpninfo->enc_key_len - vpninfo->hmac_key_len);
+
 	return 0;
 }
 
 int pulse_connect(struct openconnect_info *vpninfo)
 {
+	struct oc_text_buf *reqbuf;
 	unsigned char bytes[16384];
 	int ret;
 
@@ -1800,19 +1876,36 @@ int pulse_connect(struct openconnect_info *vpninfo)
 			ret = handle_main_config_packet(vpninfo, bytes, ret);
 			if (ret)
 				return ret;
+
 			break;
 
 		case 0x21202400:
 			ret = handle_esp_config_packet(vpninfo, bytes, ret);
-			if (ret)
+			if (ret) {
 				vpninfo->dtls_state = DTLS_DISABLED;
+				continue;
+			}
+
+			/* It has created a response packet to send. */
+			ret = send_ift_bytes(vpninfo, bytes, load_be32(bytes + 8));
+			if (ret)
+				return ret;
+
+			/* Tell server to enable ESP handling */
+			reqbuf = buf_alloc();
+			buf_append_ift_hdr(reqbuf, VENDOR_JUNIPER, 5);
+			buf_append(reqbuf, "ncmo=1\n%c", 0);
+			ret = send_ift_packet(vpninfo, reqbuf);
+			buf_free(reqbuf);
+			if (ret)
+				return ret;
+
 			break;
 
 		default:
 			goto bad_pkt;
 		}
 	}
-
 
 	if (!vpninfo->ip_info.mtu ||
 	    (!vpninfo->ip_info.addr && !vpninfo->ip_info.addr6)) {
@@ -1851,17 +1944,18 @@ int pulse_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable)
 		   negotiated MTU. We reserve some extra space to
 		   handle that */
 		int receive_mtu = MAX(16384, vpninfo->deflate_pkt_size ? : vpninfo->ip_info.mtu);
+		struct pkt *pkt = vpninfo->cstp_pkt;
 		int len, payload_len;
 
-		if (!vpninfo->cstp_pkt) {
-			vpninfo->cstp_pkt = malloc(sizeof(struct pkt) + receive_mtu);
-			if (!vpninfo->cstp_pkt) {
+		if (!pkt) {
+			pkt = vpninfo->cstp_pkt = malloc(sizeof(struct pkt) + receive_mtu);
+			if (!pkt) {
 				vpn_progress(vpninfo, PRG_ERR, _("Allocation failed\n"));
 				break;
 			}
 		}
 
-		len = ssl_nonblock_read(vpninfo, &vpninfo->cstp_pkt->pulse.vendor, receive_mtu + 16);
+		len = ssl_nonblock_read(vpninfo, &pkt->pulse.vendor, receive_mtu + 16);
 		if (!len)
 			break;
 		if (len < 0)
@@ -1872,22 +1966,47 @@ int pulse_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable)
 			return 1;
 		}
 
-		if (load_be32(&vpninfo->cstp_pkt->pulse.vendor) != VENDOR_JUNIPER ||
-		    load_be32(&vpninfo->cstp_pkt->pulse.len) != len)
+		if (load_be32(&pkt->pulse.vendor) != VENDOR_JUNIPER ||
+		    load_be32(&pkt->pulse.len) != len)
 			goto unknown_pkt;
 
 		vpninfo->ssl_times.last_rx = time(NULL);
+		payload_len = len - 16;
 
-		switch(load_be32(&vpninfo->cstp_pkt->pulse.type)) {
+		switch(load_be32(&pkt->pulse.type)) {
 		case 4:
-			payload_len = len - 16;
 			vpn_progress(vpninfo, PRG_TRACE,
 				     _("Received data packet of %d bytes\n"),
 				     payload_len);
 			vpninfo->cstp_pkt->len = payload_len;
-			queue_packet(&vpninfo->incoming_queue, vpninfo->cstp_pkt);
-			vpninfo->cstp_pkt = NULL;
+			queue_packet(&vpninfo->incoming_queue, pkt);
+			vpninfo->cstp_pkt = pkt = NULL;
 			work_done = 1;
+			continue;
+		case 1:
+			if (payload_len < 0x6a ||
+			    load_be32(pkt->data + 0x10) != 0x21202400 ||
+			    load_be32(pkt->data + 0x18) != payload_len ||
+			    load_be32(pkt->data + 0x1c) != payload_len - 0x1c ||
+			    load_be32(pkt->data + 0x20) != 0x01000000 ||
+			    load_be16(pkt->data + 0x28) != 0x40)
+				goto unknown_pkt;
+
+			dump_buf_hex(vpninfo, PRG_ERR, '<', (void *)&vpninfo->cstp_pkt->pulse.vendor, len);
+
+			ret = handle_esp_config_packet(vpninfo, (void *)&pkt->pulse.vendor, len);
+			if (ret) {
+				vpn_progress(vpninfo, PRG_ERR,
+					     _("ESP rekey failed\n"));
+				vpninfo->proto->udp_close(vpninfo);
+				continue;
+			}
+			vpninfo->cstp_pkt = NULL;
+			pkt->len = load_be32(&pkt->pulse.len) - 16;
+			queue_packet(&vpninfo->oncp_control_queue, pkt);
+
+			print_esp_keys(vpninfo, _("new incoming"), &vpninfo->esp_in[vpninfo->current_esp_in]);
+			print_esp_keys(vpninfo, _("new outgoing"), &vpninfo->esp_out);
 			continue;
 
 		default:
@@ -2044,6 +2163,22 @@ int pulse_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable)
 		;
 	}
 #endif
+	if (vpninfo->dtls_state == DTLS_CONNECTING) {
+		/* We don't currently do anything to make the server start sending
+		 * data packets in ESP instead of over IF-T/TLS. Just go straight
+		 * to CONNECTED mode. */
+		vpninfo->dtls_state = DTLS_CONNECTED;
+		work_done = 1;
+	}
+
+	vpninfo->current_ssl_pkt = dequeue_packet(&vpninfo->oncp_control_queue);
+	if (vpninfo->current_ssl_pkt) {
+		/* Anything on the control queue will have the rest of its
+		   header filled in already. */
+		store_be32(&vpninfo->current_ssl_pkt->pulse.ident, vpninfo->ift_seq++);
+		goto handle_outgoing;
+	}
+
 	/* Service outgoing packet queue, if no DTLS */
 	while (vpninfo->dtls_state != DTLS_CONNECTED &&
 	       (vpninfo->current_ssl_pkt = dequeue_packet(&vpninfo->outgoing_queue))) {
@@ -2079,53 +2214,3 @@ int pulse_bye(struct openconnect_info *vpninfo, const char *reason)
 	}
 	return 0;
 }
-
-#ifdef HAVE_ESPx
-void pulse_esp_close(struct openconnect_info *vpninfo)
-{
-	/* Tell server to stop sending on ESP channel */
-	queue_esp_control(vpninfo, 0);
-	esp_close(vpninfo);
-}
-
-int pulse_esp_send_probes(struct openconnect_info *vpninfo)
-{
-	struct pkt *pkt;
-	int pktlen, seq;
-
-	if (vpninfo->dtls_fd == -1) {
-		int fd = udp_connect(vpninfo);
-		if (fd < 0)
-			return fd;
-
-		/* We are not connected until we get an ESP packet back */
-		vpninfo->dtls_state = DTLS_SLEEPING;
-		vpninfo->dtls_fd = fd;
-		monitor_fd_new(vpninfo, dtls);
-		monitor_read_fd(vpninfo, dtls);
-		monitor_except_fd(vpninfo, dtls);
-	}
-
-	pkt = malloc(sizeof(*pkt) + 1 + vpninfo->pkt_trailer);
-	if (!pkt)
-		return -ENOMEM;
-
-	for (seq=1; seq <= (vpninfo->dtls_state==DTLS_CONNECTED ? 1 : 2); seq++) {
-		pkt->len = 1;
-		pkt->data[0] = 0;
-		pktlen = encrypt_esp_packet(vpninfo, pkt);
-		if (pktlen >= 0)
-			send(vpninfo->dtls_fd, (void *)&pkt->esp, pktlen, 0);
-	}
-	free(pkt);
-
-	vpninfo->dtls_times.last_tx = time(&vpninfo->new_dtls_started);
-
-	return 0;
-};
-
-int pulse_esp_catch_probe(struct openconnect_info *vpninfo, struct pkt *pkt)
-{
-	return (pkt->len == 1 && pkt->data[0] == 0);
-}
-#endif /* HAVE_ESP */
