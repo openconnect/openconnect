@@ -1544,108 +1544,87 @@ int pulse_obtain_cookie(struct openconnect_info *vpninfo)
 	return pulse_authenticate(vpninfo, 0);
 }
 
-int pulse_connect(struct openconnect_info *vpninfo)
+/* Example config packet:
+   < 0000: 00 00 0a 4c 00 00 00 01  00 00 01 80 00 00 01 fb  |...L............|
+   < 0010: 00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
+   < 0020: 2c 20 f0 00 00 00 00 00  00 00 01 70 2e 00 00 78  |, .........p...x|
+   < 0030: 07 00 00 00 07 00 00 10  00 00 ff ff 05 05 00 00  |................|
+   < 0040: 05 05 ff ff 07 00 00 10  00 00 ff ff 07 00 00 00  |................|
+   < 0050: 07 00 00 ff 07 00 00 10  00 00 ff ff 08 08 08 08  |................|
+   < 0060: 08 08 08 08 f1 00 00 10  00 00 ff ff 06 06 06 06  |................|
+   < 0070: 06 06 06 07 f1 00 00 10  00 00 ff ff 09 09 09 09  |................|
+   < 0080: 09 09 09 09 f1 00 00 10  00 00 ff ff 0a 0a 0a 0a  |................|
+   < 0090: 0a 0a 0a 0a f1 00 00 10  00 00 ff ff 0b 0b 0b 0b  |................|
+   < 00a0: 0b 0b 0b 0b 00 00 00 dc  03 00 00 00 40 00 00 01  |............@...|
+   < 00b0: 00 40 01 00 01 00 40 1f  00 01 00 40 20 00 01 00  |.@....@....@ ...|
+   < 00c0: 40 21 00 01 00 40 05 00  04 00 00 05 78 00 03 00  |@!...@......x...|
+   < 00d0: 04 08 08 08 08 00 03 00  04 08 08 04 04 40 06 00  |.............@..|
+   < 00e0: 0c 70 73 65 63 75 72 65  2e 6e 65 74 00 40 07 00  |.psecure.net.@..|
+   < 00f0: 04 00 00 00 00 00 04 00  04 01 01 01 01 40 19 00  |.............@..|
+   < 0100: 01 01 40 1a 00 01 00 40  0f 00 02 00 00 40 10 00  |..@....@.....@..|
+   < 0110: 02 00 05 40 11 00 02 00  02 40 12 00 04 00 00 04  |...@.....@......|
+   < 0120: b0 40 13 00 04 00 00 00  00 40 14 00 04 00 00 00  |.@.......@......|
+   < 0130: 01 40 15 00 04 00 00 00  00 40 16 00 02 11 94 40  |.@.......@.....@|
+   < 0140: 17 00 04 00 00 00 0f 40  18 00 04 00 00 00 3c 00  |.......@......<.|
+   < 0150: 01 00 04 0a 14 03 01 00  02 00 04 ff ff ff ff 40  |...............@|
+   < 0160: 0b 00 04 0a c8 c8 c8 40  0c 00 01 00 40 0d 00 01  |.......@....@...|
+   < 0170: 00 40 0e 00 01 00 40 1b  00 01 00 40 1c 00 01 00  |.@....@....@....|
+
+   It starts as an IF-T/TLS packet of type Juniper/1.
+
+   Lots of zeroes at the start, and at 0x20 there is a distinctive 0x2c20f000
+   signature which appears to be in all config packets.
+
+   At 0x28 it has the payload length (0x10 less than the full IF-T length).
+   0x2c is the start of the routing information. The 0x2e byte always
+   seems to be there, and in this example 0x78 is the length of the
+   routing information block. The number of entries is in byte 0x30.
+   In the absence of IPv6 perhaps, the length at 0x2c seems always to be
+   the number of entries (in 0x30) * 0x10 + 8.
+
+   Routing entries are 0x10 bytes each, starting at 0x34. The ones starting
+   with 0x07 are include, with 0xf1 are exclude. No idea what the following 7
+   bytes 0f 00 00 10 00 00 ff ff mean; perhaps the 0010 is a length? The IP
+   address range is in bytes 8-11 (starting address) and the highest address
+   of the range (traditionally a broadcast address) is in bytes 12-15.
+
+   After the routing inforamation (in this example at 0xa4) comes another
+   length field, this time for the information elements which comprise
+   the rest of the packet. Not sure what the 03 00 00 00 at 0xa8 means;
+   it *could* be an element type 0x3000 with payload length zero but if it
+   is, we don't know what it means. Following that, the elements all have
+   two bytes of type followed by two bytes length, then their payload.
+
+   There follows an attempt to parse the packet based on the above
+   understanding. Having more examples, especially with IPv6 split includes
+   and excludes, would be useful...
+*/
+static int handle_main_config_packet(struct openconnect_info *vpninfo,
+				     unsigned char *bytes, int len)
 {
-	unsigned char bytes[16384];
-	int ret = 0, l;
-	unsigned char *p;
 	int routes_len = 0;
+	int l;
+	unsigned char *p;
 
-	/* If we already have a channel open, it's because we have just
-	 * successfully authenticated on it from pulse_obtain_cookie(). */
-	if (vpninfo->ssl_fd == -1) {
-		ret = pulse_authenticate(vpninfo, 1);
-		if (ret)
-			return ret;
-	}
-
-	ret = recv_ift_packet(vpninfo, (void *)bytes, sizeof(bytes));
-	if (ret < 0)
-		return ret;
-
-
-	/* Example config packet:
-
-	   < 0000: 00 00 0a 4c 00 00 00 01  00 00 01 80 00 00 01 fb  |...L............|
-	   < 0010: 00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
-	   < 0020: 2c 20 f0 00 00 00 00 00  00 00 01 70 2e 00 00 78  |, .........p...x|
-	   < 0030: 07 00 00 00 07 00 00 10  00 00 ff ff 05 05 00 00  |................|
-	   < 0040: 05 05 ff ff 07 00 00 10  00 00 ff ff 07 00 00 00  |................|
-	   < 0050: 07 00 00 ff 07 00 00 10  00 00 ff ff 08 08 08 08  |................|
-	   < 0060: 08 08 08 08 f1 00 00 10  00 00 ff ff 06 06 06 06  |................|
-	   < 0070: 06 06 06 07 f1 00 00 10  00 00 ff ff 09 09 09 09  |................|
-	   < 0080: 09 09 09 09 f1 00 00 10  00 00 ff ff 0a 0a 0a 0a  |................|
-	   < 0090: 0a 0a 0a 0a f1 00 00 10  00 00 ff ff 0b 0b 0b 0b  |................|
-	   < 00a0: 0b 0b 0b 0b 00 00 00 dc  03 00 00 00 40 00 00 01  |............@...|
-	   < 00b0: 00 40 01 00 01 00 40 1f  00 01 00 40 20 00 01 00  |.@....@....@ ...|
-	   < 00c0: 40 21 00 01 00 40 05 00  04 00 00 05 78 00 03 00  |@!...@......x...|
-	   < 00d0: 04 08 08 08 08 00 03 00  04 08 08 04 04 40 06 00  |.............@..|
-	   < 00e0: 0c 70 73 65 63 75 72 65  2e 6e 65 74 00 40 07 00  |.psecure.net.@..|
-	   < 00f0: 04 00 00 00 00 00 04 00  04 01 01 01 01 40 19 00  |.............@..|
-	   < 0100: 01 01 40 1a 00 01 00 40  0f 00 02 00 00 40 10 00  |..@....@.....@..|
-	   < 0110: 02 00 05 40 11 00 02 00  02 40 12 00 04 00 00 04  |...@.....@......|
-	   < 0120: b0 40 13 00 04 00 00 00  00 40 14 00 04 00 00 00  |.@.......@......|
-	   < 0130: 01 40 15 00 04 00 00 00  00 40 16 00 02 11 94 40  |.@.......@.....@|
-	   < 0140: 17 00 04 00 00 00 0f 40  18 00 04 00 00 00 3c 00  |.......@......<.|
-	   < 0150: 01 00 04 0a 14 03 01 00  02 00 04 ff ff ff ff 40  |...............@|
-	   < 0160: 0b 00 04 0a c8 c8 c8 40  0c 00 01 00 40 0d 00 01  |.......@....@...|
-	   < 0170: 00 40 0e 00 01 00 40 1b  00 01 00 40 1c 00 01 00  |.@....@....@....|
-
-	   It starts as an IF-T/TLS packet of type Juniper/1.
-
-	   Lots of zeroes at the start, and at 0x20 there is a distinctive 0x2c20f000
-	   signature which appears to be in all config packets.
-
-	   At 0x28 it has the payload length (0x10 less than the full IF-T length).
-	   0x2c is the start of the routing information. The 0x2e byte always
-	   seems to be there, and in this example 0x78 is the length of the
-	   routing information block. The number of entries is in byte 0x30.
-	   In the absence of IPv6 perhaps, the length at 0x2c seems always to be
-	   the number of entries (in 0x30) * 0x10 + 8.
-
-	   Routing entries are 0x10 bytes each, starting at 0x34. The ones starting
-	   with 0x07 are include, with 0xf1 are exclude. No idea what the following 7
-	   bytes 0f 00 00 10 00 00 ff ff mean; perhaps the 0010 is a length? The IP
-	   address range is in bytes 8-11 (starting address) and the highest address
-	   of the range (traditionally a broadcast address) is in bytes 12-15.
-
-	   After the routing inforamation (in this example at 0xa4) comes another
-	   length field, this time for the information elements which comprise
-	   the rest of the packet. Not sure what the 03 00 00 00 at 0xa8 means;
-	   it *could* be an element type 0x3000 with payload length zero but if it
-	   is, we don't know what it means. Following that, the elements all have
-	   two bytes of type followed by two bytes length, then their payload.
-
-	   There follows an attempt to parse the packet based on the above
-	   understanding. Having more examples, especially with IPv6 split includes
-	   and excludes, would be useful...
-	*/
-
-	if (ret < 0x50 ||
-	    /* IF-T/TLS header */
-	    load_be32(bytes) != VENDOR_JUNIPER ||
-	    load_be32(bytes + 4) != 1 ||
-	    load_be32(bytes + 8) != ret ||
-	    /* This appears to indicate the packet type (vs. ESP config) */
-	    load_be32(bytes + 0x20) != 0x2c20f000 ||
-	    /* A length field */
-	    load_be32(bytes + 0x28) != ret - 0x10 ||
+	/* First part of header, similar to ESP, has already been checked */
+	if (len < 0x31 ||
 	    /* Start of routing information */
 	    load_be16(bytes + 0x2c) != 0x2e00 ||
-	    /* Routing length makes sense */
+	    /* Routing length at 0x2e makes sense */
 	    (routes_len = load_be16(bytes + 0x2e)) != ((int)bytes[0x30] * 0x10 + 8) ||
-	    /* Make sure the next length field is actually present... */
-	    ret < 0x34 + 4 + routes_len ||
-	    /* Another length field (and maybe some adjacent zeroes) */
-	    load_be32(bytes + 0x2c + routes_len) + routes_len + 0x2c != ret) {
+	    /* Make sure the next length field (at 0xa4 in the above example) is present */
+	    len < 0x2c + routes_len + 4||
+	    /* Another length field, must match to end of packet */
+	    load_be32(bytes + 0x2c + routes_len) + routes_len + 0x2c != len) {
 	bad_config:
 		vpn_progress(vpninfo, PRG_ERR,
 			     _("Unexpected Pulse config packet:\n"));
-		dump_buf_hex(vpninfo, PRG_ERR, '<', (void *)bytes, ret);
+		dump_buf_hex(vpninfo, PRG_ERR, '<', (void *)bytes, len);
 		return -EINVAL;
 	}
 	p = bytes + 0x34;
-	routes_len -= 8;
+	routes_len -= 8; /* The header including length and number of routes */
+
 	/* We know it's a multiple of 0x10 now. We checked. */
 	while (routes_len) {
 		char buf[80];
@@ -1695,8 +1674,11 @@ int pulse_connect(struct openconnect_info *vpninfo)
 				} else
 					free(exc);
 			}
-		} else
+		} else {
+			vpn_progress(vpninfo, PRG_ERR, _("Receive route of unknown type 0x%08x\n"),
+				     type);
 			goto bad_config;
+		}
 
 		p += 0x10;
 		routes_len -= 0x10;
@@ -1713,24 +1695,129 @@ int pulse_connect(struct openconnect_info *vpninfo)
 
 	while (l) {
 		uint16_t type = load_be16(p);
-		uint16_t len = load_be16(p+2);
+		uint16_t attrlen = load_be16(p+2);
 
-		if (len + 4 > l)
+		if (attrlen + 4 > l)
 			goto bad_config;
 
 		p += 4;
 		l -= 4;
-		process_attr(vpninfo, type, p, len);
-		p += len;
-		l -= len;
+		process_attr(vpninfo, type, p, attrlen);
+		p += attrlen;
+		l -= attrlen;
 		if (l && l < 4)
 			goto bad_config;
 	}
+	return 0;
+}
+
+/* Example ESP config packet:
+   < 0000:  00 00 0a 4c 00 00 00 01  00 00 00 80 00 00 01 fc  |...L............|
+   < 0010:  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
+   < 0020:  21 20 24 00 00 00 00 00  00 00 00 70 00 00 00 54  |! $........p...T|
+   < 0030:  01 00 00 00 ec 52 1b 6c  00 40 11 9d c5 f6 85 f3  |.....R.l.@......|
+   < 0040:  26 7d 70 75 44 45 63 eb  64 00 fb ba 89 4f 24 b2  |&}puDEc.d....O$.|
+   < 0050:  81 42 ce 24 b8 0a f8 b6  71 39 78 f8 5e 6f 5f d6  |.B.$....q9x.^o_.|
+   < 0060:  9e 5c 06 47 8d 1e f3 0e  5a 51 ae b2 3d 09 8d 27  |.\.G....ZQ..=..'|
+   < 0070:  e0 50 76 6a 22 9a d1 20  86 78 00 00 00 00 00 00  |.Pvj".. .x......|
+
+   First 0x2c bytes are like the main config packet header.
+
+   At 0x2c there is another length field, covering the whole of the
+   rest of this packet.  Then an unknown 0x01000000 at 0x30, followed
+   by the server->client SPI in little-endian(!) form at 0x34.
+
+   Then follows the secrets, with a 2-byte length field at 0x38 (which
+   is always 0x40), followed by the secrets themselves. As with
+   Juniper Network Connect, the HMAC secret immediately follows the
+   encryption key, however large the latter is.
+*/
+static int handle_esp_config_packet(struct openconnect_info *vpninfo,
+				    unsigned char *bytes, int len)
+{
+	return 0;
+}
+
+int pulse_connect(struct openconnect_info *vpninfo)
+{
+	unsigned char bytes[16384];
+	int ret;
+
+	/* If we already have a channel open, it's because we have just
+	 * successfully authenticated on it from pulse_obtain_cookie(). */
+	if (vpninfo->ssl_fd == -1) {
+		ret = pulse_authenticate(vpninfo, 1);
+		if (ret)
+			return ret;
+	}
+
+	while (1) {
+		uint32_t pkt_type;
+
+		ret = recv_ift_packet(vpninfo, (void *)bytes, sizeof(bytes));
+		if (ret < 0)
+			return ret;
+
+		if (ret < 16 || load_be32(bytes + 8) != ret) {
+			vpn_progress(vpninfo, PRG_ERR,
+				     _("Bad IF-T/TLS packet when expecting configuration:\n"));
+			dump_buf_hex(vpninfo, PRG_ERR, '<', bytes, ret);
+			return -EINVAL;
+		}
+
+		if (load_be32(bytes) != VENDOR_JUNIPER) {
+		bad_pkt:
+			vpn_progress(vpninfo, PRG_INFO,
+				     _("Unexpected IF-T/TLS packet when expecting configuration.\n"));
+			dump_buf_hex(vpninfo, PRG_DEBUG, '<', bytes, ret);
+			continue;
+		}
+
+		pkt_type = load_be32(bytes + 4);
+
+		/* End of configuration? Seems to have a 4-byte payload of zeroes. */
+		if (pkt_type == 0x8f)
+			break;
+
+		/* The main and ESP config packets both start like this. The word at
+		 * 0x20 is 0x2c20f000 for config and 0x0x21202400 for ESP, and the word
+		 * at 0x2c is the length of the payload (0x10 less than the overall
+		 * length including (and in) the IF-T/TLS header. e.g 0x170 here:
+		 *
+		 * < 0000: 00 00 0a 4c 00 00 00 01  00 00 01 80 00 00 01 fb  |...L............|
+		 * < 0010: 00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
+		 * < 0020: 2c 20 f0 00 00 00 00 00  00 00 01 70 ...          |, .........|
+		 */
+
+		if (pkt_type != 1 || ret < 0x2c || load_be32(bytes +  0x10) ||
+		    load_be32(bytes + 0x14) || load_be32(bytes + 0x18) ||
+		    load_be32(bytes + 0x1c) || load_be32(bytes + 0x24) ||
+		    load_be32(bytes + 0x28) != ret - 0x10)
+			goto bad_pkt;
+
+		switch(load_be32(bytes + 0x20)) {
+		case 0x2c20f000:
+			ret = handle_main_config_packet(vpninfo, bytes, ret);
+			if (ret)
+				return ret;
+			break;
+
+		case 0x21202400:
+			ret = handle_esp_config_packet(vpninfo, bytes, ret);
+			if (ret)
+				vpninfo->dtls_state = DTLS_DISABLED;
+			break;
+
+		default:
+			goto bad_pkt;
+		}
+	}
+
 
 	if (!vpninfo->ip_info.mtu ||
 	    (!vpninfo->ip_info.addr && !vpninfo->ip_info.addr6)) {
 		vpn_progress(vpninfo, PRG_ERR, "Insufficient configuration found\n");
-		goto bad_config;
+		return -EINVAL;
 	}
 
 	ret = 0;
