@@ -374,14 +374,14 @@ static int calculate_mtu(struct openconnect_info *vpninfo, int can_use_esp)
 	if (!mtu && can_use_esp) {
 		/* remove ESP, UDP, IP headers from base (wire) MTU */
 		mtu = ( base_mtu - UDP_HEADER_SIZE - ESP_HEADER_SIZE
-		        - 12 /* both supported algos (SHA1 and MD5) have 96-bit MAC lengths (RFC2403 and RFC2404) */
-		        - (vpninfo->enc_key_len ? : 32) /* biggest supported IV (AES-256) */ );
+		        - vpninfo->hmac_out_len
+		        - MAX_IV_SIZE);
 		if (vpninfo->peer_addr->sa_family == AF_INET6)
 			mtu -= IPV6_HEADER_SIZE;
 		else
 			mtu -= IPV4_HEADER_SIZE;
-		/* round down to a multiple of blocksize */
-		mtu -= mtu % (vpninfo->enc_key_len ? : 32);
+		/* round down to a multiple of blocksize (16 bytes for both AES-128 and AES-256) */
+		mtu -= mtu % 16;
 		/* subtract ESP footer, which is included in the payload before padding to the blocksize */
 		mtu -= ESP_FOOTER_SIZE;
 
