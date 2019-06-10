@@ -1959,7 +1959,8 @@ int pulse_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable)
 			}
 		}
 
-		len = ssl_nonblock_read(vpninfo, &pkt->pulse.vendor, receive_mtu + 16);
+		/* Receive packet header, if there's anything there... */
+		len = ssl_nonblock_read(vpninfo, &pkt->pulse.vendor, 16);
 		if (!len)
 			break;
 		if (len < 0)
@@ -1970,18 +1971,37 @@ int pulse_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable)
 			return 1;
 		}
 
-		if (load_be32(&pkt->pulse.vendor) != VENDOR_JUNIPER ||
-		    load_be32(&pkt->pulse.len) != len)
+		/* Packets shouldn't cross SSL record boundaries (we hope!), so if there
+		 * was a header there, then rest of that packet should be there too. */
+		if (load_be32(&pkt->pulse.len) > receive_mtu + 0x10) {
+			/* This doesn't look right. Pull the rest of the SSL record
+			 * and complain about it (which we will, since the length
+			 * won't match the header */
+			len = receive_mtu;
+		} else
+			len = load_be32(&pkt->pulse.len) - 0x10;
+
+		payload_len = ssl_nonblock_read(vpninfo, &pkt->data, len);
+		if (payload_len != load_be32(&pkt->pulse.len) - 0x10) {
+			if (payload_len < 0)
+				len = 0x10;
+			else
+				len = payload_len + 0x10;
+			goto unknown_pkt;
+		}
+
+		if (load_be32(&pkt->pulse.vendor) != VENDOR_JUNIPER)
 			goto unknown_pkt;
 
 		vpninfo->ssl_times.last_rx = time(NULL);
-		payload_len = len - 16;
+		len = payload_len + 0x10;
 
 		switch(load_be32(&pkt->pulse.type)) {
 		case 4:
 			vpn_progress(vpninfo, PRG_TRACE,
 				     _("Received data packet of %d bytes\n"),
 				     payload_len);
+			dump_buf_hex(vpninfo, PRG_TRACE, '<', (void *)&vpninfo->cstp_pkt->pulse.vendor, len);
 			vpninfo->cstp_pkt->len = payload_len;
 			queue_packet(&vpninfo->incoming_queue, pkt);
 			vpninfo->cstp_pkt = pkt = NULL;
