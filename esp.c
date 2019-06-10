@@ -110,10 +110,7 @@ int construct_esp_packet(struct openconnect_info *vpninfo, struct pkt *pkt)
 	for (i=0; i<padlen; i++)
 		pkt->data[pkt->len + i] = i + 1;
 	pkt->data[pkt->len + padlen] = padlen;
-	if ((pkt->data[0] & 0xf0) == 0x60) /* iph->ip_v */
-		pkt->data[pkt->len + padlen + 1] = 0x29; /* IPv6 */
-	else
-		pkt->data[pkt->len + padlen + 1] = 0x04; /* Legacy IP */
+	pkt->data[pkt->len + padlen + 1] = 0x04; /* Legacy IP */
 
 	memcpy(pkt->esp.iv, vpninfo->esp_out.iv, sizeof(pkt->esp.iv));
 
