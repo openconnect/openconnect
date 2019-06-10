@@ -2052,6 +2052,15 @@ int pulse_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable)
 			print_esp_keys(vpninfo, _("new outgoing"), &vpninfo->esp_out);
 			continue;
 
+		case 0x96:
+			/* It sends the licence information once the connection is set up. For
+			 * now, abuse this to deal with the race condition in ESP setup — it looks
+			 * like the server doesn't process the ESP config until after we've sent
+			 * the probes, in some cases. */
+			if (vpninfo->dtls_state == DTLS_SLEEPING)
+				vpninfo->proto->udp_send_probes(vpninfo);
+			break;
+
 		default:
 		unknown_pkt:
 			vpn_progress(vpninfo, PRG_ERR,
