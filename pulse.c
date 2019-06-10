@@ -1742,6 +1742,7 @@ static int handle_main_config_packet(struct openconnect_info *vpninfo,
 static int handle_esp_config_packet(struct openconnect_info *vpninfo,
 				    unsigned char *bytes, int len)
 {
+#ifdef HAVE_ESP
 	struct esp *esp;
 	int secretslen;
 	uint32_t spi;
@@ -1811,6 +1812,9 @@ static int handle_esp_config_packet(struct openconnect_info *vpninfo,
 	       0, 0x40 - vpninfo->enc_key_len - vpninfo->hmac_key_len);
 
 	return 0;
+#else
+	return -EINVAL;
+#endif
 }
 
 int pulse_connect(struct openconnect_info *vpninfo)
