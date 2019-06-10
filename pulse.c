@@ -298,10 +298,13 @@ static int process_attr(struct openconnect_info *vpninfo, uint16_t type,
 				     _("Failed to handle IPv6 address\n"));
 			return -EINVAL;
 		}
+		vpninfo->ip_info.addr6 = add_option(vpninfo, "ip6addr", buf, -1);
+
 		i = strlen(buf);
 		snprintf(buf + i, sizeof(buf) - i, "/%d", data[16]);
+		vpninfo->ip_info.netmask6 = add_option(vpninfo, "ip6netmask", buf, -1);
+
 		vpn_progress(vpninfo, PRG_DEBUG, _("Received internal IPv6 address %s\n"), buf);
-		vpninfo->ip_info.addr6 = add_option(vpninfo, "ip6addr", buf, -1);
 		break;
 
 	case 0x4005:
