@@ -153,6 +153,14 @@ static void buf_append_avp_string(struct oc_text_buf *buf, uint32_t type, const 
 	buf_append_avp(buf, type, str, strlen(str));
 }
 
+static void buf_append_avp_be32(struct oc_text_buf *buf, uint32_t type, uint32_t val)
+{
+	uint32_t val_be;
+
+	store_be32(&val_be, val);
+	buf_append_avp(buf, type, &val_be, sizeof(val_be));
+}
+
 static int valid_ift_success(unsigned char *bytes, int len)
 {
 	if (len != 0x18 || (load_be32(bytes) & 0xffffff) != VENDOR_TCG ||
@@ -1264,7 +1272,15 @@ static int pulse_authenticate(struct openconnect_info *vpninfo, int connecting)
 	/* Their client sends a lot of other stuff here, which we don't
 	 * understand and which doesn't appear to be mandatory. So leave
 	 * it out for now until/unless it becomes necessary. */
-	buf_append_avp_string(reqbuf, 0xd70, vpninfo->useragent);
+	buf_append_avp_be32(reqbuf, 0xd49, 3);
+	buf_append_avp_be32(reqbuf, 0xd61, 0);
+	buf_append_avp_string(reqbuf, 0xd5e, "Windows");
+	buf_append_avp_string(reqbuf, 0xd70, "Pulse-Secure/9.0.1.571 (Windows Server 2016) Pulse/9.0.1.571");
+	buf_append_avp_string(reqbuf, 0xd63, "\xac\x1e\x8a\x78\x2d\x96\x45\x69\xb7\x7b\x80\x0f\xb7\x39\x2e\x41");
+	buf_append_avp_string(reqbuf, 0xd64, "\x1a\x3d\x9f\xa4\x07\xd9\xcb\x40\x9d\x61\x6a\x7a\x89\x24\x9b\x15");
+	buf_append_avp_string(reqbuf, 0xd5f, "en-US");
+	buf_append_avp_string(reqbuf, 0xd6c, "\x02\xe9\xa7\x51\x92\x4e");
+	buf_append_avp_be32(reqbuf, 0xd84, 0);
 	if (vpninfo->cookie)
 		buf_append_avp_string(reqbuf, 0xd53, vpninfo->cookie);
 	buf_fill_eap_len(reqbuf, eap_ofs);
