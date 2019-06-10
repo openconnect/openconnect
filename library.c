@@ -38,6 +38,10 @@
 #include "gnutls.h"
 #endif
 
+#if defined(OPENCONNECT_OPENSSL)
+#include <openssl/bio.h>
+#endif
+
 struct openconnect_info *openconnect_vpninfo_new(const char *useragent,
 						 openconnect_validate_peer_cert_vfn validate_peer_cert,
 						 openconnect_write_new_config_vfn write_new_config,

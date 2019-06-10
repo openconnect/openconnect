@@ -752,8 +752,10 @@ int main(int argc, char *argv[])
     int ret;
     int i;
 
+#if OPENSSL_VERSION_NUMBER < 0x10100000L || defined(LIBRESSL_VERSION_NUMBER)
     SSL_library_init();
     SSL_load_error_strings();
+#endif
 
     RAND_bytes(session_id, sizeof(session_id));
     RAND_bytes(master_secret, sizeof(master_secret));
@@ -910,8 +912,10 @@ int main(int argc, char *argv[])
         printf("Cisco BadDTLS test: FAILED\n");
     }
 
+#if OPENSSL_VERSION_NUMBER < 0x10100000L || defined(LIBRESSL_VERSION_NUMBER)
     ERR_free_strings();
     EVP_cleanup();
+#endif
 
     return testresult?0:1;
 }

@@ -1879,10 +1879,12 @@ int openconnect_init_ssl(void)
 	if (ret)
 		return ret;
 #endif
+#if OPENSSL_VERSION_NUMBER < 0x10100000L || defined(LIBRESSL_VERSION_NUMBER)
 	SSL_library_init();
 	ERR_clear_error();
 	SSL_load_error_strings();
 	OpenSSL_add_all_algorithms();
+#endif
 	return 0;
 }
 
