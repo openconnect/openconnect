@@ -406,7 +406,17 @@ int start_dtls_handshake(struct openconnect_info *vpninfo, int dtls_fd)
 			cipher = "PSK";
 		}
 #endif /* OPENSSL_NO_PSK */
-
+#ifdef SSL_OP_NO_ENCRYPT_THEN_MAC
+		/* I'm fairly sure I wasn't lying when I said I had tested
+		 * https://github.com/openssl/openssl/commit/e23d5071ec4c7aa6bb2b
+		 * against GnuTLS both with and without EtM in 2016.
+		 * Nevertheless, in 2019 it seems to be failing to negotiate
+		 * at least for DTLS1_BAD_VER against ocserv with GnuTLS 3.6.7.
+		 * Just turn it off. Real Cisco servers don't do it for
+		 * DTLS1_BAD_VER, and we should be using GCM ciphersuites in
+		 * newer versions of DTLS anyway so it's irrelevant. */
+		SSL_CTX_set_options(vpninfo->dtls_ctx, SSL_OP_NO_ENCRYPT_THEN_MAC);
+#endif
 		/* If we don't readahead, then we do short reads and throw
 		   away the tail of data packets. */
 		SSL_CTX_set_read_ahead(vpninfo->dtls_ctx, 1);
