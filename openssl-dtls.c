@@ -332,6 +332,7 @@ int start_dtls_handshake(struct openconnect_info *vpninfo, int dtls_fd)
 	const char *cipher = vpninfo->dtls_cipher;
 
 #ifdef HAVE_DTLS12
+	/* These things should never happen unless they're supported */
 	if (vpninfo->cisco_dtls12) {
 		dtlsver = DTLS1_2_VERSION;
 	} else if (!strcmp(cipher, "OC-DTLS1_2-AES128-GCM")) {
@@ -349,16 +350,16 @@ int start_dtls_handshake(struct openconnect_info *vpninfo, int dtls_fd)
 
 	if (!vpninfo->dtls_ctx) {
 #ifdef HAVE_DTLS12
+		/* If we can use SSL_CTX_set_min_proto_version, do so. */
 		dtls_method = DTLS_client_method();
 #endif
-#if OPENSSL_VERSION_NUMBER < 0x10100000L || defined(LIBRESSL_VERSION_NUMBER)
+#ifndef HAVE_SSL_CTX_PROTOVER
+		/* If !HAVE_DTLS12, dtlsver *MUST* be DTLS1_BAD_VER because it's set
+		 * at the top of the function and nothing can change it. */
 		if (dtlsver == DTLS1_BAD_VER)
 			dtls_method = DTLSv1_client_method();
-#ifdef HAVE_DTLS12
-		else if (dtlsver == DTLS1_2_VERSION)
-			dtls_method = DTLSv1_2_client_method();
 #endif
-#endif
+
 		vpninfo->dtls_ctx = SSL_CTX_new(dtls_method);
 		if (!vpninfo->dtls_ctx) {
 			vpn_progress(vpninfo, PRG_ERR,
@@ -367,24 +368,26 @@ int start_dtls_handshake(struct openconnect_info *vpninfo, int dtls_fd)
 			vpninfo->dtls_attempt_period = 0;
 			return -EINVAL;
 		}
-		if (dtlsver) {
-#if OPENSSL_VERSION_NUMBER < 0x10100000L || defined(LIBRESSL_VERSION_NUMBER)
-			if (dtlsver == DTLS1_BAD_VER)
-				SSL_CTX_set_options(vpninfo->dtls_ctx, SSL_OP_CISCO_ANYCONNECT);
-#else
-			if (!SSL_CTX_set_min_proto_version(vpninfo->dtls_ctx, dtlsver) ||
-			    !SSL_CTX_set_max_proto_version(vpninfo->dtls_ctx, dtlsver)) {
-				vpn_progress(vpninfo, PRG_ERR,
-					     _("Set DTLS CTX version failed\n"));
-				openconnect_report_ssl_errors(vpninfo);
-				SSL_CTX_free(vpninfo->dtls_ctx);
-				vpninfo->dtls_ctx = NULL;
-				vpninfo->dtls_attempt_period = 0;
-				return -EINVAL;
-			}
+#ifdef HAVE_SSL_CTX_PROTOVER
+		if (dtlsver &&
+		    (!SSL_CTX_set_min_proto_version(vpninfo->dtls_ctx, dtlsver) ||
+		     !SSL_CTX_set_max_proto_version(vpninfo->dtls_ctx, dtlsver))) {
+			vpn_progress(vpninfo, PRG_ERR,
+				     _("Set DTLS CTX version failed\n"));
+			openconnect_report_ssl_errors(vpninfo);
+			SSL_CTX_free(vpninfo->dtls_ctx);
+			vpninfo->dtls_ctx = NULL;
+			vpninfo->dtls_attempt_period = 0;
+			return -EINVAL;
+		}
+#else /* !HAVE_SSL_CTX_PROTOVER */
+		/* If we used the legacy version-specific methods, we need the special
+		 * way to make TLSv1_client_method() do DTLS1_BAD_VER. */
+		if (dtlsver == DTLS1_BAD_VER)
+			SSL_CTX_set_options(vpninfo->dtls_ctx, SSL_OP_CISCO_ANYCONNECT);
 #endif
 #if defined (HAVE_DTLS12) && !defined(OPENSSL_NO_PSK)
-		} else {
+		if (!dtlsver) {
 			SSL_CTX_set_psk_client_callback(vpninfo->dtls_ctx, psk_callback);
 			/* For PSK we override the DTLS master secret with one derived
 			 * from the HTTPS session. */
@@ -401,9 +404,9 @@ int start_dtls_handshake(struct openconnect_info *vpninfo, int dtls_fd)
 			}
 			/* For SSL_CTX_set_cipher_list() */
 			cipher = "PSK";
-
-#endif
 		}
+#endif /* OPENSSL_NO_PSK */
+
 		/* If we don't readahead, then we do short reads and throw
 		   away the tail of data packets. */
 		SSL_CTX_set_read_ahead(vpninfo->dtls_ctx, 1);

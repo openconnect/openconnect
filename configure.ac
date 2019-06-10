@@ -455,11 +455,22 @@ case "$ssl_library" in
 			AC_DEFINE(HAVE_DTLS1_STOP_TIMER, [1], [OpenSSL has dtls1_stop_timer() function])],
 		       [AC_MSG_RESULT(no)])
 
-	AC_MSG_CHECKING([for DTLSv1_2_client_method() in OpenSSL])
+	# DTLS_client_method() and DTLSv1_2_client_method() were both added between
+	# OpenSSL v1.0.1 and v1.0.2. DTLSV1.2_client_method() was later deprecated
+	# in v1.1.0 so we use DTLS_client_method() as our check for DTLSv1.2 support
+	# and that's what we actually use in openssl-dtls.c too.
+	AC_MSG_CHECKING([for DTLS_client_method() in OpenSSL])
 	AC_LINK_IFELSE([AC_LANG_PROGRAM([#include <openssl/ssl.h>],
-					[DTLSv1_2_client_method();])],
+					[DTLS_client_method();])],
 		       [AC_MSG_RESULT(yes)
-			AC_DEFINE(HAVE_DTLS12, [1], [OpenSSL has DTLSv1_2_client_method() function])],
+			AC_DEFINE(HAVE_DTLS12, [1], [OpenSSL has DTLS_client_method() function])],
+		       [AC_MSG_RESULT(no)])
+
+	AC_MSG_CHECKING([for SSL_CTX_set_min_proto_version() in OpenSSL])
+	AC_LINK_IFELSE([AC_LANG_PROGRAM([#include <openssl/ssl.h>],
+					[SSL_CTX_set_min_proto_version((void *)0, 0);])],
+		       [AC_MSG_RESULT(yes)
+			AC_DEFINE(HAVE_SSL_CTX_PROTOVER, [1], [OpenSSL has SSL_CTX_set_min_proto_version() function])],
 		       [AC_MSG_RESULT(no)])
 
 	AC_CHECK_FUNC(HMAC_CTX_copy,
