@@ -343,7 +343,9 @@ if test "$ssl_library" = ""; then
 	     LIBS="$oldLIBS"])
 	ssl_library=OpenSSL
 	PKG_CHECK_MODULES(P11KIT, p11-kit-1,
-	    [PKG_CHECK_MODULES(LIBP11, libp11,
+	    # libp11 0.4.7 fails to export ERR_LIB_PKCS11 so we don't know what it
+	    # is and can't match its errors, which we need to for login checks.
+	    [PKG_CHECK_MODULES(LIBP11, libp11 != 0.4.7,
 		[AC_DEFINE(HAVE_LIBP11, 1, [Have libp11 and p11-kit for OpenSSL])
 		 AC_SUBST(P11KIT_PC, ["libp11 p11-kit-1"])
 		 proxy_module="`$PKG_CONFIG --variable=proxy_module p11-kit-1`"
