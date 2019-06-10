@@ -1981,6 +1981,51 @@ int hotp_hmac(struct openconnect_info *vpninfo, const void *challenge)
 	return load_be32(&hash[hashlen]) & 0x7fffffff;
 }
 
+static long ttls_ctrl_func(BIO *b, int cmd, long larg, void *iarg);
+static int ttls_pull_func(BIO *b, char *buf, int len);
+static int ttls_push_func(BIO *b, const char *buf, int len);
+
+#ifdef HAVE_BIO_METH_FREE
+static BIO_METHOD *eap_ttls_method(void)
+{
+	BIO_METHOD *meth = BIO_meth_new(BIO_get_new_index(), "EAP-TTLS");
+
+	BIO_meth_set_write(meth, ttls_push_func);
+	BIO_meth_set_read(meth, ttls_pull_func);
+	BIO_meth_set_ctrl(meth, ttls_ctrl_func);
+	return meth;
+}
+#else /* !HAVE_BIO_METH_FREE */
+#define BIO_TYPE_EAP_TTLS 0x80
+
+static BIO_METHOD ttls_bio_meth = {
+	.type = BIO_TYPE_EAP_TTLS,
+	.name = "EAP-TTLS",
+	.bwrite = ttls_push_func,
+	.bread = ttls_pull_func,
+	.ctrl = ttls_ctrl_func,
+};
+static BIO_METHOD *eap_ttls_method(void)
+{
+	return &ttls_bio_meth;
+}
+
+static inline void BIO_set_data(BIO *b, void *p)
+{
+	b->ptr = p;
+}
+
+static inline void *BIO_get_data(BIO *b)
+{
+	return b->ptr;
+}
+
+static void BIO_set_init(BIO *b, int i)
+{
+	b->init = i;
+}
+#endif /* !HAVE_BIO_METH_FREE */
+
 static int ttls_push_func(BIO *b, const char *buf, int len)
 {
 	struct openconnect_info *vpninfo = BIO_get_data(b);
@@ -2017,13 +2062,8 @@ void *establish_eap_ttls(struct openconnect_info *vpninfo)
 	BIO *bio;
 	int err;
 
-
-	if (!vpninfo->ttls_bio_meth) {
-		vpninfo->ttls_bio_meth = BIO_meth_new(BIO_get_new_index(), "EAP-TTLS");
-		BIO_meth_set_write(vpninfo->ttls_bio_meth, ttls_push_func);
-		BIO_meth_set_read(vpninfo->ttls_bio_meth, ttls_pull_func);
-		BIO_meth_set_ctrl(vpninfo->ttls_bio_meth, ttls_ctrl_func);
-	}
+	if (!vpninfo->ttls_bio_meth)
+		vpninfo->ttls_bio_meth = eap_ttls_method();
 
 	bio = BIO_new(vpninfo->ttls_bio_meth);
 	BIO_set_data(bio, vpninfo);

@@ -386,7 +386,7 @@ void openconnect_vpninfo_free(struct openconnect_info *vpninfo)
 	free(vpninfo->ifname);
 	free(vpninfo->dtls_cipher);
 	free(vpninfo->peer_cert_hash);
-#if defined(OPENCONNECT_OPENSSL)
+#if defined(OPENCONNECT_OPENSSL) && defined (HAVE_BIO_METH_FREE)
 	if (vpninfo->ttls_bio_meth)
 		BIO_meth_free(vpninfo->ttls_bio_meth);
 #elif defined(OPENCONNECT_GNUTLS)

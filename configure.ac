@@ -475,6 +475,13 @@ case "$ssl_library" in
 			AC_DEFINE(HAVE_SSL_CTX_PROTOVER, [1], [OpenSSL has SSL_CTX_set_min_proto_version() function])],
 		       [AC_MSG_RESULT(no)])
 
+	AC_MSG_CHECKING([for BIO_meth_free() in OpenSSL])
+	AC_LINK_IFELSE([AC_LANG_PROGRAM([#include <openssl/bio.h>],
+					[BIO_meth_free((void *)0);])],
+		       [AC_MSG_RESULT(yes)
+			AC_DEFINE(HAVE_BIO_METH_FREE, [1], [OpenSSL has BIO_meth_free() function])],
+		       [AC_MSG_RESULT(no)])
+
 	AC_CHECK_FUNC(HMAC_CTX_copy,
 		      [esp=yes],
 		      [AC_MSG_WARN([ESP support will be disabled])])
