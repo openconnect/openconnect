@@ -200,8 +200,8 @@ int openconnect_get_supported_protocols(struct oc_vpn_proto **protos)
 
 	for (p = openconnect_protos; p->name; p++, pr++) {
 		pr->name = p->name;
-		pr->pretty_name = p->pretty_name;
-		pr->description = p->description;
+		pr->pretty_name = _(p->pretty_name);
+		pr->description = _(p->description);
 		pr->flags = p->flags;
 	}
 	return (p - openconnect_protos);
