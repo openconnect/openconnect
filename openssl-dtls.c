@@ -407,15 +407,42 @@ int start_dtls_handshake(struct openconnect_info *vpninfo, int dtls_fd)
 		}
 #endif /* OPENSSL_NO_PSK */
 #ifdef SSL_OP_NO_ENCRYPT_THEN_MAC
-		/* I'm fairly sure I wasn't lying when I said I had tested
+		/*
+		 * I'm fairly sure I wasn't lying when I said I had tested
 		 * https://github.com/openssl/openssl/commit/e23d5071ec4c7aa6bb2b
 		 * against GnuTLS both with and without EtM in 2016.
+		 *
 		 * Nevertheless, in 2019 it seems to be failing to negotiate
-		 * at least for DTLS1_BAD_VER against ocserv with GnuTLS 3.6.7.
+		 * at least for DTLS1_BAD_VER against ocserv with GnuTLS 3.6.7:
+		 * https://gitlab.com/gnutls/gnutls/issues/139 — I think because
+		 * GnuTLS isn't actually doing EtM after negotiating it (like
+		 * OpenSSL 1.1.0 used to).
+		 *
 		 * Just turn it off. Real Cisco servers don't do it for
-		 * DTLS1_BAD_VER, and we should be using GCM ciphersuites in
-		 * newer versions of DTLS anyway so it's irrelevant. */
+		 * DTLS1_BAD_VER, and against ocserv (and newer Cisco) we should
+		 * be using DTLSv1.2 with AEAD ciphersuites anyway so EtM is
+		 * irrelevant.
+		 */
 		SSL_CTX_set_options(vpninfo->dtls_ctx, SSL_OP_NO_ENCRYPT_THEN_MAC);
+#endif
+#ifdef SSL_OP_NO_EXTENDED_MASTER_SECRET
+		/* RFC7627 says:
+		 *
+		 *   If the original session did not use the "extended_master_secret"
+		 *   extension but the new ClientHello contains the extension, then the
+		 *   server MUST NOT perform the abbreviated handshake.  Instead, it
+		 *   SHOULD continue with a full handshake (as described in
+		 *   Section 5.2) to negotiate a new session.
+		 *
+		 * Now that would be distinctly suboptimal, since we have no way to do
+		 * a full handshake (we even explicitly protect against it, in case a
+		 * MITM server attempts to hijack our deliberately-resumed session).
+		 *
+		 * So where OpenSSL provides the choice, tell it not to use extms on
+		 * resumed sessions.
+		 */
+		if (dtlsver)
+			SSL_CTX_set_options(vpninfo->dtls_ctx, SSL_OP_NO_EXTENDED_MASTER_SECRET);
 #endif
 		/* If we don't readahead, then we do short reads and throw
 		   away the tail of data packets. */
