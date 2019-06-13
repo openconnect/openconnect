@@ -1001,24 +1001,24 @@ JNIEXPORT void JNICALL Java_org_infradead_libopenconnect_LibOpenConnect_resetSSL
 	openconnect_reset_ssl(ctx->vpninfo);
 }
 
-JNIEXPORT void JNICALL Java_org_infradead_libopenconnect_LibOpenConnect_disableIPv6(
+JNIEXPORT int JNICALL Java_org_infradead_libopenconnect_LibOpenConnect_disableIPv6(
 	JNIEnv *jenv, jobject jobj)
 {
 	struct libctx *ctx = getctx(jenv, jobj);
 
 	if (!ctx)
-		return;
-	openconnect_disable_ipv6(ctx->vpninfo);
+		return -EINVAL;
+	return openconnect_disable_ipv6(ctx->vpninfo);
 }
 
-JNIEXPORT void JNICALL Java_org_infradead_libopenconnect_LibOpenConnect_disableDTLS(
+JNIEXPORT int JNICALL Java_org_infradead_libopenconnect_LibOpenConnect_disableDTLS(
 	JNIEnv *jenv, jobject jobj)
 {
 	struct libctx *ctx = getctx(jenv, jobj);
 
 	if (!ctx)
-		return;
-	openconnect_disable_dtls(ctx->vpninfo);
+		return -EINVAL;
+	return openconnect_disable_dtls(ctx->vpninfo);
 }
 
 JNIEXPORT void JNICALL Java_org_infradead_libopenconnect_LibOpenConnect_setCertExpiryWarning(

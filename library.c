@@ -552,14 +552,40 @@ void openconnect_set_xmlsha1(struct openconnect_info *vpninfo,
 	memcpy(&vpninfo->xmlsha1, xmlsha1, size);
 }
 
-void openconnect_disable_ipv6(struct openconnect_info *vpninfo)
+int openconnect_disable_ipv6(struct openconnect_info *vpninfo)
 {
+	/* This prevents disabling IPv6 when the connection is
+	 * currently connected or has been connected previously.
+	 *
+	 * XX: It would be better to allow it when currently
+	 * disconnected, but we currently have no way to indicate
+	 * a state in which IP and routing configuration are
+	 * unconfigured state. (Neither a closed TLS socket
+	 * nor tunnel socket is a reliable indicator.)
+	 */
+	if (!vpninfo->disable_ipv6
+	    || vpninfo->ssl_times.last_tx != 0)
+		return -EINVAL;
 	vpninfo->disable_ipv6 = 1;
+	return 0;
 }
 
-void openconnect_disable_dtls(struct openconnect_info *vpninfo)
+int openconnect_disable_dtls(struct openconnect_info *vpninfo)
 {
+	/* This disables DTLS or ESP. It is prevented when the
+	 * connection is currently connected or has been
+	 * connected previously.
+	 *
+	 * XX: It would be better to allow it when DTLS is not
+	 * in use, but other than DTLS already being disabled,
+	 * we currently do not have a reliable indicator of
+	 * this.
+	 */
+	if (vpninfo->dtls_state != DTLS_DISABLED
+	    || vpninfo->ssl_times.last_tx != 0)
+		return -EINVAL;
 	vpninfo->dtls_state = DTLS_DISABLED;
+	return 0;
 }
 
 int openconnect_set_cafile(struct openconnect_info *vpninfo, const char *cafile)

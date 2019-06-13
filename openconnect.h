@@ -41,6 +41,7 @@ extern "C" {
  *  - Add openconnect_set_allow_insecure_crypto()
  *  - Add openconnect_get_auth_expiration()
  *  - Add openconnect_disable_dtls()
+ *  - Make openconnect_disable_ipv6() return int
  *
  * API version 5.6 (v8.06; 2020-03-31):
  *  - Add openconnect_set_trojan_interval()
@@ -550,8 +551,8 @@ const char *openconnect_get_cookie(struct openconnect_info *);
 int openconnect_set_cookie(struct openconnect_info *, const char *);
 void openconnect_clear_cookie(struct openconnect_info *);
 
-void openconnect_disable_ipv6(struct openconnect_info *vpninfo);
-void openconnect_disable_dtls(struct openconnect_info *vpninfo);
+int openconnect_disable_ipv6(struct openconnect_info *vpninfo);
+int openconnect_disable_dtls(struct openconnect_info *vpninfo);
 void openconnect_reset_ssl(struct openconnect_info *vpninfo);
 int openconnect_parse_url(struct openconnect_info *vpninfo, const char *url);
 void openconnect_set_cert_expiry_warning(struct openconnect_info *vpninfo,
