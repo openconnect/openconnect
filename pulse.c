@@ -245,6 +245,7 @@ static const char *add_option(struct openconnect_info *vpninfo, const char *opt,
 static int process_attr(struct openconnect_info *vpninfo, uint16_t type,
 			unsigned char *data, int attrlen)
 {
+	struct oc_split_include *xc;
 	char buf[80];
 	int i;
 
@@ -313,6 +314,71 @@ static int process_attr(struct openconnect_info *vpninfo, uint16_t type,
 		vpninfo->ip_info.netmask6 = add_option(vpninfo, "ip6netmask", buf, -1);
 
 		vpn_progress(vpninfo, PRG_DEBUG, _("Received internal IPv6 address %s\n"), buf);
+		break;
+
+	case 0x000a:
+		if (attrlen != 16)
+			goto badlen;
+		if (!inet_ntop(AF_INET6, data, buf, sizeof(buf))) {
+			vpn_progress(vpninfo, PRG_ERR,
+				     _("Failed to handle IPv6 address\n"));
+			return -EINVAL;
+		}
+
+		for (i = 0; i < 3; i++) {
+			if (!vpninfo->ip_info.dns[i]) {
+				vpninfo->ip_info.dns[i] = add_option(vpninfo, "DNS", buf, -1);
+				break;
+			}
+		}
+
+		vpn_progress(vpninfo, PRG_DEBUG, _("Received DNS server %s\n"), buf);
+		break;
+
+	case 0x000f:
+		if (attrlen != 17)
+			goto badlen;
+		if (!inet_ntop(AF_INET6, data, buf, sizeof(buf))) {
+			vpn_progress(vpninfo, PRG_ERR,
+				     _("Failed to handle IPv6 address\n"));
+			return -EINVAL;
+		}
+		i = strlen(buf);
+		snprintf(buf + i, sizeof(buf) - i, "/%d", data[16]);
+
+		xc = malloc(sizeof(*xc));
+		if (xc) {
+			xc->route =  add_option(vpninfo, "split-include6", buf, -1);
+			if (xc->route) {
+				xc->next = vpninfo->ip_info.split_includes;
+				vpninfo->ip_info.split_includes = xc;
+			} else
+				free(xc);
+		}
+		vpn_progress(vpninfo, PRG_DEBUG, _("Received IPv6 split include %s\n"), buf);
+		break;
+
+	case 0x0010:
+		if (attrlen != 17)
+			goto badlen;
+		if (!inet_ntop(AF_INET6, data, buf, sizeof(buf))) {
+			vpn_progress(vpninfo, PRG_ERR,
+				     _("Failed to handle IPv6 address\n"));
+			return -EINVAL;
+		}
+		i = strlen(buf);
+		snprintf(buf + i, sizeof(buf) - i, "/%d", data[16]);
+
+		xc = malloc(sizeof(*xc));
+		if (xc) {
+			xc->route =  add_option(vpninfo, "split-exclude6", buf, -1);
+			if (xc->route) {
+				xc->next = vpninfo->ip_info.split_excludes;
+				vpninfo->ip_info.split_excludes = xc;
+			} else
+				free(xc);
+		}
+		vpn_progress(vpninfo, PRG_DEBUG, _("Received IPv6 split exclude %s\n"), buf);
 		break;
 
 	case 0x4005:
