@@ -56,6 +56,7 @@
 #define EAP_FAILURE 4
 
 #define EAP_TYPE_IDENTITY 1
+#define EAP_TYPE_GTC 6
 #define EAP_TYPE_TTLS 0x15
 #define EAP_TYPE_EXPANDED 0xfe
 
@@ -1068,6 +1069,88 @@ static int pulse_request_user_auth(struct openconnect_info *vpninfo, struct oc_t
 	return ret;
 }
 
+static int pulse_request_gtc(struct openconnect_info *vpninfo, struct oc_text_buf *reqbuf,
+			     uint8_t eap_ident, char *user_prompt, char *gtc_prompt)
+{
+	struct oc_auth_form f;
+	struct oc_form_opt o[2];
+	int ret;
+
+	memset(&f, 0, sizeof(f));
+	memset(o, 0, sizeof(o));
+        f.auth_id = (char *)"pulse_gtc";
+        f.opts = o;
+
+	f.message = _("Token code request:");
+
+	o[0].next = &o[1];
+	o[0].type = OC_FORM_OPT_TEXT;
+	o[0].name = (char *)"username";
+	if (!user_prompt || asprintf(&o[0].label, "%s:", user_prompt) < 0) {
+		user_prompt = NULL;
+		o[0].label = (char *)_("Username:");
+	}
+
+	o[1].type = OC_FORM_OPT_PASSWORD;
+	o[1].name = (char *)"tokencode";
+	o[1].label = gtc_prompt;
+
+	if (!can_gen_tokencode(vpninfo, &f, &o[1]))
+		o[1].type = OC_FORM_OPT_TOKEN;
+
+	ret = process_auth_form(vpninfo, &f);
+	if (ret)
+		goto out;
+
+	ret = do_gen_tokencode(vpninfo, &f);
+	if (ret)
+		goto out;
+
+	if (o[0]._value) {
+		buf_append_avp_string(reqbuf, 0xd6d, o[0]._value);
+		free_pass(&o[0]._value);
+	}
+	if (o[1]._value) {
+		unsigned char eap_avp[13];
+		int l = strlen(o[1]._value);
+		if (l > 253) {
+			free_pass(&o[1]._value);
+			ret = -EINVAL;
+			goto out;
+		}
+
+		/* AVP flags+mandatory+length */
+		store_be32(eap_avp, AVP_CODE_EAP_MESSAGE);
+		store_be32(eap_avp + 4, (AVP_MANDATORY << 24) + sizeof(eap_avp) + l);
+
+		/* EAP header: code/ident/len */
+		eap_avp[8] = EAP_RESPONSE;
+		eap_avp[9] = eap_ident;
+		store_be16(eap_avp + 10, l + 5); /* EAP length */
+		eap_avp[12] = EAP_TYPE_GTC;
+		buf_append_bytes(reqbuf, eap_avp, sizeof(eap_avp));
+		buf_append_bytes(reqbuf, o[1]._value, l);
+
+		/* Padding */
+		if ((sizeof(eap_avp) + l) & 3) {
+			uint32_t pad = 0;
+
+			buf_append_bytes(reqbuf, &pad,
+					 4 - ((sizeof(eap_avp) + l) & 3));
+		}
+		free_pass(&o[1]._value);
+	} else {
+		ret = -EINVAL;
+		goto out;
+	}
+	ret = 0;
+ out:
+	if (user_prompt)
+		free(o[0].label);
+
+	return ret;
+}
+
 /* IF-T/TLS session establishment is the same for both pulse_obtain_cookie() and
  * pulse_connect(). We have to go through the EAP phase of the connection either
  * way; it's just that we might do it with just the cookie, or we might need to
@@ -1086,10 +1169,10 @@ static int pulse_authenticate(struct openconnect_info *vpninfo, int connecting)
 	void *avp_p, *p;
 	unsigned char *eap;
 	int cookie_found = 0;
-	int j2_found = 0, realms_found = 0, realm_entry = 0, old_sessions = 0;
+	int j2_found = 0, realms_found = 0, realm_entry = 0, old_sessions = 0, gtc_found = 0;
 	uint8_t j2_code = 0;
 	void *ttls = NULL;
-	char *user_prompt = NULL, *pass_prompt = NULL;
+	char *user_prompt = NULL, *pass_prompt = NULL, *gtc_prompt = NULL;
 
 	/* XXX: We should do what cstp_connect() does to check that configuration
 	   hasn't changed on a reconnect. */
@@ -1341,7 +1424,7 @@ static int pulse_authenticate(struct openconnect_info *vpninfo, int connecting)
 	buf_append_avp_be32(reqbuf, 0xd49, 3);
 	buf_append_avp_be32(reqbuf, 0xd61, 0);
 	buf_append_avp_string(reqbuf, 0xd5e, "Windows");
-	buf_append_avp_string(reqbuf, 0xd70, "Pulse-Secure/9.0.1.571 (Windows Server 2016) Pulse/9.0.1.571");
+	buf_append_avp_string(reqbuf, 0xd70, "Pulse-Secure/9.0.3.1667 (Windows Server 2016) Pulse/9.0.3.1667");
 	buf_append_avp_string(reqbuf, 0xd63, "\xac\x1e\x8a\x78\x2d\x96\x45\x69\xb7\x7b\x80\x0f\xb7\x39\x2e\x41");
 	buf_append_avp_string(reqbuf, 0xd64, "\x1a\x3d\x9f\xa4\x07\xd9\xcb\x40\x9d\x61\x6a\x7a\x89\x24\x9b\x15");
 	buf_append_avp_string(reqbuf, 0xd5f, "en-US");
@@ -1357,7 +1440,7 @@ static int pulse_authenticate(struct openconnect_info *vpninfo, int connecting)
 
 	/* Await start of auth negotiations */
  auth_response:
-	realm_entry = realms_found = j2_found = old_sessions = 0;
+	realm_entry = realms_found = j2_found = old_sessions = 0, gtc_found = 0;
 	eap = recv_eap_packet(vpninfo, ttls, (void *)bytes, sizeof(bytes));
 	if (!eap) {
 		ret = -EIO;
@@ -1408,27 +1491,40 @@ static int pulse_authenticate(struct openconnect_info *vpninfo, int connecting)
 		} else if (!avp_vendor && avp_code == AVP_CODE_EAP_MESSAGE) {
 			char *avp_c = avp_p;
 
-			/* EAP within AVP within EAP within IF-T/TLS.
-			 * The only thing we understand here is another form of Expanded EAP,
-			 * this time with the type Juniper/2. */
-			if (avp_len != 13 || avp_c[0] != EAP_REQUEST ||
-			    load_be16(avp_c + 2) != avp_len ||
-			    load_be32(avp_c + 4) != EXPANDED_JUNIPER ||
-			    load_be32(avp_c + 8) != 2)
+			/* EAP within AVP within EAP within IF-T/TLS. Chewck EAP header. */
+			if (avp_len < 5 || avp_c[0] != EAP_REQUEST ||
+			    load_be16(avp_c + 2) != avp_len)
 				goto auth_unknown;
 
-			j2_found = 1;
-			j2_code = avp_c[12];
 			eap2_ident = avp_c[1];
+
+			if (avp_c[4] == EAP_TYPE_GTC) {
+				gtc_found = 1;
+				free(gtc_prompt);
+				gtc_prompt = strndup(avp_c + 5, avp_len - 5);
+			} else if (avp_len == 13 && load_be32(avp_c + 4) == EXPANDED_JUNIPER) {
+				switch (load_be32(avp_c + 8)) {
+				case 2: /*  Expanded Juniper/2: password */
+					j2_found = 1;
+					j2_code = avp_c[12];
+					break;
+
+				default:
+					goto auth_unknown;
+				}
+			} else {
+				goto auth_unknown;
+			}
+
 		} else if (avp_flags & AVP_MANDATORY)
 			goto auth_unknown;
 	}
 
 	/* We want it to be precisely one type of request, not a mixture. */
-	if (realm_entry + !!realms_found + j2_found + cookie_found + !!old_sessions != 1) {
+	if (realm_entry + !!realms_found + j2_found + gtc_found + cookie_found + !!old_sessions != 1) {
 	auth_unknown:
 		vpn_progress(vpninfo, PRG_ERR,
-			     _("Unhandled Pulse authenticationb packet, or authentication failure\n"));
+			     _("Unhandled Pulse authentication packet, or authentication failure\n"));
 		goto bad_eap;
 	}
 
@@ -1469,6 +1565,15 @@ static int pulse_authenticate(struct openconnect_info *vpninfo, int connecting)
 			/* Present user/password form to user */
 			ret = pulse_request_user_auth(vpninfo, reqbuf, eap2_ident,
 						      user_prompt, pass_prompt);
+			if (ret)
+				goto out;
+		} else if (gtc_found) {
+			vpn_progress(vpninfo, PRG_TRACE,
+				     _("Pulse password general token code request\n"));
+
+			/* Present user/password form to user */
+			ret = pulse_request_gtc(vpninfo, reqbuf, eap2_ident,
+						user_prompt, gtc_prompt);
 			if (ret)
 				goto out;
 		} else if (old_sessions) {
