@@ -1172,7 +1172,7 @@ static int pulse_authenticate(struct openconnect_info *vpninfo, int connecting)
 	int j2_found = 0, realms_found = 0, realm_entry = 0, old_sessions = 0, gtc_found = 0;
 	uint8_t j2_code = 0;
 	void *ttls = NULL;
-	char *user_prompt = NULL, *pass_prompt = NULL, *gtc_prompt = NULL;
+	char *user_prompt = NULL, *pass_prompt = NULL, *gtc_prompt = NULL, *signin_prompt = NULL;
 
 	/* XXX: We should do what cstp_connect() does to check that configuration
 	   hasn't changed on a reconnect. */
@@ -1440,6 +1440,9 @@ static int pulse_authenticate(struct openconnect_info *vpninfo, int connecting)
 
 	/* Await start of auth negotiations */
  auth_response:
+	free(signin_prompt);
+	signin_prompt = NULL;
+
 	realm_entry = realms_found = j2_found = old_sessions = 0, gtc_found = 0;
 	eap = recv_eap_packet(vpninfo, ttls, (void *)bytes, sizeof(bytes));
 	if (!eap) {
@@ -1452,6 +1455,7 @@ static int pulse_authenticate(struct openconnect_info *vpninfo, int connecting)
 	p = eap + 0x0c;
 
 	while (l) {
+
 		if (parse_avp(vpninfo, &p, &l, &avp_p, &avp_len, &avp_flags,
 			      &avp_vendor, &avp_code)) {
 			vpn_progress(vpninfo, PRG_ERR,
@@ -1480,6 +1484,9 @@ static int pulse_authenticate(struct openconnect_info *vpninfo, int connecting)
 		} else if (avp_vendor == VENDOR_JUNIPER2 && avp_code == 0xd81) {
 			free(pass_prompt);
 			pass_prompt = strndup(avp_p, avp_len);
+		} else if (avp_vendor == VENDOR_JUNIPER2 && avp_code == 0xd7b) {
+			free(signin_prompt);
+			signin_prompt = strndup(avp_p, avp_len);
 		} else if (avp_vendor == VENDOR_JUNIPER2 && avp_code == 0xd4e) {
 			realms_found++;
 		} else if (avp_vendor == VENDOR_JUNIPER2 && avp_code == 0xd4f) {
@@ -1521,7 +1528,8 @@ static int pulse_authenticate(struct openconnect_info *vpninfo, int connecting)
 	}
 
 	/* We want it to be precisely one type of request, not a mixture. */
-	if (realm_entry + !!realms_found + j2_found + gtc_found + cookie_found + !!old_sessions != 1) {
+	if (realm_entry + !!realms_found + j2_found + gtc_found + cookie_found + !!old_sessions != 1 &&
+	    !signin_prompt) {
 	auth_unknown:
 		vpn_progress(vpninfo, PRG_ERR,
 			     _("Unhandled Pulse authentication packet, or authentication failure\n"));
@@ -1583,6 +1591,8 @@ static int pulse_authenticate(struct openconnect_info *vpninfo, int connecting)
 			ret = pulse_request_session_kill(vpninfo, reqbuf, old_sessions, eap);
 			if (ret)
 				goto out;
+		} else if (signin_prompt) {
+			buf_append_avp_be32(reqbuf, 0xd7c, 1);
 		} else {
 			vpn_progress(vpninfo, PRG_ERR,
 				     _("Unhandled Pulse auth request\n"));
@@ -1642,6 +1652,8 @@ static int pulse_authenticate(struct openconnect_info *vpninfo, int connecting)
 	vpninfo->ttls_recvbuf = NULL;
 	free(user_prompt);
 	free(pass_prompt);
+	free(gtc_prompt);
+	free(signin_prompt);
 	return ret;
 }
 
