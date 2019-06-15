@@ -1478,6 +1478,22 @@ static int pulse_authenticate(struct openconnect_info *vpninfo, int connecting)
 		}
 		if (avp_vendor == VENDOR_JUNIPER2 && avp_code == 0xd65) {
 			old_sessions++;
+		} else if (avp_vendor == VENDOR_JUNIPER2 && avp_code == 0xd60) {
+			uint32_t failcode;
+			if (avp_len != 4)
+				goto auth_unknown;
+
+			failcode = load_be32(avp_p);
+			if (failcode == 0x0d) {
+				vpn_progress(vpninfo, PRG_ERR,
+					     _("Authentication failure: Account locked out\n"));
+			} else {
+				vpn_progress(vpninfo, PRG_ERR,
+					     _("Authentication failure: Code 0x%02x\n"),
+					       failcode);
+			}
+			ret = -EPERM;
+			goto out;
 		} else if (avp_vendor == VENDOR_JUNIPER2 && avp_code == 0xd80) {
 			free(user_prompt);
 			user_prompt = strndup(avp_p, avp_len);
