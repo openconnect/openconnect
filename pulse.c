@@ -57,6 +57,7 @@
 
 #define EAP_TYPE_IDENTITY 1
 #define EAP_TYPE_GTC 6
+#define EAP_TYPE_TLS 0x0d
 #define EAP_TYPE_TTLS 0x15
 #define EAP_TYPE_EXPANDED 0xfe
 
@@ -1418,9 +1419,14 @@ static int pulse_authenticate(struct openconnect_info *vpninfo, int connecting)
 	buf_append_ift_hdr(reqbuf, VENDOR_TCG, IFT_CLIENT_AUTH_RESPONSE);
 	buf_append_be32(reqbuf, JUNIPER_1); /* IF-T/TLS Auth Type */
 	eap_ofs = buf_append_eap_hdr(reqbuf, EAP_RESPONSE, eap_ident, EAP_TYPE_EXPANDED, 1);
+
+#if 0
 	/* Their client sends a lot of other stuff here, which we don't
 	 * understand and which doesn't appear to be mandatory. So leave
-	 * it out for now until/unless it becomes necessary. */
+	 * it out for now until/unless it becomes necessary. It seems that
+	 * sending Pulse-Secure/4.0.0.0 or anything newer makes it do
+	 * EAP-TLS *within* the EAP-TTLS session if you don't actually
+	 * present a certificate. */
 	buf_append_avp_be32(reqbuf, 0xd49, 3);
 	buf_append_avp_be32(reqbuf, 0xd61, 0);
 	buf_append_avp_string(reqbuf, 0xd5e, "Windows");
@@ -1430,6 +1436,9 @@ static int pulse_authenticate(struct openconnect_info *vpninfo, int connecting)
 	buf_append_avp_string(reqbuf, 0xd5f, "en-US");
 	buf_append_avp_string(reqbuf, 0xd6c, "\x02\xe9\xa7\x51\x92\x4e");
 	buf_append_avp_be32(reqbuf, 0xd84, 0);
+#else
+	buf_append_avp_string(reqbuf, 0xd70, vpninfo->useragent);
+#endif
 	if (vpninfo->cookie)
 		buf_append_avp_string(reqbuf, 0xd53, vpninfo->cookie);
 	buf_fill_eap_len(reqbuf, eap_ofs);
