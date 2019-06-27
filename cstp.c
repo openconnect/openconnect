@@ -534,7 +534,8 @@ static int start_cstp_connection(struct openconnect_info *vpninfo)
 					vpninfo->ip_info.netmask6 = new_option->value;
 			} else
 				vpninfo->ip_info.netmask = new_option->value;
-		} else if (!strcmp(buf + 7, "DNS")) {
+		} else if (!strcmp(buf + 7, "DNS") ||
+			   !strcmp(buf + 7, "DNS-IP6")) {
 			int j;
 			for (j = 0; j < 3; j++) {
 				if (!vpninfo->ip_info.dns[j]) {
