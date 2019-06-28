@@ -13,7 +13,8 @@
 <p>The Host Checker mechanism is a security scanner for the <a
 href="juniper.html">Juniper</a> VPNs, in the same vein as <a
 href="csd.html">Cisco's CSD</a> and <a href="hip.html">GlobalProtect's
-HIP</a>.</p>
+HIP</a>. It is also used by the <a href="pulse.html">Pulse Secure</a>
+protocol but support it in Pulse is not included in OpenConnect yet.</p>
 
 <h3>Background</h3>
 

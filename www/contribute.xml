@@ -98,10 +98,13 @@ bout it.</p>
 it should. There are some things which the regular developers don't have easy access to test,
 some help with testing these would be particularly welcome:</p>
 <ul>
-  <li><b>Testing against a Cisco ASAv virtual applicance (v9.10 or above) with <a href="https://gitlab.com/openconnect/ocserv/issues/188#note_130304667">DTLS v1.2</a> support.</b><br/>
-  Cisco have finally updated to use a standard version of the DTLS protocol, where the hardware acceleration doesn't prevent it. We have tested their client and OpenConnect against <a href="http://www.infradead.org/ocserv/">ocserv</a> and we believe we have a compatibile implementation, but testing OpenConnect directly against a Cisco server with DTLS v1.2 would be extremely useful.</li>
   <li><b>Testing a PAN GlobalProtect VPN with IPv6 internal addresses.</b><br/>
   We think we know how this works, but we've not been able to test.</li>
+  <li><b>Various authentication methods for Pulse Secure.</b><br/>
+  Although it looked sane at first, the Pulse protocol has a lot of horrid
+  special cases. Aside from the <a href="tncc.html">Host Checker</a> most
+  should be working, but please test and let us know if anything is
+  missing or wrong.</li>
 </ul>
 
 
@@ -118,8 +121,6 @@ to learn how they work.</p>
 perhaps even Google Summer of Code projects.</p>
 
 <ul>
-  <li><b>Junos Pulse / <a href="https://www.pulsesecure.net/connect-secure/overview/">Pulse Connect Secure</a></b><br/>
-  This is the successor to the Juniper Network Connect protocol which is already supported. It's saner, simpler, and has IPv6 support. We do understand how it works, with EAP over <a href="https://trustedcomputinggroup.org/resource/tnc-if-t-binding-to-tls/">IF-T/TLS</a>.</li>
   <li><b><a href="https://www.checkpoint.com/products/endpoint-remote-access-vpn-software-blade/">CheckPoint VPN</a></b><br/>
   This is an IPSec-based VPN with fallback to using the SSL transport. Some discussion of OpenConnect support in this <a href="https://gitlab.com/openconnect/openconnect/issues/13">GitLab ticket</a>. </li>
   <li><b>Cisco / Nortel IPSec VPN</b><br/>
