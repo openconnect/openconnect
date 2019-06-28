@@ -73,6 +73,12 @@
 #define TTLS_RECV gnutls_record_recv
 #endif
 
+/* Flags for prompt handling during authentication, based on the contents of the 0xd73 AVP (qv). */
+#define PROMPT_PRIMARY		1
+#define PROMPT_USERNAME		2
+#define PROMPT_PASSWORD		4
+#define PROMPT_GTC_NEXT		0x10000
+
 static void buf_append_be16(struct oc_text_buf *buf, uint16_t val)
 {
 	unsigned char b[2];
@@ -767,8 +773,8 @@ static int pulse_request_realm_entry(struct openconnect_info *vpninfo, struct oc
 
 	memset(&f, 0, sizeof(f));
 	memset(&o, 0, sizeof(o));
-        f.auth_id = (char *)"pulse_realm_entry";
-        f.opts = &o;
+	f.auth_id = (char *)"pulse_realm_entry";
+	f.opts = &o;
 
 	f.message = _("Enter Pulse user realm:");
 
@@ -990,32 +996,40 @@ static int pulse_request_session_kill(struct openconnect_info *vpninfo, struct o
 }
 
 static int pulse_request_user_auth(struct openconnect_info *vpninfo, struct oc_text_buf *reqbuf,
-				   uint8_t eap_ident, char *user_prompt, char *pass_prompt)
+				   uint8_t eap_ident, int prompt_flags, char *user_prompt, char *pass_prompt)
 {
 	struct oc_auth_form f;
 	struct oc_form_opt o[2];
+	unsigned char eap_avp[23];
+	int l;
 	int ret;
 
 	memset(&f, 0, sizeof(f));
 	memset(o, 0, sizeof(o));
-        f.auth_id = (char *)"pulse_user";
-        f.opts = &o[0];
+	f.auth_id = (char *) ((prompt_flags & PROMPT_PRIMARY) ? "pulse_user" : "pulse_secondary");
+	f.opts = &o[1]; /* Point to password prompt in case that's all we use */
 
-	f.message = _("Enter user credentials:");
+	f.message = (prompt_flags & PROMPT_PRIMARY) ? _("Enter user credentials:") : _("Enter secondary credentials:");
 
-	o[0].next = &o[1];
-	o[0].type = OC_FORM_OPT_TEXT;
-	o[0].name = (char *)"username";
-	if (!user_prompt || asprintf(&o[0].label, "%s:", user_prompt) < 0) {
-		user_prompt = NULL;
-		o[0].label = (char *)_("Username:");
+	if (prompt_flags & PROMPT_USERNAME) {
+		f.opts = &o[0];
+		o[0].next = NULL; /* Again, for now */
+		o[0].type = OC_FORM_OPT_TEXT;
+		o[0].name = (char *)"username";
+		if (user_prompt)
+			o[0].label = user_prompt;
+		else
+			o[0].label = (char *) ((prompt_flags & PROMPT_PRIMARY) ? _("Username:") : _("Secondary username:"));
 	}
-
-	o[1].type = OC_FORM_OPT_PASSWORD;
-	o[1].name = (char *)"password";
-	if (!pass_prompt || asprintf(&o[1].label, "%s:", pass_prompt) < 0) {
-		pass_prompt = NULL;
-		o[1].label = (char *)_("Password:");
+	if (prompt_flags & PROMPT_PASSWORD) {
+		/* Might be referenced from o[0] or directly from f.opts */
+		o[0].next = &o[1];
+		o[1].type = OC_FORM_OPT_PASSWORD;
+		o[1].name = (char *)"password";
+		if (pass_prompt)
+			o[1].label = pass_prompt;
+		else
+			o[1].label = (char *) ((prompt_flags & PROMPT_PRIMARY) ? _("Password:") : _("Secondary password:"));
 	}
 
 	ret = process_auth_form(vpninfo, &f);
@@ -1027,51 +1041,54 @@ static int pulse_request_user_auth(struct openconnect_info *vpninfo, struct oc_t
 		free_pass(&o[0]._value);
 	}
 	if (o[1]._value) {
-		unsigned char eap_avp[23];
-		int l = strlen(o[1]._value);
+		l = strlen(o[1]._value);
 		if (l > 253) {
 			free_pass(&o[1]._value);
 			return -EINVAL;
 		}
+	} else {
+		/* Their client actually resubmits the primary password when
+		 * a secondary password is requested. But it doesn't seem to
+		 * be necessary; might even just be a bug. */
+		l = 0;
+	}
 
-		/* AVP flags+mandatory+length */
-		store_be32(eap_avp, AVP_CODE_EAP_MESSAGE);
-		store_be32(eap_avp + 4, (AVP_MANDATORY << 24) + sizeof(eap_avp) + l);
+	/* AVP flags+mandatory+length */
+	store_be32(eap_avp, AVP_CODE_EAP_MESSAGE);
+	store_be32(eap_avp + 4, (AVP_MANDATORY << 24) + sizeof(eap_avp) + l);
 
-		/* EAP header: code/ident/len */
-		eap_avp[8] = EAP_RESPONSE;
-		eap_avp[9] = eap_ident;
-		store_be16(eap_avp + 10, l + 15); /* EAP length */
-		store_be32(eap_avp + 12, EXPANDED_JUNIPER);
-		store_be32(eap_avp + 16, 2);
+	/* EAP header: code/ident/len */
+	eap_avp[8] = EAP_RESPONSE;
+	eap_avp[9] = eap_ident;
+	store_be16(eap_avp + 10, l + 15); /* EAP length */
+	store_be32(eap_avp + 12, EXPANDED_JUNIPER);
+	store_be32(eap_avp + 16, 2);
 
-		/* EAP Juniper/2 payload: 02 02 <len> <password> */
-		eap_avp[20] = eap_avp[21] = 0x02;
-		eap_avp[22] = l + 2; /* Why 2? */
-		buf_append_bytes(reqbuf, eap_avp, sizeof(eap_avp));
+	/* EAP Juniper/2 payload: 02 02 <len> <password> */
+	eap_avp[20] = eap_avp[21] = 0x02;
+	eap_avp[22] = l + 2; /* Why 2? */
+	buf_append_bytes(reqbuf, eap_avp, sizeof(eap_avp));
+	if (o[1]._value) {
 		buf_append_bytes(reqbuf, o[1]._value, l);
-
-		/* Padding */
-		if ((sizeof(eap_avp) + l) & 3) {
-			uint32_t pad = 0;
-
-			buf_append_bytes(reqbuf, &pad,
-					 4 - ((sizeof(eap_avp) + l) & 3));
-		}
 		free_pass(&o[1]._value);
 	}
+
+	/* Padding */
+	if ((sizeof(eap_avp) + l) & 3) {
+		uint32_t pad = 0;
+
+		buf_append_bytes(reqbuf, &pad,
+				 4 - ((sizeof(eap_avp) + l) & 3));
+	}
+
 	ret = 0;
  out:
-	if (user_prompt)
-		free(o[0].label);
-	if (pass_prompt)
-		free(o[1].label);
-
 	return ret;
 }
 
 static int pulse_request_gtc(struct openconnect_info *vpninfo, struct oc_text_buf *reqbuf,
-			     uint8_t eap_ident, char *user_prompt, char *gtc_prompt)
+			     uint8_t eap_ident, int prompt_flags, char *user_prompt, char *pass_prompt,
+			     char *gtc_prompt)
 {
 	struct oc_auth_form f;
 	struct oc_form_opt o[2];
@@ -1079,22 +1096,44 @@ static int pulse_request_gtc(struct openconnect_info *vpninfo, struct oc_text_bu
 
 	memset(&f, 0, sizeof(f));
 	memset(o, 0, sizeof(o));
-        f.auth_id = (char *)"pulse_gtc";
-        f.opts = o;
+	f.auth_id = (char *)"pulse_gtc";
 
-	f.message = _("Token code request:");
+	/* The first prompt always seems to be 'Enter SecurID PASSCODE:' and is ignored. */
+	if (gtc_prompt && (prompt_flags & PROMPT_GTC_NEXT))
+		f.message = gtc_prompt;
+	else
+		f.message = _("Token code request:");
 
-	o[0].next = &o[1];
-	o[0].type = OC_FORM_OPT_TEXT;
-	o[0].name = (char *)"username";
-	if (!user_prompt || asprintf(&o[0].label, "%s:", user_prompt) < 0) {
-		user_prompt = NULL;
-		o[0].label = (char *)_("Username:");
+	if (prompt_flags & PROMPT_USERNAME) {
+		f.opts = &o[0];
+		o[0].next = &o[1];
+		o[0].type = OC_FORM_OPT_TEXT;
+		o[0].name = (char *)"username";
+		if (user_prompt)
+			o[0].label = user_prompt;
+		else
+			o[0].label = (char *) ((prompt_flags & PROMPT_PRIMARY) ? _("Username:") : _("Secondary username:"));
+	} else {
+		f.opts = &o[1];
 	}
 
 	o[1].type = OC_FORM_OPT_PASSWORD;
 	o[1].name = (char *)"tokencode";
-	o[1].label = gtc_prompt;
+
+	/*
+	 * For retries, we have a gtc_prompt and we just say 'Please enter response:'.
+	 * Otherwise, use the pass_prompt if it exists, or create our own based
+	 * on whether it's primary authentication or not.
+	 */
+	if (prompt_flags & PROMPT_GTC_NEXT) {
+		o[1].label = _("Please enter response:");
+	} else if (pass_prompt) {
+		o[1].label = pass_prompt;
+	} else if (prompt_flags & PROMPT_PRIMARY) {
+		o[1].label = _("Please enter your passcode:");
+	} else {
+		o[1].label = _("Please enter your secondary token information:");
+	}
 
 	if (!can_gen_tokencode(vpninfo, &f, &o[1]))
 		o[1].type = OC_FORM_OPT_TOKEN;
@@ -1146,11 +1185,49 @@ static int pulse_request_gtc(struct openconnect_info *vpninfo, struct oc_text_bu
 	}
 	ret = 0;
  out:
-	if (user_prompt)
-		free(o[0].label);
-
 	return ret;
 }
+
+static int dup_prompt(char **p, uint8_t *avp_p, int avp_len)
+{
+	char *ret = NULL;
+
+	free(*p);
+	*p = NULL;
+
+	if (!avp_len) {
+		return 0;
+	} else if (avp_p[avp_len - 1] == ':') {
+		ret = strndup((char *)avp_p, avp_len);
+	} else {
+		ret = calloc(avp_len + 2, 1);
+		if (ret) {
+			memcpy(ret, avp_p, avp_len);
+			ret[avp_len] = ':';
+			ret[avp_len + 1] = 0;
+		}
+	}
+
+	if (ret) {
+		*p = ret;
+		return 0;
+	} else
+		return -ENOMEM;
+}
+
+/*
+ * There is complex client-side logic around when to (re)prompt for a password.
+ * The first prompt always needs it, whether it's a TokenCode request (EAP-06)
+ * or a normal password request (EAP-Expanded-Juniper/2). If a password request
+ * fails (0x81) then we prompt for username again in case that's what was wrong.
+ *
+ * If there's a secondary password request, it might need a *secondary* username.
+ * The first request comes with a 0xd73 AVP which has a single integer:
+ *   1: prompt for both username and password.
+ *   3: Prompt for password only.
+ *   5: Prompt for username only.
+ *
+ */
 
 /* IF-T/TLS session establishment is the same for both pulse_obtain_cookie() and
  * pulse_connect(). We have to go through the EAP phase of the connection either
@@ -1174,6 +1251,8 @@ static int pulse_authenticate(struct openconnect_info *vpninfo, int connecting)
 	uint8_t j2_code = 0;
 	void *ttls = NULL;
 	char *user_prompt = NULL, *pass_prompt = NULL, *gtc_prompt = NULL, *signin_prompt = NULL;
+	char *user2_prompt = NULL, *pass2_prompt = NULL;
+	int prompt_flags = PROMPT_PRIMARY | PROMPT_USERNAME | PROMPT_PASSWORD;
 
 	/* XXX: We should do what cstp_connect() does to check that configuration
 	   hasn't changed on a reconnect. */
@@ -1452,6 +1531,12 @@ static int pulse_authenticate(struct openconnect_info *vpninfo, int connecting)
 	free(signin_prompt);
 	signin_prompt = NULL;
 
+	/* If there's a follow-on GTC prompt, remember it's not the first */
+	if (gtc_found)
+		prompt_flags |= PROMPT_GTC_NEXT;
+	else
+		prompt_flags &= ~PROMPT_GTC_NEXT;
+
 	realm_entry = realms_found = j2_found = old_sessions = 0, gtc_found = 0;
 	eap = recv_eap_packet(vpninfo, ttls, (void *)bytes, sizeof(bytes));
 	if (!eap) {
@@ -1504,11 +1589,34 @@ static int pulse_authenticate(struct openconnect_info *vpninfo, int connecting)
 			ret = -EPERM;
 			goto out;
 		} else if (avp_vendor == VENDOR_JUNIPER2 && avp_code == 0xd80) {
-			free(user_prompt);
-			user_prompt = strndup(avp_p, avp_len);
+			dup_prompt(&user_prompt, avp_p, avp_len);
 		} else if (avp_vendor == VENDOR_JUNIPER2 && avp_code == 0xd81) {
-			free(pass_prompt);
-			pass_prompt = strndup(avp_p, avp_len);
+			dup_prompt(&pass_prompt, avp_p, avp_len);
+		} else if (avp_vendor == VENDOR_JUNIPER2 && avp_code == 0xd82) {
+			dup_prompt(&user2_prompt, avp_p, avp_len);
+		} else if (avp_vendor == VENDOR_JUNIPER2 && avp_code == 0xd83) {
+			dup_prompt(&pass2_prompt, avp_p, avp_len);
+		} else if (avp_vendor == VENDOR_JUNIPER2 && avp_code == 0xd73) {
+			uint32_t val;
+
+			if (avp_len != 4)
+				goto auth_unknown;
+			val = load_be32(avp_p);
+
+			switch (val) {
+		case 1: /* Prompt for both username and password. */
+			prompt_flags = PROMPT_PASSWORD | PROMPT_USERNAME;
+			break;
+		case 3: /* Prompt for password.*/
+			prompt_flags = PROMPT_PASSWORD;
+			break;
+		case 5: /* Prompt for username.*/
+			prompt_flags = PROMPT_USERNAME;
+			break;
+
+		default:
+			goto auth_unknown;
+		}
 		} else if (avp_vendor == VENDOR_JUNIPER2 && avp_code == 0xd7b) {
 			free(signin_prompt);
 			signin_prompt = strndup(avp_p, avp_len);
@@ -1596,8 +1704,9 @@ static int pulse_authenticate(struct openconnect_info *vpninfo, int connecting)
 				     j2_code);
 
 			/* Present user/password form to user */
-			ret = pulse_request_user_auth(vpninfo, reqbuf, eap2_ident,
-						      user_prompt, pass_prompt);
+			ret = pulse_request_user_auth(vpninfo, reqbuf, eap2_ident, prompt_flags,
+				(prompt_flags & PROMPT_PRIMARY) ? user_prompt : user2_prompt,
+				(prompt_flags & PROMPT_PRIMARY) ? pass_prompt : pass2_prompt);
 			if (ret)
 				goto out;
 		} else if (gtc_found) {
@@ -1605,8 +1714,10 @@ static int pulse_authenticate(struct openconnect_info *vpninfo, int connecting)
 				     _("Pulse password general token code request\n"));
 
 			/* Present user/password form to user */
-			ret = pulse_request_gtc(vpninfo, reqbuf, eap2_ident,
-						user_prompt, gtc_prompt);
+			ret = pulse_request_gtc(vpninfo, reqbuf, eap2_ident, prompt_flags,
+				(prompt_flags & PROMPT_PRIMARY) ? user_prompt : user2_prompt,
+				(prompt_flags & PROMPT_PRIMARY) ? pass_prompt : pass2_prompt,
+				gtc_prompt);
 			if (ret)
 				goto out;
 		} else if (old_sessions) {
@@ -1677,6 +1788,8 @@ static int pulse_authenticate(struct openconnect_info *vpninfo, int connecting)
 	vpninfo->ttls_recvbuf = NULL;
 	free(user_prompt);
 	free(pass_prompt);
+	free(user2_prompt);
+	free(pass2_prompt);
 	free(gtc_prompt);
 	free(signin_prompt);
 	return ret;
