@@ -1345,7 +1345,7 @@ int gpst_esp_send_probes(struct openconnect_info *vpninfo)
 		memcpy(pmagic, magic_ping_payload, sizeof(magic_ping_payload)); /* required to get gateway to respond */
 		icmph->icmp_cksum = csum((uint16_t *)icmph, (ICMP_MINLEN+sizeof(magic_ping_payload))/2);
 
-		pktlen = construct_esp_packet(vpninfo, pkt);
+		pktlen = construct_esp_packet(vpninfo, pkt, IPPROTO_IPIP);
 		if (pktlen >= 0)
 			send(vpninfo->dtls_fd, (void *)&pkt->esp, pktlen, 0);
 	}

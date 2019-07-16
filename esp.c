@@ -97,10 +97,17 @@ int esp_setup(struct openconnect_info *vpninfo, int dtls_attempt_period)
 	return 0;
 }
 
-int construct_esp_packet(struct openconnect_info *vpninfo, struct pkt *pkt)
+int construct_esp_packet(struct openconnect_info *vpninfo, struct pkt *pkt, uint8_t next_hdr)
 {
 	const int blksize = 16;
 	int i, padlen, ret;
+
+	if (!next_hdr) {
+		if ((pkt->data[0] & 0xf0) == 0x60) /* iph->ip_v */
+			next_hdr = IPPROTO_IPV6;
+		else
+			next_hdr = IPPROTO_IPIP;
+	}
 
 	/* This gets much more fun if the IV is variable-length */
 	pkt->esp.spi = vpninfo->esp_out.spi;
@@ -110,7 +117,7 @@ int construct_esp_packet(struct openconnect_info *vpninfo, struct pkt *pkt)
 	for (i=0; i<padlen; i++)
 		pkt->data[pkt->len + i] = i + 1;
 	pkt->data[pkt->len + padlen] = padlen;
-	pkt->data[pkt->len + padlen + 1] = 0x04; /* Legacy IP */
+	pkt->data[pkt->len + padlen + 1] = next_hdr;
 
 	memcpy(pkt->esp.iv, vpninfo->esp_out.iv, sizeof(pkt->esp.iv));
 
@@ -299,7 +306,7 @@ int esp_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable)
 			if (!this)
 				break;
 
-			len = construct_esp_packet(vpninfo, this);
+			len = construct_esp_packet(vpninfo, this, 0);
 			if (len < 0) {
 				/* Should we disable ESP? */
 				free(this);
