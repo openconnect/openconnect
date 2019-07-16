@@ -1,0 +1,153 @@
+%global gitsnapshot @ISSNAP@
+%if 0%{?gitsnapshot}
+%global snapcommit @SNAPCOMMIT@
+%global snapcount @SNAPCOUNT@
+%global shortcommit %(c=%{snapcommit}; echo ${c:0:7})
+%global snapver .git.%{snapcount}.%{shortcommit}
+%endif
+
+%global tagver @VERSION@
+
+# RHEL6 still has ancient GnuTLS
+%define use_gnutls 0%{?fedora} || 0%{?rhel} >= 7
+
+# RHEL5 has no libproxy, and no %%make_install macro
+%if 0%{?rhel} && 0%{?rhel} <= 5
+%define use_libproxy 0
+%define make_install %{__make} install DESTDIR=%{?buildroot}
+%define use_tokens 0
+%else
+%define use_libproxy 1
+%define use_tokens 1
+%endif
+
+# Fedora has tss2-sys from F29 onwards
+%if 0%{?fedora} >= 29
+%define use_tss2_esys 1
+%else
+%define use_tss2_esys 0
+%endif
+
+%{!?_pkgdocdir: %global _pkgdocdir %{_docdir}/%{name}-%{version}}
+
+Name:		openconnect
+Version:	%{tagver}%{?snapver}
+Release:	0%{?dist}
+Summary:	Open client for Cisco AnyConnect VPN, Juniper Network Connect/Pulse, PAN GlobalProtect
+
+License:	LGPLv2
+URL:		http://www.infradead.org/openconnect.html
+%if 0%{?gitsnapshot}
+Source0:        https://github.com/openconnect/%{name}/archive/%{snapcommit}/%{name}-%{shortcommit}.tar.gz
+%else
+Source0:        ftp://ftp.infradead.org/pub/%{name}/%{name}-%{version}.tar.gz
+%endif
+Source2:	gpgkey-BE07D9FD54809AB2C4B0FF5F63762CDA67E2F359.asc
+Source3:	macros.gpg
+
+
+BuildRequires:	pkgconfig(libxml-2.0) pkgconfig(libpcsclite) krb5-devel gnupg2
+BuildRequires:	autoconf automake libtool gettext pkgconfig(liblz4)
+BuildRequires:	pkgconfig(uid_wrapper) pkgconfig(socket_wrapper) softhsm
+%if 0%{?fedora} || 0%{?rhel} >= 7
+Obsoletes:	openconnect-lib-compat < %{version}-%{release}
+Requires:	vpnc-script
+%else
+Requires:	vpnc
+%endif
+
+%if 0%{?fedora} >= 30
+BuildRequires: glibc-langpack-cs
+%endif
+%if %{use_gnutls}
+BuildRequires:	pkgconfig(gnutls) trousers-devel
+# Anywhere we use GnuTLS ,there should be an ocserv package too
+BuildRequires:	ocserv
+%else
+BuildRequires:	pkgconfig(openssl) pkgconfig(libp11) pkgconfig(p11-kit-1)
+%endif
+%if %{use_libproxy}
+BuildRequires:	pkgconfig(libproxy-1.0)
+%endif
+%if %{use_tokens}
+BuildRequires:  pkgconfig(stoken) pkgconfig(libpskc)
+%endif
+%if %{use_tss2_esys}
+# https://bugzilla.redhat.com/show_bug.cgi?id=1638961
+BuildRequires: pkgconfig(tss2-esys) libgcrypt-devel
+%endif
+
+%description
+This package provides a multiprotocol VPN client for Cisco AnyConnect,
+Juniper SSL VPN / Pulse Connect Secure, and Palo Alto Networks GlobalProtect
+SSL VPN.
+
+%package devel
+Summary: Development package for OpenConnect VPN authentication tools
+Requires: %{name}%{?_isa} = %{version}-%{release}
+# RHEL5 needs these spelled out because it doesn't automatically infer from pkgconfig
+%if 0%{?rhel} && 0%{?rhel} <= 5
+Requires: openssl-devel zlib-devel
+%endif
+
+%description devel
+This package provides the core HTTP and authentication support from
+the OpenConnect VPN client, to be used by GUI authentication dialogs
+for NetworkManager etc.
+
+%include %SOURCE3
+%prep
+%if 0%{?gitsnapshot}
+%setup -q -n %{name}-%{snapcommit}
+NOCONFIGURE=x ./autogen.sh
+%else
+%gpg_verify
+%setup -q
+if [ ! -x configure ]; then
+    NOCONFIGURE=x ./autogen.sh
+fi
+%endif
+
+%build
+%configure	--with-vpnc-script=/etc/vpnc/vpnc-script \
+		--disable-dsa-tests \
+%if %{use_gnutls}
+		--with-default-gnutls-priority="@OPENCONNECT,SYSTEM" \
+%else
+		--with-openssl --without-openssl-version-check \
+%endif
+		--htmldir=%{_pkgdocdir}
+make %{?_smp_mflags} V=1
+
+
+%install
+%make_install
+mkdir -p $RPM_BUILD_ROOT/%{_pkgdocdir}
+rm -f $RPM_BUILD_ROOT/%{_libdir}/libopenconnect.la
+rm -f $RPM_BUILD_ROOT/%{_libexecdir}/openconnect/tncc-wrapper.py
+%find_lang %{name}
+
+%check
+# Checks fail on EPEL 7 and below for environmental reasons we don't care about
+%if 0%{?fedora} || 0%{?rhel} >= 8
+make VERBOSE=1 check
+%endif
+
+%ldconfig_scriptlets
+
+%files -f %{name}.lang
+%{_libdir}/libopenconnect.so.5*
+%{_sbindir}/openconnect
+%{_libexecdir}/openconnect/
+%{_mandir}/man8/*
+%doc TODO COPYING.LGPL
+%doc %{_pkgdocdir}
+
+%files devel
+%{_libdir}/libopenconnect.so
+%{_includedir}/openconnect.h
+%{_libdir}/pkgconfig/openconnect.pc
+
+%changelog
+* Tue Jul 16 2019 David Woodhouse <dwmw2@infradead.org> - %{version}-%{release}
+- Autopackaging for COPR
