@@ -302,10 +302,27 @@ int esp_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable)
 			this = vpninfo->deflate_pkt;
 			len = this->len;
 		} else {
+			uint8_t dontsend;
+
 			this = dequeue_packet(&vpninfo->outgoing_queue);
 			if (!this)
 				break;
 
+			/* Pulse can only accept ESP of the same protocol as the one you
+			 * connected to it with. The other has to go over IF-T/TLS. */
+			if (vpninfo->dtls_addr->sa_family == AF_INET6)
+				dontsend = 0x40;
+			else
+				dontsend = 0x60;
+
+			if ( (this->data[0] & 0xf0) == dontsend) {
+				store_be32(&this->pulse.vendor, 0xa4c);
+				store_be32(&this->pulse.type, 4);
+				store_be32(&this->pulse.len, this->len + 16);
+				queue_packet(&vpninfo->oncp_control_queue, this);
+				work_done = 1;
+				continue;
+			}
 			len = construct_esp_packet(vpninfo, this, 0);
 			if (len < 0) {
 				/* Should we disable ESP? */

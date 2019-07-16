@@ -79,8 +79,8 @@ int tun_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable)
 			vpninfo->stats.tx_bytes += out_pkt->len;
 			work_done = 1;
 
-			if (queue_packet(&vpninfo->outgoing_queue, out_pkt) ==
-			    vpninfo->max_qlen) {
+			if (queue_packet(&vpninfo->outgoing_queue, out_pkt) +
+			    vpninfo->oncp_control_queue.count >= vpninfo->max_qlen) {
 				out_pkt = NULL;
 				unmonitor_read_fd(vpninfo, tun);
 				break;
@@ -88,7 +88,7 @@ int tun_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable)
 			out_pkt = NULL;
 		}
 		vpninfo->tun_pkt = out_pkt;
-	} else if (vpninfo->outgoing_queue.count < vpninfo->max_qlen) {
+	} else if (vpninfo->outgoing_queue.count + vpninfo->oncp_control_queue.count < vpninfo->max_qlen) {
 		monitor_read_fd(vpninfo, tun);
 	}
 

@@ -1305,7 +1305,8 @@ int oncp_esp_send_probes(struct openconnect_info *vpninfo)
 	for (seq=1; seq <= (vpninfo->dtls_state==DTLS_CONNECTED ? 1 : 2); seq++) {
 		pkt->len = 1;
 		pkt->data[0] = 0;
-		pktlen = construct_esp_packet(vpninfo, pkt, IPPROTO_IPIP);
+		pktlen = construct_esp_packet(vpninfo, pkt,
+					      vpninfo->dtls_addr->sa_family == AF_INET6 ? IPPROTO_IPV6 : IPPROTO_IPIP);
 		if (pktlen >= 0)
 			send(vpninfo->dtls_fd, (void *)&pkt->esp, pktlen, 0);
 	}
