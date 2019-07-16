@@ -112,6 +112,12 @@
 #ifndef MIN
 #define MIN(x,y) ((x)<(y))?(x):(y)
 #endif
+
+/* At least MinGW headers seem not to provide IPPROTO_IPIP */
+#ifndef IPPROTO_IPIP
+#define IPPROTO_IPIP 0x04
+#endif
+
 /****************************************************************************/
 
 struct pkt {
