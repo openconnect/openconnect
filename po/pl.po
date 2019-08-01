@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openconnect\n"
 "Report-Msgid-Bugs-To: openconnect-devel@lists.infradead.org\n"
-"POT-Creation-Date: 2019-07-16 09:49+0100\n"
+"POT-Creation-Date: 2019-08-01 15:33-0700\n"
 "PO-Revision-Date: 2011-09-22 22:31+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Polish (http://www.transifex.net/projects/p/meego/team/pl/)\n"
@@ -538,7 +538,7 @@ msgstr ""
 msgid "deflate failed %d\n"
 msgstr "%d „deflate” się nie powiodło\n"
 
-#: cstp.c:923 dtls.c:281 dtls.c:690 esp.c:156 gpst.c:1096 mainloop.c:69
+#: cstp.c:923 dtls.c:281 dtls.c:690 esp.c:163 gpst.c:1096 mainloop.c:69
 #: oncp.c:914 pulse.c:2297
 msgid "Allocation failed\n"
 msgstr "Przydzielenie się nie powiodło\n"
@@ -892,92 +892,92 @@ msgstr "przychodzące"
 msgid "outgoing"
 msgstr "wychodzące"
 
-#: esp.c:93 esp.c:140
+#: esp.c:93 esp.c:147
 msgid "Send ESP probes\n"
 msgstr "Wysłanie próbek ESP\n"
 
-#: esp.c:165
+#: esp.c:172
 #, c-format
 msgid "Received ESP packet of %d bytes\n"
 msgstr "Otrzymano pakiet ESP o rozmiarze %d bajtów\n"
 
-#: esp.c:182
+#: esp.c:189
 #, c-format
 msgid "Received ESP packet from old SPI 0x%x, seq %u\n"
 msgstr "Otrzymano pakiet ESP ze starym SPI 0x%x, sekwencją %u\n"
 
-#: esp.c:188
+#: esp.c:195
 #, c-format
 msgid "Received ESP packet with invalid SPI 0x%08x\n"
 msgstr "Otrzymano pakiet ESP z nieprawidłowym SPI 0x%08x\n"
 
-#: esp.c:201
+#: esp.c:208
 #, c-format
 msgid "Received ESP packet with unrecognised payload type %02x\n"
 msgstr "Otrzymano pakiet ESP z nierozpoznanym typem ładunku %02x\n"
 
-#: esp.c:208
+#: esp.c:215
 #, c-format
 msgid "Invalid padding length %02x in ESP\n"
 msgstr "Nieprawidłowa długość wypełnienia %02x w ESP\n"
 
-#: esp.c:220
+#: esp.c:227
 msgid "Invalid padding bytes in ESP\n"
 msgstr "Nieprawidłowe bajty wypełnienia w ESP\n"
 
-#: esp.c:229
+#: esp.c:236
 msgid "ESP session established with server\n"
 msgstr "Nawiązano sesję ESP z serwerem\n"
 
-#: esp.c:240
+#: esp.c:247
 msgid "Failed to allocate memory to decrypt ESP packet\n"
 msgstr "Przydzielenie pamięci do odszyfrowania pakietu ESP się nie powiodło\n"
 
-#: esp.c:246
+#: esp.c:253
 msgid "LZO decompression of ESP packet failed\n"
 msgstr "Dekompresja LZO pakietu ESP się nie powiodła\n"
 
-#: esp.c:252
+#: esp.c:259
 #, c-format
 msgid "LZO decompressed %d bytes into %d\n"
 msgstr "LZO zdekompresowało %d bajtów do %d\n"
 
-#: esp.c:266
+#: esp.c:273
 msgid "Rekey not implemented for ESP\n"
 msgstr "„rekey” nie jest zaimplementowane dla ESP\n"
 
-#: esp.c:270
+#: esp.c:277
 msgid "ESP detected dead peer\n"
 msgstr "ESP wykryło martwego partnera\n"
 
-#: esp.c:278
+#: esp.c:285
 msgid "Send ESP probes for DPD\n"
 msgstr "Wysłanie próbek ESP dla DPD\n"
 
-#: esp.c:285
+#: esp.c:292
 msgid "Keepalive not implemented for ESP\n"
 msgstr "„Keepalive” nie jest zaimplementowane dla ESP\n"
 
-#: esp.c:319
+#: esp.c:343
 #, c-format
 msgid "Requeueing failed ESP send: %s\n"
 msgstr "Ponowne kolejkowanie nieudanego wysłania ESP: %s\n"
 
-#: esp.c:326
+#: esp.c:350
 #, c-format
 msgid "Failed to send ESP packet: %s\n"
 msgstr "Wysłanie pakietu ESP się nie powiodło: %s\n"
 
-#: esp.c:332
+#: esp.c:356
 #, c-format
 msgid "Sent ESP packet of %d bytes\n"
 msgstr "Wysłano pakiet ESP o rozmiarze %d bajtów\n"
 
-#: esp.c:403
+#: esp.c:427
 msgid "Failed to generate random keys for ESP\n"
 msgstr "Utworzenie losowych kluczy dla ESP się nie powiodło\n"
 
-#: esp.c:410
+#: esp.c:434
 msgid "Failed to generate initial IV for ESP\n"
 msgstr "Utworzenie początkowego IV dla ESP się nie powiodło\n"
 
@@ -2254,7 +2254,7 @@ msgstr "Próbowanie podstawowego uwierzytelnienia HTTP do pośrednika\n"
 msgid "Attempting HTTP Basic authentication to server '%s'\n"
 msgstr "Próbowanie podstawowego uwierzytelnienia HTTP z serwerem „%s”\n"
 
-#: http-auth.c:200 http.c:1177
+#: http-auth.c:200 http.c:1178
 msgid "This version of OpenConnect was built without GSSAPI support\n"
 msgstr "Ta wersja OpenConnect została zbudowana bez obsługi GSSAPI\n"
 
@@ -2452,67 +2452,67 @@ msgstr "Serwer SOCKS zażądał uwierzytelnienia hasłem\n"
 msgid "SOCKS server requires authentication\n"
 msgstr "Serwer SOCKS wymaga uwierzytelnienia\n"
 
-#: http.c:1182
+#: http.c:1184
 #, c-format
 msgid "SOCKS server requested unknown authentication type %02x\n"
 msgstr "Serwer SOCKS zażądał nieznanego typu uwierzytelnienia %02x\n"
 
-#: http.c:1188
+#: http.c:1190
 #, c-format
 msgid "Requesting SOCKS proxy connection to %s:%d\n"
 msgstr "Żądanie połączenia pośrednika SOCKS do %s:%d\n"
 
-#: http.c:1203
+#: http.c:1205
 #, c-format
 msgid "Error writing connect request to SOCKS proxy: %s\n"
 msgstr "Błąd podczas zapisywania żądania połączenia do pośrednika SOCKS: %s\n"
 
-#: http.c:1211 http.c:1253
+#: http.c:1213 http.c:1255
 #, c-format
 msgid "Error reading connect response from SOCKS proxy: %s\n"
 msgstr "Błąd podczas odczytywania żądania połączenia z pośrednika SOCKS: %s\n"
 
-#: http.c:1217
+#: http.c:1219
 #, c-format
 msgid "Unexpected connect response from SOCKS proxy: %02x %02x...\n"
 msgstr "Nieoczekiwana odpowiedź połączenia z pośrednika SOCKS: %02x %02x…\n"
 
-#: http.c:1225
+#: http.c:1227
 #, c-format
 msgid "SOCKS proxy error %02x: %s\n"
 msgstr "Błąd pośrednika SOCKS %02x: %s\n"
 
-#: http.c:1229
+#: http.c:1231
 #, c-format
 msgid "SOCKS proxy error %02x\n"
 msgstr "Błąd pośrednika SOCKS %02x\n"
 
-#: http.c:1246
+#: http.c:1248
 #, c-format
 msgid "Unexpected address type %02x in SOCKS connect response\n"
 msgstr "Nieoczekiwany typ adresu %02x w odpowiedzi połączenia SOCKS\n"
 
-#: http.c:1269
+#: http.c:1271
 #, c-format
 msgid "Requesting HTTP proxy connection to %s:%d\n"
 msgstr "Żądanie połączenia pośrednika HTTP do %s:%d\n"
 
-#: http.c:1304
+#: http.c:1306
 #, c-format
 msgid "Sending proxy request failed: %s\n"
 msgstr "Wysłanie żądania pośrednika się nie powiodło: %s\n"
 
-#: http.c:1327
+#: http.c:1329
 #, c-format
 msgid "Proxy CONNECT request failed: %d\n"
 msgstr "Żądanie „CONNECT” pośrednika się nie powiodło: %d\n"
 
-#: http.c:1346
+#: http.c:1348
 #, c-format
 msgid "Unknown proxy type '%s'\n"
 msgstr "Nieznany typ pośrednika „%s”\n"
 
-#: http.c:1395
+#: http.c:1397
 msgid "Only http or socks(5) proxies supported\n"
 msgstr "Obsługiwane są tylko pośredniki HTTP i SOCKS(5)\n"
 
@@ -3724,7 +3724,7 @@ msgstr "Wysłano pakiet kontroli włączenia ESP\n"
 msgid "Logout successful.\n"
 msgstr "Pomyślnie wylogowano.\n"
 
-#: openconnect-internal.h:1158 openconnect-internal.h:1166
+#: openconnect-internal.h:1164 openconnect-internal.h:1172
 #, c-format
 msgid "ERROR: %s() called with invalid UTF-8 for '%s' argument\n"
 msgstr ""
@@ -4226,12 +4226,12 @@ msgstr "Otrzymano wewnętrzny adres IPv6 %s\n"
 #: pulse.c:366
 #, c-format
 msgid "Received IPv6 split include %s\n"
-msgstr ""
+msgstr "Otrzymano dołączenie „split” IPv6 %s\n"
 
 #: pulse.c:389
 #, c-format
 msgid "Received IPv6 split exclude %s\n"
-msgstr ""
+msgstr "Otrzymano wykluczenie „split” IPv6 %s\n"
 
 #: pulse.c:396
 #, c-format
@@ -4324,7 +4324,7 @@ msgstr "Przetworzenie listy sesji się nie powiodło\n"
 
 #: pulse.c:1012
 msgid "Enter secondary credentials:"
-msgstr ""
+msgstr "Proszę podać drugorzędne dane uwierzytelniania:"
 
 #. Point to password prompt in case that's all we use
 #: pulse.c:1012
@@ -4333,7 +4333,7 @@ msgstr "Proszę podać dane uwierzytelniania użytkownika:"
 
 #: pulse.c:1022 pulse.c:1115
 msgid "Secondary username:"
-msgstr ""
+msgstr "Drugorzędna nazwa użytkownika:"
 
 #: pulse.c:1022 pulse.c:1115
 msgid "Username:"
@@ -4345,23 +4345,23 @@ msgstr "Hasło:"
 
 #: pulse.c:1032
 msgid "Secondary password:"
-msgstr ""
+msgstr "Drugorzędne hasło:"
 
 #: pulse.c:1105
 msgid "Token code request:"
-msgstr ""
+msgstr "Żądanie kodu tokena:"
 
 #: pulse.c:1129
 msgid "Please enter response:"
-msgstr ""
+msgstr "Proszę podać odpowiedź:"
 
 #: pulse.c:1133
 msgid "Please enter your passcode:"
-msgstr ""
+msgstr "Proszę podać kod hasła:"
 
 #: pulse.c:1135
 msgid "Please enter your secondary token information:"
-msgstr ""
+msgstr "Proszę podać informacje o drugorzędnym tokenie:"
 
 #: pulse.c:1275
 msgid "Error creating Pulse connection request\n"
@@ -4388,16 +4388,18 @@ msgstr ""
 
 #: pulse.c:1583
 msgid "Authentication failure: Account locked out\n"
-msgstr ""
+msgstr "Niepowodzenie uwierzytelnienia: konto zostało zablokowane\n"
 
 #: pulse.c:1586
 #, c-format
 msgid "Authentication failure: Code 0x%02x\n"
-msgstr ""
+msgstr "Niepowodzenie uwierzytelnienia: kod 0x%02x\n"
 
 #: pulse.c:1668
 msgid "Unhandled Pulse authentication packet, or authentication failure\n"
 msgstr ""
+"Nieobsłużony pakiet uwierzytelnienia Pulse lub niepowodzenie "
+"uwierzytelnienia\n"
 
 #: pulse.c:1684
 msgid "Pulse authentication cookie not accepted\n"
@@ -4418,7 +4420,7 @@ msgstr "Żądanie uwierzytelnienia hasła Pulse, kod 0x%02x\n"
 
 #: pulse.c:1714
 msgid "Pulse password general token code request\n"
-msgstr ""
+msgstr "Żądanie kodu tokena ogólnego hasła Pulse\n"
 
 #: pulse.c:1725
 #, c-format
@@ -5215,42 +5217,42 @@ msgstr "polecenie obliczania"
 msgid "Unrecognised response from Yubikey when generating tokencode\n"
 msgstr "Nierozpoznana odpowiedź z Yubikey podczas tworzenia kodu tokena\n"
 
-#~ msgid "Initiating IPv4 MTU detection (min=%d, max=%d)\n"
-#~ msgstr "Inicjowanie wykrywania MTU IPv4 (min=%d, max=%d)\n"
+#~ msgid "Failed to generate random keys for ESP:\n"
+#~ msgstr "Utworzenie losowych kluczy dla ESP się nie powiodło:\n"
 
-#~ msgid "Sending MTU DPD probe (%u bytes, min=%u, max=%u)\n"
-#~ msgstr "Wysyłanie sondy „DPD” MTU (%u bajtów, min=%u, max=%u)\n"
+#~ msgid "Compatible with Juniper Network Connect / Pulse Secure SSL VPN"
+#~ msgstr "Zgodny z VPN SSL Juniper Network Connect/Pulse Secure"
 
-#~ msgid "Timeout while waiting for DPD response; trying %d\n"
-#~ msgstr ""
-#~ "Przekroczono czas oczekiwania podczas oczekiwania na odpowiedź DPD. "
-#~ "Próbowanie %d\n"
+#~ msgid "Sending data packet of %d bytes\n"
+#~ msgstr "Wysyłanie pakietu danych o rozmiarze %d B\n"
+
+#~ msgid "Unknown ESP %s algorithm: %s"
+#~ msgstr "Nieznany algorytm ESP %s: %s"
+
+#~ msgid "Failed to generate random keys for ESP: %s\n"
+#~ msgstr "Utworzenie losowych kluczy dla ESP się nie powiodło: %s\n"
+
+#~ msgid "Failed to send DPD request (%d)\n"
+#~ msgstr "Wysłanie żądania DPD się nie powiodło (%d)\n"
+
+#~ msgid "Initiating IPv6 MTU detection\n"
+#~ msgstr "Inicjowanie wykrywania MTU IPv6\n"
+
+#~ msgid "Received MTU DPD probe (%u bytes of %u)\n"
+#~ msgstr "Otrzymano sondę „DPD” MTU (%u bajtów z %u)\n"
 
 #~ msgid "Timeout while waiting for DPD response; resending probe.\n"
 #~ msgstr ""
 #~ "Przekroczono czas oczekiwania podczas czekania na odpowiedź DPD. Ponowne "
 #~ "wysyłanie sondy.\n"
 
-#~ msgid "Received MTU DPD probe (%u bytes of %u)\n"
-#~ msgstr "Otrzymano sondę „DPD” MTU (%u bajtów z %u)\n"
+#~ msgid "Timeout while waiting for DPD response; trying %d\n"
+#~ msgstr ""
+#~ "Przekroczono czas oczekiwania podczas oczekiwania na odpowiedź DPD. "
+#~ "Próbowanie %d\n"
 
-#~ msgid "Initiating IPv6 MTU detection\n"
-#~ msgstr "Inicjowanie wykrywania MTU IPv6\n"
+#~ msgid "Sending MTU DPD probe (%u bytes, min=%u, max=%u)\n"
+#~ msgstr "Wysyłanie sondy „DPD” MTU (%u bajtów, min=%u, max=%u)\n"
 
-#~ msgid "Failed to send DPD request (%d)\n"
-#~ msgstr "Wysłanie żądania DPD się nie powiodło (%d)\n"
-
-#~ msgid "Failed to generate random keys for ESP: %s\n"
-#~ msgstr "Utworzenie losowych kluczy dla ESP się nie powiodło: %s\n"
-
-#~ msgid "Unknown ESP %s algorithm: %s"
-#~ msgstr "Nieznany algorytm ESP %s: %s"
-
-#~ msgid "Sending data packet of %d bytes\n"
-#~ msgstr "Wysyłanie pakietu danych o rozmiarze %d B\n"
-
-#~ msgid "Compatible with Juniper Network Connect / Pulse Secure SSL VPN"
-#~ msgstr "Zgodny z VPN SSL Juniper Network Connect/Pulse Secure"
-
-#~ msgid "Failed to generate random keys for ESP:\n"
-#~ msgstr "Utworzenie losowych kluczy dla ESP się nie powiodło:\n"
+#~ msgid "Initiating IPv4 MTU detection (min=%d, max=%d)\n"
+#~ msgstr "Inicjowanie wykrywania MTU IPv4 (min=%d, max=%d)\n"
