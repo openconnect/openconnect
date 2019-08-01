@@ -1173,8 +1173,10 @@ static int process_socks_proxy(struct openconnect_info *vpninfo)
 	case SOCKS_AUTH_NO_ACCEPTABLE:
 		vpn_progress(vpninfo, PRG_ERR,
 			     _("SOCKS server requires authentication\n"));
+#if !defined(HAVE_GSSAPI) && !defined(_WIN32)
 		vpn_progress(vpninfo, PRG_INFO,
 			     _("This version of OpenConnect was built without GSSAPI support\n"));
+#endif
 		return -EIO;
 
 	default:
