@@ -21,6 +21,7 @@
        <li>Add HMAC-SHA256-128 (RFC4868) support for ESP.</li>
        <li>Support IPv6 in ESP.</li>
        <li>Translate user-visible strings from <tt>openconnect_get_supported_protocols()</tt>.</li>
+       <li>Fix proxy username/password handling to allow special characters and escaping.</li>
      </ul><br/>
   </li>
   <li><b><a href="ftp://ftp.infradead.org/pub/openconnect/openconnect-8.03.tar.gz">OpenConnect v8.03</a></b>

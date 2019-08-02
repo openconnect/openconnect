@@ -28,6 +28,8 @@
 #include <stdio.h>
 #include <stdarg.h>
 
+#include <libxml/uri.h>
+
 #include "openconnect-internal.h"
 
 static int proxy_write(struct openconnect_info *vpninfo, char *buf, size_t len);
@@ -1383,7 +1385,7 @@ int openconnect_set_http_proxy(struct openconnect_info *vpninfo,
 	if (ret)
 		goto out;
 
-	p = strchr(vpninfo->proxy, '@');
+	p = strrchr(vpninfo->proxy, '@');
 	if (p) {
 		/* Proxy username/password */
 		*p = 0;
@@ -1393,7 +1395,9 @@ int openconnect_set_http_proxy(struct openconnect_info *vpninfo,
 		if (p) {
 			*p = 0;
 			vpninfo->proxy_pass = strdup(p + 1);
+			xmlURIUnescapeString(vpninfo->proxy_pass, 0, vpninfo->proxy_pass);
 		}
+		xmlURIUnescapeString(vpninfo->proxy_user, 0, vpninfo->proxy_user);
 	}
 
 	if (vpninfo->proxy_type &&
