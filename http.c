@@ -1119,7 +1119,14 @@ static int process_socks_proxy(struct openconnect_info *vpninfo)
 	    !vpninfo->proxy_user && !vpninfo->proxy_pass)
 		buf[2 + nr_auth_methods++] = SOCKS_AUTH_GSSAPI;
 #endif
-	if (vpninfo->proxy_auth[AUTH_TYPE_BASIC].state > AUTH_FAILED &&
+	/*
+	 * Basic auth is disabled by default. But for SOCKS, if the user has
+	 * actually provided a password then that should implicitly allow
+	 * basic auth since that's all that SOCKS can do. We shouldn't force
+	 * the user to also add --proxy-auth=basic on the command line.
+	 */
+	if ((vpninfo->proxy_auth[AUTH_TYPE_BASIC].state > AUTH_FAILED ||
+	     vpninfo->proxy_auth[AUTH_TYPE_BASIC].state == AUTH_DEFAULT_DISABLED) &&
 	    vpninfo->proxy_user && vpninfo->proxy_pass)
 		buf[2 + nr_auth_methods++] = SOCKS_AUTH_PASSWORD;
 
