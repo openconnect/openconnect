@@ -1369,21 +1369,20 @@ int process_proxy(struct openconnect_info *vpninfo, int ssl_sock)
 int openconnect_set_http_proxy(struct openconnect_info *vpninfo,
 			       const char *proxy)
 {
-	char *url = strdup(proxy), *p;
+	char *p;
 	int ret;
-
-	if (!url)
-		return -ENOMEM;
 
 	free(vpninfo->proxy_type);
 	vpninfo->proxy_type = NULL;
 	free(vpninfo->proxy);
 	vpninfo->proxy = NULL;
 
-	ret = internal_parse_url(url, &vpninfo->proxy_type, &vpninfo->proxy,
+	ret = internal_parse_url(proxy, &vpninfo->proxy_type, &vpninfo->proxy,
 				 &vpninfo->proxy_port, NULL, 80);
-	if (ret)
-		goto out;
+	if (ret) {
+		vpn_progress(vpninfo, PRG_ERR, _("Failed to parse proxy '%s'\n"), proxy);
+		return ret;
+	}
 
 	p = strrchr(vpninfo->proxy, '@');
 	if (p) {
@@ -1412,9 +1411,8 @@ int openconnect_set_http_proxy(struct openconnect_info *vpninfo,
 		vpninfo->proxy = NULL;
 		return -EINVAL;
 	}
- out:
-	free(url);
-	return ret;
+
+	return 0;
 }
 
 void http_common_headers(struct openconnect_info *vpninfo, struct oc_text_buf *buf)
