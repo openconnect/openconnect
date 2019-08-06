@@ -125,6 +125,7 @@ make %{?_smp_mflags} V=1
 mkdir -p $RPM_BUILD_ROOT/%{_pkgdocdir}
 rm -f $RPM_BUILD_ROOT/%{_libdir}/libopenconnect.la
 rm -f $RPM_BUILD_ROOT/%{_libexecdir}/openconnect/tncc-wrapper.py
+rm -f $RPM_BUILD_ROOT/%{_libexecdir}/openconnect/hipreport-android.sh
 %find_lang %{name}
 
 %check
