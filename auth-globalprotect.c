@@ -319,10 +319,12 @@ static int parse_portal_xml(struct openconnect_info *vpninfo, xmlNode *xml_node,
 {
 	struct oc_auth_form *form;
 	xmlNode *x = NULL;
+	xmlNode *grandchild = NULL;
 	struct oc_form_opt_select *opt;
 	struct oc_text_buf *buf = NULL;
 	int max_choices = 0, result;
 	char *portal = NULL;
+	char *hip_interval = NULL;
 
 	form = calloc(1, sizeof(*form));
 	if (!form)
@@ -345,13 +347,18 @@ static int parse_portal_xml(struct openconnect_info *vpninfo, xmlNode *xml_node,
 	 * The portal contains a ton of stuff, but basically none of it is
 	 * useful to a VPN client that wishes to give control to the client
 	 * user, as opposed to the VPN administrator.  The exception is the
-	 * list of gateways in policy/gateways/external/list
+	 * list of gateways in policy/gateways/external/list and the seconds
+	 * between HIP checks in policy/hip-collection/hip-report-interval
 	 */
 	if (xmlnode_is_named(xml_node, "policy")) {
 		for (x = xml_node->children, xml_node = NULL; x; x = x->next) {
 			if (xmlnode_is_named(x, "gateways"))
 				xml_node = x;
-			else
+			else if (xmlnode_is_named(x, "hip-collection")) {
+				for (grandchild = x->children; grandchild; grandchild = grandchild->next)
+					if (!xmlnode_get_val(grandchild, "hip-report-interval", &hip_interval))
+						vpninfo->trojan_interval = atoi(hip_interval);
+			} else
 				xmlnode_get_val(x, "portal-name", &portal);
 		}
 	}
@@ -444,6 +451,7 @@ gateways:
 out:
 	buf_free(buf);
 	free(portal);
+	free(hip_interval);
 	free_auth_form(form);
 	return result;
 }

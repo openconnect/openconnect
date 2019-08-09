@@ -605,6 +605,12 @@ static int gpst_parse_config_xml(struct openconnect_info *vpninfo, xmlNode *xml_
 		vpninfo->ssl_times.dpd = 10;
 	vpninfo->ssl_times.keepalive = vpninfo->esp_ssl_fallback = vpninfo->ssl_times.dpd;
 
+	/* Default HIP check to 3600 seconds unless already set by
+	 * portal config */
+	if (!vpninfo->trojan_interval)
+		vpninfo->trojan_interval = 3600;
+	vpninfo->last_trojan = time(NULL);
+
 	free(s);
 	return 0;
 }
@@ -1069,6 +1075,25 @@ int gpst_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable)
 		/* Rekey if needed */
 		if (keepalive_action(&vpninfo->ssl_times, timeout) == KA_REKEY)
 			goto do_rekey;
+		/* Submit HIP check if needed and only do it here, ie when
+		 * using an ESP tunnel, because when using an HTTPS tunnel the
+		 * one supported HTTPS connection is used by the HTTPS tunnel
+		 * and unavailable for checking and submitting the HIP
+		 * report */
+		else if (trojan_check_deadline(vpninfo, timeout)) {
+			vpn_progress(vpninfo, PRG_INFO, _("GlobalProtect HIP check due\n"));
+			ret = check_and_maybe_submit_hip_report(vpninfo);
+			/* Close HTTPS connection to prevent trying to read
+			 * from it, eg fetching HTTPS response to next HIP
+			 * check submission, after the GP gateway half-closes
+			 * it after 60 seconds. */
+			openconnect_close_https(vpninfo, 0);
+			if (ret) {
+				vpn_progress(vpninfo, PRG_ERR, _("HIP check or report failed\n"));
+				vpninfo->quit_reason = "HIP check or report failed";
+				return ret;
+			}
+		}
 		return 0;
 	case DTLS_SECRET:
 	case DTLS_SLEEPING:
