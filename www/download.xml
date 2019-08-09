@@ -17,14 +17,17 @@
 
 <p>
 <!-- latest-release-start -->
-The latest release is <a href="ftp://ftp.infradead.org/pub/openconnect/openconnect-8.03.tar.gz">OpenConnect v8.03</a>
-<i>(<a href="ftp://ftp.infradead.org/pub/openconnect/openconnect-8.03.tar.gz.asc">PGP signature</a>)</i>,
-released on 2019-05-18 with the following changelog:</p>
+The latest release is <a href="ftp://ftp.infradead.org/pub/openconnect/openconnect-8.04.tar.gz">OpenConnect v8.04</a>
+<i>(<a href="ftp://ftp.infradead.org/pub/openconnect/openconnect-8.04.tar.gz.asc">PGP signature</a>)</i>,
+released on 2019-08-09 with the following changelog:</p>
      <ul>
-       <li>Fix detection of <tt>utun</tt> support on OS X (<a href="https://gitlab.com/openconnect/openconnect/issues/18">#18</a>).</li>
-       <li>Fix Cisco DTLSv1.2 support for <tt>AES256-GCM-SHA384</tt>.</li>
-       <li>Fix Solaris 11.4 build by properly detecting <tt>memset_s()</tt>.</li>
-       <li>Fix recognition of OTP password fields (<a href="https://gitlab.com/openconnect/openconnect/issues/24">#24</a>).</li>
+       <li>Rework DTLS MTU detection. (<a href="https://gitlab.com/openconnect/openconnect/issues/10">#10</a>)</li>
+       <li>Add Pulse Connect Secure support.</li>
+       <li>OpenSSL build fixes (<a href="https://gitlab.com/openconnect/openconnect/merge_requests/51">#51</a>).</li>
+       <li>Add HMAC-SHA256-128 (RFC4868) support for ESP.</li>
+       <li>Support IPv6 in ESP.</li>
+       <li>Translate user-visible strings from <tt>openconnect_get_supported_protocols()</tt>.</li>
+       <li>Fix proxy username/password handling to allow special characters and escaping.</li>
      </ul>
 <!-- latest-release-end -->
 
