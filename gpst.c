@@ -606,7 +606,7 @@ static int gpst_parse_config_xml(struct openconnect_info *vpninfo, xmlNode *xml_
 	vpninfo->ssl_times.keepalive = vpninfo->esp_ssl_fallback = vpninfo->ssl_times.dpd;
 
 	/* Default HIP check to 3600 seconds unless already set by
-	 * portal config */
+	 * --force-trojan or portal config */
 	if (!vpninfo->trojan_interval)
 		vpninfo->trojan_interval = 3600;
 	vpninfo->last_trojan = time(NULL);

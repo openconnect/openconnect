@@ -355,9 +355,12 @@ static int parse_portal_xml(struct openconnect_info *vpninfo, xmlNode *xml_node,
 			if (xmlnode_is_named(x, "gateways"))
 				xml_node = x;
 			else if (xmlnode_is_named(x, "hip-collection")) {
-				for (grandchild = x->children; grandchild; grandchild = grandchild->next)
-					if (!xmlnode_get_val(grandchild, "hip-report-interval", &hip_interval))
-						vpninfo->trojan_interval = atoi(hip_interval);
+				/* don't find and set HIP interval if already
+				 * set with --force-trojan */
+				if (!vpninfo->trojan_interval)
+					for (grandchild = x->children; grandchild; grandchild = grandchild->next)
+						if (!xmlnode_get_val(grandchild, "hip-report-interval", &hip_interval))
+							vpninfo->trojan_interval = atoi(hip_interval);
 			} else
 				xmlnode_get_val(x, "portal-name", &portal);
 		}
