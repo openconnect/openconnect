@@ -1082,6 +1082,7 @@ static int load_certificate(struct openconnect_info *vpninfo)
 		vpn_progress(vpninfo, PRG_ERR,
 			     _("Loading certificate failed: %s\n"),
 			     reason);
+		nr_extra_certs = 0;
 		ret = -EINVAL;
 		goto out;
 	}
