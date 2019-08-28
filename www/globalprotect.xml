@@ -22,6 +22,38 @@ to the command line:
   openconnect --protocol=gp vpn.example.com
 </pre></p>
 
+<h3>GlobalProtect portals and gateways</h3>
+
+<p>GlobalProtect VPNs actually contain two different server
+interfaces: portals and gateways. Most VPNs have one portal server and
+one or more gateway servers; the server hosting the portal interface
+often hosts a gateway interface as well, but not always. The portal
+interface mostly sends centrally-imposed security/lockdown settings
+for the official client software to follow. The only information sent
+by the portal that's clearly useful to a VPN client like OpenConnect
+(which tries to give full control to the end user) is the list of
+gateways.</p>
+
+<p>Some GlobalProtect VPNs are configured in such a way that the
+client <i>must</i> authenticate to the portal before it can access the
+gateway, while with other VPNs no interaction with the portal is
+necessary.  In order to replicate the behavior of the official
+clients, OpenConnect first attempts to connect to the portal interface
+of the specified server.</p>
+
+<ul>
+  <li>If <tt>--usergroup=gateway</tt> is specified (or, equivalently,
+  <tt>/gateway</tt> is appended to the server URL, e.g.
+  <tt>https://vpn.company.com/gateway</tt>), then OpenConnect will
+  attempt to skip the portal interface and connect immediately to the
+  gateway interface. This is useful if the GlobalProtect VPN portal is
+  misconfigured, such as by not offering the desired gateway server in
+  the list it provides.</li>
+  <li>If connecting to the portal interface yields a choice of
+  multiple gateways, <tt>--authgroup=GatewayName</tt> tells OpenConnect
+  which one to choose.</li>
+</ul>
+
 <h3>Authentication</h3>
 
 <p>To authenticate, you connect to the secure web server (<tt>POST
