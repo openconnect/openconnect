@@ -542,7 +542,7 @@ static int gpst_login(struct openconnect_info *vpninfo, int portal, struct login
 				 * unless it was a challenge auth form or alt-secret form.
 				 */
 				portal = 0;
-				if (ctx->form->auth_id[0] == '_' && ctx->alt_secret) {
+				if (ctx->form->auth_id[0] == '_' && !ctx->alt_secret) {
 					blind_retry = 1;
 					goto replay_form;
 				}
