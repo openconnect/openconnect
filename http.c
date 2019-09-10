@@ -544,7 +544,8 @@ int process_http_response(struct openconnect_info *vpninfo, int connect,
 	} else if (bodylen == BODY_CHUNKED) {
 		/* ... else, chunked */
 		while ((i = vpninfo->ssl_gets(vpninfo, buf, sizeof(buf)))) {
-			int chunklen, lastchunk = 0;
+			int lastchunk = 0;
+			long chunklen;
 
 			if (i < 0) {
 				vpn_progress(vpninfo, PRG_ERR,
@@ -556,6 +557,18 @@ int process_http_response(struct openconnect_info *vpninfo, int connect,
 			if (!chunklen) {
 				lastchunk = 1;
 				goto skip;
+			}
+			if (chunklen < 0) {
+				vpn_progress(vpninfo, PRG_ERR,
+					     _("HTTP chunk length is negative (%ld)\n"), chunklen);
+				openconnect_close_https(vpninfo, 0);
+				return -EINVAL;
+			}
+			if (chunklen >= INT_MAX) {
+				vpn_progress(vpninfo, PRG_ERR,
+					     _("HTTP chunk length is too large (%ld)\n"), chunklen);
+				openconnect_close_https(vpninfo, 0);
+				return -EINVAL;
 			}
 			if (buf_ensure_space(body, chunklen + 1)) {
 				openconnect_close_https(vpninfo, 0);

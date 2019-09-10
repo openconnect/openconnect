@@ -16,6 +16,7 @@
    <li><b>OpenConnect HEAD</b>
      <ul>
        <li>Fix GlobalProtect ESP stall (<a href="https://gitlab.com/openconnect/openconnect/merge_requests/55">#55</a>).</li>
+       <li>Fix HTTP chunked encoding buffer overflow (CVE-2019-16239).</li>
      </ul><br/>
   </li>
   <li><b><a href="ftp://ftp.infradead.org/pub/openconnect/openconnect-8.04.tar.gz">OpenConnect v8.04</a></b>
