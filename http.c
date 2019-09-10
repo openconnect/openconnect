@@ -435,6 +435,7 @@ int process_http_response(struct openconnect_info *vpninfo, int connect,
 			if (!equals) {
 				vpn_progress(vpninfo, PRG_ERR,
 					     _("Invalid cookie offered: %s\n"), buf);
+				openconnect_close_https(vpninfo, 0);
 				return -EINVAL;
 			}
 			*(equals++) = 0;
@@ -456,8 +457,10 @@ int process_http_response(struct openconnect_info *vpninfo, int connect,
 					     _("SSL certificate authentication failed\n"));
 
 			ret = http_add_cookie(vpninfo, colon, equals, 1);
-			if (ret)
+			if (ret) {
+				openconnect_close_https(vpninfo, 0);
 				return ret;
+			}
 		} else {
 			vpn_progress(vpninfo, PRG_DEBUG, "%s: %s\n", buf, colon);
 		}
@@ -477,8 +480,10 @@ int process_http_response(struct openconnect_info *vpninfo, int connect,
 		}
 		if (!strcasecmp(buf, "Location")) {
 			vpninfo->redirect_url = strdup(colon);
-			if (!vpninfo->redirect_url)
+			if (!vpninfo->redirect_url) {
+				openconnect_close_https(vpninfo, 0);
 				return -ENOMEM;
+			}
 		}
 		if (!strcasecmp(buf, "Content-Length")) {
 			bodylen = atoi(colon);
@@ -521,8 +526,10 @@ int process_http_response(struct openconnect_info *vpninfo, int connect,
 
 	/* If we were given Content-Length, it's nice and easy... */
 	if (bodylen > 0) {
-		if (buf_ensure_space(body, bodylen + 1))
+		if (buf_ensure_space(body, bodylen + 1)) {
+			openconnect_close_https(vpninfo, 0);
 			return buf_error(body);
+		}
 
 		while (body->pos < bodylen) {
 			i = vpninfo->ssl_read(vpninfo, body->data + body->pos, bodylen - body->pos);
@@ -542,6 +549,7 @@ int process_http_response(struct openconnect_info *vpninfo, int connect,
 			if (i < 0) {
 				vpn_progress(vpninfo, PRG_ERR,
 					     _("Error fetching chunk header\n"));
+				openconnect_close_https(vpninfo, 0);
 				return i;
 			}
 			chunklen = strtol(buf, NULL, 16);
@@ -549,13 +557,16 @@ int process_http_response(struct openconnect_info *vpninfo, int connect,
 				lastchunk = 1;
 				goto skip;
 			}
-			if (buf_ensure_space(body, chunklen + 1))
+			if (buf_ensure_space(body, chunklen + 1)) {
+				openconnect_close_https(vpninfo, 0);
 				return buf_error(body);
+			}
 			while (chunklen) {
 				i = vpninfo->ssl_read(vpninfo, body->data + body->pos, chunklen);
 				if (i < 0) {
 					vpn_progress(vpninfo, PRG_ERR,
 						     _("Error reading HTTP response body\n"));
+					openconnect_close_https(vpninfo, 0);
 					return -EINVAL;
 				}
 				chunklen -= i;
@@ -571,6 +582,7 @@ int process_http_response(struct openconnect_info *vpninfo, int connect,
 						     _("Error in chunked decoding. Expected '', got: '%s'"),
 						     buf);
 				}
+				openconnect_close_https(vpninfo, 0);
 				return -EINVAL;
 			}
 
@@ -587,8 +599,10 @@ int process_http_response(struct openconnect_info *vpninfo, int connect,
 
 		/* HTTP 1.0 response. Just eat all we can in 4KiB chunks */
 		while (1) {
-			if (buf_ensure_space(body, 4096 + 1))
+			if (buf_ensure_space(body, 4096 + 1)) {
+				openconnect_close_https(vpninfo, 0);
 				return buf_error(body);
+			}
 			i = vpninfo->ssl_read(vpninfo, body->data + body->pos, 4096);
 			if (i < 0) {
 				/* Error */
