@@ -197,6 +197,24 @@ AC_LINK_IFELSE([AC_LANG_PROGRAM([
 	       ])
 CFLAGS="$oldCFLAGS"
 
+AC_MSG_CHECKING([For localtime_s])
+AC_LINK_IFELSE([AC_LANG_PROGRAM([#include <time.h>],[[
+	struct tm tm;
+	time_t t = 0;
+	localtime_s(&tm, (time_t)0);]])],
+	       [AC_MSG_RESULT([yes])
+	        AC_DEFINE(HAVE_LOCALTIME_S, 1, [Have localtime_s() function])],
+	       [AC_MSG_RESULT([no])])
+
+AC_MSG_CHECKING([For localtime_r])
+AC_LINK_IFELSE([AC_LANG_PROGRAM([#include <time.h>],[[
+	struct tm tm;
+	time_t t = 0;
+	localtime_r(&t, &tm);]])],
+	       [AC_MSG_RESULT([yes])
+	        AC_DEFINE(HAVE_LOCALTIME_R, 1, [Have localtime_r() function])],
+	       [AC_MSG_RESULT([no])])
+
 if test "$have_win" = yes; then
    # Checking "properly" for __attribute__((dllimport,stdcall)) functions is non-trivial
    LIBS="$LIBS -lws2_32 -lshlwapi -lsecur32 -liphlpapi"

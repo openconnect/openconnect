@@ -956,8 +956,18 @@ static int pulse_request_session_kill(struct openconnect_info *vpninfo, struct o
 			goto badlist;
 		}
 
-		localtime_r(&when, &tm);
-		strftime(tmbuf, 80, "%a, %d %b %Y %H:%M:%S %Z", &tm);
+		if (0
+#ifdef HAVE_LOCALTIME_S
+		    || !localtime_s(&tm, &when)
+#endif
+#ifdef HAVE_LOCALTIME_R
+		    || localtime_r(&when, &tm)
+#endif
+		    ) {
+			strftime(tmbuf, sizeof(tmbuf), "%a, %d %b %Y %H:%M:%S %Z", &tm);
+		} else
+			snprintf(tmbuf, sizeof(tmbuf), "@%lu", (unsigned long)when);
+
 		buf_append(form_msg, " - %s from %s at %s\n", sessid, from, tmbuf);
 		free(from);
 		o.choices[i] = malloc(sizeof(struct oc_choice));

@@ -15,7 +15,7 @@
 <ul>
    <li><b>OpenConnect HEAD</b>
      <ul>
-       <li><i>No changelog entries yet</i></li>
+       <li>Fix Windows build with MSYS2 (<a href="https://gitlab.com/openconnect/openconnect/issues/74">#74</a>).</li>
      </ul><br/>
   </li>
   <li><b><a href="ftp://ftp.infradead.org/pub/openconnect/openconnect-8.05.tar.gz">OpenConnect v8.05</a></b>
