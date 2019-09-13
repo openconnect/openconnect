@@ -527,7 +527,7 @@ case "$ssl_library" in
 
 	PKG_CHECK_MODULES(TASN1, [libtasn1], [have_tasn1=yes], [have_tasn1=no])
 	if test "$have_tasn1" = "yes"; then
-	   PKG_CHECK_MODULES(TSS2_ESYS, [tss2-esys],
+	   PKG_CHECK_MODULES(TSS2_ESYS, [tss2-esys tss2-mu],
 			     [AC_DEFINE(HAVE_TSS2, 1, [Have TSS2])
 			      AC_SUBST(TPM2_CFLAGS, ['$(TASN1_CFLAGS) $(TSS2_ESYS_CFLAGS)'])
 			      AC_SUBST(TPM2_LIBS, ['$(TASN1_LIBS) $(TSS2_ESYS_LIBS)'])
