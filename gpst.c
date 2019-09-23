@@ -1055,6 +1055,13 @@ int gpst_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable)
 		vpn_progress(vpninfo, PRG_INFO,
 			     _("ESP tunnel connected; exiting HTTPS mainloop.\n"));
 		vpninfo->dtls_state = DTLS_CONNECTED;
+		/* Now that we are connected, let's ensure timeout is less than
+		 * or equal to DTLS DPD/keepalive else we might over sleep, eg
+		 * if timeout is set to DTLS attempt period from ESP mainloop,
+		 * and falsely detect dead peer. */
+		if (vpninfo->dtls_times.dpd)
+			if (*timeout > vpninfo->dtls_times.dpd * 1000)
+				*timeout = vpninfo->dtls_times.dpd * 1000;
 		/* fall through */
 	case DTLS_CONNECTED:
 		/* Rekey if needed */
