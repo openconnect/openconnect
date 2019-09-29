@@ -297,8 +297,10 @@ out:
 		    || !strcmp(err, "GlobalProtect portal does not exist")) {
 			vpn_progress(vpninfo, PRG_DEBUG, "%s\n", err);
 			result = -EEXIST;
-		} else if (!strcmp(err, "Invalid authentication cookie")
-		           || !strcmp(err, "Valid client certificate is required")) {
+		} else if (!strcmp(err, "Invalid authentication cookie")           /* equivalent to custom HTTP status 512 */
+		           || !strcmp(err, "Valid client certificate is required") /* equivalent to custom HTTP status 513 */
+		           || !strcmp(err, "Allow Automatic Restoration of SSL VPN is disabled")) {
+			/* Any of these errors indicates that retrying won't help us reconnect (EPERM signals this to mainloop.) */
 			vpn_progress(vpninfo, PRG_ERR, "%s\n", err);
 			result = -EPERM;
 		} else {
