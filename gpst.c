@@ -618,6 +618,7 @@ static int gpst_get_config(struct openconnect_info *vpninfo)
 	const char *request_body_type = "application/x-www-form-urlencoded";
 	const char *method = "POST";
 	char *xml_buf=NULL;
+	vpninfo->cstp_options = NULL;
 
 	/* submit getconfig request */
 	buf_append(request_body, "client-type=1&protocol-version=p1&app-version=4.0.5-8");
