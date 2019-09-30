@@ -15,6 +15,7 @@ openconnect \- Multi-protocol VPN client, for Cisco AnyConnect VPNs and others
 .OP \-d,\-\-deflate
 .OP \-D,\-\-no\-deflate
 .OP \-\-force\-dpd interval
+.OP \-\-force\-trojan interval
 .OP \-F,\-\-form\-entry form:opt=value
 .OP \-g,\-\-usergroup group
 .OP \-h,\-\-help
@@ -176,6 +177,12 @@ compression can be disabled by setting the mode to
 Use
 .I INTERVAL
 as minimum Dead Peer Detection interval for CSTP and DTLS, forcing use of DPD even when the server doesn't request it.
+.TP
+.B \-\-force\-trojan=INTERVAL
+Use
+.I INTERVAL
+as trojan binary or script execution interval, overriding server requested and
+default interval.
 .TP
 .B \-g,\-\-usergroup=GROUP
 Use

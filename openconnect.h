@@ -33,9 +33,12 @@ extern "C" {
 #endif
 
 #define OPENCONNECT_API_VERSION_MAJOR 5
-#define OPENCONNECT_API_VERSION_MINOR 5
+#define OPENCONNECT_API_VERSION_MINOR 6
 
 /*
+ * API version 5.6:
+ *  - Add openconnect_set_trojan_interval()
+ *
  * API version 5.5 (v8.00; 2019-01-05):
  *  - add openconnect_set_version_string()
  *  - add openconnect_set_key_password()
@@ -521,6 +524,7 @@ int openconnect_set_key_password(struct openconnect_info *vpninfo, const char *p
 const char *openconnect_get_ifname(struct openconnect_info *);
 void openconnect_set_reqmtu(struct openconnect_info *, int reqmtu);
 void openconnect_set_dpd(struct openconnect_info *, int min_seconds);
+void openconnect_set_trojan_interval(struct openconnect_info *, int seconds);
 int openconnect_get_idle_timeout(struct openconnect_info *);
 
 /* The returned structures are owned by the library and may be freed/replaced

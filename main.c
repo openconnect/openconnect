@@ -161,6 +161,7 @@ enum {
 	OPT_DTLS12_CIPHERS,
 	OPT_DUMP_HTTP,
 	OPT_FORCE_DPD,
+	OPT_FORCE_TROJAN,
 	OPT_GNUTLS_DEBUG,
 	OPT_JUNIPER,
 	OPT_KEY_PASSWORD_FROM_FSID,
@@ -266,6 +267,7 @@ static const struct option long_options[] = {
 	OPTION("no-http-keepalive", 0, OPT_NO_HTTP_KEEPALIVE),
 	OPTION("no-cert-check", 0, OPT_NO_CERT_CHECK),
 	OPTION("force-dpd", 1, OPT_FORCE_DPD),
+	OPTION("force-trojan", 1, OPT_FORCE_TROJAN),
 	OPTION("non-inter", 0, OPT_NON_INTER),
 	OPTION("dtls-local-port", 1, OPT_DTLS_LOCAL_PORT),
 	OPTION("token-mode", 1, OPT_TOKEN_MODE),
@@ -900,6 +902,7 @@ static void usage(void)
 	printf("\n%s:\n", _("Server bugs"));
 	printf("      --no-http-keepalive         %s\n", _("Disable HTTP connection re-use"));
 	printf("      --no-xmlpost                %s\n", _("Do not attempt XML POST authentication"));
+	printf("      --force-trojan=INTERVAL     %s\n", _("Run trojan every INTERVAL secs"));
 
 	printf("\n");
 
@@ -1446,6 +1449,9 @@ int main(int argc, char **argv)
 			break;
 		case OPT_FORCE_DPD:
 			openconnect_set_dpd(vpninfo, atoi(config_arg));
+			break;
+		case OPT_FORCE_TROJAN:
+			openconnect_set_trojan_interval(vpninfo, atoi(config_arg));
 			break;
 		case OPT_DTLS_LOCAL_PORT:
 			vpninfo->dtls_local_port = atoi(config_arg);
