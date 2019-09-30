@@ -444,6 +444,8 @@ struct openconnect_info {
 	char *dtls_ciphers;
 	char *dtls12_ciphers;
 	char *csd_wrapper;
+	int trojan_interval;
+	time_t last_trojan;
 	int no_http_keepalive;
 	int dump_http_traffic;
 
@@ -1014,6 +1016,7 @@ int queue_new_packet(struct pkt_q *q, void *buf, int len);
 int keepalive_action(struct keepalive_info *ka, int *timeout);
 int ka_stalled_action(struct keepalive_info *ka, int *timeout);
 int ka_check_deadline(int *timeout, time_t now, time_t due);
+int trojan_check_deadline(struct openconnect_info *vpninfo, int *timeout);
 
 /* xml.c */
 ssize_t read_file_into_string(struct openconnect_info *vpninfo, const char *fname,
