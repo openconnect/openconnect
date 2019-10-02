@@ -361,7 +361,18 @@ Fetch and print cookie only; don't connect
 Print cookie before connecting
 .TP
 .B \-\-cafile=FILE
-Cert file for server verification
+Additional CA file for server verification. By default, this simply
+causes OpenConnect to trust additional root CA certificate(s) in
+addition to those trusted by the system. Use
+.B \-\-no\-system\-trust
+to prevent OpenConnect from trusting the system default certificate
+authorities.
+.TP
+.B \-\-no\-system\-trust
+Do not trust the system default certificate authorities. If this option is
+given, only certificate authorities given with the
+.B \-\-cafile
+option, if any, will be trusted automatically.
 .TP
 .B \-\-disable\-ipv6
 Do not advertise IPv6 capability to server
@@ -380,12 +391,6 @@ as the local port for DTLS and UDP datagrams
 .B \-\-dump\-http\-traffic
 Enable verbose output of all HTTP requests and the bodies of all responses
 received from the server.
-.TP
-.B \-\-no\-system\-trust
-Do not trust the system default certificate authorities. If this option is
-given, only certificate authorities given with the
-.B \-\-cafile
-option, if any, will be trusted automatically.
 
 .TP
 .B \-\-pfs
