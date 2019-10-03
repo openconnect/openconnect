@@ -21,8 +21,8 @@
 %define use_tokens 1
 %endif
 
-# Fedora has tss2-sys from F29 onwards
-%if 0%{?fedora} >= 29
+# Fedora has tss2-sys from F29 onwards, and RHEL from 8 onwards.
+%if 0%{?fedora} >= 29 || 0%{?epel} >= 8
 %define use_tss2_esys 1
 %else
 %define use_tss2_esys 0
@@ -112,7 +112,9 @@ fi
 %configure	--with-vpnc-script=/etc/vpnc/vpnc-script \
 		--disable-dsa-tests \
 %if %{use_gnutls}
+%if 0%{?fedora} || 0%{?rhel} > 8
 		--with-default-gnutls-priority="@OPENCONNECT,SYSTEM" \
+%endif
 %else
 		--with-openssl --without-openssl-version-check \
 %endif
@@ -129,9 +131,10 @@ rm -f $RPM_BUILD_ROOT/%{_libexecdir}/openconnect/hipreport-android.sh
 %find_lang %{name}
 
 %check
-# Checks fail on EPEL 7 and below for environmental reasons we don't care about
-%if 0%{?fedora} || 0%{?rhel} >= 8
+%if 0%{?fedora} || 0%{?rhel} > 7
 make VERBOSE=1 check
+%else
+make VERBOSE=1 XFAIL_TESTS="auth-nonascii bad_dtls_test" check
 %endif
 
 %ldconfig_scriptlets
