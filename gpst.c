@@ -297,8 +297,10 @@ out:
 		    || !strcmp(err, "GlobalProtect portal does not exist")) {
 			vpn_progress(vpninfo, PRG_DEBUG, "%s\n", err);
 			result = -EEXIST;
-		} else if (!strcmp(err, "Invalid authentication cookie")
-		           || !strcmp(err, "Valid client certificate is required")) {
+		} else if (!strcmp(err, "Invalid authentication cookie")           /* equivalent to custom HTTP status 512 */
+		           || !strcmp(err, "Valid client certificate is required") /* equivalent to custom HTTP status 513 */
+		           || !strcmp(err, "Allow Automatic Restoration of SSL VPN is disabled")) {
+			/* Any of these errors indicates that retrying won't help us reconnect (EPERM signals this to mainloop.) */
 			vpn_progress(vpninfo, PRG_ERR, "%s\n", err);
 			result = -EPERM;
 		} else {
@@ -618,6 +620,7 @@ static int gpst_get_config(struct openconnect_info *vpninfo)
 	const char *request_body_type = "application/x-www-form-urlencoded";
 	const char *method = "POST";
 	char *xml_buf=NULL;
+	vpninfo->cstp_options = NULL;
 
 	/* submit getconfig request */
 	buf_append(request_body, "client-type=1&protocol-version=p1&app-version=4.0.5-8");
