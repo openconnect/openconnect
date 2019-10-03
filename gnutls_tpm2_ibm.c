@@ -516,7 +516,7 @@ int install_tpm2_key(struct openconnect_info *vpninfo, gnutls_privkey_t *pkey, g
 
 	switch(vpninfo->tpm2->pub.publicArea.type) {
 	case TPM_ALG_RSA: return GNUTLS_PK_RSA;
-	case TPM_ALG_ECC: return GNUTLS_PK_ECDSA;
+	case TPM_ALG_ECC: return GNUTLS_PK_ECC;
 	}
 
 	vpn_progress(vpninfo, PRG_ERR,

@@ -298,7 +298,7 @@ int load_tpm2_key(struct openconnect_info *vpninfo, gnutls_datum_t *fdata,
 #endif
 		break;
 
-	case GNUTLS_PK_ECDSA:
+	case GNUTLS_PK_ECC:
 #if GNUTLS_VERSION_NUMBER >= 0x030600
 		gnutls_privkey_import_ext4(*pkey, vpninfo, NULL, tpm2_ec_sign_hash_fn, NULL, NULL, ec_key_info, 0);
 #elif GNUTLS_VERSION_NUMBER >= 0x030400
