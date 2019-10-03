@@ -542,7 +542,7 @@ static int gpst_login(struct openconnect_info *vpninfo, int portal, struct login
 				 * unless it was a challenge auth form or alt-secret form.
 				 */
 				portal = 0;
-				if (ctx->form->auth_id[0] == '_' && ctx->alt_secret) {
+				if (ctx->form->auth_id[0] == '_' && !ctx->alt_secret) {
 					blind_retry = 1;
 					goto replay_form;
 				}
@@ -580,10 +580,10 @@ int gpst_obtain_cookie(struct openconnect_info *vpninfo)
 		/* assume the server is a gateway */
 		result = gpst_login(vpninfo, 0, &ctx);
 	} else {
-		/* first try handling it as a gateway, then a portal */
-		result = gpst_login(vpninfo, 0, &ctx);
+		/* first try handling it as a portal, then a gateway */
+		result = gpst_login(vpninfo, 1, &ctx);
 		if (result == -EEXIST) {
-			result = gpst_login(vpninfo, 1, &ctx);
+			result = gpst_login(vpninfo, 0, &ctx);
 			if (result == -EEXIST)
 				vpn_progress(vpninfo, PRG_ERR, _("Server is neither a GlobalProtect portal nor a gateway.\n"));
 		}
