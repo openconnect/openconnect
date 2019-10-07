@@ -935,6 +935,7 @@ static int load_certificate(struct openconnect_info *vpninfo)
 				vpn_progress(vpninfo, PRG_ERR,
 					     _("Loading private key failed\n"));
 				openconnect_report_ssl_errors(vpninfo);
+				ret = -EINVAL;
 			}
 		again:
 			fseek(f, 0, SEEK_SET);
