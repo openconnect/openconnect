@@ -565,7 +565,12 @@ static int load_pkcs12_certificate(struct openconnect_info *vpninfo, PKCS12 *p12
 	}
 
 	if (pkey) {
-		SSL_CTX_use_PrivateKey(vpninfo->https_ctx, pkey);
+		if (!SSL_CTX_use_PrivateKey(vpninfo->https_ctx, pkey)) {
+			vpn_progress(vpninfo, PRG_ERR,
+				     _("Loading private key failed\n"));
+			openconnect_report_ssl_errors(vpninfo);
+			ret = -EINVAL;
+		}
 		EVP_PKEY_free(pkey);
 	} else {
 		vpn_progress(vpninfo, PRG_ERR,
