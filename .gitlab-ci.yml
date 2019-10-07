@@ -95,6 +95,7 @@ Fedora/GnuTLS:
     ocserv softhsm 'pkgconfig(uid_wrapper)' 'pkgconfig(socket_wrapper)'
     vpnc-script 'pkgconfig(libpskc)' 'pkgconfig(libpcsclite)' tss2-devel
     java-devel-openjdk glibc-langpack-cs iproute iputils nuttcp
+    'pkgconfig(tss2-esys)' 'pkgconfig(krb5-gssapi)'
   - ./autogen.sh
   - ./configure --with-java --disable-dsa-tests CFLAGS=-g
   - make tmp-distdir
@@ -122,6 +123,7 @@ Fedora/GnuTLS/clang:
     ocserv softhsm 'pkgconfig(uid_wrapper)' 'pkgconfig(socket_wrapper)'
     vpnc-script 'pkgconfig(libpskc)' 'pkgconfig(libpcsclite)' tss2-devel
     java-devel-openjdk clang glibc-langpack-cs iproute iputils nuttcp
+    'pkgconfig(tss2-esys)' 'pkgconfig(krb5-gssapi)'
   - ./autogen.sh
   - ./configure --with-java --disable-dsa-tests CC=clang CFLAGS=-g
   - make tmp-distdir
@@ -149,6 +151,7 @@ Fedora/OpenSSL:
     ocserv softhsm 'pkgconfig(uid_wrapper)' 'pkgconfig(socket_wrapper)'
     vpnc-script 'pkgconfig(libpskc)' 'pkgconfig(libpcsclite)'
     java-devel-openjdk glibc-langpack-cs iproute iputils nuttcp
+    'pkgconfig(krb5-gssapi)' 'pkgconfig(libp11)'
 # Re-enable DSA since we test it
   - update-crypto-policies --set LEGACY
   - ./autogen.sh
@@ -178,6 +181,7 @@ Fedora/OpenSSL/clang:
     ocserv softhsm 'pkgconfig(uid_wrapper)' 'pkgconfig(socket_wrapper)'
     vpnc-script 'pkgconfig(libpskc)' 'pkgconfig(libpcsclite)'
     java-devel-openjdk clang glibc-langpack-cs iproute iputils nuttcp
+    'pkgconfig(krb5-gssapi)' 'pkgconfig(libp11)'
 # Re-enable DSA since we test it
   - update-crypto-policies --set LEGACY
   - ./autogen.sh
