@@ -794,12 +794,10 @@ static int xmlpost_initial_req(struct openconnect_info *vpninfo,
 	if (vpninfo->urlpath)
 		buf_append(url_buf, "/%s", vpninfo->urlpath);
 
-	if (buf_error(url_buf)) {
-		buf_free(url_buf);
+	if (buf_error(url_buf))
 		goto bad;
-	}
+
 	node = xmlNewTextChild(root, NULL, XCAST("group-access"), XCAST(url_buf->data));
-	buf_free(url_buf);
 	if (!node)
 		goto bad;
 	if (cert_fail) {
@@ -812,6 +810,7 @@ static int xmlpost_initial_req(struct openconnect_info *vpninfo,
 		if (!node)
 			goto bad;
 	}
+	buf_free(url_buf);
 	return xmlpost_complete(doc, request_body);
 
 bad:
