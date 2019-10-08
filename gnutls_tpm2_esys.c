@@ -168,13 +168,17 @@ static TPML_PCR_SELECTION allCreationPCR = {
 
 static void install_tpm_passphrase(struct openconnect_info *vpninfo, TPM2B_DIGEST *auth, char *pass)
 {
-	if (strlen(pass) > sizeof(auth->buffer) - 1) {
+	int pwlen = strlen(pass);
+
+	if (pwlen > sizeof(auth->buffer) - 1) {
 		vpn_progress(vpninfo, PRG_ERR,
 			     _("TPM2 password too long; truncating\n"));
-		pass[sizeof(auth->buffer) - 1] = 0;
+		pwlen = sizeof(auth->buffer) - 1;
 	}
-	auth->size = strlen(pass);
-	strcpy((char *)auth->buffer, pass);
+	auth->size = pwlen;
+	memcpy(auth->buffer, pass, pwlen);
+	pass[pwlen] = 0;
+
 	free_pass(&pass);
 }
 
