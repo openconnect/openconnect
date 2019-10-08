@@ -126,7 +126,7 @@ int lzs_decompress(unsigned char *dst, int dstlen, const unsigned char *src, int
 				}
 			}
 		}
-		if (offset > outlen)
+		if (!offset || offset > outlen)
 			return -EINVAL;
 		if (length + outlen > dstlen)
 			return -EFBIG;

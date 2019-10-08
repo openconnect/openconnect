@@ -34,6 +34,16 @@ int lzs_compress(unsigned char *dst, int dstlen, const unsigned char *src, int s
 #define NR_PKTS 2048
 #define MAX_PKT 65536
 
+/*
+ * Compressed data can encode an 11-bit offset of zero, which is invalid.
+ * 10 00000000000 00   110000000
+ * Compr offset  len   end marker
+ *
+ * In bytes:
+ * 1000.0000 0000.0001 1000.0000
+ */
+static const unsigned char zero_ofs[] = { 0x80, 0x01, 0x80 };
+
 int main(void)
 {
 	int i, j, ret;
@@ -43,6 +53,16 @@ int main(void)
 	unsigned char uncomprbuf[MAX_PKT];
 
 	srand(0xdeadbeef);
+
+	uncomprbuf[0] = 0x5a;
+	uncomprbuf[1] = 0xa5;
+
+	ret = lzs_decompress(uncomprbuf, 3, zero_ofs, sizeof(zero_ofs));
+	if (ret != -EINVAL) {
+		fprintf(stderr, "Decompressing zero-offset should have failed -EINVAL: %d, bytes %08x %08x\n",
+			ret, uncomprbuf[0], uncomprbuf[1]);
+		exit(1);
+	}
 
 	for (i = 0; i < NR_PKTS; i++) {
 		if (i)
