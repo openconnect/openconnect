@@ -1169,8 +1169,10 @@ static int load_certificate(struct openconnect_info *vpninfo)
 				s = sizeof(token->label) + 1;
 				if (!gnutls_pkcs11_obj_get_info(crt, GNUTLS_PKCS11_OBJ_TOKEN_LABEL,
 								buf, &s)) {
-					if (!gtls_ver(3,6,0))
+					if (s && !gtls_ver(3,6,0))
 						s--;
+					if (s > sizeof(token->label))
+						s = sizeof(token->label);
 					memcpy(token->label, buf, s);
 					memset(token->label + s, ' ',
 					       sizeof(token->label) - s);
@@ -1180,8 +1182,10 @@ static int load_certificate(struct openconnect_info *vpninfo)
 				s = sizeof(token->manufacturerID) + 1;
 				if (!gnutls_pkcs11_obj_get_info(crt, GNUTLS_PKCS11_OBJ_TOKEN_MANUFACTURER,
 								buf, &s)) {
-					if (!gtls_ver(3,6,0))
+					if (s && !gtls_ver(3,6,0))
 						s--;
+					if (s > sizeof(token->manufacturerID))
+						s = sizeof(token->manufacturerID);
 					memcpy(token->manufacturerID, buf, s);
 					memset(token->manufacturerID + s, ' ',
 					       sizeof(token->manufacturerID) - s);
@@ -1191,8 +1195,10 @@ static int load_certificate(struct openconnect_info *vpninfo)
 				s = sizeof(token->model) + 1;
 				if (!gnutls_pkcs11_obj_get_info(crt, GNUTLS_PKCS11_OBJ_TOKEN_MODEL,
 								buf, &s)) {
-					if (!gtls_ver(3,6,0))
+					if (s && !gtls_ver(3,6,0))
 						s--;
+					if (s > sizeof(token->model))
+						s = sizeof(token->model);
 					memcpy(token->model, buf, s);
 					memset(token->model + s, ' ',
 					       sizeof(token->model) - s);
@@ -1202,8 +1208,10 @@ static int load_certificate(struct openconnect_info *vpninfo)
 				s = sizeof(token->serialNumber) + 1;
 				if (!gnutls_pkcs11_obj_get_info(crt, GNUTLS_PKCS11_OBJ_TOKEN_SERIAL,
 								buf, &s)) {
-					if (!gtls_ver(3,6,0))
+					if (s && !gtls_ver(3,6,0))
 						s--;
+					if (s > sizeof(token->serialNumber))
+						s = sizeof(token->serialNumber);
 					memcpy(token->serialNumber, buf, s);
 					memset(token->serialNumber + s, ' ',
 					       sizeof(token->serialNumber) - s);
