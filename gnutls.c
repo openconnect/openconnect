@@ -896,6 +896,17 @@ static int import_openssl_pem(struct openconnect_info *vpninfo,
 	return ret;
 }
 
+static void fill_token_info(char *buf, size_t s, unsigned char *dst, size_t dstlen)
+{
+	if (s && !gtls_ver(3,6,0))
+		s--;
+	if (s > dstlen)
+		s = dstlen;
+	memcpy(dst, buf, s);
+	if (s < dstlen)
+		memset(dst + s, ' ', dstlen - s);
+}
+
 static int load_certificate(struct openconnect_info *vpninfo)
 {
 	gnutls_datum_t fdata;
@@ -1168,55 +1179,26 @@ static int load_certificate(struct openconnect_info *vpninfo)
 			if (!token->label[0]) {
 				s = sizeof(token->label) + 1;
 				if (!gnutls_pkcs11_obj_get_info(crt, GNUTLS_PKCS11_OBJ_TOKEN_LABEL,
-								buf, &s)) {
-					if (s && !gtls_ver(3,6,0))
-						s--;
-					if (s > sizeof(token->label))
-						s = sizeof(token->label);
-					memcpy(token->label, buf, s);
-					memset(token->label + s, ' ',
-					       sizeof(token->label) - s);
-				}
+								buf, &s))
+					fill_token_info(buf, s, token->label, sizeof(token->label));
 			}
 			if (!token->manufacturerID[0]) {
 				s = sizeof(token->manufacturerID) + 1;
 				if (!gnutls_pkcs11_obj_get_info(crt, GNUTLS_PKCS11_OBJ_TOKEN_MANUFACTURER,
-								buf, &s)) {
-					if (s && !gtls_ver(3,6,0))
-						s--;
-					if (s > sizeof(token->manufacturerID))
-						s = sizeof(token->manufacturerID);
-					memcpy(token->manufacturerID, buf, s);
-					memset(token->manufacturerID + s, ' ',
-					       sizeof(token->manufacturerID) - s);
-				}
+								buf, &s))
+					fill_token_info(buf, s, token->manufacturerID, sizeof(token->manufacturerID));
 			}
 			if (!token->model[0]) {
 				s = sizeof(token->model) + 1;
 				if (!gnutls_pkcs11_obj_get_info(crt, GNUTLS_PKCS11_OBJ_TOKEN_MODEL,
-								buf, &s)) {
-					if (s && !gtls_ver(3,6,0))
-						s--;
-					if (s > sizeof(token->model))
-						s = sizeof(token->model);
-					memcpy(token->model, buf, s);
-					memset(token->model + s, ' ',
-					       sizeof(token->model) - s);
-				}
+								buf, &s))
+					fill_token_info(buf, s, token->model, sizeof(token->model));
 			}
 			if (!token->serialNumber[0]) {
 				s = sizeof(token->serialNumber) + 1;
 				if (!gnutls_pkcs11_obj_get_info(crt, GNUTLS_PKCS11_OBJ_TOKEN_SERIAL,
-								buf, &s)) {
-					if (s && !gtls_ver(3,6,0))
-						s--;
-					if (s > sizeof(token->serialNumber))
-						s = sizeof(token->serialNumber);
-					memcpy(token->serialNumber, buf, s);
-					memset(token->serialNumber + s, ' ',
-					       sizeof(token->serialNumber) - s);
-				}
-
+								buf, &s))
+					fill_token_info(buf, s, token->serialNumber, sizeof(token->serialNumber));
 			}
 
 			free(key_url);
