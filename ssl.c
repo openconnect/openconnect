@@ -130,7 +130,7 @@ static int cancellable_connect(struct openconnect_info *vpninfo, int sockfd,
 #else
 	err = -errno;
 	if (err == -ENOTCONN) {
-		int ch;
+		char ch;
 
 		if (read(sockfd, &ch, 1) < 0)
 			err = -errno;
