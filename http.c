@@ -707,7 +707,7 @@ int process_http_response(struct openconnect_info *vpninfo, int connect,
 		openconnect_close_https(vpninfo, 0);
 	}
 	buf_free(hdrbuf);
-	return result;
+	return ret;
 }
 
 int internal_parse_url(const char *url, char **res_proto, char **res_host,
