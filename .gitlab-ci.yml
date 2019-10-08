@@ -89,6 +89,7 @@ Fedora/Coverity:
   only:
     refs:
        - master
+       - coverity
   script:
   - dnf update -y
   - dnf install -y git autoconf automake libtool python gettext make
@@ -99,6 +100,7 @@ Fedora/Coverity:
     vpnc-script 'pkgconfig(libpskc)' 'pkgconfig(libpcsclite)' tss2-devel
     java-devel-openjdk glibc-langpack-cs iproute iputils nuttcp
     'pkgconfig(tss2-esys)' 'pkgconfig(krb5-gssapi)' 'pkgconfig(libp11)'
+    ant
   - curl -o /tmp/cov-analysis-linux64.tgz https://scan.coverity.com/download/linux64
     --form project=$COVERITY_SCAN_PROJECT_NAME --form token=$COVERITY_SCAN_TOKEN
   - tar xfz /tmp/cov-analysis-linux64.tgz
@@ -108,6 +110,9 @@ Fedora/Coverity:
   - make clean
   - ./configure --with-java --disable-dsa-tests
   - cov-analysis-linux64-*/bin/cov-build --dir cov-int make -j4
+  - cd java
+  - ../cov-analysis-linux64-*/bin/cov-build --dir ../cov-int ant
+  - cd ..
   - tar cfz cov-int.tar.gz cov-int
   - curl https://scan.coverity.com/builds?project=$COVERITY_SCAN_PROJECT_NAME
     --form token=$COVERITY_SCAN_TOKEN --form email=dwmw2@infradead.org
