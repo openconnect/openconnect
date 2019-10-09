@@ -943,7 +943,7 @@ int do_https_request(struct openconnect_info *vpninfo, const char *method,
 		     const char *request_body_type, struct oc_text_buf *request_body,
 		     char **form_buf, int fetch_redirect)
 {
-	struct oc_text_buf *buf = buf_alloc();
+	struct oc_text_buf *buf;
 	int result;
 	int rq_retry;
 	int rlen, pad;
@@ -952,6 +952,8 @@ int do_https_request(struct openconnect_info *vpninfo, const char *method,
 
 	if (request_body_type && buf_error(request_body))
 		return buf_error(request_body);
+
+	buf = buf_alloc();
 
  redirected:
 	if (max_redirects-- <= 0) {
