@@ -254,7 +254,7 @@ static int parse_login_xml(struct openconnect_info *vpninfo, xmlNode *xml_node, 
 	while (xml_node && xml_node->type != XML_ELEMENT_NODE)
 		xml_node = xml_node->next;
 
-	if (!xmlnode_is_named(xml_node, "application-desc"))
+	if (!xml_node || !xmlnode_is_named(xml_node, "application-desc"))
 		goto err_out;
 
 	xml_node = xml_node->children;
