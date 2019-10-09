@@ -719,14 +719,15 @@ static xmlDocPtr xmlpost_new_query(struct openconnect_info *vpninfo, const char 
 	if (!doc)
 		return NULL;
 
-	*rootp = root = xmlNewNode(NULL, XCAST("config-auth"));
+	root = xmlNewNode(NULL, XCAST("config-auth"));
 	if (!root)
 		goto bad;
+	xmlDocSetRootElement(doc, root);
+
 	if (!xmlNewProp(root, XCAST("client"), XCAST("vpn")))
 		goto bad;
 	if (!xmlNewProp(root, XCAST("type"), XCAST(type)))
 		goto bad;
-	xmlDocSetRootElement(doc, root);
 
 	node = xmlNewTextChild(root, NULL, XCAST("version"),
 			       XCAST(vpninfo->version_string ? : openconnect_version_str));
@@ -745,6 +746,7 @@ static xmlDocPtr xmlpost_new_query(struct openconnect_info *vpninfo, const char 
 			goto bad;
 	}
 
+	*rootp = root;
 	return doc;
 
 bad:
