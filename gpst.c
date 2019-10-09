@@ -1149,16 +1149,17 @@ int gpst_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable)
 			vpn_progress(vpninfo, PRG_TRACE,
 				     _("Received IPv%d data packet of %d bytes\n"),
 				     ethertype == 0x86DD ? 6 : 4, payload_len);
-			vpninfo->cstp_pkt->len = payload_len;
-			queue_packet(&vpninfo->incoming_queue, vpninfo->cstp_pkt);
-			vpninfo->cstp_pkt = NULL;
-			work_done = 1;
 
 			if (one != 1 || zero != 0) {
 				vpn_progress(vpninfo, PRG_DEBUG,
 					     _("Expected 0100000000000000 as last 8 bytes of data packet header, but got:\n"));
 				dump_buf_hex(vpninfo, PRG_DEBUG, '<', vpninfo->cstp_pkt->gpst.hdr + 8, 8);
 			}
+
+			vpninfo->cstp_pkt->len = payload_len;
+			queue_packet(&vpninfo->incoming_queue, vpninfo->cstp_pkt);
+			vpninfo->cstp_pkt = NULL;
+			work_done = 1;
 			continue;
 		}
 
