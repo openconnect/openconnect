@@ -115,6 +115,8 @@ static int parse_pkcs11_uri(const char *uri, PKCS11_TOKEN **p_tok,
 		return -ENOMEM;
 	}
 
+	*id = NULL;
+
 	/* We are only ever invoked if the string starts with 'pkcs11:' */
 	end = uri + 6;
 	while (!ret && end[0] && end[1]) {
@@ -172,6 +174,8 @@ static int parse_pkcs11_uri(const char *uri, PKCS11_TOKEN **p_tok,
 		free(tok);
 		tok = NULL;
 		free(newlabel);
+		free(*id);
+		*id = NULL;
 	}
 
 	return ret;
