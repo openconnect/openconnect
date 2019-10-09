@@ -806,7 +806,9 @@ static int oncp_receive_espkeys(struct openconnect_info *vpninfo, int len)
 	int ret;
 
 	ret = parse_conf_pkt(vpninfo, vpninfo->cstp_pkt->oncp.kmp, len + 20, 301);
-	if (!ret && !openconnect_setup_esp_keys(vpninfo, 1)) {
+	if (!ret)
+		ret = openconnect_setup_esp_keys(vpninfo, 1);
+	if (!ret) {
 		struct esp *esp = &vpninfo->esp_in[vpninfo->current_esp_in];
 		unsigned char *p = vpninfo->cstp_pkt->oncp.kmp;
 
@@ -1043,7 +1045,13 @@ int oncp_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable)
 			 * we can stop doing this. */
 			if (vpninfo->cstp_pkt->len != kmplen + 20)
 				goto unknown_pkt;
+
 			ret = oncp_receive_espkeys(vpninfo, kmplen);
+			if (ret) {
+				vpn_progress(vpninfo, PRG_ERR, _("Failed to set up ESP: %s\n"),
+					     strerror(-ret));
+				oncp_esp_close(vpninfo);
+			}
 			work_done = 1;
 			break;
 
@@ -1276,7 +1284,8 @@ int oncp_bye(struct openconnect_info *vpninfo, const char *reason)
 void oncp_esp_close(struct openconnect_info *vpninfo)
 {
 	/* Tell server to stop sending on ESP channel */
-	queue_esp_control(vpninfo, 0);
+	if (vpninfo->dtls_state >= DTLS_CONNECTING)
+		queue_esp_control(vpninfo, 0);
 	esp_close(vpninfo);
 }
 
