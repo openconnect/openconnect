@@ -922,6 +922,8 @@ static int pulse_request_session_kill(struct openconnect_info *vpninfo, struct o
 		if (parse_avp(vpninfo, &p, &l, &avp_p, &avp_len, &avp_flags,
 			      &avp_vendor, &avp_code)) {
 		badlist:
+			free(from);
+			free(sessid);
 			vpn_progress(vpninfo, PRG_ERR,
 				     _("Failed to parse session list\n"));
 			ret = -EINVAL;
@@ -939,8 +941,10 @@ static int pulse_request_session_kill(struct openconnect_info *vpninfo, struct o
 			dump_avp(vpninfo, avp_flags, avp_vendor, avp_code, avp_p2, avp_len2);
 
 			if (avp_vendor == VENDOR_JUNIPER2 && avp_code == 0xd66) {
+				free(sessid);
 				sessid = strndup(avp_p2, avp_len2);
 			} else if (avp_vendor == VENDOR_JUNIPER2 && avp_code == 0xd67) {
+				free(from);
 				from = strndup(avp_p2, avp_len2);
 			} else if (avp_vendor == VENDOR_JUNIPER2 && avp_code == 0xd68 &&
 				   avp_len2 == 8) {
@@ -950,11 +954,8 @@ static int pulse_request_session_kill(struct openconnect_info *vpninfo, struct o
 			}
 		}
 
-		if (!from || !sessid || !when) {
-			free(from);
-			free(sessid);
+		if (!from || !sessid || !when)
 			goto badlist;
-		}
 
 		if (0
 #ifdef HAVE_LOCALTIME_S
@@ -970,6 +971,8 @@ static int pulse_request_session_kill(struct openconnect_info *vpninfo, struct o
 
 		buf_append(form_msg, " - %s from %s at %s\n", sessid, from, tmbuf);
 		free(from);
+		free(sessid);
+		from = sessid = NULL;
 		o.choices[i] = malloc(sizeof(struct oc_choice));
 		if (!o.choices[i]) {
 			ret = -ENOMEM;
