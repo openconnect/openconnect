@@ -138,6 +138,9 @@ void free_pass(char **p)
 
 void free_opt(struct oc_form_opt *opt)
 {
+	if (!opt)
+		return;
+
 	/* for SELECT options, opt->value is a pointer to oc_choice->name */
 	if (opt->type != OC_FORM_OPT_SELECT) {
 		free_pass(&opt->_value);
