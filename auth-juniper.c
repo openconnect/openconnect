@@ -198,8 +198,10 @@ static int parse_select_node(struct openconnect_info *vpninfo, struct oc_auth_fo
 			continue;
 
 		choice = calloc(1, sizeof(*choice));
-		if (!choice)
+		if (!choice) {
+			free_opt((void *)opt);
 			return -ENOMEM;
+		}
 
 		xmlnode_get_prop(node, "name", &choice->name);
 		choice->label = (char *)xmlNodeGetContent(child);
