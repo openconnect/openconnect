@@ -38,6 +38,7 @@ static int b32_char(char in)
 	return -1;
 }
 
+/* Take a group of 8 base32 chars, convert to (up to) 5 bytes of data */
 static int decode_b32_group(unsigned char *out, const char *in)
 {
 	uint32_t d = 0;
@@ -58,6 +59,12 @@ static int decode_b32_group(unsigned char *out, const char *in)
 			out[0] = d >> 2;
 	}
 	len = i;
+
+	/* There must be at least two base32 chars to provide one byte of data.
+	 * Bail out early to avoid an undefined shift. */
+	if (len < 2)
+		return -EINVAL;
+
 	if (i < 8) {
 		d <<= 5 * (8 - i);
 		while (++i < 8) {
