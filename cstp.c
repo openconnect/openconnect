@@ -414,8 +414,7 @@ static int start_cstp_connection(struct openconnect_info *vpninfo)
 		else
 			vpn_progress(vpninfo, PRG_DEBUG, "%s: %s\n", buf, colon);
 
-		if (((i = 7) && !strncmp(buf, "X-DTLS-", 7)) ||
-		    ((i = 9) && !strncmp(buf, "X-DTLS12-", 9))) {
+		if (!strncmp(buf, "X-DTLS-", (i = 7)) || !strncmp(buf, "X-DTLS12-", (i = 9))) {
 			*next_dtls_option = new_option;
 			next_dtls_option = &new_option->next;
 
