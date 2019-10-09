@@ -504,6 +504,13 @@ case "$ssl_library" in
 		      [esp=yes],
 		      [AC_MSG_WARN([ESP support will be disabled])])
 
+	AC_MSG_CHECKING([for SSL_CIPHER_find() in OpenSSL])
+	AC_LINK_IFELSE([AC_LANG_PROGRAM([#include <openssl/ssl.h>],
+					[SSL_CIPHER_find((void *)0, "");])],
+		       [AC_MSG_RESULT(yes)
+			AC_DEFINE(HAVE_SSL_CIPHER_FIND, [1], [OpenSSL has SSL_CIPHER_find() function])],
+		       [AC_MSG_RESULT(no)])
+
 	LIBS="${oldLIBS}"
 	CFLAGS="${oldCFLAGS}"
 
