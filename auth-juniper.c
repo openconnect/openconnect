@@ -162,6 +162,7 @@ static int parse_input_node(struct openconnect_info *vpninfo, struct oc_auth_for
 			vpn_progress(vpninfo, PRG_DEBUG,
 				     _("Discarding duplicate option '%s'\n"),
 				     opt->name);
+			free_opt(opt);
 			goto out;
 		}
 		p = &(*p)->next;
