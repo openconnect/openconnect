@@ -374,6 +374,7 @@ int connect_https_socket(struct openconnect_info *vpninfo)
 						     _("Failed to allocate sockaddr storage\n"));
 					closesocket(ssl_sock);
 					ssl_sock = -ENOMEM;
+					freeaddrinfo(result);
 					goto out;
 				}
 				vpninfo->peer_addrlen = rp->ai_addrlen;
