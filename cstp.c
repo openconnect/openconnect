@@ -1190,6 +1190,7 @@ int cstp_bye(struct openconnect_info *vpninfo, const char *reason)
 {
 	unsigned char *bye_pkt;
 	int reason_len;
+	int ret;
 
 	/* already lost connection? */
 #if defined(OPENCONNECT_OPENSSL)
@@ -1215,10 +1216,17 @@ int cstp_bye(struct openconnect_info *vpninfo, const char *reason)
 	vpn_progress(vpninfo, PRG_INFO,
 		     _("Send BYE packet: %s\n"), reason);
 
-	ssl_nonblock_write(vpninfo, bye_pkt, reason_len + 9);
+	ret = ssl_nonblock_write(vpninfo, bye_pkt, reason_len + 9);
+	if (ret == reason_len + 9) {
+		ret = 0;
+	} else if (ret >= 0) {
+		vpn_progress(vpninfo, PRG_ERR,
+			     _("Short write writing BYE packet\n"));
+		ret = -EIO;
+	}
 	free(bye_pkt);
 
-	return 0;
+	return ret;
 }
 
 void cstp_common_headers(struct openconnect_info *vpninfo, struct oc_text_buf *buf)
