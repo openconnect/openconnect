@@ -681,7 +681,7 @@ static void print_supported_protocols_usage(void)
 static const char default_vpncscript[] = DEFAULT_VPNCSCRIPT;
 static void read_stdin(char **string, int hidden, int allow_fail)
 {
-	char *c, *buf = malloc(1025);
+	char *c, *got, *buf = malloc(1025);
 	int fd = fileno(stdin);
 	struct termios t;
 
@@ -696,7 +696,7 @@ static void read_stdin(char **string, int hidden, int allow_fail)
 		tcsetattr(fd, TCSANOW, &t);
 	}
 
-	buf = fgets(buf, 1025, stdin);
+	got = fgets(buf, 1025, stdin);
 
 	if (hidden) {
 		t.c_lflag |= ECHO;
@@ -704,7 +704,7 @@ static void read_stdin(char **string, int hidden, int allow_fail)
 		fprintf(stderr, "\n");
 	}
 
-	if (!buf) {
+	if (!got) {
 		if (allow_fail) {
 			*string = NULL;
 			free(buf);
