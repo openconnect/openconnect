@@ -841,7 +841,10 @@ JNIEXPORT void JNICALL Java_org_infradead_libopenconnect_LibOpenConnect_setClien
 	struct libctx *ctx = getctx(jenv, jobj);
 	const char *cert = NULL, *sslkey = NULL;
 
-	if (ctx && !get_cstring(ctx->jenv, jcert, &cert) &&
+	if (!ctx)
+		return;
+
+	if (!get_cstring(ctx->jenv, jcert, &cert) &&
 	    !get_cstring(ctx->jenv, jsslkey, &sslkey))
 		openconnect_set_client_cert(ctx->vpninfo, cert, sslkey);
 
@@ -858,7 +861,10 @@ JNIEXPORT jint JNICALL Java_org_infradead_libopenconnect_LibOpenConnect_setupTun
 	const char *arg0 = NULL, *arg1 = NULL;
 	int ret = -ENOMEM;
 
-	if (ctx && !get_cstring(ctx->jenv, jarg0, &arg0) &&
+	if (!ctx)
+		return -EINVAL;
+
+	if (!get_cstring(ctx->jenv, jarg0, &arg0) &&
 	    !get_cstring(ctx->jenv, jarg1, &arg1))
 		ret = openconnect_setup_tun_device(ctx->vpninfo, arg0, arg1);
 
@@ -873,8 +879,10 @@ JNIEXPORT void JNICALL Java_org_infradead_libopenconnect_LibOpenConnect_setCSDWr
 	struct libctx *ctx = getctx(jenv, jobj);
 	const char *arg0 = NULL, *arg1 = NULL, *arg2 = NULL;
 
-	if (ctx &&
-	    !get_cstring(ctx->jenv, jarg0, &arg0) &&
+	if (!ctx)
+		return;
+
+	if (!get_cstring(ctx->jenv, jarg0, &arg0) &&
 	    !get_cstring(ctx->jenv, jarg1, &arg1) &&
 	    !get_cstring(ctx->jenv, jarg2, &arg2)) {
 		openconnect_setup_csd(ctx->vpninfo, getuid(), 1, arg0);
@@ -894,8 +902,10 @@ JNIEXPORT void JNICALL Java_org_infradead_libopenconnect_LibOpenConnect_setMobil
 	struct libctx *ctx = getctx(jenv, jobj);
 	const char *arg0 = NULL, *arg1 = NULL, *arg2 = NULL;
 
-	if (ctx &&
-	    !get_cstring(ctx->jenv, jarg0, &arg0) &&
+	if (!ctx)
+		return;
+
+	if (!get_cstring(ctx->jenv, jarg0, &arg0) &&
 	    !get_cstring(ctx->jenv, jarg1, &arg1) &&
 	    !get_cstring(ctx->jenv, jarg2, &arg2))
 		openconnect_set_mobile_info(ctx->vpninfo, arg0, arg1, arg2);
@@ -1221,11 +1231,21 @@ JNIEXPORT jstring JNICALL Java_org_infradead_libopenconnect_LibOpenConnect_getPr
 	RETURN_STRING_END
 }
 
-#define SET_STRING_START(ret) \
+#define SET_STRING_START()			 \
 	struct libctx *ctx = getctx(jenv, jobj); \
 	const char *arg = NULL;			 \
-	if (get_cstring(ctx->jenv, jarg, &arg)) \
-		return ret;
+	if (!ctx)				 \
+		return -EINVAL;			 \
+	if (get_cstring(ctx->jenv, jarg, &arg))	 \
+		return -ENOMEM;
+
+#define SET_STRING_START_VOID()			 \
+	struct libctx *ctx = getctx(jenv, jobj); \
+	const char *arg = NULL;			 \
+	if (!ctx)				 \
+		return;				 \
+	if (get_cstring(ctx->jenv, jarg, &arg))	 \
+		return;
 
 #define SET_STRING_END() \
 	release_cstring(ctx->jenv, jarg, arg)
@@ -1234,7 +1254,7 @@ JNIEXPORT jint JNICALL Java_org_infradead_libopenconnect_LibOpenConnect_checkPee
 	JNIEnv *jenv, jobject jobj, jstring jarg)
 {
 	int ret;
-	SET_STRING_START(-ENOMEM)
+	SET_STRING_START()
 	ret = openconnect_check_peer_cert_hash(ctx->vpninfo, arg);
 	SET_STRING_END();
 
@@ -1245,7 +1265,7 @@ JNIEXPORT jint JNICALL Java_org_infradead_libopenconnect_LibOpenConnect_parseURL
 	JNIEnv *jenv, jobject jobj, jstring jarg)
 {
 	int ret;
-	SET_STRING_START(-ENOMEM)
+	SET_STRING_START()
 	ret = openconnect_parse_url(ctx->vpninfo, arg);
 	SET_STRING_END();
 	return ret;
@@ -1255,7 +1275,7 @@ JNIEXPORT jint JNICALL Java_org_infradead_libopenconnect_LibOpenConnect_setProxy
 	JNIEnv *jenv, jobject jobj, jstring jarg)
 {
 	int ret;
-	SET_STRING_START(-ENOMEM)
+	SET_STRING_START()
 	ret = openconnect_set_proxy_auth(ctx->vpninfo, arg);
 	SET_STRING_END();
 	return ret;
@@ -1265,7 +1285,7 @@ JNIEXPORT jint JNICALL Java_org_infradead_libopenconnect_LibOpenConnect_setHTTPP
 	JNIEnv *jenv, jobject jobj, jstring jarg)
 {
 	int ret;
-	SET_STRING_START(-ENOMEM)
+	SET_STRING_START()
 	ret = openconnect_set_http_proxy(ctx->vpninfo, arg);
 	SET_STRING_END();
 	return ret;
@@ -1275,7 +1295,7 @@ JNIEXPORT jint JNICALL Java_org_infradead_libopenconnect_LibOpenConnect_setProto
 	JNIEnv *jenv, jobject jobj, jstring jarg)
 {
 	int ret;
-	SET_STRING_START(-ENOMEM)
+	SET_STRING_START()
 	ret = openconnect_set_protocol(ctx->vpninfo, arg);
 	SET_STRING_END();
 	return ret;
@@ -1284,7 +1304,7 @@ JNIEXPORT jint JNICALL Java_org_infradead_libopenconnect_LibOpenConnect_setProto
 JNIEXPORT void JNICALL Java_org_infradead_libopenconnect_LibOpenConnect_setXMLSHA1(
 	JNIEnv *jenv, jobject jobj, jstring jarg)
 {
-	SET_STRING_START()
+	SET_STRING_START_VOID()
 	openconnect_set_xmlsha1(ctx->vpninfo, arg, strlen(arg) + 1);
 	SET_STRING_END();
 }
@@ -1292,7 +1312,7 @@ JNIEXPORT void JNICALL Java_org_infradead_libopenconnect_LibOpenConnect_setXMLSH
 JNIEXPORT void JNICALL Java_org_infradead_libopenconnect_LibOpenConnect_setHostname(
 	JNIEnv *jenv, jobject jobj, jstring jarg)
 {
-	SET_STRING_START()
+	SET_STRING_START_VOID()
 	openconnect_set_hostname(ctx->vpninfo, arg);
 	SET_STRING_END();
 }
@@ -1300,7 +1320,7 @@ JNIEXPORT void JNICALL Java_org_infradead_libopenconnect_LibOpenConnect_setHostn
 JNIEXPORT void JNICALL Java_org_infradead_libopenconnect_LibOpenConnect_setVersionString(
 	JNIEnv *jenv, jobject jobj, jstring jarg)
 {
-	SET_STRING_START()
+	SET_STRING_START_VOID()
 	openconnect_set_version_string(ctx->vpninfo, arg);
 	SET_STRING_END();
 }
@@ -1308,7 +1328,7 @@ JNIEXPORT void JNICALL Java_org_infradead_libopenconnect_LibOpenConnect_setVersi
 JNIEXPORT void JNICALL Java_org_infradead_libopenconnect_LibOpenConnect_setUrlpath(
 	JNIEnv *jenv, jobject jobj, jstring jarg)
 {
-	SET_STRING_START()
+	SET_STRING_START_VOID()
 	openconnect_set_urlpath(ctx->vpninfo, arg);
 	SET_STRING_END();
 }
@@ -1316,7 +1336,7 @@ JNIEXPORT void JNICALL Java_org_infradead_libopenconnect_LibOpenConnect_setUrlpa
 JNIEXPORT void JNICALL Java_org_infradead_libopenconnect_LibOpenConnect_setLocalName(
 	JNIEnv *jenv, jobject jobj, jstring jarg)
 {
-	SET_STRING_START()
+	SET_STRING_START_VOID()
 	openconnect_set_localname(ctx->vpninfo, arg);
 	SET_STRING_END();
 }
@@ -1324,7 +1344,7 @@ JNIEXPORT void JNICALL Java_org_infradead_libopenconnect_LibOpenConnect_setLocal
 JNIEXPORT void JNICALL Java_org_infradead_libopenconnect_LibOpenConnect_setCAFile(
 	JNIEnv *jenv, jobject jobj, jstring jarg)
 {
-	SET_STRING_START()
+	SET_STRING_START_VOID()
 	openconnect_set_cafile(ctx->vpninfo, arg);
 	SET_STRING_END();
 }
@@ -1332,7 +1352,7 @@ JNIEXPORT void JNICALL Java_org_infradead_libopenconnect_LibOpenConnect_setCAFil
 JNIEXPORT jint JNICALL Java_org_infradead_libopenconnect_LibOpenConnect_setReportedOS(
 	JNIEnv *jenv, jobject jobj, jstring jarg)
 {
-	SET_STRING_START(-ENOMEM)
+	SET_STRING_START()
 	return openconnect_set_reported_os(ctx->vpninfo, arg);
 	SET_STRING_END();
 }
@@ -1341,7 +1361,7 @@ JNIEXPORT jint JNICALL Java_org_infradead_libopenconnect_LibOpenConnect_setToken
 	JNIEnv *jenv, jobject jobj, jint mode, jstring jarg)
 {
 	int ret;
-	SET_STRING_START(-ENOMEM)
+	SET_STRING_START()
 	ret = openconnect_set_token_mode(ctx->vpninfo, mode, arg);
 	SET_STRING_END();
 	return ret;
@@ -1351,7 +1371,7 @@ JNIEXPORT jint JNICALL Java_org_infradead_libopenconnect_LibOpenConnect_setupTun
 	JNIEnv *jenv, jobject jobj, jstring jarg)
 {
 	int ret;
-	SET_STRING_START(-ENOMEM)
+	SET_STRING_START()
 	ret = openconnect_setup_tun_script(ctx->vpninfo, arg);
 	SET_STRING_END();
 	return ret;
