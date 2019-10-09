@@ -442,7 +442,7 @@ int process_http_response(struct openconnect_info *vpninfo, int connect,
 	ret = read_http_header(vpninfo, &nextchar, hdrbuf, 0);
 	if (ret) {
 		vpn_progress(vpninfo, PRG_ERR, _("Error reading HTTP response: %s\n"),
-			     strerror(ret));
+			     strerror(-ret));
 		goto err;
 	}
 
@@ -468,7 +468,7 @@ int process_http_response(struct openconnect_info *vpninfo, int connect,
 		ret = read_http_header(vpninfo, &nextchar, hdrbuf, 1);
 		if (ret) {
 			vpn_progress(vpninfo, PRG_ERR, _("Error reading HTTP response: %s\n"),
-				     strerror(ret));
+				     strerror(-ret));
 			goto err;
 		}
 		/* Default error case */

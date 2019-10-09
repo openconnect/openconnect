@@ -230,7 +230,7 @@ static SSL_SESSION *generate_dtls_session(struct openconnect_info *vpninfo,
 	if (buf_error(buf)) {
 		vpn_progress(vpninfo, PRG_ERR,
 			     _("Failed to create SSL_SESSION ASN.1 for OpenSSL: %s\n"),
-			     strerror(buf_error(buf)));
+			     strerror(-buf_error(buf)));
 		buf_free(buf);
 		return NULL;
 	}
