@@ -358,10 +358,13 @@ static int parse_portal_xml(struct openconnect_info *vpninfo, xmlNode *xml_node,
 
 	if (xml_node) {
 		for (xml_node = xml_node->children; xml_node; xml_node = xml_node->next)
-			if (xmlnode_is_named(xml_node, "external"))
-				for (xml_node = xml_node->children; xml_node; xml_node = xml_node->next)
+			if (xmlnode_is_named(xml_node, "external")) {
+				for (xml_node = xml_node->children; xml_node; xml_node = xml_node->next) {
 					if (xmlnode_is_named(xml_node, "list"))
 						goto gateways;
+				}
+				break;
+			}
 	}
 	result = -EINVAL;
 	goto out;
