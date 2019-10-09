@@ -675,7 +675,7 @@ static int gpst_get_config(struct openconnect_info *vpninfo)
 		goto out;
 	}
 	if (old_addr) {
-		if (strcmp(old_addr, vpninfo->ip_info.addr)) {
+		if (!vpninfo->ip_info.addr || strcmp(old_addr, vpninfo->ip_info.addr)) {
 			vpn_progress(vpninfo, PRG_ERR,
 				     _("Reconnect gave different Legacy IP address (%s != %s)\n"),
 				     vpninfo->ip_info.addr, old_addr);
@@ -684,7 +684,7 @@ static int gpst_get_config(struct openconnect_info *vpninfo)
 		}
 	}
 	if (old_netmask) {
-		if (strcmp(old_netmask, vpninfo->ip_info.netmask)) {
+		if (!vpninfo->ip_info.netmask || strcmp(old_netmask, vpninfo->ip_info.netmask)) {
 			vpn_progress(vpninfo, PRG_ERR,
 				     _("Reconnect gave different Legacy IP netmask (%s != %s)\n"),
 				     vpninfo->ip_info.netmask, old_netmask);
@@ -693,7 +693,7 @@ static int gpst_get_config(struct openconnect_info *vpninfo)
 		}
 	}
 	if (old_addr6) {
-		if (strcmp(old_addr6, vpninfo->ip_info.addr6)) {
+		if (!vpninfo->ip_info.addr6 || strcmp(old_addr6, vpninfo->ip_info.addr6)) {
 			vpn_progress(vpninfo, PRG_ERR,
 				     _("Reconnect gave different IPv6 address (%s != %s)\n"),
 				     vpninfo->ip_info.addr6, old_addr6);
@@ -701,7 +701,7 @@ static int gpst_get_config(struct openconnect_info *vpninfo)
 		}
 	}
 	if (old_netmask6) {
-		if (strcmp(old_netmask6, vpninfo->ip_info.netmask6)) {
+		if (!vpninfo->ip_info.netmask6 || strcmp(old_netmask6, vpninfo->ip_info.netmask6)) {
 			vpn_progress(vpninfo, PRG_ERR,
 			             _("Reconnect gave different IPv6 netmask (%s != %s)\n"),
 			             vpninfo->ip_info.netmask6, old_netmask6);
