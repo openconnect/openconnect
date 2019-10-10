@@ -1316,8 +1316,9 @@ int oncp_esp_send_probes(struct openconnect_info *vpninfo)
 		pkt->data[0] = 0;
 		pktlen = construct_esp_packet(vpninfo, pkt,
 					      vpninfo->dtls_addr->sa_family == AF_INET6 ? IPPROTO_IPV6 : IPPROTO_IPIP);
-		if (pktlen >= 0)
-			send(vpninfo->dtls_fd, (void *)&pkt->esp, pktlen, 0);
+		if (pktlen < 0 ||
+		    send(vpninfo->dtls_fd, (void *)&pkt->esp, pktlen, 0) < 0)
+			vpn_progress(vpninfo, PRG_DEBUG, _("Failed to send ESP probe\n"));
 	}
 	free(pkt);
 
