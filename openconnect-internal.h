@@ -785,7 +785,16 @@ static inline int set_fd_cloexec(int fd)
 #ifdef _WIN32
 	return 0; /* Windows has O_INHERIT but... */
 #else
-	return fcntl(fd, F_SETFD, fcntl(fd, F_GETFD) | FD_CLOEXEC);
+	int ret = fcntl(fd, F_SETFD, fcntl(fd, F_GETFD) | FD_CLOEXEC);
+	/*
+	 * Coverity gets really sad if we don't check the error here.
+	 * But really, we're doing this to be a 'good citizen' when
+	 * running as a library, and we aren't even going to bother
+	 * printing a debug message if it fails. We just don't care.
+	 */
+	if (ret)
+		return ret;
+	return 0;
 #endif
 }
 static inline int tun_is_up(struct openconnect_info *vpninfo)
