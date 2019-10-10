@@ -90,7 +90,10 @@ static int _openconnect_gnutls_write(gnutls_session_t ses, int fd, struct openco
 				FD_SET(fd, &rd_set);
 
 			cmd_fd_set(vpninfo, &rd_set, &maxfd);
-			select(maxfd + 1, &rd_set, &wr_set, NULL, NULL);
+			if (select(maxfd + 1, &rd_set, &wr_set, NULL, NULL) < 0) {
+				vpn_perror(vpninfo, _("Failed select() for TLS"));
+				return -EIO;
+			}
 			if (is_cancel_pending(vpninfo, &rd_set)) {
 				vpn_progress(vpninfo, PRG_ERR, _("SSL write cancelled\n"));
 				return -EINTR;
@@ -141,6 +144,11 @@ static int _openconnect_gnutls_read(gnutls_session_t ses, int fd, struct opencon
 
 			cmd_fd_set(vpninfo, &rd_set, &maxfd);
 			ret = select(maxfd + 1, &rd_set, &wr_set, NULL, tv);
+			if (ret < 0) {
+				vpn_perror(vpninfo, _("Failed select() for TLS"));
+				return -EIO;
+			}
+
 			if (is_cancel_pending(vpninfo, &rd_set)) {
 				vpn_progress(vpninfo, PRG_ERR, _("SSL read cancelled\n"));
 				done = -EINTR;
@@ -232,7 +240,10 @@ static int openconnect_gnutls_gets(struct openconnect_info *vpninfo, char *buf, 
 				FD_SET(vpninfo->ssl_fd, &rd_set);
 
 			cmd_fd_set(vpninfo, &rd_set, &maxfd);
-			select(maxfd + 1, &rd_set, &wr_set, NULL, NULL);
+			if (select(maxfd + 1, &rd_set, &wr_set, NULL, NULL) < 0) {
+				vpn_perror(vpninfo, _("Failed select() for TLS"));
+				return -EIO;
+			}
 			if (is_cancel_pending(vpninfo, &rd_set)) {
 				vpn_progress(vpninfo, PRG_ERR, _("SSL read cancelled\n"));
 				ret = -EINTR;
@@ -2282,7 +2293,10 @@ int cstp_handshake(struct openconnect_info *vpninfo, unsigned init)
 				FD_SET(ssl_sock, &rd_set);
 
 			cmd_fd_set(vpninfo, &rd_set, &maxfd);
-			select(maxfd + 1, &rd_set, &wr_set, NULL, NULL);
+			if (select(maxfd + 1, &rd_set, &wr_set, NULL, NULL) < 0) {
+				vpn_perror(vpninfo, _("Failed select() for TLS"));
+				return -EIO;
+			}
 			if (is_cancel_pending(vpninfo, &rd_set)) {
 				vpn_progress(vpninfo, PRG_ERR, _("SSL connection cancelled\n"));
 				gnutls_deinit(vpninfo->https_sess);
