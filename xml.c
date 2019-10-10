@@ -61,6 +61,12 @@ ssize_t read_file_into_string(struct openconnect_info *vpninfo, const char *fnam
 		close(fd);
 		return -ENOENT;
 	}
+	if (st.st_size >= INT_MAX || st.st_size < 0) {
+		vpn_progress(vpninfo, PRG_INFO, _("XML file %s has suspicious size %zd\n"),
+			     vpninfo->xmlconfig, (ssize_t)st.st_size);
+		close(fd);
+		return -EIO;
+	}
 	len = st.st_size;
 	buf = malloc(len + 1);
 	if (!buf) {
