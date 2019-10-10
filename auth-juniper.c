@@ -604,8 +604,10 @@ int oncp_obtain_cookie(struct openconnect_info *vpninfo)
 	int try_tncc = !!vpninfo->csd_wrapper;
 
 	resp_buf = buf_alloc();
-	if (buf_error(resp_buf))
-		return -ENOMEM;
+	if (buf_error(resp_buf)) {
+		ret = buf_error(resp_buf);
+		goto out;
+	}
 
 	while (1) {
 		char *form_buf = NULL;
