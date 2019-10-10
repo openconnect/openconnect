@@ -313,7 +313,11 @@ static int check_cookie_success(struct openconnect_info *vpninfo)
 		buf_append(buf, "Cookie=%s\n", dspreauth);
 		if (buf_error(buf))
 			return buf_free(buf);
-		send(vpninfo->tncc_fd, buf->data, buf->pos, 0);
+		if (send(vpninfo->tncc_fd, buf->data, buf->pos, 0) < 0) {
+			vpn_progress(vpninfo, PRG_ERR,
+				     _("Failed to send cookie to TNCC\n"));
+			/* Continue anyway */
+		}
 		buf_truncate(buf);
 	}
 
