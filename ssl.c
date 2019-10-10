@@ -82,11 +82,14 @@ static int cancellable_connect(struct openconnect_info *vpninfo, int sockfd,
 	int maxfd = sockfd;
 	int err;
 
-	set_sock_nonblock(sockfd);
+	if (set_sock_nonblock(sockfd))
+		goto sockerr;
+
 	if (vpninfo->protect_socket)
 		vpninfo->protect_socket(vpninfo->cbdata, sockfd);
 
 	if (connect(sockfd, addr, addrlen) < 0 && !connect_pending()) {
+	sockerr:
 #ifdef _WIN32
 		return WSAGetLastError();
 #else
@@ -1000,7 +1003,11 @@ int udp_connect(struct openconnect_info *vpninfo)
 	}
 
 	set_fd_cloexec(fd);
-	set_sock_nonblock(fd);
+	if (set_sock_nonblock(fd)) {
+		vpn_perror(vpninfo, _("Make UDP socket non-blocking"));
+		closesocket(fd);
+		return -EIO;
+	}
 
 	return fd;
 }

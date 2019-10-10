@@ -460,7 +460,11 @@ int openconnect_setup_tun_fd(struct openconnect_info *vpninfo, int tun_fd)
 	monitor_fd_new(vpninfo, tun);
 	monitor_read_fd(vpninfo, tun);
 
-	set_sock_nonblock(tun_fd);
+	if (set_sock_nonblock(tun_fd)) {
+		vpn_progress(vpninfo, PRG_ERR, _("Failed to make tun socket nonblocking: %s\n"),
+			     strerror(errno));
+		return -EIO;
+	}
 
 	return 0;
 }
