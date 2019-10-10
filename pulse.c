@@ -911,8 +911,10 @@ static int pulse_request_session_kill(struct openconnect_info *vpninfo, struct o
 
 	o.nr_choices = sessions;
 	o.choices = calloc(sessions, sizeof(*o.choices));
-	if (!o.choices)
-		return -ENOMEM;
+	if (!o.choices) {
+		ret = -ENOMEM;
+		goto out;
+	}
 
 	while (l) {
 		char *from = NULL;
