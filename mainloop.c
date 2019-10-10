@@ -303,7 +303,12 @@ int openconnect_mainloop(struct openconnect_info *vpninfo,
 		tv.tv_sec = timeout / 1000;
 		tv.tv_usec = (timeout % 1000) * 1000;
 
-		select(vpninfo->_select_nfds, &rfds, &wfds, &efds, &tv);
+		if (select(vpninfo->_select_nfds, &rfds, &wfds, &efds, &tv) < 0) {
+			ret = -errno;
+			vpn_perror(vpninfo, "Failed select() in mainloop");
+			break;
+		}
+
 		if (vpninfo->tun_fd >= 0)
 			tun_r = FD_ISSET(vpninfo->tun_fd, &rfds);
 		if (vpninfo->dtls_fd >= 0)
