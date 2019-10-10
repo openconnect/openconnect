@@ -110,7 +110,7 @@ err:
 	return NULL;
 }
 
-const struct vpn_proto openconnect_protos[] = {
+static const struct vpn_proto openconnect_protos[] = {
 	{
 		.name = "anyconnect",
 		.pretty_name = N_("Cisco AnyConnect or openconnect"),
@@ -186,25 +186,26 @@ const struct vpn_proto openconnect_protos[] = {
 		.udp_catch_probe = oncp_esp_catch_probe,
 #endif
 	},
-	{ /* NULL */ }
 };
+
+#define NR_PROTOS (sizeof(openconnect_protos)/sizeof(*openconnect_protos))
 
 int openconnect_get_supported_protocols(struct oc_vpn_proto **protos)
 {
 	struct oc_vpn_proto *pr;
-	const struct vpn_proto *p;
+	int i;
 
-	*protos = pr = calloc(sizeof(openconnect_protos)/sizeof(*openconnect_protos), sizeof(*pr));
+	*protos = pr = calloc(NR_PROTOS, sizeof(*pr));
 	if (!pr)
 		return -ENOMEM;
 
-	for (p = openconnect_protos; p->name; p++, pr++) {
-		pr->name = p->name;
-		pr->pretty_name = _(p->pretty_name);
-		pr->description = _(p->description);
-		pr->flags = p->flags;
+	for (i = 0; i < NR_PROTOS; i++) {
+		pr[i].name = openconnect_protos[i].name;
+		pr[i].pretty_name = _(openconnect_protos[i].pretty_name);
+		pr[i].description = _(openconnect_protos[i].description);
+		pr[i].flags = openconnect_protos[i].flags;
 	}
-	return (p - openconnect_protos);
+	return i;
 }
 
 void openconnect_free_supported_protocols(struct oc_vpn_proto *protos)
@@ -220,8 +221,10 @@ const char *openconnect_get_protocol(struct openconnect_info *vpninfo)
 int openconnect_set_protocol(struct openconnect_info *vpninfo, const char *protocol)
 {
 	const struct vpn_proto *p;
+	int i;
 
-	for (p = openconnect_protos; p->name; p++) {
+	for (i = 0; i < NR_PROTOS; i++) {
+		p = &openconnect_protos[i];
 		if (strcasecmp(p->name, protocol))
 			continue;
 		vpninfo->proto = p;
