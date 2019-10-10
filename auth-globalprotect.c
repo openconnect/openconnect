@@ -85,6 +85,7 @@ static int parse_prelogin_xml(struct openconnect_info *vpninfo, xmlNode *xml_nod
 		char *s = NULL;
 		if (!xmlnode_get_val(xml_node, "saml-request", &s)) {
 			int len;
+			free(saml_path);
 			saml_path = openconnect_base64_decode(&len, s);
 			if (len < 0) {
 				vpn_progress(vpninfo, PRG_ERR, "Could not decode SAML request as base64: %s\n", s);
@@ -93,7 +94,11 @@ static int parse_prelogin_xml(struct openconnect_info *vpninfo, xmlNode *xml_nod
 				goto out;
 			}
 			free(s);
-			saml_path = realloc(saml_path, len+1);
+			realloc_inplace(saml_path, len+1);
+			if (!saml_path) {
+				result = -ENOMEM;
+				goto out;
+			}
 			saml_path[len] = '\0';
 		} else {
 			xmlnode_get_val(xml_node, "saml-auth-method", &saml_method);
