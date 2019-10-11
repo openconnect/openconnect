@@ -92,6 +92,9 @@ int buf_ensure_space(struct oc_text_buf *buf, int len)
 {
 	unsigned int new_buf_len;
 
+	if (!buf)
+		return -ENOMEM;
+
 	new_buf_len = (buf->pos + len + BUF_CHUNK_SIZE - 1) & ~(BUF_CHUNK_SIZE - 1);
 
 	if (new_buf_len <= buf->buf_len)
@@ -438,6 +441,10 @@ int process_http_response(struct openconnect_info *vpninfo, int connect,
 
 	buf_truncate(body);
 
+	/* Ensure it has *something* in it, so that we can dereference hdrbuf->data
+	 * later without checking (for anything except buf_error(hdrbuf), which is
+	 * what read_http_header() uses for its return code anyway). */
+	buf_append_bytes(hdrbuf, "\0", 1);
  cont:
 	ret = read_http_header(vpninfo, &nextchar, hdrbuf, 0);
 	if (ret) {
