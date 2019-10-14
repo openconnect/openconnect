@@ -1630,7 +1630,14 @@ static int pulse_authenticate(struct openconnect_info *vpninfo, int connecting)
 			break;
 
 		default:
-			goto auth_unknown;
+			/* It does no harm to submit both, as anything unwanted is ignored. */
+			vpn_progress(vpninfo, PRG_ERR,
+				     _("Unknown D73 prompt value 0x%x. Will prompt for both username and password.\n"),
+				     val);
+			vpn_progress(vpninfo, PRG_ERR,
+				     _("Please report this value and the behaviour of the official client.\n"));
+			prompt_flags = PROMPT_PASSWORD | PROMPT_USERNAME;
+			break;
 		}
 		} else if (avp_vendor == VENDOR_JUNIPER2 && avp_code == 0xd7b) {
 			free(signin_prompt);
