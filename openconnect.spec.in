@@ -22,7 +22,7 @@
 %endif
 
 # Fedora has tss2-sys from F29 onwards, and RHEL from 8 onwards.
-%if 0%{?fedora} >= 29 || 0%{?epel} >= 8
+%if 0%{?fedora} >= 29 || 0%{?rhel} >= 8
 %define use_tss2_esys 1
 %else
 %define use_tss2_esys 0
