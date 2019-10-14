@@ -676,7 +676,7 @@ static int handle_auth_form(struct openconnect_info *vpninfo, struct oc_auth_for
 	      append_form_opts(vpninfo, form, request_body);
 	if (!ret) {
 		*method = "POST";
-		*request_body_type = "application/x-www-form-urlencoded";
+		*request_body_type = vpninfo->xmlpost ? "application/xml; charset=utf-8" : "application/x-www-form-urlencoded";
 	}
 	return ret;
 }
@@ -1237,7 +1237,7 @@ int cstp_obtain_cookie(struct openconnect_info *vpninfo)
 	struct oc_auth_form *form = NULL;
 	int result, buflen, tries;
 	struct oc_text_buf *request_body = buf_alloc();
-	const char *request_body_type = "application/x-www-form-urlencoded";
+	const char *request_body_type;
 	const char *method = "POST";
 	char *orig_host = NULL, *orig_path = NULL, *form_path = NULL;
 	int orig_port = 0;
@@ -1300,6 +1300,7 @@ newgroup:
 			}
 		}
 
+		request_body_type = vpninfo->xmlpost ? "application/xml; charset=utf-8" : "application/x-www-form-urlencoded";
 		result = do_https_request(vpninfo, method, request_body_type, request_body,
 					  &form_buf, 0);
 		if (vpninfo->got_cancel_cmd) {
