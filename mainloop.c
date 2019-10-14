@@ -306,8 +306,7 @@ int openconnect_mainloop(struct openconnect_info *vpninfo,
 		if (select(vpninfo->_select_nfds, &rfds, &wfds, &efds, &tv) < 0 &&
 		    errno != EINTR) {
 			ret = -errno;
-			vpn_perror(vpninfo, _("Failed select() in mainloop: %s"),
-				   strerror(-ret));
+			vpn_perror(vpninfo, _("Failed select() in mainloop"));
 			break;
 		}
 
