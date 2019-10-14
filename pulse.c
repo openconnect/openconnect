@@ -972,19 +972,17 @@ static int pulse_request_session_kill(struct openconnect_info *vpninfo, struct o
 			snprintf(tmbuf, sizeof(tmbuf), "@%lu", (unsigned long)when);
 
 		buf_append(form_msg, " - %s from %s at %s\n", sessid, from, tmbuf);
+
 		free(from);
-		free(sessid);
-		from = sessid = NULL;
+		from = NULL;
+
 		o.choices[i] = malloc(sizeof(struct oc_choice));
 		if (!o.choices[i]) {
+			free(sessid);
 			ret = -ENOMEM;
 			goto out;
 		}
 		o.choices[i]->name = o.choices[i]->label = sessid;
-		if (!o.choices[i]->name) {
-			ret = -ENOMEM;
-			goto out;
-		}
 		i++;
 	}
 	ret = buf_error(form_msg);
