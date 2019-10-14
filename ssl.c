@@ -106,7 +106,8 @@ static int cancellable_connect(struct openconnect_info *vpninfo, int sockfd,
 		FD_SET(sockfd, &ex_set);
 #endif
 		cmd_fd_set(vpninfo, &rd_set, &maxfd);
-		if (select(maxfd + 1, &rd_set, &wr_set, &ex_set, NULL) < 0) {
+		if (select(maxfd + 1, &rd_set, &wr_set, &ex_set, NULL) < 0 &&
+		    errno != EINTR) {
 			vpn_perror(vpninfo, _("Failed select() for socket connect"));
 			return -EIO;
 		}
@@ -839,7 +840,8 @@ void poll_cmd_fd(struct openconnect_info *vpninfo, int timeout)
 
 		FD_ZERO(&rd_set);
 		cmd_fd_set(vpninfo, &rd_set, &maxfd);
-		if (select(maxfd + 1, &rd_set, NULL, NULL, &tv) < 0) {
+		if (select(maxfd + 1, &rd_set, NULL, NULL, &tv) < 0 &&
+		    errno != EINTR) {
 			vpn_perror(vpninfo, _("Failed select() for command socket"));
 		}
 
@@ -1119,7 +1121,8 @@ int cancellable_send(struct openconnect_info *vpninfo, int fd,
 		FD_SET(fd, &wr_set);
 		cmd_fd_set(vpninfo, &rd_set, &maxfd);
 
-		if (select(maxfd + 1, &rd_set, &wr_set, NULL, NULL) < 0) {
+		if (select(maxfd + 1, &rd_set, &wr_set, NULL, NULL) < 0 &&
+		    errno != EINTR) {
 			vpn_perror(vpninfo, _("Failed select() for socket send"));
 			return -EIO;
 		}
@@ -1158,7 +1161,8 @@ int cancellable_recv(struct openconnect_info *vpninfo, int fd,
 		FD_SET(fd, &rd_set);
 		cmd_fd_set(vpninfo, &rd_set, &maxfd);
 
-		if (select(maxfd + 1, &rd_set, NULL, NULL, NULL) < 0) {
+		if (select(maxfd + 1, &rd_set, NULL, NULL, NULL) < 0 &&
+		    errno != EINTR) {
 			vpn_perror(vpninfo, _("Failed select() for socket recv"));
 			return -EIO;
 		}

@@ -303,9 +303,11 @@ int openconnect_mainloop(struct openconnect_info *vpninfo,
 		tv.tv_sec = timeout / 1000;
 		tv.tv_usec = (timeout % 1000) * 1000;
 
-		if (select(vpninfo->_select_nfds, &rfds, &wfds, &efds, &tv) < 0) {
+		if (select(vpninfo->_select_nfds, &rfds, &wfds, &efds, &tv) < 0 &&
+		    errno != EINTR) {
 			ret = -errno;
-			vpn_perror(vpninfo, "Failed select() in mainloop");
+			vpn_perror(vpninfo, _("Failed select() in mainloop: %s"),
+				   strerror(-ret));
 			break;
 		}
 
