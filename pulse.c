@@ -1623,6 +1623,7 @@ static int pulse_authenticate(struct openconnect_info *vpninfo, int connecting)
 			prompt_flags = PROMPT_PASSWORD | PROMPT_USERNAME;
 			break;
 		case 3: /* Prompt for password.*/
+		case 15:
 			prompt_flags = PROMPT_PASSWORD;
 			break;
 		case 5: /* Prompt for username.*/
