@@ -226,6 +226,11 @@ void prepare_script_env(struct openconnect_info *vpninfo)
 
 	script_setenv_int(vpninfo, "INTERNAL_IP4_MTU", vpninfo->ip_info.mtu);
 
+	if (vpninfo->idle_timeout)
+		script_setenv_int(vpninfo, "IDLE_TIMEOUT", vpninfo->idle_timeout);
+	else
+		script_setenv(vpninfo, "IDLE_TIMEOUT", NULL, 0, 0);
+
 	if (vpninfo->ip_info.addr) {
 		script_setenv(vpninfo, "INTERNAL_IP4_ADDRESS", vpninfo->ip_info.addr, 0, 0);
 		if (vpninfo->ip_info.netmask) {
