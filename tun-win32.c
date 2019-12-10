@@ -142,7 +142,7 @@ static intptr_t search_taps(struct openconnect_info *vpninfo, tap_callback *cb, 
 		}
 
 		ret = cb(vpninfo, buf, namebuf->data);
-		if (!all)
+		if (!ret && !all)
 			break;
 	}
 
