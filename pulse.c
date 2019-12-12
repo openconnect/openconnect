@@ -79,6 +79,12 @@
 #define PROMPT_PASSWORD		4
 #define PROMPT_GTC_NEXT		0x10000
 
+/* Request codes for the Juniper Expanded/2 auth requests. */
+#define J2_PASSCHANGE	0x43
+#define J2_PASSREQ	0x01
+#define J2_PASSRETRY	0x81
+#define J2_PASSFAIL	0xc5
+
 static void buf_append_be16(struct oc_text_buf *buf, uint16_t val)
 {
 	unsigned char b[2];
@@ -1099,6 +1105,105 @@ static int pulse_request_user_auth(struct openconnect_info *vpninfo, struct oc_t
 	return ret;
 }
 
+static int pulse_request_pass_change(struct openconnect_info *vpninfo, struct oc_text_buf *reqbuf,
+				     uint8_t eap_ident, int prompt_flags)
+{
+	struct oc_auth_form f;
+	struct oc_form_opt o[3];
+	unsigned char eap_avp[23];
+	int l1, l2;
+	int ret;
+
+	memset(&f, 0, sizeof(f));
+	memset(o, 0, sizeof(o));
+	f.auth_id = (char *) ((prompt_flags & PROMPT_PRIMARY) ? "pulse_user_change" : "pulse_secondary_change");
+	f.opts = &o[0];
+
+	f.message = _("Password expired. Please change password:");
+
+	o[0].type = OC_FORM_OPT_PASSWORD;
+	o[0].name = (char *)"oldpass";
+	o[0].label = (char *) _("Current password:");
+	o[0].next = &o[1];
+
+	o[1].type = OC_FORM_OPT_PASSWORD;
+	o[1].name = (char *)"newpass1";
+	o[1].label = (char *) _("New password:");
+	o[1].next = &o[2];
+
+	o[2].type = OC_FORM_OPT_PASSWORD;
+	o[2].name = (char *)"newpass1";
+	o[2].label = (char *) _("Verify new password:");
+
+ retry:
+	free_pass(&o[0]._value);
+	free_pass(&o[1]._value);
+	free_pass(&o[2]._value);
+
+	ret = process_auth_form(vpninfo, &f);
+	if (ret)
+		goto out;
+
+	if (!o[0]._value || !o[1]._value || !o[2]._value) {
+		vpn_progress(vpninfo, PRG_DEBUG, _("Passwords not provided.\n"));
+		ret = -EINVAL;
+		goto out;
+	}
+
+	if (strcmp(o[1]._value, o[2]._value)) {
+		vpn_progress(vpninfo, PRG_ERR, _("Passwords do not match.\n"));
+		goto retry;
+	}
+	l1 = strlen(o[0]._value);
+	if (l1 > 253) {
+		vpn_progress(vpninfo, PRG_ERR, _("Current password too long.\n"));
+		goto retry;
+	}
+	l2 = strlen(o[1]._value);
+	if (l2 > 253) {
+		vpn_progress(vpninfo, PRG_ERR, _("New password too long.\n"));
+		goto retry;
+	}
+
+	/* AVP flags+mandatory+length */
+	store_be32(eap_avp, AVP_CODE_EAP_MESSAGE);
+	store_be32(eap_avp + 4, (AVP_MANDATORY << 24) + sizeof(eap_avp) + l1 + 2 + l2);
+
+	/* EAP header: code/ident/len */
+	eap_avp[8] = EAP_RESPONSE;
+	eap_avp[9] = eap_ident;
+	store_be16(eap_avp + 10, l1 + l2 + 17); /* EAP length */
+	store_be32(eap_avp + 12, EXPANDED_JUNIPER);
+	store_be32(eap_avp + 16, 2);
+
+	/* EAP Juniper/2 payload: 02 02 <len> <password> */
+	eap_avp[20] = eap_avp[21] = 0x02;
+	eap_avp[22] = l1 + 2; /* Why 2? */
+	buf_append_bytes(reqbuf, eap_avp, sizeof(eap_avp));
+	buf_append_bytes(reqbuf, o[0]._value, l1);
+
+	/* Reuse eap_avp to append the new password */
+	eap_avp[0] = 0x03;
+	eap_avp[1] = l2 + 2;
+	buf_append_bytes(reqbuf, eap_avp, 2);
+	buf_append_bytes(reqbuf, o[1]._value, l2);
+
+	/* Padding */
+	if ((sizeof(eap_avp) + l1 + 2 + l2) & 3) {
+		uint32_t pad = 0;
+
+		buf_append_bytes(reqbuf, &pad,
+				 4 - ((sizeof(eap_avp) + l1 + 2 + l2) & 3));
+	}
+
+	ret = 0;
+ out:
+	free_pass(&o[0]._value);
+	free_pass(&o[1]._value);
+	free_pass(&o[2]._value);
+	return ret;
+}
+
 static int pulse_request_gtc(struct openconnect_info *vpninfo, struct oc_text_buf *reqbuf,
 			     uint8_t eap_ident, int prompt_flags, char *user_prompt, char *pass_prompt,
 			     char *gtc_prompt)
@@ -1663,11 +1768,36 @@ static int pulse_authenticate(struct openconnect_info *vpninfo, int connecting)
 				gtc_found = 1;
 				free(gtc_prompt);
 				gtc_prompt = strndup(avp_c + 5, avp_len - 5);
-			} else if (avp_len == 13 && load_be32(avp_c + 4) == EXPANDED_JUNIPER) {
+			} else if (avp_len >= 13 && load_be32(avp_c + 4) == EXPANDED_JUNIPER) {
 				switch (load_be32(avp_c + 8)) {
 				case 2: /*  Expanded Juniper/2: password */
 					j2_found = 1;
 					j2_code = avp_c[12];
+					if (j2_code == J2_PASSREQ || j2_code == J2_PASSRETRY || j2_code == J2_PASSCHANGE) {
+						if (avp_len != 13)
+							goto auth_unknown;
+						/* Precisely one byte, which is j2_code. OK. */
+					} else if (j2_code == J2_PASSFAIL) {
+						/*
+						  < 0000:  00 00 55 97 00 00 00 05  00 00 00 84 00 00 01 fa  |..U.............|
+						  < 0010:  00 0a 4c 01 01 05 00 70  fe 00 0a 4c 00 00 00 01  |..L....p...L....|
+						  < 0020:  00 00 00 4f 40 00 00 62  01 02 00 5a fe 00 0a 4c  |...O@..b...Z...L|
+						  < 0030:  00 00 00 02 c5 01 4d 43  6f 75 6c 64 20 6e 6f 74  |......MCould not|
+						  < 0040:  20 63 68 61 6e 67 65 20  70 61 73 73 77 6f 72 64  | change password|
+						  < 0050:  2e 20 4e 65 77 20 70 61  73 73 77 6f 72 64 20 6d  |. New password m|
+						  < 0060:  75 73 74 20 62 65 20 61  74 20 6c 65 61 73 74 20  |ust be at least |
+						  < 0070:  34 20 63 68 61 72 61 63  74 65 72 73 20 6c 6f 6e  |4 characters lon|
+						  < 0080:  67 2e 00 00                                       |g...|
+						 */
+						if (avp_len > 15 && avp_c[13] == 0x01 && avp_c[14] == avp_len - 13) {
+							/* Failure message. */
+							vpn_progress(vpninfo, PRG_ERR,
+								     _("Authentication failure: %.*s\n"), avp_len - 15, avp_c + 15);
+							ret = -EIO;
+							goto out;
+						} else
+							goto auth_unknown;
+					}
 					break;
 
 				default:
@@ -1724,10 +1854,21 @@ static int pulse_authenticate(struct openconnect_info *vpninfo, int connecting)
 				     _("Pulse password auth request, code 0x%02x\n"),
 				     j2_code);
 
-			/* Present user/password form to user */
-			ret = pulse_request_user_auth(vpninfo, reqbuf, eap2_ident, prompt_flags,
-				(prompt_flags & PROMPT_PRIMARY) ? user_prompt : user2_prompt,
-				(prompt_flags & PROMPT_PRIMARY) ? pass_prompt : pass2_prompt);
+			if (j2_code == J2_PASSCHANGE) {
+				ret = pulse_request_pass_change(vpninfo, reqbuf, eap2_ident,
+								prompt_flags);
+			} else if (j2_code == J2_PASSREQ || j2_code == J2_PASSRETRY) {
+				/* Present user/password form to user */
+				ret = pulse_request_user_auth(vpninfo, reqbuf, eap2_ident, prompt_flags,
+							      (prompt_flags & PROMPT_PRIMARY) ? user_prompt : user2_prompt,
+							      (prompt_flags & PROMPT_PRIMARY) ? pass_prompt : pass2_prompt);
+			} else {
+				vpn_progress(vpninfo, PRG_ERR,
+					     _("Pulse password request with unknown code 0x%02x. Please report.\n"),
+					     j2_code);
+				ret = -EINVAL;
+			}
+
 			if (ret)
 				goto out;
 		} else if (gtc_found) {
