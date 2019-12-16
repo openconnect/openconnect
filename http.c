@@ -933,6 +933,24 @@ void dump_buf_hex(struct openconnect_info *vpninfo, int loglevel, char prefix, u
 	buf_free(line);
 }
 
+static int https_socket_closed(struct openconnect_info *vpninfo)
+{
+	char c;
+
+	if (!openconnect_https_connected(vpninfo))
+		return 1;
+
+	if (recv(vpninfo->ssl_fd, &c, 1, MSG_PEEK) == 0) {
+		vpn_progress(vpninfo, PRG_DEBUG,
+			     _("HTTPS socket closed by peer; reopening\n"));
+		openconnect_close_https(vpninfo, 0);
+		return 1;
+	}
+
+	return 0;
+}
+
+
 /* Inputs:
  *  method:             GET or POST
  *  vpninfo->hostname:  Host DNS name
@@ -1028,7 +1046,7 @@ int do_https_request(struct openconnect_info *vpninfo, const char *method,
 	vpninfo->retry_on_auth_fail = 0;
 
  retry:
-	if (openconnect_https_connected(vpninfo)) {
+	if (!https_socket_closed(vpninfo)) {
 		/* The session is already connected. If we get a failure on
 		* *sending* the request, try it again immediately with a new
 		* connection. */
