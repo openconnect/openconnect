@@ -874,15 +874,14 @@ int openconnect_set_token_mode(struct openconnect_info *vpninfo,
 	case OC_TOKEN_MODE_NONE:
 		return 0;
 
+	case OC_TOKEN_MODE_TOTP:
+	case OC_TOKEN_MODE_HOTP:
+		return set_oath_mode(vpninfo, token_str, token_mode);
+
 #ifdef HAVE_LIBSTOKEN
 	case OC_TOKEN_MODE_STOKEN:
 		return set_libstoken_mode(vpninfo, token_str);
 #endif
-	case OC_TOKEN_MODE_TOTP:
-		return set_totp_mode(vpninfo, token_str);
-
-	case OC_TOKEN_MODE_HOTP:
-		return set_hotp_mode(vpninfo, token_str);
 #ifdef HAVE_LIBPCSCLITE
 	case OC_TOKEN_MODE_YUBIOATH:
 		return set_yubikey_mode(vpninfo, token_str);

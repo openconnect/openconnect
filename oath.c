@@ -217,7 +217,8 @@ static int pskc_decode(struct openconnect_info *vpninfo, const char *token_str,
 #endif /* HAVE_LIBPSKC */
 }
 
-int set_totp_mode(struct openconnect_info *vpninfo, const char *token_str)
+int set_oath_mode(struct openconnect_info *vpninfo, const char *token_str,
+		  oc_token_mode_t token_mode)
 {
 	int ret, toklen;
 
@@ -230,62 +231,10 @@ int set_totp_mode(struct openconnect_info *vpninfo, const char *token_str)
 
 	if (strncmp(token_str, "<?xml", 5) == 0) {
 		vpninfo->hotp_secret_format = HOTP_SECRET_PSKC;
-		ret = pskc_decode(vpninfo, token_str, toklen, OC_TOKEN_MODE_TOTP);
+		ret = pskc_decode(vpninfo, token_str, toklen, token_mode);
 		if (ret)
 			return -EINVAL;
-		vpninfo->token_mode = OC_TOKEN_MODE_TOTP;
-		return 0;
-	}
-	if (!strncasecmp(token_str, "sha1:", 5)) {
-		token_str += 5;
-		toklen -= 5;
-		vpninfo->oath_hmac_alg = OATH_ALG_HMAC_SHA1;
-	} else if (!strncasecmp(token_str, "sha256:", 7)) {
-		token_str += 7;
-		toklen -= 7;
-		vpninfo->oath_hmac_alg = OATH_ALG_HMAC_SHA256;
-	} else if (!strncasecmp(token_str, "sha512:", 7)) {
-		token_str += 7;
-		toklen -= 7;
-		vpninfo->oath_hmac_alg = OATH_ALG_HMAC_SHA512;
-	} else
-		vpninfo->oath_hmac_alg = OATH_ALG_HMAC_SHA1;
-
-	if (strncasecmp(token_str, "base32:", strlen("base32:")) == 0) {
-		ret = decode_base32(vpninfo, token_str + strlen("base32:"),
-				    toklen - strlen("base32:"));
-		if (ret)
-			return ret;
-	} else if (strncmp(token_str, "0x", 2) == 0) {
-		vpninfo->oath_secret_len = (toklen - 2) / 2;
-		vpninfo->oath_secret = parse_hex(token_str + 2, toklen - 2);
-		if (!vpninfo->oath_secret)
-			return -EINVAL;
-	} else {
-		vpninfo->oath_secret = strdup(token_str);
-		vpninfo->oath_secret_len = toklen;
-	}
-
-	vpninfo->token_mode = OC_TOKEN_MODE_TOTP;
-	return 0;
-}
-
-int set_hotp_mode(struct openconnect_info *vpninfo, const char *token_str)
-{
-	int ret, toklen;
-	char *p;
-
-	if (!token_str)
-		return -EINVAL;
-
-	toklen = strlen(token_str);
-
-	if (strncmp(token_str, "<?xml", 5) == 0) {
-		vpninfo->hotp_secret_format = HOTP_SECRET_PSKC;
-		ret = pskc_decode(vpninfo, token_str, toklen, OC_TOKEN_MODE_HOTP);
-		if (ret)
-			return -EINVAL;
-		vpninfo->token_mode = OC_TOKEN_MODE_HOTP;
+		vpninfo->token_mode = token_mode;
 		return 0;
 	}
 
@@ -304,25 +253,27 @@ int set_hotp_mode(struct openconnect_info *vpninfo, const char *token_str)
 	} else
 		vpninfo->oath_hmac_alg = OATH_ALG_HMAC_SHA1;
 
-	p = strrchr(token_str, ',');
-	if (p) {
-		long counter;
-		toklen = p - token_str;
-		p++;
-		counter = strtol(p, &p, 0);
-		if (counter < 0)
-			return -EINVAL;
-		while (*p) {
-			if (isspace((int)(unsigned char)*p))
-				p++;
-			else
+	if (token_mode == OC_TOKEN_MODE_HOTP) {
+		char *p = strrchr(token_str, ',');
+		if (p) {
+			long counter;
+			toklen = p - token_str;
+			p++;
+			counter = strtol(p, &p, 0);
+			if (counter < 0)
 				return -EINVAL;
+			while (*p) {
+				if (isspace((int)(unsigned char)*p))
+					p++;
+				else
+					return -EINVAL;
+			}
+			vpninfo->token_time = counter;
+		} else {
+			while (toklen &&
+			       isspace((int)(unsigned char)token_str[toklen-1]))
+				toklen--;
 		}
-		vpninfo->token_time = counter;
-	} else {
-		while (toklen &&
-		       isspace((int)(unsigned char)token_str[toklen-1]))
-			toklen--;
 	}
 
 	if (strncasecmp(token_str, "base32:", strlen("base32:")) == 0) {
@@ -343,7 +294,7 @@ int set_hotp_mode(struct openconnect_info *vpninfo, const char *token_str)
 		vpninfo->oath_secret_len = toklen;
 	}
 
-	vpninfo->token_mode = OC_TOKEN_MODE_HOTP;
+	vpninfo->token_mode = token_mode;
 	return 0;
 }
 

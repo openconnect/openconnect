@@ -1030,8 +1030,8 @@ ssize_t read_file_into_string(struct openconnect_info *vpninfo, const char *fnam
 int config_lookup_host(struct openconnect_info *vpninfo, const char *host);
 
 /* oath.c */
-int set_totp_mode(struct openconnect_info *vpninfo, const char *token_str);
-int set_hotp_mode(struct openconnect_info *vpninfo, const char *token_str);
+int set_oath_mode(struct openconnect_info *vpninfo, const char *token_str,
+		  oc_token_mode_t token_mode);
 int can_gen_totp_code(struct openconnect_info *vpninfo,
 		      struct oc_auth_form *form,
 		      struct oc_form_opt *opt);
