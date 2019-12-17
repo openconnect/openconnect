@@ -81,6 +81,9 @@ TESTS_ENVIRONMENT = srcdir="$(srcdir)" \
 
 C_TESTS = lzstest seqtest
 
+if OPENCONNECT_WIN32
+C_TESTS += list-taps
+endif
 
 if CHECK_DTLS
 C_TESTS += bad_dtls_test

@@ -160,6 +160,8 @@ static intptr_t search_taps(struct openconnect_info *vpninfo, tap_callback *cb, 
 	return ret;
 }
 
+#ifndef __LIST_TAPS__
+
 static int get_adapter_index(struct openconnect_info *vpninfo, char *guid)
 {
 	struct oc_text_buf *buf = buf_alloc();
@@ -445,3 +447,5 @@ int openconnect_setup_tun_script(struct openconnect_info *vpninfo,
 		     _("Spawning tunnel scripts is not yet supported on Windows\n"));
 	return -1;
 }
+
+#endif /* __LIST_TAPS__ */
