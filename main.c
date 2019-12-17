@@ -2123,7 +2123,7 @@ static int lock_token(void *tokdata)
 	int err;
 
 	/* FIXME: Actually lock the file */
-	err = read_file_into_string(vpninfo, token_filename, &file_token);
+	err = openconnect_read_file(vpninfo, token_filename, &file_token);
 	if (err < 0)
 	    return err;
 
@@ -2170,13 +2170,14 @@ static void init_token(struct openconnect_info *vpninfo,
 	int ret;
 	char *file_token = NULL;
 
-	if (token_str) {
+	if (token_str && (token_mode == OC_TOKEN_MODE_TOTP ||
+			  token_mode == OC_TOKEN_MODE_HOTP)) {
 		switch(token_str[0]) {
 		case '@':
 			token_str++;
 			/* fall through... */
 		case '/':
-			if (read_file_into_string(vpninfo, token_str,
+			if (openconnect_read_file(vpninfo, token_str,
 						  &file_token) < 0)
 				exit(1);
 			break;

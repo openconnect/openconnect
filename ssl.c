@@ -918,6 +918,66 @@ FILE *openconnect_fopen_utf8(struct openconnect_info *vpninfo, const char *fname
 	return fdopen(fd, mode);
 }
 
+ssize_t openconnect_read_file(struct openconnect_info *vpninfo, const char *fname,
+			      char **ptr)
+{
+	int fd, len;
+	struct stat st;
+	char *buf;
+
+	fd = openconnect_open_utf8(vpninfo, fname, O_RDONLY|O_BINARY);
+	if (fd < 0) {
+		vpn_progress(vpninfo, PRG_ERR,
+			     _("Failed to open %s: %s\n"),
+			     fname, strerror(errno));
+		return -ENOENT;
+	}
+
+	if (fstat(fd, &st)) {
+		vpn_progress(vpninfo, PRG_ERR,
+			     _("Failed to fstat() %s: %s\n"),
+			     fname, strerror(errno));
+		close(fd);
+		return -EIO;
+	}
+
+	if (st.st_size == 0) {
+		vpn_progress(vpninfo, PRG_INFO, _("File %s is empty\n"),
+			     vpninfo->xmlconfig);
+		close(fd);
+		return -ENOENT;
+	}
+	if (st.st_size >= INT_MAX || st.st_size < 0) {
+		vpn_progress(vpninfo, PRG_INFO, _("File %s has suspicious size %zd\n"),
+			     vpninfo->xmlconfig, (ssize_t)st.st_size);
+		close(fd);
+		return -EIO;
+	}
+	len = st.st_size;
+	buf = malloc(len + 1);
+	if (!buf) {
+		vpn_progress(vpninfo, PRG_ERR,
+			     _("Failed to allocate %d bytes for %s\n"),
+			     len + 1, fname);
+		close(fd);
+		return -ENOMEM;
+	}
+
+	if (read(fd, buf, len) != len) {
+		vpn_progress(vpninfo, PRG_ERR,
+			     _("Failed to read %s: %s\n"),
+			     fname, strerror(errno));
+		free(buf);
+		close(fd);
+		return -EIO;
+	}
+
+	buf[len] = 0;
+	close(fd);
+	*ptr = buf;
+	return len;
+}
+
 int udp_sockaddr(struct openconnect_info *vpninfo, int port)
 {
 	free(vpninfo->dtls_addr);

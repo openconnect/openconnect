@@ -23,7 +23,6 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <sys/types.h>
-#include <sys/stat.h>
 #include <libxml/parser.h>
 #include <libxml/tree.h>
 #include <string.h>
@@ -31,66 +30,6 @@
 #include <errno.h>
 
 #include "openconnect-internal.h"
-
-ssize_t read_file_into_string(struct openconnect_info *vpninfo, const char *fname,
-			      char **ptr)
-{
-	int fd, len;
-	struct stat st;
-	char *buf;
-
-	fd = openconnect_open_utf8(vpninfo, fname, O_RDONLY|O_BINARY);
-	if (fd < 0) {
-		vpn_progress(vpninfo, PRG_ERR,
-			     _("Failed to open %s: %s\n"),
-			     fname, strerror(errno));
-		return -ENOENT;
-	}
-
-	if (fstat(fd, &st)) {
-		vpn_progress(vpninfo, PRG_ERR,
-			     _("Failed to fstat() %s: %s\n"),
-			     fname, strerror(errno));
-		close(fd);
-		return -EIO;
-	}
-
-	if (st.st_size == 0) {
-		vpn_progress(vpninfo, PRG_INFO, _("XML file %s is empty\n"),
-			     vpninfo->xmlconfig);
-		close(fd);
-		return -ENOENT;
-	}
-	if (st.st_size >= INT_MAX || st.st_size < 0) {
-		vpn_progress(vpninfo, PRG_INFO, _("XML file %s has suspicious size %zd\n"),
-			     vpninfo->xmlconfig, (ssize_t)st.st_size);
-		close(fd);
-		return -EIO;
-	}
-	len = st.st_size;
-	buf = malloc(len + 1);
-	if (!buf) {
-		vpn_progress(vpninfo, PRG_ERR,
-			     _("Failed to allocate %d bytes for %s\n"),
-			     len + 1, fname);
-		close(fd);
-		return -ENOMEM;
-	}
-
-	if (read(fd, buf, len) != len) {
-		vpn_progress(vpninfo, PRG_ERR,
-			     _("Failed to read %s: %s\n"),
-			     fname, strerror(errno));
-		free(buf);
-		close(fd);
-		return -EIO;
-	}
-
-	buf[len] = 0;
-	close(fd);
-	*ptr = buf;
-	return len;
-}
 
 static char *fetch_and_trim(xmlNode *node)
 {
@@ -131,7 +70,7 @@ int config_lookup_host(struct openconnect_info *vpninfo, const char *host)
 	if (!vpninfo->xmlconfig)
 		return 0;
 
-	size = read_file_into_string(vpninfo, vpninfo->xmlconfig, &xmlfile);
+	size = openconnect_read_file(vpninfo, vpninfo->xmlconfig, &xmlfile);
 	if (size == -ENOENT) {
 		fprintf(stderr, _("Treating host \"%s\" as a raw hostname\n"), host);
 		return 0;

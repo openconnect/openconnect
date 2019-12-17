@@ -959,6 +959,8 @@ int openconnect_open_utf8(struct openconnect_info *vpninfo,
 			  const char *fname, int mode);
 FILE *openconnect_fopen_utf8(struct openconnect_info *vpninfo,
 			     const char *fname, const char *mode);
+ssize_t openconnect_read_file(struct openconnect_info *vpninfo, const char *fname,
+			      char **ptr);
 int udp_sockaddr(struct openconnect_info *vpninfo, int port);
 int udp_connect(struct openconnect_info *vpninfo);
 int ssl_reconnect(struct openconnect_info *vpninfo);
@@ -1025,8 +1027,6 @@ int ka_stalled_action(struct keepalive_info *ka, int *timeout);
 int ka_check_deadline(int *timeout, time_t now, time_t due);
 
 /* xml.c */
-ssize_t read_file_into_string(struct openconnect_info *vpninfo, const char *fname,
-			      char **ptr);
 int config_lookup_host(struct openconnect_info *vpninfo, const char *host);
 
 /* oath.c */
