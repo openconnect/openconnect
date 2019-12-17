@@ -2204,7 +2204,10 @@ static void init_token(struct openconnect_info *vpninfo,
 			fprintf(stderr, _("Soft token string is invalid\n"));
 			exit(1);
 		case -ENOENT:
-			fprintf(stderr, _("Can't open ~/.stokenrc file\n"));
+			if (token_str)
+				fprintf(stderr, _("Can't open stoken file\n"));
+			else
+				fprintf(stderr, _("Can't open ~/.stokenrc file\n"));
 			exit(1);
 		case -EOPNOTSUPP:
 			fprintf(stderr, _("OpenConnect was not built with libstoken support\n"));

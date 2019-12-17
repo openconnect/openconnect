@@ -34,6 +34,7 @@
 int set_libstoken_mode(struct openconnect_info *vpninfo, const char *token_str)
 {
 	int ret;
+	char *file_token = NULL;
 
 	if (!vpninfo->stoken_ctx) {
 		vpninfo->stoken_ctx = stoken_new();
@@ -41,9 +42,33 @@ int set_libstoken_mode(struct openconnect_info *vpninfo, const char *token_str)
 			return -EIO;
 	}
 
-	ret = token_str ?
-	      stoken_import_string(vpninfo->stoken_ctx, token_str) :
-	      stoken_import_rcfile(vpninfo->stoken_ctx, NULL);
+	if (token_str) {
+		switch(token_str[0]) {
+		case '@':
+			token_str++;
+			/* fall through */
+		case '/':
+			ret = openconnect_read_file(vpninfo, token_str, &file_token);
+			if (ret < 0)
+				return ret;
+		}
+	}
+
+	/* Ug. If it's an XML STDID file or a raw token string, we need to
+	 * pass its contents to stoken_import_string(). If it's an rcfile,
+	 * we need to pass the *filename* to stoken_import_rcfile(). So
+	 * let's just depend on stoken_import_string() failing gracefully. */
+	if (file_token) {
+		ret = stoken_import_string(vpninfo->stoken_ctx, file_token);
+		free(file_token);
+		if (ret == -EINVAL)
+			ret = stoken_import_rcfile(vpninfo->stoken_ctx, token_str);
+	} else if (token_str) {
+		ret = stoken_import_string(vpninfo->stoken_ctx, token_str);
+	} else {
+		ret = stoken_import_rcfile(vpninfo->stoken_ctx, NULL);
+	}
+
 	if (ret)
 		return ret;
 

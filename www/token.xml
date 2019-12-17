@@ -70,6 +70,12 @@ it may take one of the many forms accepted by the <tt>stoken import</tt> command
    RSA sdtid-formatted XML files. These should be generally be imported from a
    file: '<tt>--token-secret @<i>FILE.SDTID</i></tt>'</li>
 </ul>
+<p>Additionally, a filename <i>(prefixed by the <tt>@</tt> or <tt>/</tt> characters)</i>
+may refer to a stoken rcfile. The default behaviour if no <tt>--token-secret</tt> file
+is provided is therefore equivalent to:</p>
+<ul>
+  <li><b>@<i>${HOME}</i>/.stokenrc</b></li>
+</ul>
 
 <p>SecurID two-factor authentication is based on something you have (a
 hardware or software token) and something you know (a 4-8 digit PIN code).
