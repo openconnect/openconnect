@@ -15,6 +15,7 @@
 <ul>
    <li><b>OpenConnect HEAD</b>
      <ul>
+       <li>Implement EAP-TTLS fragmentation.</li>
        <li>Fix Windows build with MSYS2 (<a href="https://gitlab.com/openconnect/openconnect/issues/74">#74</a>).</li>
        <li>Allow custom stoken rcfile to be specified (<a href="https://gitlab.com/openconnect/openconnect/issues/71">#71</a>).</li>
      </ul><br/>

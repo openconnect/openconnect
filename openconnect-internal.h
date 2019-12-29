@@ -534,6 +534,7 @@ struct openconnect_info {
 	unsigned char *ttls_recvbuf;
 	int ttls_recvpos;
 	int ttls_recvlen;
+	uint32_t ttls_msgleft;
 
 	struct pin_cache *pin_cache;
 	struct keepalive_info ssl_times;
