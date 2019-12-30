@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openconnect\n"
 "Report-Msgid-Bugs-To: openconnect-devel@lists.infradead.org\n"
-"POT-Creation-Date: 2019-11-29 10:57+0000\n"
+"POT-Creation-Date: 2019-12-30 00:19+0000\n"
 "PO-Revision-Date: 2011-09-22 22:31+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Polish (http://www.transifex.net/projects/p/meego/team/pl/)\n"
@@ -254,7 +254,7 @@ msgstr "Zapytano o hasło, ale ustawiono „--no-passwd”\n"
 msgid "Not downloading XML profile because SHA1 already matches\n"
 msgstr "Profil XML nie zostanie pobrany, ponieważ suma SHA1 już pasuje\n"
 
-#: auth.c:932 cstp.c:335 http.c:1040
+#: auth.c:932 cstp.c:335 http.c:1058
 #, c-format
 msgid "Failed to open HTTPS connection to %s\n"
 msgstr "Otwarcie połączenia HTTPS z %s się nie powiodło\n"
@@ -543,11 +543,11 @@ msgid "deflate failed %d\n"
 msgstr "%d „deflate” się nie powiodło\n"
 
 #: cstp.c:922 dtls.c:281 dtls.c:690 esp.c:163 gpst.c:1106 mainloop.c:69
-#: oncp.c:916 pulse.c:2318
+#: oncp.c:916 pulse.c:2621
 msgid "Allocation failed\n"
 msgstr "Przydzielenie się nie powiodło\n"
 
-#: cstp.c:933 gpst.c:1119 pulse.c:2330
+#: cstp.c:933 gpst.c:1119 pulse.c:2633
 #, c-format
 msgid "Short packet received (%d bytes)\n"
 msgstr "Otrzymano krótki pakiet (%d bajtów)\n"
@@ -597,35 +597,35 @@ msgstr "otrzymano pakiet wymuszenia zakończenia serwera\n"
 msgid "Unknown packet %02x %02x %02x %02x %02x %02x %02x %02x\n"
 msgstr "Nieznany pakiet %02x %02x %02x %02x %02x %02x %02x %02x\n"
 
-#: cstp.c:1063 gpst.c:1208 oncp.c:1129 pulse.c:2473
+#: cstp.c:1063 gpst.c:1208 oncp.c:1129 pulse.c:2776
 #, c-format
 msgid "SSL wrote too few bytes! Asked for %d, sent %d\n"
 msgstr "SSL zapisało za mało bajtów. Poproszono o %d, wysłano %d\n"
 
 #. Not that this will ever happen; we don't even process
 #. the setting when we're asked for it.
-#: cstp.c:1091 oncp.c:1164 pulse.c:2500
+#: cstp.c:1091 oncp.c:1164 pulse.c:2803
 msgid "CSTP rekey due\n"
 msgstr "„rekey” CSTP do\n"
 
 #. if we failed rehandshake try establishing a new-tunnel instead of failing
-#: cstp.c:1098 oncp.c:1171 pulse.c:2507
+#: cstp.c:1098 oncp.c:1171 pulse.c:2810
 msgid "Rehandshake failed; attempting new-tunnel\n"
 msgstr "Ponowne powitanie się nie powiodło. Próbowanie „new-tunnel”\n"
 
-#: cstp.c:1109 oncp.c:1182 pulse.c:2518
+#: cstp.c:1109 oncp.c:1182 pulse.c:2821
 msgid "CSTP Dead Peer Detection detected dead peer!\n"
 msgstr "Wykrywanie martwych partnerów CSTP wykryło martwego partnera.\n"
 
-#: cstp.c:1113 gpst.c:1232 oncp.c:1099 oncp.c:1186 pulse.c:2443 pulse.c:2523
+#: cstp.c:1113 gpst.c:1232 oncp.c:1099 oncp.c:1186 pulse.c:2746 pulse.c:2826
 msgid "Reconnect failed\n"
 msgstr "Ponowne połączenie się nie powiodło\n"
 
-#: cstp.c:1129 oncp.c:1202 pulse.c:2539
+#: cstp.c:1129 oncp.c:1202 pulse.c:2842
 msgid "Send CSTP DPD\n"
 msgstr "Wysłanie „DPD” CSTP\n"
 
-#: cstp.c:1141 oncp.c:1213 pulse.c:2551
+#: cstp.c:1141 oncp.c:1213 pulse.c:2854
 msgid "Send CSTP Keepalive\n"
 msgstr "Wysłanie „Keepalive” CSTP\n"
 
@@ -1160,11 +1160,11 @@ msgstr "Wysłanie SSL się nie powiodło: %s\n"
 msgid "Could not extract expiration time of certificate\n"
 msgstr "Nie można wydobyć czasu wygaśnięcia certyfikatu\n"
 
-#: gnutls.c:333 openssl.c:1598
+#: gnutls.c:333 openssl.c:1602
 msgid "Client certificate has expired at"
 msgstr "Certyfikat klienta wygasł w"
 
-#: gnutls.c:335 openssl.c:1603
+#: gnutls.c:335 openssl.c:1607
 msgid "Client certificate expires soon at"
 msgstr "Certyfikat klienta niedługo wygaśnie w"
 
@@ -1486,11 +1486,11 @@ msgid "Error comparing server's cert on rehandshake: %s\n"
 msgstr ""
 "Błąd podczas porównywania certyfikatu serwera przy ponownym powitaniu: %s\n"
 
-#: gnutls.c:1958 openssl.c:1521
+#: gnutls.c:1958 openssl.c:1525
 msgid "Server presented different cert on rehandshake\n"
 msgstr "Serwer przedstawił inny certyfikat podczas ponownego powitania\n"
 
-#: gnutls.c:1963 openssl.c:1524
+#: gnutls.c:1963 openssl.c:1528
 msgid "Server presented identical cert on rehandshake\n"
 msgstr "Serwer przedstawił identyczny certyfikat podczas ponownego powitania\n"
 
@@ -1541,11 +1541,11 @@ msgstr "certyfikat wygasł"
 msgid "signature verification failed"
 msgstr "sprawdzenie poprawności podpisu się nie powiodło"
 
-#: gnutls.c:2058 openssl.c:1405 openssl.c:1557
+#: gnutls.c:2058 openssl.c:1405 openssl.c:1561
 msgid "certificate does not match hostname"
 msgstr "certyfikat nie pasuje do nazwy komputera"
 
-#: gnutls.c:2063 openssl.c:1404 openssl.c:1563
+#: gnutls.c:2063 openssl.c:1404 openssl.c:1567
 #, c-format
 msgid "Server certificate verify failed: %s\n"
 msgstr "Sprawdzenie poprawności certyfikatu klienta się nie powiodło: %s\n"
@@ -1564,7 +1564,7 @@ msgstr "Odczytanie certyfikatów z pliku CA się nie powiodło: %s\n"
 msgid "Failed to open CA file '%s': %s\n"
 msgstr "Otwarcie pliku CA „%s” się nie powiodło: %s\n"
 
-#: gnutls.c:2180 openssl.c:1685
+#: gnutls.c:2180 openssl.c:1689
 msgid "Loading certificate failed. Aborting.\n"
 msgstr "Wczytanie certyfikatu się nie powiodło. Przerywanie.\n"
 
@@ -1573,12 +1573,12 @@ msgstr "Wczytanie certyfikatu się nie powiodło. Przerywanie.\n"
 msgid "Failed to set TLS priority string (\"%s\"): %s\n"
 msgstr "Ustawienie ciągu priorytetu TLS się nie powiodło („%s”): %s\n"
 
-#: gnutls.c:2253 openssl.c:1802
+#: gnutls.c:2253 openssl.c:1806
 #, c-format
 msgid "SSL negotiation with %s\n"
 msgstr "Negocjacja SSL z %s\n"
 
-#: gnutls.c:2304 openssl.c:1828
+#: gnutls.c:2304 openssl.c:1832
 msgid "SSL connection cancelled\n"
 msgstr "Anulowano połączenie SSL\n"
 
@@ -1592,7 +1592,7 @@ msgstr "Niepowodzenie połączenia SSL: %s\n"
 msgid "GnuTLS non-fatal return during handshake: %s\n"
 msgstr "Niekrytyczny zwrot biblioteki GnuTLS podczas powitania: %s\n"
 
-#: gnutls.c:2326 openssl.c:1845
+#: gnutls.c:2326 openssl.c:1849
 #, c-format
 msgid "Connected to HTTPS on %s\n"
 msgstr "Połączono z HTTPS na %s\n"
@@ -1623,7 +1623,7 @@ msgstr "Pozostało tylko kilka prób przed zablokowaniem."
 msgid "Enter PIN:"
 msgstr "Proszę wprowadzić kod PIN:"
 
-#: gnutls.c:2591 openssl.c:1975
+#: gnutls.c:2591 openssl.c:1979
 msgid "Unsupported OATH HMAC algorithm\n"
 msgstr "Nieobsługiwany algorytm HMAC „OATH”\n"
 
@@ -1637,7 +1637,7 @@ msgstr "Obliczenie HMAC „OATH” się nie powiodło: %s\n"
 msgid "ttls_pull_timeout_func %dms\n"
 msgstr "ttls_pull_timeout_func %d ms\n"
 
-#: gnutls.c:2657 openssl.c:2090
+#: gnutls.c:2657 openssl.c:2094
 msgid "Established EAP-TTLS session\n"
 msgstr "Ustanowiono sesję EAP-TTLS\n"
 
@@ -2270,7 +2270,7 @@ msgstr "Próbowanie podstawowego uwierzytelnienia HTTP do pośrednika\n"
 msgid "Attempting HTTP Basic authentication to server '%s'\n"
 msgstr "Próbowanie podstawowego uwierzytelnienia HTTP z serwerem „%s”\n"
 
-#: http-auth.c:200 http.c:1297
+#: http-auth.c:200 http.c:1315
 msgid "This version of OpenConnect was built without GSSAPI support\n"
 msgstr "Ta wersja OpenConnect została zbudowana bez obsługi GSSAPI\n"
 
@@ -2391,160 +2391,164 @@ msgstr ""
 "Przydzielenie nowej ścieżki dla względnego przekierowania się nie powiodło: "
 "%s\n"
 
-#: http.c:1097 oncp.c:591 pulse.c:1305
+#: http.c:945
+msgid "HTTPS socket closed by peer; reopening\n"
+msgstr ""
+
+#: http.c:1115 oncp.c:591 pulse.c:1420
 #, c-format
 msgid "Unexpected %d result from server\n"
 msgstr "Oczekiwano %d wyników z serwera\n"
 
-#: http.c:1145
+#: http.c:1163
 msgid "request granted"
 msgstr "udzielono żądanie"
 
-#: http.c:1146
+#: http.c:1164
 msgid "general failure"
 msgstr "ogólne niepowodzenie"
 
-#: http.c:1147
+#: http.c:1165
 msgid "connection not allowed by ruleset"
 msgstr "połączenie niedozwolone przez zestaw reguł"
 
-#: http.c:1148
+#: http.c:1166
 msgid "network unreachable"
 msgstr "sieć jest nieosiągalna"
 
-#: http.c:1149
+#: http.c:1167
 msgid "host unreachable"
 msgstr "komputer jest nieosiągalny"
 
-#: http.c:1150
+#: http.c:1168
 msgid "connection refused by destination host"
 msgstr "połączenie odrzucone przez komputer docelowy"
 
-#: http.c:1151
+#: http.c:1169
 msgid "TTL expired"
 msgstr "TTL wygasło"
 
-#: http.c:1152
+#: http.c:1170
 msgid "command not supported / protocol error"
 msgstr "nieobsługiwane polecenie/błąd protokołu"
 
-#: http.c:1153
+#: http.c:1171
 msgid "address type not supported"
 msgstr "nieobsługiwany typ adresu"
 
-#: http.c:1163
+#: http.c:1181
 msgid "SOCKS server requested username/password but we have none\n"
 msgstr "Serwer SOCKS zażądał nazwy użytkownika/hasło, ale nie ma żadnego\n"
 
-#: http.c:1171
+#: http.c:1189
 msgid "Username and password for SOCKS authentication must be < 255 bytes\n"
 msgstr ""
 "Nazwa użytkownika i hasło do uwierzytelnienia SOCKS musi być < 255 bajtów\n"
 
-#: http.c:1186 http.c:1249
+#: http.c:1204 http.c:1267
 #, c-format
 msgid "Error writing auth request to SOCKS proxy: %s\n"
 msgstr ""
 "Błąd podczas zapisywania żądania uwierzytelnienia do pośrednika SOCKS: %s\n"
 
-#: http.c:1194 http.c:1256
+#: http.c:1212 http.c:1274
 #, c-format
 msgid "Error reading auth response from SOCKS proxy: %s\n"
 msgstr ""
 "Błąd podczas odczytywania żądania uwierzytelnienia z pośrednika SOCKS: %s\n"
 
-#: http.c:1201 http.c:1262
+#: http.c:1219 http.c:1280
 #, c-format
 msgid "Unexpected auth response from SOCKS proxy: %02x %02x\n"
 msgstr ""
 "Nieoczekiwana odpowiedź uwierzytelnienia z pośrednika SOCKS: %02x %02x\n"
 
-#: http.c:1207
+#: http.c:1225
 msgid "Authenticated to SOCKS server using password\n"
 msgstr "Uwierzytelniono z serwerem SOCKS używając hasła\n"
 
-#: http.c:1211
+#: http.c:1229
 msgid "Password authentication to SOCKS server failed\n"
 msgstr "Uwierzytelnienie hasłem z serwerem SOCKS się nie powiodło\n"
 
-#: http.c:1274 http.c:1281
+#: http.c:1292 http.c:1299
 msgid "SOCKS server requested GSSAPI authentication\n"
 msgstr "Serwer SOCKS zażądał uwierzytelnienia GSSAPI\n"
 
-#: http.c:1287
+#: http.c:1305
 msgid "SOCKS server requested password authentication\n"
 msgstr "Serwer SOCKS zażądał uwierzytelnienia hasłem\n"
 
-#: http.c:1294
+#: http.c:1312
 msgid "SOCKS server requires authentication\n"
 msgstr "Serwer SOCKS wymaga uwierzytelnienia\n"
 
-#: http.c:1303
+#: http.c:1321
 #, c-format
 msgid "SOCKS server requested unknown authentication type %02x\n"
 msgstr "Serwer SOCKS zażądał nieznanego typu uwierzytelnienia %02x\n"
 
-#: http.c:1309
+#: http.c:1327
 #, c-format
 msgid "Requesting SOCKS proxy connection to %s:%d\n"
 msgstr "Żądanie połączenia pośrednika SOCKS do %s:%d\n"
 
-#: http.c:1324
+#: http.c:1342
 #, c-format
 msgid "Error writing connect request to SOCKS proxy: %s\n"
 msgstr "Błąd podczas zapisywania żądania połączenia do pośrednika SOCKS: %s\n"
 
-#: http.c:1332 http.c:1374
+#: http.c:1350 http.c:1392
 #, c-format
 msgid "Error reading connect response from SOCKS proxy: %s\n"
 msgstr "Błąd podczas odczytywania żądania połączenia z pośrednika SOCKS: %s\n"
 
-#: http.c:1338
+#: http.c:1356
 #, c-format
 msgid "Unexpected connect response from SOCKS proxy: %02x %02x...\n"
 msgstr "Nieoczekiwana odpowiedź połączenia z pośrednika SOCKS: %02x %02x…\n"
 
-#: http.c:1346
+#: http.c:1364
 #, c-format
 msgid "SOCKS proxy error %02x: %s\n"
 msgstr "Błąd pośrednika SOCKS %02x: %s\n"
 
-#: http.c:1350
+#: http.c:1368
 #, c-format
 msgid "SOCKS proxy error %02x\n"
 msgstr "Błąd pośrednika SOCKS %02x\n"
 
-#: http.c:1367
+#: http.c:1385
 #, c-format
 msgid "Unexpected address type %02x in SOCKS connect response\n"
 msgstr "Nieoczekiwany typ adresu %02x w odpowiedzi połączenia SOCKS\n"
 
-#: http.c:1390
+#: http.c:1408
 #, c-format
 msgid "Requesting HTTP proxy connection to %s:%d\n"
 msgstr "Żądanie połączenia pośrednika HTTP do %s:%d\n"
 
-#: http.c:1425
+#: http.c:1443
 #, c-format
 msgid "Sending proxy request failed: %s\n"
 msgstr "Wysłanie żądania pośrednika się nie powiodło: %s\n"
 
-#: http.c:1448
+#: http.c:1466
 #, c-format
 msgid "Proxy CONNECT request failed: %d\n"
 msgstr "Żądanie „CONNECT” pośrednika się nie powiodło: %d\n"
 
-#: http.c:1467
+#: http.c:1485
 #, c-format
 msgid "Unknown proxy type '%s'\n"
 msgstr "Nieznany typ pośrednika „%s”\n"
 
-#: http.c:1493
+#: http.c:1511
 #, c-format
 msgid "Failed to parse proxy '%s'\n"
 msgstr "Przetworzenie pośrednika „%s” się nie powiodło\n"
 
-#: http.c:1517
+#: http.c:1535
 msgid "Only http or socks(5) proxies supported\n"
 msgstr "Obsługiwane są tylko pośredniki HTTP i SOCKS(5)\n"
 
@@ -2598,19 +2602,19 @@ msgstr "Przetworzenie adresu URL serwera „%s” się nie powiodło\n"
 msgid "Only https:// permitted for server URL\n"
 msgstr "W adresach URL serwera dozwolone jest tylko „https://”\n"
 
-#: library.c:1087
+#: library.c:1086
 #, c-format
 msgid "Unknown certificate hash: %s.\n"
 msgstr "Nieznana suma kontrolna certyfikatu: %s.\n"
 
-#: library.c:1116
+#: library.c:1115
 #, c-format
 msgid ""
 "The size of the provided fingerprint is less than the minimum required "
 "(%u).\n"
 msgstr "Rozmiar podanego odcisku jest mniejszy niż minimalnie wymagany (%u).\n"
 
-#: library.c:1177
+#: library.c:1176
 msgid "No form handler; cannot authenticate.\n"
 msgstr "Brak programu obsługującego formularze. Nie można uwierzytelnić.\n"
 
@@ -3360,47 +3364,52 @@ msgstr "Otwarcie pliku token do zapisu się nie powiodło: %s\n"
 msgid "Failed to write token: %s\n"
 msgstr "Zapisanie tokenu się nie powiodło: %s\n"
 
-#: main.c:2203 main.c:2224
+#: main.c:2204 main.c:2228
 #, c-format
 msgid "Soft token string is invalid\n"
 msgstr "Ciąg tokena programowego jest nieprawidłowy\n"
 
-#: main.c:2206
+#: main.c:2208
+#, c-format
+msgid "Can't open stoken file\n"
+msgstr ""
+
+#: main.c:2210
 #, c-format
 msgid "Can't open ~/.stokenrc file\n"
 msgstr "Nie można otworzyć pliku ~/.stokenrc\n"
 
-#: main.c:2209
+#: main.c:2213
 #, c-format
 msgid "OpenConnect was not built with libstoken support\n"
 msgstr "OpenConnect zostało zbudowane bez obsługi biblioteki libstoken\n"
 
-#: main.c:2212
+#: main.c:2216
 #, c-format
 msgid "General failure in libstoken\n"
 msgstr "Ogólne niepowodzenie w bibliotece libstoken\n"
 
-#: main.c:2227
+#: main.c:2231
 #, c-format
 msgid "OpenConnect was not built with liboath support\n"
 msgstr "OpenConnect zostało zbudowane bez obsługi biblioteki liboath\n"
 
-#: main.c:2230
+#: main.c:2234
 #, c-format
 msgid "General failure in liboath\n"
 msgstr "Ogólne niepowodzenie w bibliotece liboath\n"
 
-#: main.c:2241
+#: main.c:2245
 #, c-format
 msgid "Yubikey token not found\n"
 msgstr "Nie odnaleziono tokena Yubikey\n"
 
-#: main.c:2244
+#: main.c:2248
 #, c-format
 msgid "OpenConnect was not built with Yubikey support\n"
 msgstr "OpenConnect zostało zbudowane bez obsługi Yubikey\n"
 
-#: main.c:2247
+#: main.c:2251
 #, c-format
 msgid "General Yubikey failure: %s\n"
 msgstr "Ogólne niepowodzenie Yubikey: %s\n"
@@ -3480,23 +3489,23 @@ msgstr "Przydzielenie pamięci do dekodowania hasła OATH się nie powiodło\n"
 msgid "This version of OpenConnect was built without PSKC support\n"
 msgstr "Ta wersja OpenConnect została zbudowana bez obsługi PSKC\n"
 
-#: oath.c:360 oath.c:385 stoken.c:272 yubikey.c:507
+#: oath.c:311 oath.c:336 stoken.c:297 yubikey.c:507
 msgid "OK to generate INITIAL tokencode\n"
 msgstr "Można utworzyć kod tokena „INITIAL”\n"
 
-#: oath.c:364 oath.c:388 stoken.c:277 yubikey.c:511
+#: oath.c:315 oath.c:339 stoken.c:302 yubikey.c:511
 msgid "OK to generate NEXT tokencode\n"
 msgstr "Można utworzyć kod tokena „NEXT”\n"
 
-#: oath.c:369 oath.c:392 stoken.c:282
+#: oath.c:320 oath.c:343 stoken.c:307
 msgid "Server is rejecting the soft token; switching to manual entry\n"
 msgstr "Serwer odrzuca token programowy. Przełączanie na wprowadzanie ręczne\n"
 
-#: oath.c:426
+#: oath.c:377
 msgid "Generating OATH TOTP token code\n"
 msgstr "Tworzenie kodu tokena „TOTP” OATH\n"
 
-#: oath.c:572
+#: oath.c:523
 msgid "Generating OATH HOTP token code\n"
 msgstr "Tworzenie kodu tokena „HOTP” OATH\n"
 
@@ -3510,17 +3519,17 @@ msgstr "Nieprawidłowe ciasteczko \"%s\"\n"
 msgid "Unexpected length %d for TLV %d/%d\n"
 msgstr "Nieoczekiwana długość %d dla TLV %d/%d\n"
 
-#: oncp.c:166 pulse.c:402
+#: oncp.c:166 pulse.c:418
 #, c-format
 msgid "Received MTU %d from server\n"
 msgstr "Otrzymano MTU %d z serwera\n"
 
-#: oncp.c:175 pulse.c:285 pulse.c:343
+#: oncp.c:175 pulse.c:301 pulse.c:359
 #, c-format
 msgid "Received DNS server %s\n"
 msgstr "Otrzymano serwer DNS %s\n"
 
-#: oncp.c:186 pulse.c:411
+#: oncp.c:186 pulse.c:427
 #, c-format
 msgid "Received DNS search domain %.*s\n"
 msgstr "Otrzymano domenę wyszukiwania DNS %.*s\n"
@@ -3530,27 +3539,27 @@ msgstr "Otrzymano domenę wyszukiwania DNS %.*s\n"
 msgid "Received internal IP address %s\n"
 msgstr "Otrzymano wewnętrzny adres IP %s\n"
 
-#: oncp.c:210 pulse.c:276
+#: oncp.c:210 pulse.c:292
 #, c-format
 msgid "Received netmask %s\n"
 msgstr "Otrzymano maskę sieci %s\n"
 
-#: oncp.c:219 pulse.c:426
+#: oncp.c:219 pulse.c:442
 #, c-format
 msgid "Received internal gateway address %s\n"
 msgstr "Otrzymano wewnętrzny adres bramy %s\n"
 
-#: oncp.c:232 pulse.c:2022
+#: oncp.c:232 pulse.c:2325
 #, c-format
 msgid "Received split include route %s\n"
 msgstr "Otrzymano trasę dołączania „split” %s\n"
 
-#: oncp.c:254 pulse.c:2035
+#: oncp.c:254 pulse.c:2338
 #, c-format
 msgid "Received split exclude route %s\n"
 msgstr "Otrzymano trasę wykluczania „split” %s\n"
 
-#: oncp.c:274 pulse.c:300
+#: oncp.c:274 pulse.c:316
 #, c-format
 msgid "Received WINS server %s\n"
 msgstr "Otrzymano serwer WINS %s\n"
@@ -3570,37 +3579,37 @@ msgstr "HMAC ESP: 0x%02x (%s)\n"
 msgid "ESP compression: %d\n"
 msgstr "Kompresja ESP: %d\n"
 
-#: oncp.c:335 pulse.c:506
+#: oncp.c:335 pulse.c:522
 #, c-format
 msgid "ESP port: %d\n"
 msgstr "Port ESP: %d\n"
 
-#: oncp.c:342 pulse.c:489
+#: oncp.c:342 pulse.c:505
 #, c-format
 msgid "ESP key lifetime: %u bytes\n"
 msgstr "Czas życia klucza ESP: %u bajtów\n"
 
-#: oncp.c:350 pulse.c:481
+#: oncp.c:350 pulse.c:497
 #, c-format
 msgid "ESP key lifetime: %u seconds\n"
 msgstr "Czas życia klucza ESP: %u sekund\n"
 
-#: oncp.c:358 pulse.c:513
+#: oncp.c:358 pulse.c:529
 #, c-format
 msgid "ESP to SSL fallback: %u seconds\n"
 msgstr "Przechodzenie z ESP do SSL: %u sekund\n"
 
-#: oncp.c:366 pulse.c:497
+#: oncp.c:366 pulse.c:513
 #, c-format
 msgid "ESP replay protection: %d\n"
 msgstr "Ochrona powtarzania ESP: %d\n"
 
-#: oncp.c:374 pulse.c:529 pulse.c:2136
+#: oncp.c:374 pulse.c:545 pulse.c:2439
 #, c-format
 msgid "ESP SPI (outbound): %x\n"
 msgstr "„SPI” ESP (wychodzące): %x\n"
 
-#: oncp.c:383 pulse.c:538 pulse.c:2124
+#: oncp.c:383 pulse.c:554 pulse.c:2427
 #, c-format
 msgid "%d bytes of ESP secrets\n"
 msgstr "%d bajtów haseł ESP\n"
@@ -3697,11 +3706,11 @@ msgstr "Błąd podczas negocjowania kluczy ESP\n"
 msgid "oNCP negotiation request outgoing:\n"
 msgstr "Wychodzące żądanie negocjacji oNCP:\n"
 
-#: oncp.c:831 pulse.c:2393
+#: oncp.c:831 pulse.c:2696
 msgid "new incoming"
 msgstr "nowe przychodzące"
 
-#: oncp.c:832 pulse.c:2394
+#: oncp.c:832 pulse.c:2697
 msgid "new outgoing"
 msgstr "nowe wychodzące"
 
@@ -3753,7 +3762,7 @@ msgstr "Nieznany komunikat KMP %d o rozmiarze %d:\n"
 msgid ".... + %d more bytes unreceived\n"
 msgstr "… + %d więcej bajtów nie zostało otrzymanych\n"
 
-#: oncp.c:1081 pulse.c:2425
+#: oncp.c:1081 pulse.c:2728
 msgid "Packet outgoing:\n"
 msgstr "Wychodzący pakiet:\n"
 
@@ -3765,7 +3774,7 @@ msgstr "Wysłano pakiet kontroli włączenia ESP\n"
 msgid "Logout successful.\n"
 msgstr "Pomyślnie wylogowano.\n"
 
-#: openconnect-internal.h:1173 openconnect-internal.h:1181
+#: openconnect-internal.h:1174 openconnect-internal.h:1182
 #, c-format
 msgid "ERROR: %s() called with invalid UTF-8 for '%s' argument\n"
 msgstr ""
@@ -4206,335 +4215,395 @@ msgstr "Pasująca nazwa tematu certyfikatu partnera „%s”\n"
 msgid "Extra cert from cafile: '%s'\n"
 msgstr "Dodatkowy certyfikat z pliku CA: „%s”\n"
 
-#: openssl.c:1595
+#: openssl.c:1599
 msgid "Error in client cert notAfter field\n"
 msgstr "Błąd w polu „notAfter” certyfikatu klienta\n"
 
-#: openssl.c:1608
+#: openssl.c:1612
 msgid "<error>"
 msgstr "<błąd>"
 
-#: openssl.c:1661
+#: openssl.c:1665
 msgid "Create TLSv1 CTX failed\n"
 msgstr "Utworzenie „CTX” TLSv1 się nie powiodło\n"
 
-#: openssl.c:1680
+#: openssl.c:1684
 msgid "SSL certificate and key do not match\n"
 msgstr "Certyfikat SSL i klucz nie pasują\n"
 
-#: openssl.c:1725
+#: openssl.c:1729
 #, c-format
 msgid "Failed to read certs from CA file '%s'\n"
 msgstr "Odczytanie certyfikatów z pliku CA „%s” się nie powiodło\n"
 
-#: openssl.c:1758
+#: openssl.c:1762
 #, c-format
 msgid "Failed to open CA file '%s'\n"
 msgstr "Otwarcie pliku CA „%s” się nie powiodło\n"
 
-#: openssl.c:1818
+#: openssl.c:1822
 msgid "SSL connection failure\n"
 msgstr "Niepowodzenie połączenia SSL\n"
 
-#: openssl.c:1981
+#: openssl.c:1985
 msgid "Failed to calculate OATH HMAC\n"
 msgstr "Obliczenie „HMAC” OATH się nie powiodło\n"
 
-#: openssl.c:2084
+#: openssl.c:2088
 #, c-format
 msgid "EAP-TTLS negotiation with %s\n"
 msgstr "Negocjacja EAP-TTLS z %s\n"
 
-#: openssl.c:2095
+#: openssl.c:2099
 #, c-format
 msgid "EAP-TTLS connection failure %d\n"
 msgstr "Niepowodzenie połączenia EAP-TTLS: %d\n"
 
-#: pulse.c:267
+#: pulse.c:283
 #, c-format
 msgid "Received internal Legacy IP address %s\n"
 msgstr "Otrzymano wewnętrzny przestarzały adres IP %s\n"
 
-#: pulse.c:315 pulse.c:332 pulse.c:351 pulse.c:374
+#: pulse.c:331 pulse.c:348 pulse.c:367 pulse.c:390
 msgid "Failed to handle IPv6 address\n"
 msgstr "Obsłużenie adresu IPv6 się nie powiodło\n"
 
-#: pulse.c:324
+#: pulse.c:340
 #, c-format
 msgid "Received internal IPv6 address %s\n"
 msgstr "Otrzymano wewnętrzny adres IPv6 %s\n"
 
-#: pulse.c:366
+#: pulse.c:382
 #, c-format
 msgid "Received IPv6 split include %s\n"
 msgstr "Otrzymano dołączenie „split” IPv6 %s\n"
 
-#: pulse.c:389
+#: pulse.c:405
 #, c-format
 msgid "Received IPv6 split exclude %s\n"
 msgstr "Otrzymano wykluczenie „split” IPv6 %s\n"
 
-#: pulse.c:396
+#: pulse.c:412
 #, c-format
 msgid "Unexpected length %d for attr 0x%x\n"
 msgstr "Nieoczekiwana długość %d dla atrybutu 0x%x\n"
 
-#: pulse.c:447
+#: pulse.c:463
 #, c-format
 msgid "ESP encryption: 0x%04x (%s)\n"
 msgstr "Szyfrowanie ESP: 0x%04x (%s)\n"
 
-#: pulse.c:471
+#: pulse.c:487
 #, c-format
 msgid "ESP HMAC: 0x%04x (%s)\n"
 msgstr "HMAC ESP: 0x%04x (%s)\n"
 
 #. Amusingly, this isn't enforced. It's client-only
-#: pulse.c:521
+#: pulse.c:537
 #, c-format
 msgid "ESP only: %d\n"
 msgstr "Tylko ESP: %d\n"
 
-#: pulse.c:563
+#: pulse.c:579
 #, c-format
 msgid "Unknown attr 0x%x len %d:%s\n"
 msgstr "Nieznany atrybut 0x%x len %d:%s\n"
 
-#: pulse.c:574
+#: pulse.c:590
 #, c-format
 msgid "Read %d bytes of IF-T/TLS record\n"
 msgstr "Odczyt %d B wpisu IF-T/TLS\n"
 
-#: pulse.c:591
+#: pulse.c:607
 msgid "Short write to IF-T/TLS\n"
 msgstr "Krótki zapis do IF-T/TLS\n"
 
-#: pulse.c:604
+#: pulse.c:620
 msgid "Error creating IF-T packet\n"
 msgstr "Błąd podczas tworzenia pakietu IF-T\n"
 
-#: pulse.c:624
+#: pulse.c:640
 msgid "Error creating EAP packet\n"
 msgstr "Błąd podczas tworzenia pakietu EAP\n"
 
-#: pulse.c:659 pulse.c:1371 pulse.c:1434
+#: pulse.c:675 pulse.c:1486 pulse.c:1549
 msgid "Unexpected IF-T/TLS authentication challenge:\n"
 msgstr "Nieoczekiwane wyzwanie uwierzytelnienia IF-T/TLS:\n"
 
-#: pulse.c:677
+#: pulse.c:693
 msgid "Unexpected EAP-TTLS payload:\n"
 msgstr "Nieoczekiwany ładunek EAP-TTLS:\n"
 
-#: pulse.c:710
+#: pulse.c:726
 #, c-format
 msgid "AVP 0x%x/0x%x:%s\n"
 msgstr "AVP 0x%x/0x%x:%s\n"
 
-#: pulse.c:712
+#: pulse.c:728
 #, c-format
 msgid "AVP %d:%s\n"
 msgstr "AVP %d:%s\n"
 
-#: pulse.c:779
+#: pulse.c:795
 msgid "Enter Pulse user realm:"
 msgstr "Proszę podać obszar użytkownika Pulse:"
 
-#: pulse.c:784 pulse.c:827
+#: pulse.c:800 pulse.c:843
 msgid "Realm:"
 msgstr "Obszar:"
 
-#: pulse.c:822
+#: pulse.c:838
 msgid "Choose Pulse user realm:"
 msgstr "Proszę wybrać obszar użytkownika Pulse:"
 
-#: pulse.c:838 pulse.c:1500 pulse.c:1569
+#: pulse.c:854 pulse.c:1616 pulse.c:1685
 msgid "Failed to parse AVP\n"
 msgstr "Przetworzenie AVP się nie powiodło\n"
 
-#: pulse.c:905
+#: pulse.c:921
 msgid "Session limit reached. Choose session to kill:\n"
 msgstr "Osiągnięto ograniczenie sesji. Proszę wybrać sesję do zakończenia:\n"
 
-#: pulse.c:910
+#: pulse.c:926
 msgid "Session:"
 msgstr "Sesja:"
 
-#: pulse.c:930
+#: pulse.c:946
 msgid "Failed to parse session list\n"
 msgstr "Przetworzenie listy sesji się nie powiodło\n"
 
-#: pulse.c:1025
+#: pulse.c:1041
 msgid "Enter secondary credentials:"
 msgstr "Proszę podać drugorzędne dane uwierzytelniania:"
 
 #. Point to password prompt in case that's all we use
-#: pulse.c:1025
+#: pulse.c:1041
 msgid "Enter user credentials:"
 msgstr "Proszę podać dane uwierzytelniania użytkownika:"
 
-#: pulse.c:1035 pulse.c:1128
+#: pulse.c:1051 pulse.c:1243
 msgid "Secondary username:"
 msgstr "Drugorzędna nazwa użytkownika:"
 
-#: pulse.c:1035 pulse.c:1128
+#: pulse.c:1051 pulse.c:1243
 msgid "Username:"
 msgstr "Nazwa użytkownika:"
 
-#: pulse.c:1045 stoken.c:89
+#: pulse.c:1061 stoken.c:114
 msgid "Password:"
 msgstr "Hasło:"
 
-#: pulse.c:1045
+#: pulse.c:1061
 msgid "Secondary password:"
 msgstr "Drugorzędne hasło:"
 
-#: pulse.c:1118
+#: pulse.c:1132
+msgid "Password expired. Please change password:"
+msgstr ""
+
+#: pulse.c:1136
+msgid "Current password:"
+msgstr ""
+
+#: pulse.c:1141
+msgid "New password:"
+msgstr ""
+
+#: pulse.c:1146
+msgid "Verify new password:"
+msgstr ""
+
+#: pulse.c:1158
+msgid "Passwords not provided.\n"
+msgstr ""
+
+#: pulse.c:1164
+msgid "Passwords do not match.\n"
+msgstr ""
+
+#: pulse.c:1169
+msgid "Current password too long.\n"
+msgstr ""
+
+#: pulse.c:1174
+msgid "New password too long.\n"
+msgstr ""
+
+#: pulse.c:1233
 msgid "Token code request:"
 msgstr "Żądanie kodu tokena:"
 
-#: pulse.c:1142
+#: pulse.c:1257
 msgid "Please enter response:"
 msgstr "Proszę podać odpowiedź:"
 
-#: pulse.c:1146
+#: pulse.c:1261
 msgid "Please enter your passcode:"
 msgstr "Proszę podać kod hasła:"
 
-#: pulse.c:1148
+#: pulse.c:1263
 msgid "Please enter your secondary token information:"
 msgstr "Proszę podać informacje o drugorzędnym tokenie:"
 
-#: pulse.c:1288
+#: pulse.c:1403
 msgid "Error creating Pulse connection request\n"
 msgstr "Błąd podczas tworzenia żądania negocjacji Pulse\n"
 
-#: pulse.c:1331
+#: pulse.c:1446
 msgid "Unexpected response to IF-T/TLS version negotiation:\n"
 msgstr "Nieoczekiwana odpowiedź na negocjację wersji IF-T/TLS:\n"
 
-#: pulse.c:1336
+#: pulse.c:1451
 #, c-format
 msgid "IF-T/TLS version from server: %d\n"
 msgstr "Wersja IF-T/TLS z serwera: %d\n"
 
-#: pulse.c:1462
+#: pulse.c:1578
 msgid "Failed to establish EAP-TTLS session\n"
 msgstr "Ustanowienie sesji EAP-TTLS się nie powiodło\n"
 
-#: pulse.c:1581
+#: pulse.c:1697
 msgid "Server certificate mismatch. Aborting due to suspected MITM attack\n"
 msgstr ""
 "Niedopasowanie certyfikatu serwera. Przerywanie z powodu podejrzenia ataku "
 "typu „MITM”\n"
 
-#: pulse.c:1596
+#: pulse.c:1712
 msgid "Authentication failure: Account locked out\n"
 msgstr "Niepowodzenie uwierzytelnienia: konto zostało zablokowane\n"
 
-#: pulse.c:1599
+#: pulse.c:1715
 #, c-format
 msgid "Authentication failure: Code 0x%02x\n"
 msgstr "Niepowodzenie uwierzytelnienia: kod 0x%02x\n"
 
-#: pulse.c:1634
+#: pulse.c:1750
 #, c-format
 msgid ""
 "Unknown D73 prompt value 0x%x. Will prompt for both username and password.\n"
 msgstr ""
 
-#: pulse.c:1637
+#: pulse.c:1753
 msgid "Please report this value and the behaviour of the official client.\n"
 msgstr ""
 
-#: pulse.c:1689
+#: pulse.c:1806
+#, c-format
+msgid "Authentication failure: %.*s\n"
+msgstr ""
+
+#: pulse.c:1830
 msgid "Unhandled Pulse authentication packet, or authentication failure\n"
 msgstr ""
 "Nieobsłużony pakiet uwierzytelnienia Pulse lub niepowodzenie "
 "uwierzytelnienia\n"
 
-#: pulse.c:1705
+#: pulse.c:1846
 msgid "Pulse authentication cookie not accepted\n"
 msgstr "Nie przyjęto ciasteczka uwierzytelnienia Pulse\n"
 
-#: pulse.c:1711
+#: pulse.c:1852
 msgid "Pulse realm entry\n"
 msgstr "Wpis obszaru Pulse\n"
 
-#: pulse.c:1717
+#: pulse.c:1858
 msgid "Pulse realm choice\n"
 msgstr "Wybór obszaru Pulse\n"
 
-#: pulse.c:1724
+#: pulse.c:1865
 #, c-format
 msgid "Pulse password auth request, code 0x%02x\n"
 msgstr "Żądanie uwierzytelnienia hasła Pulse, kod 0x%02x\n"
 
-#: pulse.c:1735
+#: pulse.c:1878
+#, c-format
+msgid "Pulse password request with unknown code 0x%02x. Please report.\n"
+msgstr ""
+
+#: pulse.c:1887
 msgid "Pulse password general token code request\n"
 msgstr "Żądanie kodu tokena ogólnego hasła Pulse\n"
 
-#: pulse.c:1746
+#: pulse.c:1898
 #, c-format
 msgid "Pulse session limit, %d sessions\n"
 msgstr "Ograniczenie liczby sesji Pulse: %d\n"
 
-#: pulse.c:1755
+#: pulse.c:1907
 msgid "Unhandled Pulse auth request\n"
 msgstr "Nieobsłużone żądanie uwierzytelnienia Pulse\n"
 
-#: pulse.c:1792
+#: pulse.c:1944
 msgid "Unexpected response instead of IF-T/TLS auth success:\n"
 msgstr ""
 "Nieoczekiwana odpowiedź zamiast powodzenia uwierzytelnienia IF-T/TLS:\n"
 
-#: pulse.c:1865
+#: pulse.c:2007
+msgid "EAP-TTLS failure: Flushing output with pending input bytes\n"
+msgstr ""
+
+#: pulse.c:2030
+msgid "Error creating EAP-TTLS buffer\n"
+msgstr ""
+
+#: pulse.c:2078
+#, c-format
+msgid "Failed to read EAP-TTLS Acknowledge: %s\n"
+msgstr ""
+
+#: pulse.c:2084 pulse.c:2124
 #, c-format
 msgid "Read %d bytes of IF-T/TLS EAP-TTLS record\n"
 msgstr "Odczyt %d B wpisu EAP-TTLS IF-T/TLS\n"
 
-#: pulse.c:1876
-msgid "Bad EAP-TTLS packet\n"
-msgstr "Błędny pakiet EAP-TTLS\n"
+#: pulse.c:2095
+msgid "Bad EAP-TTLS Acknowledge packet\n"
+msgstr ""
 
-#: pulse.c:1989
+#: pulse.c:2135
+#, c-format
+msgid "Bad EAP-TTLS packet (len %d, left %d)\n"
+msgstr ""
+
+#: pulse.c:2292
 msgid "Unexpected Pulse config packet:\n"
 msgstr "Nieoczekiwany pakiet konfiguracji Pulse:\n"
 
-#: pulse.c:2046
+#: pulse.c:2349
 #, c-format
 msgid "Receive route of unknown type 0x%08x\n"
 msgstr "Otrzymanie trasy o nieznanym typie 0x%08x\n"
 
-#: pulse.c:2117
+#: pulse.c:2420
 msgid "Invalid ESP config packet:\n"
 msgstr "Nieprawidłowy pakiet konfiguracji ESP:\n"
 
-#: pulse.c:2129
+#: pulse.c:2432
 msgid "Invalid ESP setup\n"
 msgstr "Nieprawidłowa konfiguracja ESP\n"
 
-#: pulse.c:2204
+#: pulse.c:2507
 msgid "Bad IF-T/TLS packet when expecting configuration:\n"
 msgstr "Błędny pakiet IF-T/TLS, kiedy oczekiwano konfiguracji:\n"
 
-#: pulse.c:2212
+#: pulse.c:2515
 msgid "Unexpected IF-T/TLS packet when expecting configuration.\n"
 msgstr "Błędny pakiet IF-T/TLS, kiedy oczekiwano konfiguracji.\n"
 
-#: pulse.c:2363
+#: pulse.c:2666
 #, c-format
 msgid "Received data packet of %d bytes\n"
 msgstr "Otrzymano pakiet danych o rozmiarze %d B\n"
 
-#: pulse.c:2385
+#: pulse.c:2688
 msgid "ESP rekey failed\n"
 msgstr "„rekey” ESP się nie powiodło\n"
 
-#: pulse.c:2409
+#: pulse.c:2712
 msgid "Unknown Pulse packet\n"
 msgstr "Nieznany pakiet Pulse\n"
 
-#: pulse.c:2587
+#: pulse.c:2890
 #, c-format
 msgid "Sending IF-T/TLS data packet of %d bytes\n"
 msgstr "Wysyłanie pakietu danych IF-T/TLS o rozmiarze %d B\n"
@@ -4709,47 +4778,77 @@ msgid "openconnect_fopen_utf8() used with unsupported mode '%s'\n"
 msgstr ""
 "openconnect_fopen_utf8() używane za pomocą nieobsługiwanego trybu „%s”\n"
 
-#: ssl.c:944
+#: ssl.c:931
+#, c-format
+msgid "Failed to open %s: %s\n"
+msgstr "Otwarcie %s się nie powiodło: %s\n"
+
+#: ssl.c:938
+#, c-format
+msgid "Failed to fstat() %s: %s\n"
+msgstr "Wykonanie fstat() na %s się nie powiodło: %s\n"
+
+#: ssl.c:945
+#, c-format
+msgid "File %s is empty\n"
+msgstr ""
+
+#: ssl.c:951
+#, c-format
+msgid "File %s has suspicious size %zd\n"
+msgstr ""
+
+#: ssl.c:960
+#, c-format
+msgid "Failed to allocate %d bytes for %s\n"
+msgstr "Przydzielenie %d bajtów dla %s się nie powiodło\n"
+
+#: ssl.c:968
+#, c-format
+msgid "Failed to read %s: %s\n"
+msgstr "Odczytanie %s się nie powiodło: %s\n"
+
+#: ssl.c:1004
 #, c-format
 msgid "Unknown protocol family %d. Cannot create UDP server address\n"
 msgstr ""
 "Nieznana rodzina protokołów %d. Nie można utworzyć adresu serwera UDP\n"
 
-#: ssl.c:963
+#: ssl.c:1023
 msgid "Open UDP socket"
 msgstr "Otwarcie gniazda UDP"
 
-#: ssl.c:996
+#: ssl.c:1056
 #, c-format
 msgid "Unknown protocol family %d. Cannot use UDP transport\n"
 msgstr "Nieznana rodzina protokołów %d. Nie można użyć transportu UDP\n"
 
-#: ssl.c:1004
+#: ssl.c:1064
 msgid "Bind UDP socket"
 msgstr "Dowiązanie gniazda UDP"
 
-#: ssl.c:1011
+#: ssl.c:1071
 msgid "Connect UDP socket\n"
 msgstr "Połączenie gniazda UDP\n"
 
-#: ssl.c:1018
+#: ssl.c:1078
 msgid "Make UDP socket non-blocking"
 msgstr ""
 
-#: ssl.c:1053
+#: ssl.c:1113
 msgid "Cookie is no longer valid, ending session\n"
 msgstr "Ciasteczko nie jest już prawidłowe, kończenie sesji\n"
 
-#: ssl.c:1057
+#: ssl.c:1117
 #, c-format
 msgid "sleep %ds, remaining timeout %ds\n"
 msgstr "uśpienie: %d s, pozostały czas oczekiwania: %d s\n"
 
-#: ssl.c:1126
+#: ssl.c:1186
 msgid "Failed select() for socket send"
 msgstr ""
 
-#: ssl.c:1166
+#: ssl.c:1226
 msgid "Failed select() for socket recv"
 msgstr ""
 
@@ -4835,70 +4934,90 @@ msgstr "DecryptMessage się nie powiodło: %lx\n"
 msgid "Invalid SSPI protection response from proxy (%lu bytes)\n"
 msgstr "Nieprawidłowa odpowiedź ochrony SSPI z pośrednika (%lu bajtów)\n"
 
-#: stoken.c:77
+#: stoken.c:102
 msgid "Enter credentials to unlock software token."
 msgstr ""
 "Wymagane jest wprowadzenie danych uwierzytelniających, aby odblokować token "
 "programowy."
 
-#: stoken.c:82
+#: stoken.c:107
 msgid "Device ID:"
 msgstr "Identyfikator urządzenia:"
 
-#: stoken.c:118
+#: stoken.c:143
 msgid "User bypassed soft token.\n"
 msgstr "Użytkownik obszedł token programowy.\n"
 
-#: stoken.c:124 stoken.c:209
+#: stoken.c:149 stoken.c:234
 msgid "All fields are required; try again.\n"
 msgstr "Wymagane są wszystkie pola. Proszę spróbować ponownie.\n"
 
-#: stoken.c:134 stoken.c:301
+#: stoken.c:159 stoken.c:326
 msgid "General failure in libstoken.\n"
 msgstr "Ogólne niepowodzenie w bibliotece libstoken.\n"
 
-#: stoken.c:138
+#: stoken.c:163
 msgid "Incorrect device ID or password; try again.\n"
 msgstr ""
 "Niepoprawny identyfikator urządzenia lub hasło. Proszę spróbować ponownie.\n"
 
-#: stoken.c:142
+#: stoken.c:167
 msgid "Soft token init was successful.\n"
 msgstr "Pomyślnie zainicjowano token programowy.\n"
 
-#: stoken.c:185
+#: stoken.c:210
 msgid "Enter software token PIN."
 msgstr "Proszę wprowadzić kod PIN tokena programowego."
 
-#: stoken.c:189
+#: stoken.c:214
 msgid "PIN:"
 msgstr "PIN:"
 
-#: stoken.c:216
+#: stoken.c:241
 msgid "Invalid PIN format; try again.\n"
 msgstr "Nieprawidłowy format kodu PIN; proszę spróbować ponownie.\n"
 
-#: stoken.c:296
+#: stoken.c:321
 msgid "Generating RSA token code\n"
 msgstr "Tworzenie kodu tokena RSA\n"
 
-#: tun-win32.c:76
+#: tun-win32.c:75
 msgid "Error accessing registry key for network adapters\n"
 msgstr ""
 "Błąd podczas uzyskiwania dostępu do klucza rejestru dla adapterów "
 "sieciowych\n"
 
-#: tun-win32.c:139
+#: tun-win32.c:101
 #, c-format
-msgid "Ignoring non-matching TAP interface \"%s\"\n"
-msgstr "Ignorowanie niepasującego interfejsu TAP „%s”\n"
+msgid "Cannot read %s\\%s or is not string\n"
+msgstr ""
 
-#: tun-win32.c:154
+#: tun-win32.c:108
+#, c-format
+msgid "%s\\ComponentId is '%s' not '%s'\n"
+msgstr ""
+
+#: tun-win32.c:114
+#, c-format
+msgid "Found %s at %s\n"
+msgstr ""
+
+#: tun-win32.c:131
+#, c-format
+msgid "Cannot open registry key %s\n"
+msgstr ""
+
+#: tun-win32.c:142
+#, c-format
+msgid "Cannot read registry key %s\\%s or is not string\n"
+msgstr ""
+
+#: tun-win32.c:158
 msgid "No Windows-TAP adapters found. Is the driver installed?\n"
 msgstr ""
 "Nie odnaleziono adapterów Windows-TAP. Czy sterownik jest zainstalowany?\n"
 
-#: tun-win32.c:186
+#: tun-win32.c:192
 #, c-format
 msgid ""
 "GetAdapterIndex() failed: %s\n"
@@ -4907,77 +5026,82 @@ msgstr ""
 "GetAdapterIndex() się nie powiodło: %s\n"
 "Używanie GetAdaptersInfo()\n"
 
-#: tun-win32.c:200
+#: tun-win32.c:206
 #, c-format
 msgid "GetAdaptersInfo() failed: %s\n"
 msgstr "GetAdaptersInfo() się nie powiodło: %s\n"
 
-#: tun-win32.c:231
+#: tun-win32.c:241
+#, c-format
+msgid "Ignoring non-matching TAP interface \"%s\"\n"
+msgstr "Ignorowanie niepasującego interfejsu TAP „%s”\n"
+
+#: tun-win32.c:252
 #, c-format
 msgid "Failed to open %s\n"
 msgstr "Otwarcie %s się nie powiodło\n"
 
-#: tun-win32.c:236
+#: tun-win32.c:257
 #, c-format
 msgid "Opened tun device %s\n"
 msgstr "Otwarto urządzenie tun %s\n"
 
-#: tun-win32.c:244
+#: tun-win32.c:265
 #, c-format
 msgid "Failed to obtain TAP driver version: %s\n"
 msgstr "Uzyskanie wersji sterownika TAP się nie powiodło: %s\n"
 
-#: tun-win32.c:250
+#: tun-win32.c:271
 #, c-format
 msgid "Error: TAP-Windows driver v9.9 or greater is required (found %ld.%ld)\n"
 msgstr ""
 "Błąd: wymagany jest sterownik TAP-Windows w wersji 9.9 lub nowszej "
 "(odnaleziono wersję %ld.%ld)\n"
 
-#: tun-win32.c:271
+#: tun-win32.c:292
 #, c-format
 msgid "Failed to set TAP IP addresses: %s\n"
 msgstr "Ustawienie adresu IP TAP się nie powiodło: %s\n"
 
-#: tun-win32.c:283 tun-win32.c:406
+#: tun-win32.c:304 tun-win32.c:430
 #, c-format
 msgid "Failed to set TAP media status: %s\n"
 msgstr "Ustawienie stanu nośnika TAP się nie powiodło: %s\n"
 
-#: tun-win32.c:316
+#: tun-win32.c:340
 msgid "TAP device aborted connectivity. Disconnecting.\n"
 msgstr "Urządzenie TAP nieoczekiwanie przerwało łączność. Rozłączanie.\n"
 
-#: tun-win32.c:321
+#: tun-win32.c:345
 #, c-format
 msgid "Failed to read from TAP device: %s\n"
 msgstr "Odczytanie z urządzenia TAP się nie powiodło: %s\n"
 
-#: tun-win32.c:335
+#: tun-win32.c:359
 #, c-format
 msgid "Failed to complete read from TAP device: %s\n"
 msgstr "Pełne odczytanie z urządzenia TAP się nie powiodło: %s\n"
 
-#: tun-win32.c:358
+#: tun-win32.c:382
 #, c-format
 msgid "Wrote %ld bytes to tun\n"
 msgstr "Zapisano %ld bajtów do tun\n"
 
-#: tun-win32.c:368
+#: tun-win32.c:392
 msgid "Waiting for tun write...\n"
 msgstr "Oczekiwanie na zapis tun…\n"
 
-#: tun-win32.c:371
+#: tun-win32.c:395
 #, c-format
 msgid "Wrote %ld bytes to tun after waiting\n"
 msgstr "Zapisano %ld bajtów do tun po oczekiwaniu\n"
 
-#: tun-win32.c:378
+#: tun-win32.c:402
 #, c-format
 msgid "Failed to write to TAP device: %s\n"
 msgstr "Zapisanie do urządzenia TAP się nie powiodło: %s\n"
 
-#: tun-win32.c:423
+#: tun-win32.c:447
 msgid "Spawning tunnel scripts is not yet supported on Windows\n"
 msgstr ""
 "Wywoływanie skryptów tuneli nie jest jeszcze obsługiwane w systemie Windows\n"
@@ -5120,67 +5244,37 @@ msgstr "(skrypt)"
 msgid "Failed to write incoming packet: %s\n"
 msgstr "Zapisanie przychodzącego pakietu się nie powiodło: %s\n"
 
-#: xml.c:45
-#, c-format
-msgid "Failed to open %s: %s\n"
-msgstr "Otwarcie %s się nie powiodło: %s\n"
-
-#: xml.c:52
-#, c-format
-msgid "Failed to fstat() %s: %s\n"
-msgstr "Wykonanie fstat() na %s się nie powiodło: %s\n"
-
-#: xml.c:59
-#, c-format
-msgid "XML file %s is empty\n"
-msgstr ""
-
-#: xml.c:65
-#, c-format
-msgid "XML file %s has suspicious size %zd\n"
-msgstr ""
-
-#: xml.c:74
-#, c-format
-msgid "Failed to allocate %d bytes for %s\n"
-msgstr "Przydzielenie %d bajtów dla %s się nie powiodło\n"
-
-#: xml.c:82
-#, c-format
-msgid "Failed to read %s: %s\n"
-msgstr "Odczytanie %s się nie powiodło: %s\n"
-
-#: xml.c:136 xml.c:161
+#: xml.c:75 xml.c:100
 #, c-format
 msgid "Treating host \"%s\" as a raw hostname\n"
 msgstr "Traktowanie komputera „%s” jako surowa nazwa komputera\n"
 
-#: xml.c:143
+#: xml.c:82
 #, c-format
 msgid "Failed to SHA1 existing file\n"
 msgstr "Użycie SHA1 na istniejącym pliku się nie powiodło\n"
 
-#: xml.c:151
+#: xml.c:90
 #, c-format
 msgid "XML config file SHA1: %s\n"
 msgstr "Suma kontrolna SHA1 pliku konfiguracji XML: %s\n"
 
-#: xml.c:159
+#: xml.c:98
 #, c-format
 msgid "Failed to parse XML config file %s\n"
 msgstr "Przetworzenie pliku konfiguracji XML %s się nie powiodło\n"
 
-#: xml.c:196
+#: xml.c:135
 #, c-format
 msgid "Host \"%s\" has address \"%s\"\n"
 msgstr "Komputer „%s” posiada adres „%s”\n"
 
-#: xml.c:206
+#: xml.c:145
 #, c-format
 msgid "Host \"%s\" has UserGroup \"%s\"\n"
 msgstr "Komputer „%s” posiada „UserGroup” „%s”\n"
 
-#: xml.c:220
+#: xml.c:159
 #, c-format
 msgid "Host \"%s\" not listed in config; treating as raw hostname\n"
 msgstr ""
@@ -5302,46 +5396,3 @@ msgstr "polecenie obliczania"
 #: yubikey.c:627
 msgid "Unrecognised response from Yubikey when generating tokencode\n"
 msgstr "Nierozpoznana odpowiedź z Yubikey podczas tworzenia kodu tokena\n"
-
-#~ msgid "Initiating IPv4 MTU detection (min=%d, max=%d)\n"
-#~ msgstr "Inicjowanie wykrywania MTU IPv4 (min=%d, max=%d)\n"
-
-#~ msgid "Sending MTU DPD probe (%u bytes, min=%u, max=%u)\n"
-#~ msgstr "Wysyłanie sondy „DPD” MTU (%u bajtów, min=%u, max=%u)\n"
-
-#~ msgid "Timeout while waiting for DPD response; trying %d\n"
-#~ msgstr ""
-#~ "Przekroczono czas oczekiwania podczas oczekiwania na odpowiedź DPD. "
-#~ "Próbowanie %d\n"
-
-#~ msgid "Timeout while waiting for DPD response; resending probe.\n"
-#~ msgstr ""
-#~ "Przekroczono czas oczekiwania podczas czekania na odpowiedź DPD. Ponowne "
-#~ "wysyłanie sondy.\n"
-
-#~ msgid "Received MTU DPD probe (%u bytes of %u)\n"
-#~ msgstr "Otrzymano sondę „DPD” MTU (%u bajtów z %u)\n"
-
-#~ msgid "Initiating IPv6 MTU detection\n"
-#~ msgstr "Inicjowanie wykrywania MTU IPv6\n"
-
-#~ msgid "Failed to send DPD request (%d)\n"
-#~ msgstr "Wysłanie żądania DPD się nie powiodło (%d)\n"
-
-#~ msgid "Failed to generate random keys for ESP: %s\n"
-#~ msgstr "Utworzenie losowych kluczy dla ESP się nie powiodło: %s\n"
-
-#~ msgid "Unknown ESP %s algorithm: %s"
-#~ msgstr "Nieznany algorytm ESP %s: %s"
-
-#~ msgid "Sending data packet of %d bytes\n"
-#~ msgstr "Wysyłanie pakietu danych o rozmiarze %d B\n"
-
-#~ msgid "Compatible with Juniper Network Connect / Pulse Secure SSL VPN"
-#~ msgstr "Zgodny z VPN SSL Juniper Network Connect/Pulse Secure"
-
-#~ msgid "Failed to generate random keys for ESP:\n"
-#~ msgstr "Utworzenie losowych kluczy dla ESP się nie powiodło:\n"
-
-#~ msgid "Error processing HTTP response\n"
-#~ msgstr "Błąd podczas przetwarzania odpowiedzi HTTP\n"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openconnect\n"
 "Report-Msgid-Bugs-To: openconnect-devel@lists.infradead.org\n"
-"POT-Creation-Date: 2019-09-11 14:49+0100\n"
+"POT-Creation-Date: 2019-12-30 00:19+0000\n"
 "PO-Revision-Date: 2011-09-22 22:31+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Hungarian (http://www.transifex.net/projects/p/meego/team/"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
 
-#: auth-globalprotect.c:124
+#: auth-globalprotect.c:129
 #, c-format
 msgid ""
 "SAML login is required via %s to this URL:\n"
@@ -27,71 +27,71 @@ msgstr ""
 "SAML bejelentkezés szükséges %s módszerrel a következő URL-en:\n"
 "\t%s"
 
-#: auth-globalprotect.c:126
+#: auth-globalprotect.c:131
 msgid "Please enter your username and password"
 msgstr "Adja meg a felhasználónevét és jelszavát"
 
-#: auth-globalprotect.c:135
+#: auth-globalprotect.c:140
 msgid "Username"
 msgstr "Felhasználónév"
 
-#: auth-globalprotect.c:150
+#: auth-globalprotect.c:155
 msgid "Password"
 msgstr "Jelszó"
 
-#: auth-globalprotect.c:197
+#: auth-globalprotect.c:202
 msgid "Challenge: "
 msgstr "Kihívás: "
 
-#: auth-globalprotect.c:276
+#: auth-globalprotect.c:281
 #, c-format
 msgid "GlobalProtect login returned %s=%s (expected %s)\n"
 msgstr ""
 "A GlobalProtect bejelentkezés a következőt adta vissza: %s=%s (várt: %s)\n"
 
-#: auth-globalprotect.c:282
+#: auth-globalprotect.c:287
 #, c-format
 msgid "GlobalProtect login returned empty or missing %s\n"
 msgstr ""
 "A GlobalProtect bejelentkezés üres vagy hiányzó %s értéket adott vissza\n"
 
-#: auth-globalprotect.c:288
+#: auth-globalprotect.c:293
 #, c-format
 msgid "GlobalProtect login returned %s=%s\n"
 msgstr "A GlobalProtect bejelentkezés a következőt adta vissza: %s=%s\n"
 
-#: auth-globalprotect.c:331
+#: auth-globalprotect.c:336
 msgid "Please select GlobalProtect gateway."
 msgstr "Válasszon egy GlobalProtect átjárót."
 
-#: auth-globalprotect.c:341
+#: auth-globalprotect.c:346
 msgid "GATEWAY:"
 msgstr "ÁTJÁRÓ:"
 
 #. each entry looks like <entry name="host[:443]"><description>Label</description></entry>
-#: auth-globalprotect.c:395
+#: auth-globalprotect.c:403
 #, c-format
 msgid "%d gateway servers available:\n"
 msgstr "%d átjáró kiszolgáló érhető el:\n"
 
-#: auth-globalprotect.c:416
+#: auth-globalprotect.c:424
 #, c-format
 msgid "  %s (%s)\n"
 msgstr "  %s (%s)\n"
 
-#: auth-globalprotect.c:492 auth-juniper.c:730 auth.c:669
+#: auth-globalprotect.c:500 auth-juniper.c:739 auth.c:669
 msgid "Failed to generate OTP tokencode; disabling token\n"
 msgstr "Nem sikerült az OTP tokenkód előállítása, a token letiltásra kerül\n"
 
-#: auth-globalprotect.c:588
+#: auth-globalprotect.c:596
 msgid "Server is neither a GlobalProtect portal nor a gateway.\n"
 msgstr "A kiszolgáló nem GlobalProtect portál, sem átjáró.\n"
 
-#: auth-globalprotect.c:640 oncp.c:1267
+#: auth-globalprotect.c:648 oncp.c:1275
 msgid "Logout failed.\n"
 msgstr "Kijelentkezés meghiúsult.\n"
 
-#: auth-globalprotect.c:642
+#: auth-globalprotect.c:650
 msgid "Logout successful\n"
 msgstr "Kijelentkezés sikeres\n"
 
@@ -110,93 +110,97 @@ msgstr "Ismeretlen űrlap beviteli típus mellőzése: „%s”\n"
 msgid "Discarding duplicate option '%s'\n"
 msgstr "Kettőzött kapcsoló eldobása: „%s”\n"
 
-#: auth-juniper.c:236 auth.c:408
+#: auth-juniper.c:239 auth.c:408
 #, c-format
 msgid "Cannot handle form method='%s', action='%s'\n"
 msgstr "Nem kezelhetők az űrlap method='%s', action='%s' értékei\n"
 
-#: auth-juniper.c:267
+#: auth-juniper.c:270
 #, c-format
 msgid "Unknown textarea field: '%s'\n"
 msgstr "Ismeretlen szövegterület mező: „%s”\n"
 
-#: auth-juniper.c:337
+#: auth-juniper.c:318
+msgid "Failed to send cookie to TNCC\n"
+msgstr ""
+
+#: auth-juniper.c:344
 msgid "TNCC support not implemented yet on Windows\n"
 msgstr "A TNCC támogatás még nincs megvalósítva Windowson\n"
 
-#: auth-juniper.c:359
+#: auth-juniper.c:366
 msgid "No DSPREAUTH cookie; not attempting TNCC\n"
 msgstr "Nincs DSPREAUTH süti, TNCC nincs megpróbálva\n"
 
-#: auth-juniper.c:397
+#: auth-juniper.c:404
 #, c-format
 msgid "Failed to exec TNCC script %s: %s\n"
 msgstr "Nem sikerült végrehajtani a(z) %s TNCC parancsfájlt: %s\n"
 
-#: auth-juniper.c:411
+#: auth-juniper.c:418
 msgid "Failed to allocate memory for communication with TNCC\n"
 msgstr "Nem sikerült memóriát lefoglalni a TNCC-vel való kommunikációhoz\n"
 
-#: auth-juniper.c:418
+#: auth-juniper.c:425
 msgid "Failed to send start command to TNCC\n"
 msgstr "Nem sikerült indítási parancsot küldeni a TNCC-nek\n"
 
-#: auth-juniper.c:425
+#: auth-juniper.c:432
 msgid "Sent start; waiting for response from TNCC\n"
 msgstr "Indítás elküldve, várakozás a TNCC-től érkező válaszra\n"
 
-#: auth-juniper.c:432
+#: auth-juniper.c:439
 msgid "Failed to read response from TNCC\n"
 msgstr "Nem sikerült a válasz olvasása a TNCC-től\n"
 
-#: auth-juniper.c:439
+#: auth-juniper.c:446
 #, c-format
 msgid "Received unsuccessful %s response from TNCC\n"
 msgstr "%s válasz sikertelenül érkezett a TNCC-től\n"
 
-#: auth-juniper.c:445
+#: auth-juniper.c:452
 msgid "TNCC response 200 OK\n"
 msgstr "TNCC válasz: 200 OK\n"
 
-#: auth-juniper.c:452
+#: auth-juniper.c:459
 #, c-format
 msgid "Second line of TNCC response: '%s'\n"
 msgstr "TNCC válasz második sora: „%s”\n"
 
-#: auth-juniper.c:461
+#: auth-juniper.c:468
 #, c-format
 msgid "Got new DSPREAUTH cookie from TNCC: %s\n"
 msgstr "Új DSPREAUTH süti beszerezve a TNCC-től: %s\n"
 
-#: auth-juniper.c:474
+#: auth-juniper.c:481
 #, c-format
 msgid "Unexpected non-empty line from TNCC after DSPREAUTH cookie: '%s'\n"
 msgstr "Váratlan nem üres sor a TNCC-től a DSPREAUTH süti után: „%s”\n"
 
-#: auth-juniper.c:481
+#: auth-juniper.c:488
 msgid "Too many non-empty lines from TNCC after DSPREAUTH cookie\n"
 msgstr "Túl sok nem üres sor a TNCC-től a DSPREAUTH süti után\n"
 
-#: auth-juniper.c:650
+#: auth-juniper.c:659
 msgid "Failed to parse HTML document\n"
 msgstr "Nem sikerült feldolgozni a HTML dokumentumot\n"
 
-#: auth-juniper.c:667
+#: auth-juniper.c:676
 msgid "Failed to find or parse web form in login page\n"
 msgstr ""
 "Nem sikerült megtalálni vagy feldolgozni a bejelentkező oldalon lévő webes "
 "űrlapot\n"
 
-#: auth-juniper.c:675
+#: auth-juniper.c:684
 msgid "Encountered form with no ID\n"
 msgstr "Azonosító nélküli űrlap található\n"
 
-#: auth-juniper.c:713
+#: auth-juniper.c:722
 #, c-format
 msgid "Unknown form ID '%s'\n"
 msgstr "Ismeretlen űrlap-azonosító: „%s”\n"
 
-#: auth-juniper.c:716
+#: auth-juniper.c:725
 #, c-format
 msgid "Dumping unknown HTML form:\n"
 msgstr "Ismeretlen HTML űrlap kiírása:\n"
@@ -248,28 +252,28 @@ msgstr "Az XML válasznak nincs „auth” csomópontja\n"
 msgid "Asked for password but '--no-passwd' set\n"
 msgstr "Jelszót kértek, de „--no-passwd” van beállítva\n"
 
-#: auth.c:925
+#: auth.c:926
 msgid "Not downloading XML profile because SHA1 already matches\n"
 msgstr "Nem kerül letöltésre az XML profil, mert az SHA1 már egyezik\n"
 
-#: auth.c:931 cstp.c:335 http.c:944
+#: auth.c:932 cstp.c:335 http.c:1058
 #, c-format
 msgid "Failed to open HTTPS connection to %s\n"
 msgstr "Nem sikerült a HTTPS kapcsolat megnyitása ehhez: %s\n"
 
-#: auth.c:952
+#: auth.c:953
 msgid "Failed to send GET request for new config\n"
 msgstr "Nem sikerült GET kérést küldeni az új beállításhoz\n"
 
-#: auth.c:976
+#: auth.c:977
 msgid "Downloaded config file did not match intended SHA1\n"
 msgstr "A letöltött beállítófájl nem egyezett a szándékolt SHA1-gyel\n"
 
-#: auth.c:981
+#: auth.c:982
 msgid "Downloaded new XML profile\n"
 msgstr "Új XML profil letöltve\n"
 
-#: auth.c:992 auth.c:1044
+#: auth.c:993 auth.c:1045
 msgid ""
 "Error: Running the 'Cisco Secure Desktop' trojan on this platform is not yet "
 "implemented.\n"
@@ -277,32 +281,32 @@ msgstr ""
 "Hiba: A „Cisco Secure Desktop” trójai futtatása még nincs megvalósítva ezen "
 "a platformon.\n"
 
-#: auth.c:1003 mainloop.c:144
+#: auth.c:1004 mainloop.c:144
 #, c-format
 msgid "Failed to set gid %ld: %s\n"
 msgstr "A(z) %ld gid beállítása nem sikerült: %s\n"
 
-#: auth.c:1010 mainloop.c:151
+#: auth.c:1011 mainloop.c:151
 #, c-format
 msgid "Failed to set groups to %ld: %s\n"
 msgstr "A csoportok beállítása nem sikerült erre: %ld: %s\n"
 
-#: auth.c:1017 mainloop.c:158
+#: auth.c:1018 mainloop.c:158
 #, c-format
 msgid "Failed to set uid %ld: %s\n"
 msgstr "A(z) %ld uid beállítása nem sikerült: %s\n"
 
-#: auth.c:1024
+#: auth.c:1025
 #, c-format
 msgid "Invalid user uid=%ld: %s\n"
 msgstr "Érvénytelen felhasználó uid=%ld: %s\n"
 
-#: auth.c:1031
+#: auth.c:1032
 #, c-format
 msgid "Failed to change to CSD home directory '%s': %s\n"
 msgstr "Nem sikerült átváltani a(z) „%s” CSD saját könyvtárra: %s\n"
 
-#: auth.c:1053
+#: auth.c:1054
 msgid ""
 "Error: Server asked us to run CSD hostscan.\n"
 "You need to provide a suitable --csd-wrapper argument.\n"
@@ -310,7 +314,7 @@ msgstr ""
 "Hiba: A kiszolgáló CSD gépkeresés futtatására kért minket.\n"
 "Meg kell adnia egy megfelelő --csd-wrapper argumentumot.\n"
 
-#: auth.c:1060
+#: auth.c:1061
 msgid ""
 "Error: Server asked us to download and run a 'Cisco Secure Desktop' trojan.\n"
 "This facility is disabled by default for security reasons, so you may wish "
@@ -321,26 +325,26 @@ msgstr ""
 "Ez a szolgáltatás biztonsági okokból alapértelmezetten le van tiltva, ezért "
 "érdemes lenne engedélyeznie azt.\n"
 
-#: auth.c:1067
+#: auth.c:1068
 msgid "Trying to run Linux CSD trojan script.\n"
 msgstr "Linux CSD trójai parancsfájl futtatásának kísérlete.\n"
 
-#: auth.c:1094
+#: auth.c:1095
 #, c-format
 msgid "Temporary directory '%s' is not writable: %s\n"
 msgstr "A(z) „%s” átmeneti könyvtár nem írható: %s\n"
 
-#: auth.c:1102
+#: auth.c:1103
 #, c-format
 msgid "Failed to open temporary CSD script file: %s\n"
 msgstr "Nem sikerült megnyitni az átmeneti CSD parancsfájlt: %s\n"
 
-#: auth.c:1111
+#: auth.c:1112
 #, c-format
 msgid "Failed to write temporary CSD script file: %s\n"
 msgstr "Nem sikerült írni az átmeneti CSD parancsfájlt: %s\n"
 
-#: auth.c:1141
+#: auth.c:1142
 #, c-format
 msgid ""
 "Warning: you are running insecure CSD code with root privileges\n"
@@ -349,31 +353,31 @@ msgstr ""
 "Figyelem: nem biztonságos CSD kódot futtat rendszergazdai jogosultságokkal\n"
 "\t Használja a „--csd-user” parancssori kapcsolót\n"
 
-#: auth.c:1189
+#: auth.c:1190
 #, c-format
 msgid "Failed to exec CSD script %s\n"
 msgstr "Nem sikerült végrehajtani a következő CSD parancsfájlt: %s\n"
 
-#: auth.c:1221
+#: auth.c:1222
 msgid "Unknown response from server\n"
 msgstr "Érvénytelen válasz a kiszolgálótól\n"
 
-#: auth.c:1342
+#: auth.c:1344
 msgid "Server requested SSL client certificate after one was provided\n"
 msgstr ""
 "A kiszolgáló azután kérte a kliens SSL tanúsítványát, miután meg lett adva "
 "egy\n"
 
-#: auth.c:1346
+#: auth.c:1348
 msgid "Server requested SSL client certificate; none was configured\n"
 msgstr ""
 "A kiszolgáló a kliens SSL tanúsítványát kérte; egyik sem volt beállítva\n"
 
-#: auth.c:1362
+#: auth.c:1364
 msgid "XML POST enabled\n"
 msgstr "XML POST engedélyezve\n"
 
-#: auth.c:1405
+#: auth.c:1407
 #, c-format
 msgid "Refreshing %s after 1 second...\n"
 msgstr "%s frissítése 1 másodperc múlva…\n"
@@ -392,12 +396,12 @@ msgstr "(Hiba történt a hiba leírása során!)"
 msgid "ERROR: Cannot initialize sockets\n"
 msgstr "HIBA: Nem lehet előkészíteni a foglalatokat\n"
 
-#: cstp.c:112 gpst.c:341
+#: cstp.c:112 gpst.c:343
 #, c-format
 msgid "TCP_INFO rcv mss %d, snd mss %d, adv mss %d, pmtu %d\n"
 msgstr "TCP_INFO rcv mss %d, snd mss %d, adv mss %d, pmtu %d\n"
 
-#: cstp.c:134 gpst.c:360
+#: cstp.c:134 gpst.c:362
 #, c-format
 msgid "TCP_MAXSEG %d\n"
 msgstr "TCP_MAXSEG %d\n"
@@ -412,7 +416,7 @@ msgstr ""
 msgid "Error creating HTTPS CONNECT request\n"
 msgstr "Hiba a HTTPS CONNECT kérés létrehozásakor\n"
 
-#: cstp.c:328 http.c:386
+#: cstp.c:328
 msgid "Error fetching HTTPS response\n"
 msgstr "Hiba a HTTPS válasz lekérésekor\n"
 
@@ -435,203 +439,203 @@ msgstr "CONNECT válasz érkezett: %s\n"
 msgid "No memory for options\n"
 msgstr "Nincs memória a kapcsolókhoz\n"
 
-#: cstp.c:413 http.c:447
+#: cstp.c:413 http.c:522
 msgid "<elided>"
 msgstr "<elided>"
 
-#: cstp.c:433
+#: cstp.c:432
 #, c-format
 msgid "X-DTLS-Session-ID not 64 characters; is: \"%s\"\n"
 msgstr "Az X-DTLS-Session-ID nem 64 karakteres; értéke: „%s”\n"
 
-#: cstp.c:450
+#: cstp.c:449
 #, c-format
 msgid "X-DTLS-Session-ID is invalid; is: \"%s\"\n"
 msgstr "Az X-DTLS-Session-ID érvénytelen; értéke: „%s”\n"
 
-#: cstp.c:468
+#: cstp.c:467
 #, c-format
 msgid "Unknown DTLS-Content-Encoding %s\n"
 msgstr "Ismeretlen DTLS tartalomkódolás: %s\n"
 
-#: cstp.c:510
+#: cstp.c:509
 #, c-format
 msgid "Unknown CSTP-Content-Encoding %s\n"
 msgstr "Ismeretlen CSTP tartalomkódolás: %s\n"
 
-#: cstp.c:586
+#: cstp.c:585
 msgid "No MTU received. Aborting\n"
 msgstr "Nem érkezett MTU. Megszakítás\n"
 
-#: cstp.c:594 gpst.c:670
+#: cstp.c:593 gpst.c:673
 msgid "No IP address received. Aborting\n"
 msgstr "Nem érkezett IP-cím. Megszakítás\n"
 
-#: cstp.c:600
+#: cstp.c:599
 #, c-format
 msgid "IPv6 configuration received but MTU %d is too small.\n"
 msgstr "IPv6 beállítás érkezett, de a(z) %d MTU túl kicsi.\n"
 
-#: cstp.c:606 gpst.c:677
+#: cstp.c:605 gpst.c:680
 #, c-format
 msgid "Reconnect gave different Legacy IP address (%s != %s)\n"
 msgstr "Az újracsatlakozás eltérő örökölt IP-címet adott (%s != %s)\n"
 
-#: cstp.c:615 gpst.c:686
+#: cstp.c:614 gpst.c:689
 #, c-format
 msgid "Reconnect gave different Legacy IP netmask (%s != %s)\n"
 msgstr ""
 "Az újracsatlakozás eltérő örökölt IP hálózati maszkot adott (%s != %s)\n"
 
-#: cstp.c:623 gpst.c:695
+#: cstp.c:622 gpst.c:698
 #, c-format
 msgid "Reconnect gave different IPv6 address (%s != %s)\n"
 msgstr "Az újracsatlakozás eltérő IPv6-címet adott (%s != %s)\n"
 
-#: cstp.c:631 gpst.c:703
+#: cstp.c:630 gpst.c:706
 #, c-format
 msgid "Reconnect gave different IPv6 netmask (%s != %s)\n"
 msgstr "Az újracsatlakozás eltérő IPv6 hálózati maszkot adott (%s != %s)\n"
 
-#: cstp.c:639
+#: cstp.c:638
 #, c-format
 msgid "CSTP connected. DPD %d, Keepalive %d\n"
 msgstr "CSTP kapcsolódva. DPD %d, Keepalive %d\n"
 
-#: cstp.c:641
+#: cstp.c:640
 #, c-format
 msgid "CSTP Ciphersuite: %s\n"
 msgstr "CSTP titkosító alkalmazáscsomag: %s\n"
 
-#: cstp.c:703
+#: cstp.c:702
 msgid "Compression setup failed\n"
 msgstr "Tömörítés beállítás sikertelen\n"
 
-#: cstp.c:720
+#: cstp.c:719
 msgid "Allocation of deflate buffer failed\n"
 msgstr "A deflate puffer lefoglalása meghiúsult\n"
 
-#: cstp.c:782
+#: cstp.c:781
 msgid "inflate failed\n"
 msgstr "inflate meghiúsult\n"
 
-#: cstp.c:805
+#: cstp.c:804
 #, c-format
 msgid "LZS decompression failed: %s\n"
 msgstr "Az LZS kibontás meghiúsult: %s\n"
 
-#: cstp.c:818
+#: cstp.c:817
 msgid "LZ4 decompression failed\n"
 msgstr "Az LZ4 kibontás meghiúsult\n"
 
-#: cstp.c:825
+#: cstp.c:824
 #, c-format
 msgid "Unknown compression type %d\n"
 msgstr "Ismeretlen tömörítési típus: %d\n"
 
-#: cstp.c:830
+#: cstp.c:829
 #, c-format
 msgid "Received %s compressed data packet of %d bytes (was %d)\n"
 msgstr "%s / %d bájt tömörített adatcsomag érkezett (%d volt)\n"
 
-#: cstp.c:850
+#: cstp.c:849
 #, c-format
 msgid "deflate failed %d\n"
 msgstr "deflate meghiúsult: %d\n"
 
-#: cstp.c:923 dtls.c:281 dtls.c:690 esp.c:163 gpst.c:1096 mainloop.c:69
-#: oncp.c:914 pulse.c:2297
+#: cstp.c:922 dtls.c:281 dtls.c:690 esp.c:163 gpst.c:1106 mainloop.c:69
+#: oncp.c:916 pulse.c:2621
 msgid "Allocation failed\n"
 msgstr "A lefoglalás meghiúsult\n"
 
-#: cstp.c:934 gpst.c:1109 pulse.c:2309
+#: cstp.c:933 gpst.c:1119 pulse.c:2633
 #, c-format
 msgid "Short packet received (%d bytes)\n"
 msgstr "Rövid csomag érkezett (%d bájt)\n"
 
-#: cstp.c:947
+#: cstp.c:946
 #, c-format
 msgid "Unexpected packet length. SSL_read returned %d but packet is\n"
 msgstr ""
 "Váratlan csomaghossz. Az SSL_read visszatérési értéke %d, de a csomag\n"
 
-#: cstp.c:961
+#: cstp.c:960
 msgid "Got CSTP DPD request\n"
 msgstr "CSTP DPD kérés érkezett\n"
 
-#: cstp.c:967
+#: cstp.c:966
 msgid "Got CSTP DPD response\n"
 msgstr "CSTP DPD válasz érkezett\n"
 
-#: cstp.c:972
+#: cstp.c:971
 msgid "Got CSTP Keepalive\n"
 msgstr "CSTP Keepalive érkezett\n"
 
-#: cstp.c:977 oncp.c:1003
+#: cstp.c:976 oncp.c:1005
 #, c-format
 msgid "Received uncompressed data packet of %d bytes\n"
 msgstr "%d bájt tömörítetlen adatcsomag érkezett\n"
 
-#: cstp.c:994
+#: cstp.c:993
 #, c-format
 msgid "Received server disconnect: %02x '%s'\n"
 msgstr "Kiszolgáló leválasztás érkezett: %02x „%s”\n"
 
-#: cstp.c:997
+#: cstp.c:996
 msgid "Received server disconnect\n"
 msgstr "Kiszolgáló leválasztás érkezett\n"
 
-#: cstp.c:1005
+#: cstp.c:1004
 msgid "Compressed packet received in !deflate mode\n"
 msgstr "Tömörített csomag érkezett !deflate módban\n"
 
-#: cstp.c:1014
+#: cstp.c:1013
 msgid "received server terminate packet\n"
 msgstr "kiszolgáló megszakítás csomag érkezett\n"
 
-#: cstp.c:1021
+#: cstp.c:1020
 #, c-format
 msgid "Unknown packet %02x %02x %02x %02x %02x %02x %02x %02x\n"
 msgstr "Ismeretlen csomag: %02x %02x %02x %02x %02x %02x %02x %02x\n"
 
-#: cstp.c:1064 gpst.c:1197 oncp.c:1121 pulse.c:2452
+#: cstp.c:1063 gpst.c:1208 oncp.c:1129 pulse.c:2776
 #, c-format
 msgid "SSL wrote too few bytes! Asked for %d, sent %d\n"
 msgstr "Az SSL túl kevés bájtot írt! %d volt a kérés, %d lett elküldve\n"
 
 #. Not that this will ever happen; we don't even process
 #. the setting when we're asked for it.
-#: cstp.c:1092 oncp.c:1156 pulse.c:2479
+#: cstp.c:1091 oncp.c:1164 pulse.c:2803
 msgid "CSTP rekey due\n"
 msgstr "CSTP kulcsmegújítás esedékes\n"
 
 #. if we failed rehandshake try establishing a new-tunnel instead of failing
-#: cstp.c:1099 oncp.c:1163 pulse.c:2486
+#: cstp.c:1098 oncp.c:1171 pulse.c:2810
 msgid "Rehandshake failed; attempting new-tunnel\n"
 msgstr "Újra kézfogás sikertelen, új alagút kísérlete\n"
 
-#: cstp.c:1110 oncp.c:1174 pulse.c:2497
+#: cstp.c:1109 oncp.c:1182 pulse.c:2821
 msgid "CSTP Dead Peer Detection detected dead peer!\n"
 msgstr "A CSTP halott csomópont felderítés halott csomópontot észlelt!\n"
 
-#: cstp.c:1114 gpst.c:1221 oncp.c:1091 oncp.c:1178 pulse.c:2422 pulse.c:2502
+#: cstp.c:1113 gpst.c:1232 oncp.c:1099 oncp.c:1186 pulse.c:2746 pulse.c:2826
 msgid "Reconnect failed\n"
 msgstr "Újracsatlakozás sikertelen\n"
 
-#: cstp.c:1130 oncp.c:1194 pulse.c:2518
+#: cstp.c:1129 oncp.c:1202 pulse.c:2842
 msgid "Send CSTP DPD\n"
 msgstr "CSTP DPD küldése\n"
 
-#: cstp.c:1142 oncp.c:1205 pulse.c:2530
+#: cstp.c:1141 oncp.c:1213 pulse.c:2854
 msgid "Send CSTP Keepalive\n"
 msgstr "CSTP Keepalive küldése\n"
 
-#: cstp.c:1167
+#: cstp.c:1166
 #, c-format
 msgid "Sending compressed data packet of %d bytes (was %d)\n"
 msgstr "%d bájt tömörített adatcsomag küldése (%d volt)\n"
 
-#: cstp.c:1178 oncp.c:1239
+#: cstp.c:1177 oncp.c:1247
 #, c-format
 msgid "Sending uncompressed data packet of %d bytes\n"
 msgstr "%d bájt tömörítetlen adatcsomag küldése\n"
@@ -640,6 +644,10 @@ msgstr "%d bájt tömörítetlen adatcsomag küldése\n"
 #, c-format
 msgid "Send BYE packet: %s\n"
 msgstr "BYE csomag küldése: %s\n"
+
+#: cstp.c:1224
+msgid "Short write writing BYE packet\n"
+msgstr ""
 
 #: digest.c:252
 msgid "Attempting Digest authentication to proxy\n"
@@ -741,7 +749,7 @@ msgstr "DTLS Keepalive küldése\n"
 msgid "Failed to send keepalive request. Expect disconnect\n"
 msgstr "Nem sikerült az életben tartás kérés küldése. Leválasztás várható\n"
 
-#: dtls.c:432 tun.c:541
+#: dtls.c:432 tun.c:545
 #, c-format
 msgid "Unknown packet (len %d) received: %02x %02x %02x %02x...\n"
 msgstr "Ismeretlen csomag (hossz: %d) érkezett: %02x %02x %02x %02x…\n"
@@ -1107,530 +1115,534 @@ msgstr "Az ESP csomag titkosításának feloldása sikertelen: %s\n"
 msgid "Failed to encrypt ESP packet: %s\n"
 msgstr "Az ESP csomag titkosítása sikertelen: %s\n"
 
-#: gnutls.c:95 openssl.c:154
+#: gnutls.c:95 gnutls.c:149 gnutls.c:246 gnutls.c:2300
+msgid "Failed select() for TLS"
+msgstr ""
+
+#: gnutls.c:99 openssl.c:154
 msgid "SSL write cancelled\n"
 msgstr "SSL írás megszakítva\n"
 
-#: gnutls.c:99
+#: gnutls.c:103
 #, c-format
 msgid "Failed to write to SSL socket: %s\n"
 msgstr "Nem sikerült írni az SSL foglalatba: %s\n"
 
-#: gnutls.c:145 gnutls.c:237 openssl.c:204 openssl.c:271
+#: gnutls.c:154 gnutls.c:250 openssl.c:204 openssl.c:271
 msgid "SSL read cancelled\n"
 msgstr "SSL olvasás megszakítva\n"
 
 #. We've seen this with HTTP 1.0 responses followed by abrupt
 #. socket closure and no clean SSL shutdown.
 #. https://bugs.launchpad.net/bugs/1225276
-#: gnutls.c:158
+#: gnutls.c:167
 msgid "SSL socket closed uncleanly\n"
 msgstr "Az SSL foglalat nem tisztán záródott be\n"
 
-#: gnutls.c:168 gnutls.c:246
+#: gnutls.c:177 gnutls.c:259
 #, c-format
 msgid "Failed to read from SSL socket: %s\n"
 msgstr "Nem sikerült olvasni az SSL foglalatból: %s\n"
 
-#: gnutls.c:266
+#: gnutls.c:279
 #, c-format
 msgid "SSL read error: %s; reconnecting.\n"
 msgstr "SSL olvasási hiba: %s; újracsatlakozás.\n"
 
-#: gnutls.c:302
+#: gnutls.c:315
 #, c-format
 msgid "SSL send failed: %s\n"
 msgstr "SSL küldés sikertelen: %s\n"
 
-#: gnutls.c:315
+#: gnutls.c:328
 msgid "Could not extract expiration time of certificate\n"
 msgstr "Nem sikerült kinyerni a tanúsítvány lejárati idejét\n"
 
-#: gnutls.c:320 openssl.c:1592
+#: gnutls.c:333 openssl.c:1602
 msgid "Client certificate has expired at"
 msgstr "A kliens tanúsítvány érvényessége lejárt"
 
-#: gnutls.c:322 openssl.c:1597
+#: gnutls.c:335 openssl.c:1607
 msgid "Client certificate expires soon at"
 msgstr "A kliens tanúsítvány hamarosan lejár"
 
-#: gnutls.c:371 openssl.c:771
+#: gnutls.c:384 openssl.c:776
 #, c-format
 msgid "Failed to load item '%s' from keystore: %s\n"
 msgstr ""
 "Nem sikerült betölteni a(z) „%s” elemet a következő kulcstartóról: %s\n"
 
-#: gnutls.c:384
+#: gnutls.c:397
 #, c-format
 msgid "Failed to open key/certificate file %s: %s\n"
 msgstr "Nem sikerült a(z) %s kulcs/tanúsítvány fájl megnyitása: %s\n"
 
-#: gnutls.c:391
+#: gnutls.c:404
 #, c-format
 msgid "Failed to stat key/certificate file %s: %s\n"
 msgstr "Nem sikerült a(z) %s kulcs/tanúsítvány fájl elérése: %s\n"
 
-#: gnutls.c:400
+#: gnutls.c:413
 msgid "Failed to allocate certificate buffer\n"
 msgstr "Nem sikerült lefoglalni a tanúsítvány puffert\n"
 
-#: gnutls.c:408
+#: gnutls.c:421
 #, c-format
 msgid "Failed to read certificate into memory: %s\n"
 msgstr "Nem sikerült a tanúsítvány beolvasása a memóriába: %s\n"
 
-#: gnutls.c:439
+#: gnutls.c:452
 #, c-format
 msgid "Failed to setup PKCS#12 data structure: %s\n"
 msgstr "Nem sikerült beállítani a PKCS#12 adatszerkezetet: %s\n"
 
-#: gnutls.c:462 openssl.c:534
+#: gnutls.c:475 openssl.c:534
 msgid "Failed to decrypt PKCS#12 certificate file\n"
 msgstr "Nem sikerült visszafejteni a PKCS#12 tanúsítvány fájlt\n"
 
-#: gnutls.c:466 openssl.c:537
+#: gnutls.c:479 openssl.c:537
 msgid "Enter PKCS#12 pass phrase:"
 msgstr "PKCS#12 jelmondat megadása:"
 
-#: gnutls.c:489
+#: gnutls.c:502
 #, c-format
 msgid "Failed to process PKCS#12 file: %s\n"
 msgstr "Nem sikerült feldolgozni a PKCS#12 fájlt: %s\n"
 
-#: gnutls.c:501
+#: gnutls.c:514
 #, c-format
 msgid "Failed to load PKCS#12 certificate: %s\n"
 msgstr "Nem sikerült betölteni a PKCS#12 tanúsítványt: %s\n"
 
-#: gnutls.c:584
+#: gnutls.c:597
 #, c-format
 msgid "Importing X509 certificate failed: %s\n"
 msgstr "Az X509 tanúsítvány importálása nem sikerült: %s\n"
 
-#: gnutls.c:594
+#: gnutls.c:607
 #, c-format
 msgid "Setting PKCS#11 certificate failed: %s\n"
 msgstr "A PKCS#11 tanúsítvány beállítása nem sikerült: %s\n"
 
-#: gnutls.c:628
+#: gnutls.c:641
 #, c-format
 msgid "Could not initialise MD5 hash: %s\n"
 msgstr "Nem sikerült az MD5 hash előkészítése: %s\n"
 
-#: gnutls.c:638
+#: gnutls.c:651
 #, c-format
 msgid "MD5 hash error: %s\n"
 msgstr "MD5 hash hiba: %s\n"
 
-#: gnutls.c:696
+#: gnutls.c:709
 msgid "Missing DEK-Info: header from OpenSSL encrypted key\n"
 msgstr "Hiányzó DEK-Info: fejléc a titkosított OpenSSL kulcsból\n"
 
-#: gnutls.c:703
+#: gnutls.c:716
 msgid "Cannot determine PEM encryption type\n"
 msgstr "Nem lehet meghatározni a PEM titkosítás típusát\n"
 
-#: gnutls.c:716
+#: gnutls.c:729
 #, c-format
 msgid "Unsupported PEM encryption type: %s\n"
 msgstr "Nem támogatott PEM titkosítási típus: %s\n"
 
-#: gnutls.c:741 gnutls.c:754
+#: gnutls.c:754 gnutls.c:767
 msgid "Invalid salt in encrypted PEM file\n"
 msgstr "Érvénytelen só a titkosított PEM fájlban\n"
 
-#: gnutls.c:778
+#: gnutls.c:791
 #, c-format
 msgid "Error base64-decoding encrypted PEM file: %s\n"
 msgstr "Hiba a base64 dekódolt titkosított PEM fájlban: %s\n"
 
-#: gnutls.c:786
+#: gnutls.c:799
 msgid "Encrypted PEM file too short\n"
 msgstr "A titkosított PEM fájl túl rövid\n"
 
-#: gnutls.c:814
+#: gnutls.c:827
 #, c-format
 msgid "Failed to initialise cipher for decrypting PEM file: %s\n"
 msgstr ""
 "Nem sikerült a titkosító előkészítése a PEM fájl visszafejtéséhez: %s\n"
 
-#: gnutls.c:825
+#: gnutls.c:838
 #, c-format
 msgid "Failed to decrypt PEM key: %s\n"
 msgstr "Nem sikerült visszafejteni a PEM kulcsot: %s\n"
 
-#: gnutls.c:877
+#: gnutls.c:890
 msgid "Decrypting PEM key failed\n"
 msgstr "A PEM kulcs visszafejtése nem sikerült\n"
 
-#: gnutls.c:881 gnutls.c:1406 openssl.c:458
+#: gnutls.c:894 gnutls.c:1409 openssl.c:458
 msgid "Enter PEM pass phrase:"
 msgstr "PEM jelmondat megadása:"
 
-#: gnutls.c:942
+#: gnutls.c:966
 msgid "This binary built without system key support\n"
 msgstr "Ez a program rendszerkulcs támogatás nélkül készült\n"
 
-#: gnutls.c:949
+#: gnutls.c:973
 msgid "This binary built without PKCS#11 support\n"
 msgstr "Ez a program PKCS#11 támogatás nélkül készült\n"
 
-#: gnutls.c:993 openssl-pkcs11.c:407
+#: gnutls.c:1017 openssl-pkcs11.c:411
 #, c-format
 msgid "Using PKCS#11 certificate %s\n"
 msgstr "A következő PKCS#11 tanúsítvány használata: %s\n"
 
-#: gnutls.c:994
+#: gnutls.c:1018
 #, c-format
 msgid "Using system certificate %s\n"
 msgstr "Rendszertanúsítvány használata: %s\n"
 
-#: gnutls.c:1012
+#: gnutls.c:1036
 #, c-format
 msgid "Error loading certificate from PKCS#11: %s\n"
 msgstr "Hiba a tanúsítvány betöltésekor a PKCS#11 fájlból: %s\n"
 
-#: gnutls.c:1013
+#: gnutls.c:1037
 #, c-format
 msgid "Error loading system certificate: %s\n"
 msgstr "Hiba a rendszertanúsítvány betöltésekor: %s\n"
 
-#: gnutls.c:1024 openssl.c:827
+#: gnutls.c:1048 openssl.c:832
 #, c-format
 msgid "Using certificate file %s\n"
 msgstr "A következő tanúsítványfájl használata: %s\n"
 
-#: gnutls.c:1052
+#: gnutls.c:1076
 msgid "PKCS#11 file contained no certificate\n"
 msgstr "A PKCS#11 fájl nem tartalmazott tanúsítványt\n"
 
-#: gnutls.c:1078
+#: gnutls.c:1102
 msgid "No certificate found in file"
 msgstr "Nem található tanúsítvány a fájlban"
 
-#: gnutls.c:1083
+#: gnutls.c:1107
 #, c-format
 msgid "Loading certificate failed: %s\n"
 msgstr "A tanúsítvány betöltése nem sikerült: %s\n"
 
-#: gnutls.c:1099
+#: gnutls.c:1123
 #, c-format
 msgid "Using system key %s\n"
 msgstr "Rendszerkulcs használata: %s\n"
 
-#: gnutls.c:1104 gnutls.c:1272
+#: gnutls.c:1128 gnutls.c:1275
 #, c-format
 msgid "Error initialising private key structure: %s\n"
 msgstr "Hiba a személyes kulcs szerkezet előkészítésekor: %s\n"
 
-#: gnutls.c:1115
+#: gnutls.c:1139
 #, c-format
 msgid "Error importing system key %s: %s\n"
 msgstr "Hiba a(z) %s rendszerkulcs importálásakor: %s\n"
 
-#: gnutls.c:1126 gnutls.c:1220 gnutls.c:1248
+#: gnutls.c:1150 gnutls.c:1223 gnutls.c:1251
 #, c-format
 msgid "Trying PKCS#11 key URL %s\n"
 msgstr "A(z) %s PKCS#11 kulcs URL próbája\n"
 
-#: gnutls.c:1131
+#: gnutls.c:1155
 #, c-format
 msgid "Error initialising PKCS#11 key structure: %s\n"
 msgstr "Hiba a PKCS#11 kulcs szerkezet előkészítésekor: %s\n"
 
-#: gnutls.c:1260
+#: gnutls.c:1263
 #, c-format
 msgid "Error importing PKCS#11 URL %s: %s\n"
 msgstr "Hiba a(z) %s PKCS#11 URL importálásakor: %s\n"
 
-#: gnutls.c:1267 openssl-pkcs11.c:644
+#: gnutls.c:1270 openssl-pkcs11.c:648
 #, c-format
 msgid "Using PKCS#11 key %s\n"
 msgstr "A következő PKCS#11 kulcs használata: %s\n"
 
-#: gnutls.c:1282
+#: gnutls.c:1285
 #, c-format
 msgid "Error importing PKCS#11 key into private key structure: %s\n"
 msgstr ""
 "Hiba a PKCS#11 kulcs importálásakor a személyes kulcs szerkezetbe: %s\n"
 
-#: gnutls.c:1300
+#: gnutls.c:1303
 #, c-format
 msgid "Using private key file %s\n"
 msgstr "A következő személyes kulcs fájl használata: %s\n"
 
-#: gnutls.c:1311 openssl.c:651
+#: gnutls.c:1314 openssl.c:656
 msgid "This version of OpenConnect was built without TPM support\n"
 msgstr "Az OpenConnect ezen verziója TPM támogatás nélkül készült\n"
 
-#: gnutls.c:1327
+#: gnutls.c:1330
 msgid "This version of OpenConnect was built without TPM2 support\n"
 msgstr "Az OpenConnect ezen verziója TPM2 támogatás nélkül készült\n"
 
-#: gnutls.c:1348
+#: gnutls.c:1351
 msgid "Failed to interpret PEM file\n"
 msgstr "Nem sikerült értelmezni a PEM fájlt\n"
 
-#: gnutls.c:1367
+#: gnutls.c:1370
 #, c-format
 msgid "Failed to load PKCS#1 private key: %s\n"
 msgstr "Nem sikerült betölteni a PKCS#1 személyes kulcsot: %s\n"
 
-#: gnutls.c:1380 gnutls.c:1394
+#: gnutls.c:1383 gnutls.c:1397
 #, c-format
 msgid "Failed to load private key as PKCS#8: %s\n"
 msgstr "Nem sikerült betölteni a személyes kulcsot PKCS#8-ként: %s\n"
 
-#: gnutls.c:1402 gnutls.c:1435 openssl.c:1002 openssl.c:1012
+#: gnutls.c:1405 gnutls.c:1438 openssl.c:1008 openssl.c:1018
 msgid "Failed to decrypt PKCS#8 certificate file\n"
 msgstr "Nem sikerült visszafejteni a PKCS#8 tanúsítvány fájlt\n"
 
-#: gnutls.c:1427
+#: gnutls.c:1430
 #, c-format
 msgid "Failed to determine type of private key %s\n"
 msgstr "Nem sikerült meghatározni a személyes kulcs típusát: %s\n"
 
-#: gnutls.c:1439 openssl.c:1008
+#: gnutls.c:1442 openssl.c:1014
 msgid "Enter PKCS#8 pass phrase:"
 msgstr "PKCS#8 jelmondat megadása:"
 
-#: gnutls.c:1455
+#: gnutls.c:1458
 #, c-format
 msgid "Failed to get key ID: %s\n"
 msgstr "Nem sikerült lekérni a kulcsazonosítót: %s\n"
 
-#: gnutls.c:1500
+#: gnutls.c:1503
 #, c-format
 msgid "Error signing test data with private key: %s\n"
 msgstr "Hiba a tesztadatok aláírásakor a személyes kulccsal: %s\n"
 
-#: gnutls.c:1515
+#: gnutls.c:1518
 #, c-format
 msgid "Error validating signature against certificate: %s\n"
 msgstr "Hiba az aláírás hitelesítésekor a tanúsítvány ellenében: %s\n"
 
-#: gnutls.c:1540
+#: gnutls.c:1543
 msgid "No SSL certificate found to match private key\n"
 msgstr "Nem található SSL tanúsítvány a személyes kulcs egyezésére\n"
 
-#: gnutls.c:1552 openssl.c:560 openssl.c:709
+#: gnutls.c:1555 openssl.c:560 openssl.c:714
 #, c-format
 msgid "Using client certificate '%s'\n"
 msgstr "A következő klienstanúsítvány használata: „%s”\n"
 
-#: gnutls.c:1559
+#: gnutls.c:1562
 #, c-format
 msgid "Setting certificate revocation list failed: %s\n"
 msgstr "A tanúsítvány visszavonási lista beállítása nem sikerült: %s\n"
 
-#: gnutls.c:1580 gnutls.c:1590
+#: gnutls.c:1583 gnutls.c:1593
 msgid "Failed to allocate memory for certificate\n"
 msgstr "Nem sikerült memóriát lefoglalni a tanúsítványhoz\n"
 
-#: gnutls.c:1626
+#: gnutls.c:1629
 msgid ""
 "WARNING: GnuTLS returned incorrect issuer certs; authentication may fail!\n"
 msgstr ""
 "FIGYELEM: a GnuTLS helytelen kibocsátó tanúsítványokkal tért vissza; a "
 "hitelesítés meghiúsulhat!\n"
 
-#: gnutls.c:1649
+#: gnutls.c:1652
 msgid "Got no issuer from PKCS#11\n"
 msgstr "Nem kapott kibocsátót a PKCS#11-ből\n"
 
-#: gnutls.c:1654
+#: gnutls.c:1657
 #, c-format
 msgid "Got next CA '%s' from PKCS11\n"
 msgstr "A következő „%s” CA lekérve a PKCS11-ből\n"
 
-#: gnutls.c:1680
+#: gnutls.c:1683
 msgid "Failed to allocate memory for supporting certificates\n"
 msgstr "Nem sikerült memóriát lefoglalni a tanúsítványok támogatásához\n"
 
-#: gnutls.c:1703
+#: gnutls.c:1706
 #, c-format
 msgid "Adding supporting CA '%s'\n"
 msgstr "Támogatott CA hozzáadása: „%s”\n"
 
-#: gnutls.c:1725
+#: gnutls.c:1728
 msgid "Private key appears not to support RSA-PSS. Disabling TLSv1.3\n"
 msgstr ""
 "A privát kulcs úgy tűnik, hogy nem támogatja az RSA-PSS-t. A TLSv1.3 "
 "letiltása\n"
 
-#: gnutls.c:1749
+#: gnutls.c:1752
 #, c-format
 msgid "Setting certificate failed: %s\n"
 msgstr "A tanúsítvány beállítása nem sikerült: %s\n"
 
-#: gnutls.c:1942
+#: gnutls.c:1945
 msgid "Server presented no certificate\n"
 msgstr "A kiszolgáló nem mutatott be tanúsítványt\n"
 
-#: gnutls.c:1950
+#: gnutls.c:1953
 #, c-format
 msgid "Error comparing server's cert on rehandshake: %s\n"
 msgstr ""
 "Hiba a kiszolgáló tanúsítványának újbóli kézfogáskor történő "
 "összehasonlításakor: %s\n"
 
-#: gnutls.c:1955 openssl.c:1515
+#: gnutls.c:1958 openssl.c:1525
 msgid "Server presented different cert on rehandshake\n"
 msgstr ""
 "A kiszolgáló különböző tanúsítványt mutatott be az újbóli kézfogáskor\n"
 
-#: gnutls.c:1960 openssl.c:1518
+#: gnutls.c:1963 openssl.c:1528
 msgid "Server presented identical cert on rehandshake\n"
 msgstr "A kiszolgáló azonos tanúsítványt mutatott be az újbóli kézfogáskor\n"
 
-#: gnutls.c:1966
+#: gnutls.c:1969
 msgid "Error initialising X509 cert structure\n"
 msgstr "Hiba az X509 tanúsítvány szerkezet előkészítésekor\n"
 
-#: gnutls.c:1972
+#: gnutls.c:1975
 msgid "Error importing server's cert\n"
 msgstr "Hiba a kiszolgáló tanúsítványának importálásakor\n"
 
-#: gnutls.c:1981 main.c:1794
+#: gnutls.c:1984 main.c:1794
 msgid "Could not calculate hash of server's certificate\n"
 msgstr "Nem sikerült kiszámolni a kiszolgáló tanúsítványának hash értékét\n"
 
-#: gnutls.c:1986
+#: gnutls.c:1989
 msgid "Error checking server cert status\n"
 msgstr "Hiba a kiszolgáló tanúsítványállapotának ellenőrzésekor\n"
 
-#: gnutls.c:1991
+#: gnutls.c:1994
 msgid "certificate revoked"
 msgstr "tanúsítvány visszavonva"
 
-#: gnutls.c:1993
+#: gnutls.c:1996
 msgid "signer not found"
 msgstr "aláíró nem található"
 
-#: gnutls.c:1995
+#: gnutls.c:1998
 msgid "signer not a CA certificate"
 msgstr "az aláíró nem hitelesítésszolgáltatói tanúsítvány"
 
-#: gnutls.c:1997
+#: gnutls.c:2000
 msgid "insecure algorithm"
 msgstr "nem biztonságos algoritmus"
 
-#: gnutls.c:1999
+#: gnutls.c:2002
 msgid "certificate not yet activated"
 msgstr "a tanúsítvány még nincs aktiválva"
 
-#: gnutls.c:2001
+#: gnutls.c:2004
 msgid "certificate expired"
 msgstr "a tanúsítvány lejárt"
 
 #. If this is set and no other reason, it apparently means
 #. that signature verification failed. Not entirely sure
 #. why we don't just set a bit for that too.
-#: gnutls.c:2006
+#: gnutls.c:2009
 msgid "signature verification failed"
 msgstr "az aláírás ellenőrzése sikertelen"
 
-#: gnutls.c:2055 openssl.c:1399 openssl.c:1551
+#: gnutls.c:2058 openssl.c:1405 openssl.c:1561
 msgid "certificate does not match hostname"
 msgstr "a tanúsítvány nem egyezik a gépnévvel"
 
-#: gnutls.c:2060 openssl.c:1398 openssl.c:1557
+#: gnutls.c:2063 openssl.c:1404 openssl.c:1567
 #, c-format
 msgid "Server certificate verify failed: %s\n"
 msgstr "A kiszolgáló tanúsítványának ellenőrzése meghiúsult: %s\n"
 
-#: gnutls.c:2127
+#: gnutls.c:2130
 msgid "Failed to allocate memory for cafile certs\n"
 msgstr ""
 "Nem sikerült memóriát lefoglalni a hitelesítés-szolgáltató fájl "
 "tanúsítványokhoz\n"
 
-#: gnutls.c:2148
+#: gnutls.c:2151
 #, c-format
 msgid "Failed to read certs from cafile: %s\n"
 msgstr ""
 "Nem sikerült a tanúsítványok olvasása a hitelesítés-szolgáltató fájlból: "
 "„%s”\n"
 
-#: gnutls.c:2164
+#: gnutls.c:2167
 #, c-format
 msgid "Failed to open CA file '%s': %s\n"
 msgstr "Nem sikerült megnyitni a(z) „%s” CA fájlt: %s\n"
 
-#: gnutls.c:2177 openssl.c:1679
+#: gnutls.c:2180 openssl.c:1689
 msgid "Loading certificate failed. Aborting.\n"
 msgstr "A tanúsítvány betöltése nem sikerült. Megszakítás.\n"
 
-#: gnutls.c:2238
+#: gnutls.c:2241
 #, c-format
 msgid "Failed to set TLS priority string (\"%s\"): %s\n"
 msgstr "A TLS prioritás szöveg („%s”) beállítása sikertelen: %s\n"
 
-#: gnutls.c:2250 openssl.c:1796
+#: gnutls.c:2253 openssl.c:1806
 #, c-format
 msgid "SSL negotiation with %s\n"
 msgstr "SSL egyeztetés ezzel: %s\n"
 
-#: gnutls.c:2297 openssl.c:1822
+#: gnutls.c:2304 openssl.c:1832
 msgid "SSL connection cancelled\n"
 msgstr "Az SSL kapcsolat megszakítva\n"
 
-#: gnutls.c:2304
+#: gnutls.c:2311
 #, c-format
 msgid "SSL connection failure: %s\n"
 msgstr "Az SSL kapcsolat meghiúsult: %s\n"
 
-#: gnutls.c:2313
+#: gnutls.c:2320
 #, c-format
 msgid "GnuTLS non-fatal return during handshake: %s\n"
 msgstr "Nem végzetes GnuTLS visszatérés a kézfogás közben: %s\n"
 
-#: gnutls.c:2319 openssl.c:1839
+#: gnutls.c:2326 openssl.c:1849
 #, c-format
 msgid "Connected to HTTPS on %s\n"
 msgstr "Kapcsolódva HTTPS-hez ezen: %s\n"
 
-#: gnutls.c:2322
+#: gnutls.c:2329
 #, c-format
 msgid "Renegotiated SSL on %s\n"
 msgstr "SSL újraegyeztetés ezen: %s\n"
 
-#: gnutls.c:2484 openssl-pkcs11.c:199
+#: gnutls.c:2491 openssl-pkcs11.c:203
 #, c-format
 msgid "PIN required for %s"
 msgstr "PIN-kód szükséges ehhez: %s"
 
-#: gnutls.c:2488 openssl-pkcs11.c:202
+#: gnutls.c:2495 openssl-pkcs11.c:206
 msgid "Wrong PIN"
 msgstr "Hibás PIN-kód"
 
-#: gnutls.c:2491
+#: gnutls.c:2498
 msgid "This is the final try before locking!"
 msgstr "Ez az utolsó próbálkozás a zárolás előtt!"
 
-#: gnutls.c:2493
+#: gnutls.c:2500
 msgid "Only a few tries left before locking!"
 msgstr "Már csak néhány próbálkozás van a zárolás előtt!"
 
-#: gnutls.c:2498 openssl-pkcs11.c:206
+#: gnutls.c:2505 openssl-pkcs11.c:210
 msgid "Enter PIN:"
 msgstr "Adja meg a PIN-kódot:"
 
-#: gnutls.c:2584 openssl.c:1969
+#: gnutls.c:2591 openssl.c:1979
 msgid "Unsupported OATH HMAC algorithm\n"
 msgstr "Nem támogatott OATH HMAC algoritmus\n"
 
-#: gnutls.c:2593
+#: gnutls.c:2600
 #, c-format
 msgid "Failed to calculate OATH HMAC: %s\n"
 msgstr "Nem sikerült az OATH HMAC kiszámítása: %s\n"
 
-#: gnutls.c:2607
+#: gnutls.c:2614
 #, c-format
 msgid "ttls_pull_timeout_func %dms\n"
 msgstr "ttls_pull_timeout_func %dms\n"
 
-#: gnutls.c:2650 openssl.c:2084
+#: gnutls.c:2657 openssl.c:2094
 msgid "Established EAP-TTLS session\n"
 msgstr "EAP-TTLS munkamenet kiépítve\n"
 
@@ -1716,7 +1728,7 @@ msgstr "Adja meg a TPM kulcs PIN-kódját:"
 msgid "Failed to set key PIN: %s\n"
 msgstr "Nem sikerült a kulcs PIN-kódjának beállítása: %s\n"
 
-#: gnutls_tpm2.c:92 gnutls_tpm2_esys.c:474 gnutls_tpm2_ibm.c:419
+#: gnutls_tpm2.c:92 gnutls_tpm2_esys.c:478 gnutls_tpm2_ibm.c:419
 #, c-format
 msgid "Unknown TPM2 EC digest size %d\n"
 msgstr ""
@@ -1769,140 +1781,140 @@ msgstr ""
 msgid "TPM2 digest too large: %d > %d\n"
 msgstr ""
 
-#: gnutls_tpm2_esys.c:173
+#: gnutls_tpm2_esys.c:175
 msgid "TPM2 password too long; truncating\n"
 msgstr "A TPM2 jelszó túl hosszú; csonkolás\n"
 
-#: gnutls_tpm2_esys.c:189
+#: gnutls_tpm2_esys.c:193
 msgid "owner"
 msgstr "tulajdonos"
 
-#: gnutls_tpm2_esys.c:190
+#: gnutls_tpm2_esys.c:194
 msgid "null"
 msgstr "null"
 
-#: gnutls_tpm2_esys.c:191
+#: gnutls_tpm2_esys.c:195
 msgid "endorsement"
 msgstr ""
 
-#: gnutls_tpm2_esys.c:192
+#: gnutls_tpm2_esys.c:196
 msgid "platform"
 msgstr "platform"
 
-#: gnutls_tpm2_esys.c:196
+#: gnutls_tpm2_esys.c:200
 #, c-format
 msgid "Creating primary key under %s hierarchy.\n"
 msgstr "Elsődleges kulcs létrehozása a(z) %s hierarchia alatt.\n"
 
-#: gnutls_tpm2_esys.c:201 gnutls_tpm2_ibm.c:262
+#: gnutls_tpm2_esys.c:205 gnutls_tpm2_ibm.c:262
 #, c-format
 msgid "Enter TPM2 %s hierarchy password:"
 msgstr "Adja meg a(z) %s TPM2 hierarchia jelszavát:"
 
-#: gnutls_tpm2_esys.c:209 gnutls_tpm2_esys.c:303 gnutls_tpm2_esys.c:374
+#: gnutls_tpm2_esys.c:213 gnutls_tpm2_esys.c:307 gnutls_tpm2_esys.c:378
 #, c-format
 msgid "TPM2 Esys_TR_SetAuth failed: 0x%x\n"
 msgstr "TPM2 Esys_TR_SetAuth sikertelen: 0x%x\n"
 
-#: gnutls_tpm2_esys.c:221
+#: gnutls_tpm2_esys.c:225
 msgid "TPM2 Esys_CreatePrimary owner auth failed\n"
 msgstr "TPM2 Esys_CreatePrimary tulajdonos hitelesítése sikertelen\n"
 
-#: gnutls_tpm2_esys.c:226
+#: gnutls_tpm2_esys.c:230
 #, c-format
 msgid "TPM2 Esys_CreatePrimary failed: 0x%x\n"
 msgstr "TPM2 Esys_CreatePrimary sikertelen: 0x%x\n"
 
-#: gnutls_tpm2_esys.c:245
+#: gnutls_tpm2_esys.c:249
 msgid "Establishing connection with TPM.\n"
 msgstr "Kapcsolat kiépítése a TPM-mel.\n"
 
-#: gnutls_tpm2_esys.c:250
+#: gnutls_tpm2_esys.c:254
 #, c-format
 msgid "TPM2 Esys_Initialize failed: 0x%x\n"
 msgstr "TPM2 Esys_Initialize sikertelen: 0x%x\n"
 
-#: gnutls_tpm2_esys.c:258
+#: gnutls_tpm2_esys.c:262
 msgid ""
 "TPM2 was already started up thus false positive failing in tpm2tss log.\n"
 msgstr ""
 
-#: gnutls_tpm2_esys.c:261
+#: gnutls_tpm2_esys.c:265
 #, c-format
 msgid "TPM2 Esys_Startup failed: 0x%x\n"
 msgstr ""
 
-#: gnutls_tpm2_esys.c:274
+#: gnutls_tpm2_esys.c:278
 #, c-format
 msgid "Esys_TR_FromTPMPublic failed for handle 0x%x: 0x%x\n"
 msgstr ""
 
-#: gnutls_tpm2_esys.c:295 gnutls_tpm2_ibm.c:278
+#: gnutls_tpm2_esys.c:299 gnutls_tpm2_ibm.c:278
 msgid "Enter TPM2 parent key password:"
 msgstr ""
 
-#: gnutls_tpm2_esys.c:309
+#: gnutls_tpm2_esys.c:313
 #, c-format
 msgid "Loading TPM2 key blob, parent %x.\n"
 msgstr ""
 
-#: gnutls_tpm2_esys.c:317
+#: gnutls_tpm2_esys.c:321
 msgid "TPM2 Esys_Load auth failed\n"
 msgstr ""
 
-#: gnutls_tpm2_esys.c:323
+#: gnutls_tpm2_esys.c:327
 #, c-format
 msgid "TPM2 Esys_Load failed: 0x%x\n"
 msgstr ""
 
-#: gnutls_tpm2_esys.c:333
+#: gnutls_tpm2_esys.c:337
 #, c-format
 msgid "TPM2 Esys_FlushContext for generated primary failed: 0x%x\n"
 msgstr ""
 
-#: gnutls_tpm2_esys.c:363 gnutls_tpm2_ibm.c:363 gnutls_tpm2_ibm.c:450
+#: gnutls_tpm2_esys.c:367 gnutls_tpm2_ibm.c:363 gnutls_tpm2_ibm.c:450
 msgid "Enter TPM2 key password:"
 msgstr ""
 
-#: gnutls_tpm2_esys.c:395
+#: gnutls_tpm2_esys.c:399
 #, c-format
 msgid "TPM2 RSA sign function called for %d bytes.\n"
 msgstr ""
 
-#: gnutls_tpm2_esys.c:414
+#: gnutls_tpm2_esys.c:418
 msgid "TPM2 Esys_RSA_Decrypt auth failed\n"
 msgstr ""
 
-#: gnutls_tpm2_esys.c:420 gnutls_tpm2_esys.c:500
+#: gnutls_tpm2_esys.c:424 gnutls_tpm2_esys.c:504
 #, c-format
 msgid "TPM2 failed to generate RSA signature: 0x%x\n"
 msgstr ""
 
-#: gnutls_tpm2_esys.c:464 gnutls_tpm2_ibm.c:405
+#: gnutls_tpm2_esys.c:468 gnutls_tpm2_ibm.c:405
 #, c-format
 msgid "TPM2 EC sign function called for %d bytes.\n"
 msgstr ""
 
-#: gnutls_tpm2_esys.c:494
+#: gnutls_tpm2_esys.c:498
 msgid "TPM2 Esys_Sign auth failed\n"
 msgstr ""
 
-#: gnutls_tpm2_esys.c:532 gnutls_tpm2_ibm.c:485
+#: gnutls_tpm2_esys.c:536 gnutls_tpm2_ibm.c:485
 #, c-format
 msgid "Invalid TPM2 parent handle 0x%08x\n"
 msgstr ""
 
-#: gnutls_tpm2_esys.c:546 gnutls_tpm2_ibm.c:502
+#: gnutls_tpm2_esys.c:550 gnutls_tpm2_ibm.c:502
 #, c-format
 msgid "Failed to import TPM2 private key data: 0x%x\n"
 msgstr ""
 
-#: gnutls_tpm2_esys.c:555 gnutls_tpm2_ibm.c:512
+#: gnutls_tpm2_esys.c:559 gnutls_tpm2_ibm.c:512
 #, c-format
 msgid "Failed to import TPM2 public key data: 0x%x\n"
 msgstr ""
 
-#: gnutls_tpm2_esys.c:569 gnutls_tpm2_ibm.c:523
+#: gnutls_tpm2_esys.c:573 gnutls_tpm2_ibm.c:523
 #, c-format
 msgid "Unsupported TPM2 key type %d\n"
 msgstr ""
@@ -1922,55 +1934,55 @@ msgstr ""
 msgid "Challenge: %s\n"
 msgstr ""
 
-#: gpst.c:412
+#: gpst.c:414
 #, c-format
 msgid "Unknown ESP MAC algorithm: %s"
 msgstr ""
 
-#: gpst.c:420
+#: gpst.c:422
 #, c-format
 msgid "Unknown ESP encryption algorithm: %s"
 msgstr "Ismeretlen ESP titkosítási algoritmus: %s"
 
-#: gpst.c:486
+#: gpst.c:488
 #, c-format
 msgid "Session will expire after %d minutes.\n"
 msgstr ""
 
-#: gpst.c:489
+#: gpst.c:491
 #, c-format
 msgid "Idle timeout is %d minutes.\n"
 msgstr ""
 
-#: gpst.c:495
+#: gpst.c:497
 #, c-format
 msgid "Non-standard SSL tunnel path: %s\n"
 msgstr ""
 
-#: gpst.c:499
+#: gpst.c:501
 #, c-format
 msgid "Tunnel timeout (rekey interval) is %d minutes.\n"
 msgstr ""
 
-#: gpst.c:510
+#: gpst.c:512
 #, c-format
 msgid ""
 "Gateway address in config XML (%s) differs from external gateway address "
 "(%s).\n"
 msgstr ""
 
-#: gpst.c:564
+#: gpst.c:566
 #, c-format
 msgid "GlobalProtect config sent ipsec-mode=%s (expected esp-tunnel)\n"
 msgstr ""
 
-#: gpst.c:573 oncp.c:835
+#: gpst.c:575 oncp.c:837
 msgid "Ignoring ESP keys since ESP support not available in this build\n"
 msgstr ""
 "Az ESP kulcsok figyelmen kívül hagyása, mivel az ESP támogatás nem elérhető "
 "ebben a verzióban\n"
 
-#: gpst.c:591
+#: gpst.c:593
 #, c-format
 msgid ""
 "Potential IPv6-related GlobalProtect config tag <%s>: %s\n"
@@ -1979,46 +1991,46 @@ msgid ""
 "to <openconnect-devel@lists.infradead.org>.\n"
 msgstr ""
 
-#: gpst.c:596
+#: gpst.c:598
 #, c-format
 msgid "Unknown GlobalProtect config tag <%s>: %s\n"
 msgstr ""
 
-#: gpst.c:655
+#: gpst.c:658
 msgid "ESP disabled"
 msgstr ""
 
-#: gpst.c:657
+#: gpst.c:660
 msgid "No ESP keys received"
 msgstr ""
 
-#: gpst.c:659
+#: gpst.c:662
 msgid "ESP support not available in this build"
 msgstr ""
 
-#: gpst.c:663
+#: gpst.c:666
 #, c-format
 msgid "No MTU received. Calculated %d for %s%s\n"
 msgstr ""
 
-#: gpst.c:725
+#: gpst.c:728
 msgid "Connecting to HTTPS tunnel endpoint ...\n"
 msgstr ""
 
-#: gpst.c:747
+#: gpst.c:750
 msgid "Error fetching GET-tunnel HTTPS response.\n"
 msgstr ""
 
-#: gpst.c:756
+#: gpst.c:759
 msgid "Gateway disconnected immediately after GET-tunnel request.\n"
 msgstr ""
 
-#: gpst.c:764
+#: gpst.c:767
 #, c-format
 msgid "Got inappropriate HTTP GET-tunnel response: %.*s\n"
 msgstr ""
 
-#: gpst.c:909
+#: gpst.c:912
 #, c-format
 msgid ""
 "WARNING: Server asked us to submit HIP report with md5sum %s.\n"
@@ -2027,102 +2039,106 @@ msgid ""
 "script.\n"
 msgstr ""
 
-#: gpst.c:919
+#: gpst.c:922
 msgid ""
 "Error: Running the 'HIP Report' script on this platform is not yet "
 "implemented.\n"
 msgstr ""
 
-#: gpst.c:948
+#: gpst.c:951
 #, c-format
 msgid "HIP script '%s' exited abnormally\n"
 msgstr ""
 
-#: gpst.c:953
+#: gpst.c:956
 #, c-format
 msgid "HIP script '%s' returned non-zero status: %d\n"
 msgstr ""
 
-#: gpst.c:959
+#: gpst.c:962
 msgid "HIP report submission failed.\n"
 msgstr ""
 
-#: gpst.c:961
+#: gpst.c:964
 msgid "HIP report submitted successfully.\n"
 msgstr ""
 
-#: gpst.c:996
+#: gpst.c:999
 #, c-format
 msgid "Failed to exec HIP script %s\n"
 msgstr ""
 
-#: gpst.c:1020
+#: gpst.c:1023
 msgid "Gateway says HIP report submission is needed.\n"
 msgstr ""
 
-#: gpst.c:1026
+#: gpst.c:1029
 msgid "Gateway says no HIP report submission is needed.\n"
 msgstr ""
 
-#: gpst.c:1053
+#: gpst.c:1056
 msgid "ESP tunnel connected; exiting HTTPS mainloop.\n"
 msgstr ""
 
-#: gpst.c:1069
+#: gpst.c:1079
 msgid "Failed to connect ESP tunnel; using HTTPS instead.\n"
 msgstr ""
 
-#: gpst.c:1105
+#: gpst.c:1115
 #, c-format
 msgid "Packet receive error: %s\n"
 msgstr ""
 
-#: gpst.c:1126
+#: gpst.c:1136
 #, c-format
 msgid ""
 "Unexpected packet length. SSL_read returned %d (includes 16 header bytes) "
 "but header payload_len is %d\n"
 msgstr ""
 
-#: gpst.c:1136
+#: gpst.c:1146
 msgid "Got GPST DPD/keepalive response\n"
 msgstr ""
 
-#: gpst.c:1140
+#: gpst.c:1150
 msgid ""
 "Expected 0000000000000000 as last 8 bytes of DPD/keepalive packet header, "
 "but got:\n"
 msgstr ""
 
-#: gpst.c:1147
+#: gpst.c:1157
 #, c-format
 msgid "Received IPv%d data packet of %d bytes\n"
 msgstr ""
 
-#: gpst.c:1156
+#: gpst.c:1162
 msgid ""
 "Expected 0100000000000000 as last 8 bytes of data packet header, but got:\n"
 msgstr ""
 
-#: gpst.c:1164
+#: gpst.c:1175
 msgid "Unknown packet. Header dump follows:\n"
 msgstr ""
 
-#: gpst.c:1212
+#: gpst.c:1223
 msgid "GlobalProtect rekey due\n"
 msgstr ""
 
-#: gpst.c:1217
+#: gpst.c:1228
 msgid "GPST Dead Peer Detection detected dead peer!\n"
 msgstr ""
 
-#: gpst.c:1237
+#: gpst.c:1248
 msgid "Send GPST DPD/keepalive request\n"
 msgstr ""
 
-#: gpst.c:1260
+#: gpst.c:1271
 #, c-format
 msgid "Sending IPv%d data packet of %d bytes\n"
+msgstr ""
+
+#: gpst.c:1362 oncp.c:1321
+msgid "Failed to send ESP probe\n"
 msgstr ""
 
 #: gssapi.c:75
@@ -2227,7 +2243,7 @@ msgstr "Alap HTML hitelesítési kísérlet a proxyra\n"
 msgid "Attempting HTTP Basic authentication to server '%s'\n"
 msgstr "Alap HTML hitelesítési kísérlet a kiszolgálóra: „%s”\n"
 
-#: http-auth.c:200 http.c:1201
+#: http-auth.c:200 http.c:1315
 msgid "This version of OpenConnect was built without GSSAPI support\n"
 msgstr "Az OpenConnect ezen verziója GSSAPI támogatás nélkül készült\n"
 
@@ -2248,243 +2264,258 @@ msgstr ""
 msgid "No more authentication methods to try\n"
 msgstr "Nincs több kipróbálható hitelesítési eljárás\n"
 
-#: http.c:321
+#: http.c:324
 msgid "No memory for allocating cookies\n"
 msgstr "Nincs memória a sütik lefoglalásához\n"
 
-#: http.c:396
+#: http.c:451 http.c:477
+#, c-format
+msgid "Error reading HTTP response: %s\n"
+msgstr ""
+
+#: http.c:462
 #, c-format
 msgid "Failed to parse HTTP response '%s'\n"
 msgstr "Nem sikerült feldolgozni a következő HTTP választ: „%s”\n"
 
-#: http.c:402
+#: http.c:468
 #, c-format
 msgid "Got HTTP response: %s\n"
 msgstr "HTTP válasz érkezett: %s\n"
 
-#: http.c:410
-msgid "Error processing HTTP response\n"
-msgstr "Hiba a HTTP válasz feldolgozásakor\n"
-
-#: http.c:417
+#: http.c:493
 #, c-format
 msgid "Ignoring unknown HTTP response line '%s'\n"
 msgstr "Ismeretlen HTTP válasz sor mellőzése: „%s”\n"
 
-#: http.c:437
+#: http.c:512
 #, c-format
 msgid "Invalid cookie offered: %s\n"
 msgstr "Érvénytelen sütit ajánlottak: %s\n"
 
-#: http.c:457
+#: http.c:532
 msgid "SSL certificate authentication failed\n"
 msgstr "Az SSL tanúsítvány hitelesítése nem sikerült\n"
 
-#: http.c:492
+#: http.c:565
 #, c-format
 msgid "Response body has negative size (%d)\n"
 msgstr "A választörzsnek negatív mérete van (%d)\n"
 
-#: http.c:503
+#: http.c:576
 #, c-format
 msgid "Unknown Transfer-Encoding: %s\n"
 msgstr "Ismeretlen átviteli kódolás: %s\n"
 
 #. Now the body, if there is one
-#: http.c:522
+#: http.c:597
 #, c-format
 msgid "HTTP body %s (%d)\n"
 msgstr "HTTP törzs %s (%d)\n"
 
-#: http.c:538 http.c:568
+#: http.c:613 http.c:657
 msgid "Error reading HTTP response body\n"
 msgstr "Hiba a HTTP válasz törzsének olvasásakor\n"
 
-#: http.c:551
+#: http.c:628
 msgid "Error fetching chunk header\n"
 msgstr "Hiba a fejléc darabjának lekérésekor\n"
 
-#: http.c:579
+#: http.c:639
+#, c-format
+msgid "HTTP chunk length is negative (%ld)\n"
+msgstr ""
+
+#: http.c:645
+#, c-format
+msgid "HTTP chunk length is too large (%ld)\n"
+msgstr ""
+
+#: http.c:668
 msgid "Error fetching HTTP response body\n"
 msgstr "Hiba a HTTP válasz törzsének lekérésekor\n"
 
-#: http.c:582
+#: http.c:672
 #, c-format
 msgid "Error in chunked decoding. Expected '', got: '%s'"
 msgstr "Hiba a darabolt dekódolásban. „” várt, „%s” érkezett"
 
-#: http.c:595
+#: http.c:685
 msgid "Cannot receive HTTP 1.0 body without closing connection\n"
 msgstr "Nem fogadható HTTP 1.0 törzs a kapcsolat lezárása nélkül\n"
 
-#: http.c:724
+#: http.c:818
 #, c-format
 msgid "Failed to parse redirected URL '%s': %s\n"
 msgstr "Nem sikerült feldolgozni az átirányított „%s” URL-t: %s\n"
 
-#: http.c:748
+#: http.c:842
 #, c-format
 msgid "Cannot follow redirection to non-https URL '%s'\n"
 msgstr "Nem követhető az átirányítás nem HTTPS URL-re: „%s”\n"
 
-#: http.c:776
+#: http.c:870
 #, c-format
 msgid "Allocating new path for relative redirect failed: %s\n"
 msgstr "Új útvonal lefoglalása a relatív átirányításhoz nem sikerült: %s\n"
 
-#: http.c:1001 oncp.c:591 pulse.c:1292
+#: http.c:945
+msgid "HTTPS socket closed by peer; reopening\n"
+msgstr ""
+
+#: http.c:1115 oncp.c:591 pulse.c:1420
 #, c-format
 msgid "Unexpected %d result from server\n"
 msgstr "Váratlan %d eredmény a kiszolgálótól\n"
 
-#: http.c:1049
+#: http.c:1163
 msgid "request granted"
 msgstr "kérés megadva"
 
-#: http.c:1050
+#: http.c:1164
 msgid "general failure"
 msgstr "általános hiba"
 
-#: http.c:1051
+#: http.c:1165
 msgid "connection not allowed by ruleset"
 msgstr "a kapcsolatot a szabálykészlet nem engedélyezi"
 
-#: http.c:1052
+#: http.c:1166
 msgid "network unreachable"
 msgstr "a hálózat elérhetetlen"
 
-#: http.c:1053
+#: http.c:1167
 msgid "host unreachable"
 msgstr "a gép elérhetetlen"
 
-#: http.c:1054
+#: http.c:1168
 msgid "connection refused by destination host"
 msgstr "a célgép visszautasította a kapcsolatot"
 
-#: http.c:1055
+#: http.c:1169
 msgid "TTL expired"
 msgstr "TTL lejárt"
 
-#: http.c:1056
+#: http.c:1170
 msgid "command not supported / protocol error"
 msgstr "a parancs nem támogatott / protokollhiba"
 
-#: http.c:1057
+#: http.c:1171
 msgid "address type not supported"
 msgstr "a címtípus nem támogatott"
 
-#: http.c:1067
+#: http.c:1181
 msgid "SOCKS server requested username/password but we have none\n"
 msgstr ""
 "A SOCKS kiszolgáló felhasználónevet/jelszót kért, de nekünk nincs olyan\n"
 
-#: http.c:1075
+#: http.c:1189
 msgid "Username and password for SOCKS authentication must be < 255 bytes\n"
 msgstr ""
 "A SOCKS hitelesítés felhasználónevének és jelszavának < 255 bájtnak kell "
 "lennie\n"
 
-#: http.c:1090 http.c:1153
+#: http.c:1204 http.c:1267
 #, c-format
 msgid "Error writing auth request to SOCKS proxy: %s\n"
 msgstr "Hiba a SOCKS proxy hitelesítési kérésének írásakor: %s\n"
 
-#: http.c:1098 http.c:1160
+#: http.c:1212 http.c:1274
 #, c-format
 msgid "Error reading auth response from SOCKS proxy: %s\n"
 msgstr "Hiba a SOCKS proxy hitelesítési válaszának olvasásakor: %s\n"
 
-#: http.c:1105 http.c:1166
+#: http.c:1219 http.c:1280
 #, c-format
 msgid "Unexpected auth response from SOCKS proxy: %02x %02x\n"
 msgstr "Váratlan hitelesítési válasz a következő SOCKS proxy-tól: %02x %02x\n"
 
-#: http.c:1111
+#: http.c:1225
 msgid "Authenticated to SOCKS server using password\n"
 msgstr "Hitelesítés a SOCKS kiszolgálóra jelszó használatával\n"
 
-#: http.c:1115
+#: http.c:1229
 msgid "Password authentication to SOCKS server failed\n"
 msgstr "A jelszavas hitelesítés a SOCKS kiszolgálóra nem sikerült\n"
 
-#: http.c:1178 http.c:1185
+#: http.c:1292 http.c:1299
 msgid "SOCKS server requested GSSAPI authentication\n"
 msgstr "A SOCKS kiszolgáló GSSAPI hitelesítést kért\n"
 
-#: http.c:1191
+#: http.c:1305
 msgid "SOCKS server requested password authentication\n"
 msgstr "A SOCKS kiszolgáló jelszavas hitelesítést kért\n"
 
-#: http.c:1198
+#: http.c:1312
 msgid "SOCKS server requires authentication\n"
 msgstr "A SOCKS kiszolgálóhoz hitelesítés szükséges\n"
 
-#: http.c:1207
+#: http.c:1321
 #, c-format
 msgid "SOCKS server requested unknown authentication type %02x\n"
 msgstr "A SOCKS kiszolgáló ismeretlen %02x hitelesítéstípust kért\n"
 
-#: http.c:1213
+#: http.c:1327
 #, c-format
 msgid "Requesting SOCKS proxy connection to %s:%d\n"
 msgstr "SOCKS proxy csatlakozási kérés ide: %s:%d\n"
 
-#: http.c:1228
+#: http.c:1342
 #, c-format
 msgid "Error writing connect request to SOCKS proxy: %s\n"
 msgstr "Hiba a SOCKS proxy csatlakozási kérésének írásakor: %s\n"
 
-#: http.c:1236 http.c:1278
+#: http.c:1350 http.c:1392
 #, c-format
 msgid "Error reading connect response from SOCKS proxy: %s\n"
 msgstr "Hiba a SOCKS proxy csatlakozási válaszának olvasásakor: %s\n"
 
-#: http.c:1242
+#: http.c:1356
 #, c-format
 msgid "Unexpected connect response from SOCKS proxy: %02x %02x...\n"
 msgstr "Váratlan csatlakozási válasz a következő SOCKS proxy-tól: %02x %02x…\n"
 
-#: http.c:1250
+#: http.c:1364
 #, c-format
 msgid "SOCKS proxy error %02x: %s\n"
 msgstr "SOCKS proxy hiba %02x: %s\n"
 
-#: http.c:1254
+#: http.c:1368
 #, c-format
 msgid "SOCKS proxy error %02x\n"
 msgstr "SOCKS proxy hiba %02x\n"
 
-#: http.c:1271
+#: http.c:1385
 #, c-format
 msgid "Unexpected address type %02x in SOCKS connect response\n"
 msgstr "Váratlan %02x címtípus a SOCKS proxy csatlakozási válaszában\n"
 
-#: http.c:1294
+#: http.c:1408
 #, c-format
 msgid "Requesting HTTP proxy connection to %s:%d\n"
 msgstr "HTTP proxy csatlakozási kérés ide: %s:%d\n"
 
-#: http.c:1329
+#: http.c:1443
 #, c-format
 msgid "Sending proxy request failed: %s\n"
 msgstr "A proxy kérés küldése nem sikerült: %s\n"
 
-#: http.c:1352
+#: http.c:1466
 #, c-format
 msgid "Proxy CONNECT request failed: %d\n"
 msgstr "A proxy CSATLAKOZÁS kérés nem sikerült: %d\n"
 
-#: http.c:1371
+#: http.c:1485
 #, c-format
 msgid "Unknown proxy type '%s'\n"
 msgstr "Ismeretlen proxy típus: „%s”\n"
 
-#: http.c:1397
+#: http.c:1511
 #, c-format
 msgid "Failed to parse proxy '%s'\n"
 msgstr ""
 
-#: http.c:1421
+#: http.c:1535
 msgid "Only http or socks(5) proxies supported\n"
 msgstr "Csak http vagy socks(5) proxyk támogatottak\n"
 
@@ -2521,30 +2552,30 @@ msgstr ""
 msgid "Compatible with Pulse Connect Secure SSL VPN"
 msgstr "Kompatibilis a Pulse Connect Secure SSL VPN-nel"
 
-#: library.c:234
+#: library.c:237
 #, c-format
 msgid "Unknown VPN protocol '%s'\n"
 msgstr "Ismeretlen VPN protokoll: „%s”\n"
 
-#: library.c:256
+#: library.c:259
 msgid "Built against SSL library with no Cisco DTLS support\n"
 msgstr "A Cisco DTLS támogatás nélküli SSL könyvtárral szemben készítve\n"
 
-#: library.c:683
+#: library.c:686
 #, c-format
 msgid "Failed to parse server URL '%s'\n"
 msgstr "Nem sikerült a kiszolgáló URL feldolgozása: „%s”\n"
 
-#: library.c:689
+#: library.c:692
 msgid "Only https:// permitted for server URL\n"
 msgstr "Csak https:// engedélyezett a kiszolgáló URL-hez\n"
 
-#: library.c:1084
+#: library.c:1086
 #, c-format
 msgid "Unknown certificate hash: %s.\n"
 msgstr "Ismeretlen tanúsítvány hash: %s.\n"
 
-#: library.c:1113
+#: library.c:1115
 #, c-format
 msgid ""
 "The size of the provided fingerprint is less than the minimum required "
@@ -2552,7 +2583,7 @@ msgid ""
 msgstr ""
 "A megadott ujjlenyomat hossza kisebb a minimálisan szükségesnél (%u).\n"
 
-#: library.c:1174
+#: library.c:1176
 msgid "No form handler; cannot authenticate.\n"
 msgstr "Nincs űrlapkezelő, nem lehet hitelesíteni.\n"
 
@@ -3296,47 +3327,52 @@ msgstr "Nem sikerült megnyitni a tokenfájlt írásra: %s\n"
 msgid "Failed to write token: %s\n"
 msgstr "Nem sikerült a token írása: %s\n"
 
-#: main.c:2203 main.c:2224
+#: main.c:2204 main.c:2228
 #, c-format
 msgid "Soft token string is invalid\n"
 msgstr "A szoftveres token szöveg érvénytelen\n"
 
-#: main.c:2206
+#: main.c:2208
+#, c-format
+msgid "Can't open stoken file\n"
+msgstr ""
+
+#: main.c:2210
 #, c-format
 msgid "Can't open ~/.stokenrc file\n"
 msgstr "Nem nyitható meg a ~/.stokenrc fájl\n"
 
-#: main.c:2209
+#: main.c:2213
 #, c-format
 msgid "OpenConnect was not built with libstoken support\n"
 msgstr "Az OpenConnect nem libstoken támogatással készült\n"
 
-#: main.c:2212
+#: main.c:2216
 #, c-format
 msgid "General failure in libstoken\n"
 msgstr "Általános hiba a libstoken könyvtárban\n"
 
-#: main.c:2227
+#: main.c:2231
 #, c-format
 msgid "OpenConnect was not built with liboath support\n"
 msgstr "Az OpenConnect nem liboath támogatással készült\n"
 
-#: main.c:2230
+#: main.c:2234
 #, c-format
 msgid "General failure in liboath\n"
 msgstr "Általános hiba a liboath könyvtárban\n"
 
-#: main.c:2241
+#: main.c:2245
 #, c-format
 msgid "Yubikey token not found\n"
 msgstr "Yubikey token nem található\n"
 
-#: main.c:2244
+#: main.c:2248
 #, c-format
 msgid "OpenConnect was not built with Yubikey support\n"
 msgstr "Az OpenConnect nem Yubikey támogatással készült\n"
 
-#: main.c:2247
+#: main.c:2251
 #, c-format
 msgid "General Yubikey failure: %s\n"
 msgstr "Általános Yubikey hiba: %s\n"
@@ -3364,6 +3400,10 @@ msgstr "Nincs tennivalója; alvás %d ms-ra…\n"
 #, c-format
 msgid "WaitForMultipleObjects failed: %s\n"
 msgstr "WaitForMultipleObjects sikertelen: %s\n"
+
+#: mainloop.c:309
+msgid "Failed select() in mainloop"
+msgstr ""
 
 #: ntlm.c:87 sspi.c:114 sspi.c:197
 #, c-format
@@ -3400,36 +3440,36 @@ msgstr "HTML NTLMv%d hitelesítési kísérlet a proxyra\n"
 msgid "Attempting HTTP NTLMv%d authentication to server '%s'\n"
 msgstr "HTTP NTLMv%d hitelesítési kísérlet a kiszolgálóra: „%s”\n"
 
-#: oath.c:97
+#: oath.c:104
 msgid "Invalid base32 token string\n"
 msgstr "Érvénytelen base32 token szöveg\n"
 
-#: oath.c:105
+#: oath.c:112
 msgid "Failed to allocate memory to decode OATH secret\n"
 msgstr "Nem sikerült memóriát lefoglalni az OATH titok visszafejtéséhez\n"
 
-#: oath.c:208
+#: oath.c:215
 msgid "This version of OpenConnect was built without PSKC support\n"
 msgstr "Az OpenConnect ezen verziója PSKC támogatás nélkül készült\n"
 
-#: oath.c:353 oath.c:378 stoken.c:272 yubikey.c:507
+#: oath.c:311 oath.c:336 stoken.c:297 yubikey.c:507
 msgid "OK to generate INITIAL tokencode\n"
 msgstr "OK a KEZDETI tokenkód előállításához\n"
 
-#: oath.c:357 oath.c:381 stoken.c:277 yubikey.c:511
+#: oath.c:315 oath.c:339 stoken.c:302 yubikey.c:511
 msgid "OK to generate NEXT tokencode\n"
 msgstr "OK a KÖVETKEZŐ tokenkód előállításához\n"
 
-#: oath.c:362 oath.c:385 stoken.c:282
+#: oath.c:320 oath.c:343 stoken.c:307
 msgid "Server is rejecting the soft token; switching to manual entry\n"
 msgstr ""
 "A kiszolgáló visszautasította a szoftveres tokent; átváltás kézi bevitelre\n"
 
-#: oath.c:419
+#: oath.c:377
 msgid "Generating OATH TOTP token code\n"
 msgstr "OATH TOTP tokenkód előállítása\n"
 
-#: oath.c:565
+#: oath.c:523
 msgid "Generating OATH HOTP token code\n"
 msgstr "OATH HOTP tokenkód előállítása\n"
 
@@ -3443,17 +3483,17 @@ msgstr "Érvénytelen süti: „%s”\n"
 msgid "Unexpected length %d for TLV %d/%d\n"
 msgstr "Váratlan hossz (%d) ehhez: TLV %d/%d\n"
 
-#: oncp.c:166 pulse.c:402
+#: oncp.c:166 pulse.c:418
 #, c-format
 msgid "Received MTU %d from server\n"
 msgstr "%d. MTU érkezett a kiszolgálótól\n"
 
-#: oncp.c:175 pulse.c:285 pulse.c:343
+#: oncp.c:175 pulse.c:301 pulse.c:359
 #, c-format
 msgid "Received DNS server %s\n"
 msgstr "DNS-kiszolgáló érkezett: %s\n"
 
-#: oncp.c:186 pulse.c:411
+#: oncp.c:186 pulse.c:427
 #, c-format
 msgid "Received DNS search domain %.*s\n"
 msgstr "DNS keresési tartomány érkezett: %.*s\n"
@@ -3463,27 +3503,27 @@ msgstr "DNS keresési tartomány érkezett: %.*s\n"
 msgid "Received internal IP address %s\n"
 msgstr "Belső IP-cím érkezett: %s\n"
 
-#: oncp.c:210 pulse.c:276
+#: oncp.c:210 pulse.c:292
 #, c-format
 msgid "Received netmask %s\n"
 msgstr "Hálózati maszk érkezett: %s\n"
 
-#: oncp.c:219 pulse.c:426
+#: oncp.c:219 pulse.c:442
 #, c-format
 msgid "Received internal gateway address %s\n"
 msgstr "Belső átjárócím érkezett: %s\n"
 
-#: oncp.c:232 pulse.c:2001
+#: oncp.c:232 pulse.c:2325
 #, c-format
 msgid "Received split include route %s\n"
 msgstr "Felosztott felvétel útvonal érkezett: %s\n"
 
-#: oncp.c:254 pulse.c:2014
+#: oncp.c:254 pulse.c:2338
 #, c-format
 msgid "Received split exclude route %s\n"
 msgstr "Felosztott kizárás útvonal érkezett: %s\n"
 
-#: oncp.c:274 pulse.c:300
+#: oncp.c:274 pulse.c:316
 #, c-format
 msgid "Received WINS server %s\n"
 msgstr "WINS kiszolgáló érkezett: %s\n"
@@ -3503,37 +3543,37 @@ msgstr "ESP HMAC: 0x%02x (%s)\n"
 msgid "ESP compression: %d\n"
 msgstr "ESP tömörítés: %d\n"
 
-#: oncp.c:335 pulse.c:506
+#: oncp.c:335 pulse.c:522
 #, c-format
 msgid "ESP port: %d\n"
 msgstr "ESP port: %d\n"
 
-#: oncp.c:342 pulse.c:489
+#: oncp.c:342 pulse.c:505
 #, c-format
 msgid "ESP key lifetime: %u bytes\n"
 msgstr "ESP kulcs élettartam: %u bájt\n"
 
-#: oncp.c:350 pulse.c:481
+#: oncp.c:350 pulse.c:497
 #, c-format
 msgid "ESP key lifetime: %u seconds\n"
 msgstr "ESP kulcs élettartam: %u másodperc\n"
 
-#: oncp.c:358 pulse.c:513
+#: oncp.c:358 pulse.c:529
 #, c-format
 msgid "ESP to SSL fallback: %u seconds\n"
 msgstr "ESP az SSL tartalékhoz: %u másodperc\n"
 
-#: oncp.c:366 pulse.c:497
+#: oncp.c:366 pulse.c:513
 #, c-format
 msgid "ESP replay protection: %d\n"
 msgstr "ESP ismétlési védelem: %d\n"
 
-#: oncp.c:374 pulse.c:529 pulse.c:2115
+#: oncp.c:374 pulse.c:545 pulse.c:2439
 #, c-format
 msgid "ESP SPI (outbound): %x\n"
 msgstr "ESP SPI (kimenő): %x\n"
 
-#: oncp.c:383 pulse.c:538 pulse.c:2103
+#: oncp.c:383 pulse.c:554 pulse.c:2427
 #, c-format
 msgid "%d bytes of ESP secrets\n"
 msgstr "Az ESP titkok %d bájtja\n"
@@ -3630,69 +3670,74 @@ msgstr "Hiba az ESP kulcsok egyeztetésekor\n"
 msgid "oNCP negotiation request outgoing:\n"
 msgstr "oNCP egyeztetési kérés kimenő:\n"
 
-#: oncp.c:829 pulse.c:2372
+#: oncp.c:831 pulse.c:2696
 msgid "new incoming"
 msgstr "új bejövő"
 
-#: oncp.c:830 pulse.c:2373
+#: oncp.c:832 pulse.c:2697
 msgid "new outgoing"
 msgstr "új kimenő"
 
-#: oncp.c:855
+#: oncp.c:857
 msgid "Read only 1 byte of oNCP length field\n"
 msgstr "Az oNCP hossz mezőjének csak 1 bájtja olvasva\n"
 
-#: oncp.c:864
+#: oncp.c:866
 msgid "Server terminated connection (session expired)\n"
 msgstr "A kiszolgáló megszakította a kapcsolatot (munkamenet lejárt)\n"
 
-#: oncp.c:868
+#: oncp.c:870
 #, c-format
 msgid "Server terminated connection (reason: %d)\n"
 msgstr "A kiszolgáló megszakította a kapcsolatot (ok: %d)\n"
 
-#: oncp.c:874
+#: oncp.c:876
 msgid "Server sent zero-length oNCP record\n"
 msgstr "A kiszolgáló nulla hosszú oNCP rekordot küldött\n"
 
-#: oncp.c:969
+#: oncp.c:971
 #, c-format
 msgid "Incoming KMP message %d of size %d (got %d)\n"
 msgstr "Bejövő, %2$d méretű, KMP %1$d. üzenet (kapott: %3$d)\n"
 
-#: oncp.c:972
+#: oncp.c:974
 #, c-format
 msgid "Continuing to process KMP message %d now size %d (got %d)\n"
 msgstr ""
 "A KMP %d üzenet feldolgozásának folytatása, mérete most: %d (kapott: %d)\n"
 
-#: oncp.c:991
+#: oncp.c:993
 msgid "Unrecognised data packet\n"
 msgstr "Nem felismert adatcsomag\n"
 
-#: oncp.c:1053
+#: oncp.c:1051
+#, c-format
+msgid "Failed to set up ESP: %s\n"
+msgstr ""
+
+#: oncp.c:1061
 #, c-format
 msgid "Unknown KMP message %d of size %d:\n"
 msgstr "Ismeretlen, %2$d méretű, KMP %1$d üzenet:\n"
 
-#: oncp.c:1058
+#: oncp.c:1066
 #, c-format
 msgid ".... + %d more bytes unreceived\n"
 msgstr ".... + %d további, nem fogadott bájt\n"
 
-#: oncp.c:1073 pulse.c:2404
+#: oncp.c:1081 pulse.c:2728
 msgid "Packet outgoing:\n"
 msgstr "Kimenő csomag:\n"
 
-#: oncp.c:1135
+#: oncp.c:1143
 msgid "Sent ESP enable control packet\n"
 msgstr "ESP engedélyezési vezérlőcsomag elküldve\n"
 
-#: oncp.c:1269
+#: oncp.c:1277
 msgid "Logout successful.\n"
 msgstr "Kijelentkezés sikeres.\n"
 
-#: openconnect-internal.h:1164 openconnect-internal.h:1172
+#: openconnect-internal.h:1174 openconnect-internal.h:1182
 #, c-format
 msgid "ERROR: %s() called with invalid UTF-8 for '%s' argument\n"
 msgstr ""
@@ -3822,111 +3867,111 @@ msgstr "Nem sikerült libp11 PKCS#11 környezetet létesíteni:\n"
 msgid "Failed to load PKCS#11 provider module (%s):\n"
 msgstr "Nem sikerült betölteni a PKCS#11-et biztosító modult (%s):\n"
 
-#: openssl-pkcs11.c:269
+#: openssl-pkcs11.c:273
 msgid "PIN locked\n"
 msgstr "PIN-kód zárolva\n"
 
-#: openssl-pkcs11.c:272
+#: openssl-pkcs11.c:276
 msgid "PIN expired\n"
 msgstr "PIN-kód lejárt\n"
 
-#: openssl-pkcs11.c:275
+#: openssl-pkcs11.c:279
 msgid "Another user already logged in\n"
 msgstr "Egy másik felhasználó már bejelentkezett\n"
 
-#: openssl-pkcs11.c:279
+#: openssl-pkcs11.c:283
 msgid "Unknown error logging in to PKCS#11 token\n"
 msgstr "Ismeretlen hiba a PKCS#11 tokenbe való bejelentkezéskor\n"
 
-#: openssl-pkcs11.c:286
+#: openssl-pkcs11.c:290
 #, c-format
 msgid "Logged in to PKCS#11 slot '%s'\n"
 msgstr "Bejelentkezve a következő PKCS#11 tárolóhelyre: „%s”\n"
 
-#: openssl-pkcs11.c:300
+#: openssl-pkcs11.c:304
 #, c-format
 msgid "Failed to enumerate certs in PKCS#11 slot '%s'\n"
 msgstr ""
 "Nem sikerült a tanúsítványok felsorolása a következő PKCS#11 tárolóhelyen: "
 "„%s”\n"
 
-#: openssl-pkcs11.c:306
+#: openssl-pkcs11.c:310
 #, c-format
 msgid "Found %d certs in slot '%s'\n"
 msgstr "%d tanúsítvány található a következő tárolóhelyen: „%s”\n"
 
-#: openssl-pkcs11.c:342 openssl-pkcs11.c:565
+#: openssl-pkcs11.c:346 openssl-pkcs11.c:569
 #, c-format
 msgid "Failed to parse PKCS#11 URI '%s'\n"
 msgstr "Nem sikerült a következő PKCS#11 URI feldolgozása: „%s”\n"
 
-#: openssl-pkcs11.c:349 openssl-pkcs11.c:575
+#: openssl-pkcs11.c:353 openssl-pkcs11.c:579
 msgid "Failed to enumerate PKCS#11 slots\n"
 msgstr "Nem sikerült felsorolni a PKCS#11 tárolóhelyeket\n"
 
-#: openssl-pkcs11.c:383 openssl-pkcs11.c:617
+#: openssl-pkcs11.c:387 openssl-pkcs11.c:621
 #, c-format
 msgid "Logging in to PKCS#11 slot '%s'\n"
 msgstr "Bejelentkezés a következő PKCS#11 tárolóhelyre: „%s”\n"
 
-#: openssl-pkcs11.c:393
+#: openssl-pkcs11.c:397
 #, c-format
 msgid "Failed to find PKCS#11 cert '%s'\n"
 msgstr "Nem sikerült megtalálni a(z) „%s” PKCS#11 tanúsítványt\n"
 
-#: openssl-pkcs11.c:401
+#: openssl-pkcs11.c:405
 msgid "Certificate X.509 content not fetched by libp11\n"
 msgstr "A tanúsítvány X.509 tartalmát nem kérte le a libp11\n"
 
-#: openssl-pkcs11.c:412 openssl.c:713
+#: openssl-pkcs11.c:416 openssl.c:718
 msgid "Failed to install certificate in OpenSSL context\n"
 msgstr "Nem sikerült a tanúsítvány telepítése az OpenSSL környezetben\n"
 
-#: openssl-pkcs11.c:458
+#: openssl-pkcs11.c:462
 #, c-format
 msgid "Failed to enumerate keys in PKCS#11 slot '%s'\n"
 msgstr ""
 "Nem sikerült a kulcsok felsorolása a következő PKCS#11 tárolóhelyen: „%s”\n"
 
-#: openssl-pkcs11.c:464
+#: openssl-pkcs11.c:468
 #, c-format
 msgid "Found %d keys in slot '%s'\n"
 msgstr "%d kulcs található a következő tárolóhelyen: „%s”\n"
 
-#: openssl-pkcs11.c:497
+#: openssl-pkcs11.c:501
 msgid "Certificate has no public key\n"
 msgstr "A tanúsítványban nincs nyilvános kulcs\n"
 
-#: openssl-pkcs11.c:503 openssl-pkcs11.c:526
+#: openssl-pkcs11.c:507 openssl-pkcs11.c:530
 msgid "Certificate does not match private key\n"
 msgstr "A tanúsítvány nem egyezik a titkos kulccsal\n"
 
-#: openssl-pkcs11.c:506
+#: openssl-pkcs11.c:510
 msgid "Checking EC key matches cert\n"
 msgstr "Az EC kulcsellenőrzés egyezik a tanúsítvánnyal\n"
 
-#: openssl-pkcs11.c:510
+#: openssl-pkcs11.c:514
 msgid "Failed to allocate signature buffer\n"
 msgstr "Nem sikerült lefoglalni a mintapuffert\n"
 
-#: openssl-pkcs11.c:520
+#: openssl-pkcs11.c:524
 msgid "Failed to sign dummy data to validate EC key\n"
 msgstr "Nem sikerült aláírni a látszatadatokat az EC kulcs ellenőrzéséhez\n"
 
-#: openssl-pkcs11.c:638
+#: openssl-pkcs11.c:642
 #, c-format
 msgid "Failed to find PKCS#11 key '%s'\n"
 msgstr "Nem sikerült megtalálni a(z) „%s” PKCS#11 kulcsot\n"
 
-#: openssl-pkcs11.c:649
+#: openssl-pkcs11.c:653
 msgid "Failed to instantiated private key from PKCS#11\n"
 msgstr "Nem sikerült példányosítani a személyes kulcsot a PKCS#11-ből\n"
 
-#: openssl-pkcs11.c:678
+#: openssl-pkcs11.c:682
 msgid "Add key from PKCS#11 failed\n"
 msgstr "A kulcs hozzáadása nem sikerült a PKCS#11-ből\n"
 
-#: openssl-pkcs11.c:710 openssl-pkcs11.c:716
+#: openssl-pkcs11.c:714 openssl-pkcs11.c:720
 msgid "This version of OpenConnect was built without PKCS#11 support\n"
 msgstr "Az OpenConnect ezen verziója PKCS#11 támogatás nélkül készült\n"
 
@@ -3973,479 +4018,549 @@ msgstr "A PKCS#12 feldolgozása nem sikerült (lásd a fenti hibákat)\n"
 msgid "PKCS#12 contained no certificate!\n"
 msgstr "A PKCS#12 nem tartalmazott tanúsítványt!\n"
 
-#: openssl.c:572
+#: openssl.c:570 openssl.c:941 openssl.c:957 openssl.c:978 openssl.c:1044
+msgid "Loading private key failed\n"
+msgstr "A személyes kulcs betöltése nem sikerült\n"
+
+#: openssl.c:577
 msgid "PKCS#12 contained no private key!\n"
 msgstr "A PKCS#12 nem tartalmazott személyes kulcsot!\n"
 
-#: openssl.c:577
+#: openssl.c:582
 msgid "PKCS#12"
 msgstr "PKCS#12"
 
-#: openssl.c:600
+#: openssl.c:605
 msgid "Can't load TPM engine.\n"
 msgstr "Nem sikerült betölteni a TPM motort.\n"
 
-#: openssl.c:606
+#: openssl.c:611
 msgid "Failed to init TPM engine\n"
 msgstr "Nem sikerült előkészíteni a TPM motort\n"
 
-#: openssl.c:616
+#: openssl.c:621
 msgid "Failed to set TPM SRK password\n"
 msgstr "Nem sikerült beállítani a TPM SRK jelszót\n"
 
-#: openssl.c:630
+#: openssl.c:635
 msgid "Failed to load TPM private key\n"
 msgstr "Nem sikerült betölteni a TPM személyes kulcsot\n"
 
-#: openssl.c:636
+#: openssl.c:641
 msgid "Add key from TPM failed\n"
 msgstr "A kulcs hozzáadása nem sikerült a TPM-ből\n"
 
-#: openssl.c:687 openssl.c:835
+#: openssl.c:692 openssl.c:840
 #, c-format
 msgid "Failed to open certificate file %s: %s\n"
 msgstr "Nem sikerült a(z) %s tanúsítványfájl megnyitása: %s\n"
 
-#: openssl.c:697
+#: openssl.c:702
 msgid "Loading certificate failed\n"
 msgstr "A tanúsítvány betöltése nem sikerült\n"
 
-#: openssl.c:735
+#: openssl.c:740
 msgid "Failed to process all supporting certs. Trying anyway...\n"
 msgstr ""
 "Nem sikerült minden támogatott tanúsítvány feldolgozása. Azért megpróbálom…\n"
 
-#: openssl.c:748
+#: openssl.c:753
 msgid "PEM file"
 msgstr "PEM fájl"
 
-#: openssl.c:777
+#: openssl.c:782
 #, c-format
 msgid "Failed to create BIO for keystore item '%s'\n"
 msgstr "Nem sikerült a BIO létrehozása a következő kulcstartó elemnél: „%s”\n"
 
-#: openssl.c:802
+#: openssl.c:807
 msgid "Loading private key failed (wrong passphrase?)\n"
 msgstr "A személyes kulcs betöltése nem sikerült (rossz jelmondat?)\n"
 
-#: openssl.c:808
+#: openssl.c:813
 msgid "Loading private key failed (see above errors)\n"
 msgstr "A személyes kulcs betöltése nem sikerült (lásd a fenti hibákat)\n"
 
-#: openssl.c:858
+#: openssl.c:863
 msgid "Failed to load X509 certificate from keystore\n"
 msgstr "Nem sikerült betölteni az X509 tanúsítványt a kulcstartóról\n"
 
-#: openssl.c:864
+#: openssl.c:869
 msgid "Failed to use X509 certificate from keystore\n"
 msgstr "Nem sikerült az X509 tanúsítvány használata a kulcstartóról\n"
 
-#: openssl.c:896
+#: openssl.c:901
 msgid "Failed to use private key from keystore\n"
 msgstr "Nem sikerült a személyes kulcs használata a kulcstartóról\n"
 
-#: openssl.c:912
+#: openssl.c:917
 #, c-format
 msgid "Failed to open private key file %s: %s\n"
 msgstr "A(z) %s személyes kulcsfájl megnyitása nem sikerült: %s\n"
 
-#: openssl.c:936 openssl.c:951 openssl.c:972 openssl.c:1038
-msgid "Loading private key failed\n"
-msgstr "A személyes kulcs betöltése nem sikerült\n"
-
-#: openssl.c:1032
+#: openssl.c:1038
 msgid "Failed to convert PKCS#8 to OpenSSL EVP_PKEY\n"
 msgstr "A PKCS#8 átalakítása OpenSSL EVP_PKEY kulcsra sikertelen\n"
 
-#: openssl.c:1049
+#: openssl.c:1055
 #, c-format
 msgid "Failed to identify private key type in '%s'\n"
 msgstr "Nem sikerült azonosítani a személyes kulcs típusát ebben: „%s”\n"
 
-#: openssl.c:1203
+#: openssl.c:1209
 #, c-format
 msgid "Matched DNS altname '%s'\n"
 msgstr "Egyező DNS altname: „%s”\n"
 
-#: openssl.c:1210
+#: openssl.c:1216
 #, c-format
 msgid "No match for altname '%s'\n"
 msgstr "Nincs egyezés a következő altname értékre: „%s”\n"
 
-#: openssl.c:1224
+#: openssl.c:1230
 #, c-format
 msgid "Certificate has GEN_IPADD altname with bogus length %d\n"
 msgstr "A tanúsítványnak GEN_IPADD altname értéke van hamis hosszal: %d\n"
 
-#: openssl.c:1235 openssl.c:1381
+#: openssl.c:1241 openssl.c:1387
 #, c-format
 msgid "Matched %s address '%s'\n"
 msgstr "Egyező %s cím: „%s”\n"
 
-#: openssl.c:1242
+#: openssl.c:1248
 #, c-format
 msgid "No match for %s address '%s'\n"
 msgstr "Nincs egyezés a(z) %s címmel: „%s”\n"
 
-#: openssl.c:1284
+#: openssl.c:1290
 #, c-format
 msgid "URI '%s' has non-empty path; ignoring\n"
 msgstr "A(z) „%s” URI nem üres útvonallal rendelkezik; mellőzés\n"
 
-#: openssl.c:1289
+#: openssl.c:1295
 #, c-format
 msgid "Matched URI '%s'\n"
 msgstr "Egyező URI: „%s”\n"
 
-#: openssl.c:1300
+#: openssl.c:1306
 #, c-format
 msgid "No match for URI '%s'\n"
 msgstr "Nincs egyezés a következő URI-ra: „%s”\n"
 
-#: openssl.c:1315
+#: openssl.c:1321
 #, c-format
 msgid "No altname in peer cert matched '%s'\n"
 msgstr ""
 "Nincs altname érték a következőre illeszkedő csomópont tanúsítványában: "
 "„%s”\n"
 
-#: openssl.c:1323
+#: openssl.c:1329
 msgid "No subject name in peer cert!\n"
 msgstr "Nincs tárgynév a csomópont tanúsítványában!\n"
 
-#: openssl.c:1343
+#: openssl.c:1349
 msgid "Failed to parse subject name in peer cert\n"
 msgstr "Nem sikerült a tárgynév feldolgozása a csomópont tanúsítványában\n"
 
-#: openssl.c:1350
+#: openssl.c:1356
 #, c-format
 msgid "Peer cert subject mismatch ('%s' != '%s')\n"
 msgstr "A csomópont tanúsítvány tárgya nem megfelelő („%s” != „%s”)\n"
 
-#: openssl.c:1355 openssl.c:1389
+#: openssl.c:1361 openssl.c:1395
 #, c-format
 msgid "Matched peer certificate subject name '%s'\n"
 msgstr "Egyező csomópont tanúsítvány tárgynév: „%s”\n"
 
-#: openssl.c:1451
+#: openssl.c:1457
 #, c-format
 msgid "Extra cert from cafile: '%s'\n"
 msgstr "További tanúsítvány a hitelesítés-szolgáltató fájlból: „%s”\n"
 
-#: openssl.c:1589
+#: openssl.c:1599
 msgid "Error in client cert notAfter field\n"
 msgstr "Hiba a kliens tanúsítvány notAfter mezőjében\n"
 
-#: openssl.c:1602
+#: openssl.c:1612
 msgid "<error>"
 msgstr "<hiba>"
 
-#: openssl.c:1655
+#: openssl.c:1665
 msgid "Create TLSv1 CTX failed\n"
 msgstr "TLSv1 CTX létrehozása sikertelen\n"
 
-#: openssl.c:1674
+#: openssl.c:1684
 msgid "SSL certificate and key do not match\n"
 msgstr "Az SSL tanúsítvány és a kulcs nem egyezik\n"
 
-#: openssl.c:1719
+#: openssl.c:1729
 #, c-format
 msgid "Failed to read certs from CA file '%s'\n"
 msgstr "Nem sikerült a tanúsítványok olvasása a CA fájlból: „%s”\n"
 
-#: openssl.c:1752
+#: openssl.c:1762
 #, c-format
 msgid "Failed to open CA file '%s'\n"
 msgstr "Nem sikerült megnyitni a CA fájlt: „%s”\n"
 
-#: openssl.c:1812
+#: openssl.c:1822
 msgid "SSL connection failure\n"
 msgstr "Az SSL kapcsolat meghiúsult\n"
 
-#: openssl.c:1975
+#: openssl.c:1985
 msgid "Failed to calculate OATH HMAC\n"
 msgstr "Nem sikerült kiszámítani a OATH HMAC kódot\n"
 
-#: openssl.c:2078
+#: openssl.c:2088
 #, c-format
 msgid "EAP-TTLS negotiation with %s\n"
 msgstr "EAP-TTLS egyeztetés ezzel: %s\n"
 
-#: openssl.c:2089
+#: openssl.c:2099
 #, c-format
 msgid "EAP-TTLS connection failure %d\n"
 msgstr "Az EAP-TTLS kapcsolat meghiúsult: %d\n"
 
-#: pulse.c:267
+#: pulse.c:283
 #, c-format
 msgid "Received internal Legacy IP address %s\n"
 msgstr "Belső örökölt IP-cím érkezett: %s\n"
 
-#: pulse.c:315 pulse.c:332 pulse.c:351 pulse.c:374
+#: pulse.c:331 pulse.c:348 pulse.c:367 pulse.c:390
 msgid "Failed to handle IPv6 address\n"
 msgstr "Nem sikerült kezelni az IPv6-címet\n"
 
-#: pulse.c:324
+#: pulse.c:340
 #, c-format
 msgid "Received internal IPv6 address %s\n"
 msgstr "Belső IPv6-cím érkezett: %s\n"
 
-#: pulse.c:366
+#: pulse.c:382
 #, c-format
 msgid "Received IPv6 split include %s\n"
 msgstr ""
 
-#: pulse.c:389
+#: pulse.c:405
 #, c-format
 msgid "Received IPv6 split exclude %s\n"
 msgstr ""
 
-#: pulse.c:396
+#: pulse.c:412
 #, c-format
 msgid "Unexpected length %d for attr 0x%x\n"
 msgstr "Váratlan hossz (%d) a 0x%x attribútumnál\n"
 
-#: pulse.c:447
+#: pulse.c:463
 #, c-format
 msgid "ESP encryption: 0x%04x (%s)\n"
 msgstr "ESP titkosítás: 0x%04x (%s)\n"
 
-#: pulse.c:471
+#: pulse.c:487
 #, c-format
 msgid "ESP HMAC: 0x%04x (%s)\n"
 msgstr "ESP HMAC: 0x%04x (%s)\n"
 
 #. Amusingly, this isn't enforced. It's client-only
-#: pulse.c:521
+#: pulse.c:537
 #, c-format
 msgid "ESP only: %d\n"
 msgstr "Csak ESP: %d\n"
 
-#: pulse.c:563
+#: pulse.c:579
 #, c-format
 msgid "Unknown attr 0x%x len %d:%s\n"
 msgstr "Ismeretlen attribútum: 0x%x, hossz: %d:%s\n"
 
-#: pulse.c:574
+#: pulse.c:590
 #, c-format
 msgid "Read %d bytes of IF-T/TLS record\n"
 msgstr "%d bájt kiolvasva az IF-T/TLS rekordból\n"
 
-#: pulse.c:591
+#: pulse.c:607
 msgid "Short write to IF-T/TLS\n"
 msgstr ""
 
-#: pulse.c:604
+#: pulse.c:620
 msgid "Error creating IF-T packet\n"
 msgstr "Hiba az IF-T csomag létrehozásakor\n"
 
-#: pulse.c:624
+#: pulse.c:640
 msgid "Error creating EAP packet\n"
 msgstr "Hiba az EAP csomag létrehozásakor\n"
 
-#: pulse.c:659 pulse.c:1358 pulse.c:1421
+#: pulse.c:675 pulse.c:1486 pulse.c:1549
 msgid "Unexpected IF-T/TLS authentication challenge:\n"
 msgstr "Váratlan IF-T/TLS hitelesítés kihívás:\n"
 
-#: pulse.c:677
+#: pulse.c:693
 msgid "Unexpected EAP-TTLS payload:\n"
 msgstr "Váratlan EAP-TTLS adat:\n"
 
-#: pulse.c:710
+#: pulse.c:726
 #, c-format
 msgid "AVP 0x%x/0x%x:%s\n"
 msgstr "AVP 0x%x/0x%x:%s\n"
 
-#: pulse.c:712
+#: pulse.c:728
 #, c-format
 msgid "AVP %d:%s\n"
 msgstr "AVP %d:%s\n"
 
-#: pulse.c:779
+#: pulse.c:795
 msgid "Enter Pulse user realm:"
 msgstr ""
 
-#: pulse.c:784 pulse.c:827
+#: pulse.c:800 pulse.c:843
 msgid "Realm:"
 msgstr ""
 
-#: pulse.c:822
+#: pulse.c:838
 msgid "Choose Pulse user realm:"
 msgstr ""
 
-#: pulse.c:838 pulse.c:1487 pulse.c:1556
+#: pulse.c:854 pulse.c:1616 pulse.c:1685
 msgid "Failed to parse AVP\n"
 msgstr "Nem sikerült feldolgozni az AVP-t\n"
 
-#: pulse.c:905
+#: pulse.c:921
 msgid "Session limit reached. Choose session to kill:\n"
 msgstr "Munkamenetkorlát elérve. Válasszon munkamenetet a kilövéshez:\n"
 
-#: pulse.c:910
+#: pulse.c:926
 msgid "Session:"
 msgstr "Munkamenet:"
 
-#: pulse.c:926
+#: pulse.c:946
 msgid "Failed to parse session list\n"
 msgstr "Nem sikerült feldolgozni a munkamenetlistát\n"
 
-#: pulse.c:1012
+#: pulse.c:1041
 msgid "Enter secondary credentials:"
 msgstr "Másodlagos hitelesítési adatok megadása:"
 
 #. Point to password prompt in case that's all we use
-#: pulse.c:1012
+#: pulse.c:1041
 msgid "Enter user credentials:"
 msgstr "Felhasználói hitelesítési adatok megadása:"
 
-#: pulse.c:1022 pulse.c:1115
+#: pulse.c:1051 pulse.c:1243
 msgid "Secondary username:"
 msgstr "Másodlagos felhasználónév:"
 
-#: pulse.c:1022 pulse.c:1115
+#: pulse.c:1051 pulse.c:1243
 msgid "Username:"
 msgstr "Felhasználónév:"
 
-#: pulse.c:1032 stoken.c:89
+#: pulse.c:1061 stoken.c:114
 msgid "Password:"
 msgstr "Jelszó:"
 
-#: pulse.c:1032
+#: pulse.c:1061
 msgid "Secondary password:"
 msgstr "Másodlagos jelszó:"
 
-#: pulse.c:1105
+#: pulse.c:1132
+msgid "Password expired. Please change password:"
+msgstr ""
+
+#: pulse.c:1136
+msgid "Current password:"
+msgstr ""
+
+#: pulse.c:1141
+msgid "New password:"
+msgstr ""
+
+#: pulse.c:1146
+msgid "Verify new password:"
+msgstr ""
+
+#: pulse.c:1158
+msgid "Passwords not provided.\n"
+msgstr ""
+
+#: pulse.c:1164
+msgid "Passwords do not match.\n"
+msgstr ""
+
+#: pulse.c:1169
+msgid "Current password too long.\n"
+msgstr ""
+
+#: pulse.c:1174
+msgid "New password too long.\n"
+msgstr ""
+
+#: pulse.c:1233
 msgid "Token code request:"
 msgstr "Tokenkód kérés:"
 
-#: pulse.c:1129
+#: pulse.c:1257
 msgid "Please enter response:"
 msgstr "Adja meg a választ:"
 
-#: pulse.c:1133
+#: pulse.c:1261
 msgid "Please enter your passcode:"
 msgstr "Adja meg a jelkódját:"
 
-#: pulse.c:1135
+#: pulse.c:1263
 msgid "Please enter your secondary token information:"
 msgstr "Adja meg a másodlagos token információját:"
 
-#: pulse.c:1275
+#: pulse.c:1403
 msgid "Error creating Pulse connection request\n"
 msgstr "Hiba a Pulse kapcsolódási kérés létrehozásakor\n"
 
-#: pulse.c:1318
+#: pulse.c:1446
 msgid "Unexpected response to IF-T/TLS version negotiation:\n"
 msgstr "Váratlan válasz az IF-T/TLS verzióegyeztetéshez:\n"
 
-#: pulse.c:1323
+#: pulse.c:1451
 #, c-format
 msgid "IF-T/TLS version from server: %d\n"
 msgstr "IF-T/TLS verzió a kiszolgálóról: %d\n"
 
-#: pulse.c:1449
+#: pulse.c:1578
 msgid "Failed to establish EAP-TTLS session\n"
 msgstr "Nem sikerült az EAP-TTLS munkamenet kiépítése\n"
 
-#: pulse.c:1568
+#: pulse.c:1697
 msgid "Server certificate mismatch. Aborting due to suspected MITM attack\n"
 msgstr ""
 
-#: pulse.c:1583
+#: pulse.c:1712
 msgid "Authentication failure: Account locked out\n"
 msgstr ""
 
-#: pulse.c:1586
+#: pulse.c:1715
 #, c-format
 msgid "Authentication failure: Code 0x%02x\n"
 msgstr "Hitelesítési hiba: 0x%02x kód\n"
 
-#: pulse.c:1668
+#: pulse.c:1750
+#, c-format
+msgid ""
+"Unknown D73 prompt value 0x%x. Will prompt for both username and password.\n"
+msgstr ""
+
+#: pulse.c:1753
+msgid "Please report this value and the behaviour of the official client.\n"
+msgstr ""
+
+#: pulse.c:1806
+#, c-format
+msgid "Authentication failure: %.*s\n"
+msgstr ""
+
+#: pulse.c:1830
 msgid "Unhandled Pulse authentication packet, or authentication failure\n"
 msgstr ""
 
-#: pulse.c:1684
+#: pulse.c:1846
 msgid "Pulse authentication cookie not accepted\n"
 msgstr "Pulse hitelesítési süti nincs elfogadva\n"
 
-#: pulse.c:1690
+#: pulse.c:1852
 msgid "Pulse realm entry\n"
 msgstr ""
 
-#: pulse.c:1696
+#: pulse.c:1858
 msgid "Pulse realm choice\n"
 msgstr ""
 
-#: pulse.c:1703
+#: pulse.c:1865
 #, c-format
 msgid "Pulse password auth request, code 0x%02x\n"
 msgstr "Pulse jelszó hitelesítési kérés, 0x%02x kód\n"
 
-#: pulse.c:1714
+#: pulse.c:1878
+#, c-format
+msgid "Pulse password request with unknown code 0x%02x. Please report.\n"
+msgstr ""
+
+#: pulse.c:1887
 msgid "Pulse password general token code request\n"
 msgstr "Pulse jelszó általános tokenkód kérés\n"
 
-#: pulse.c:1725
+#: pulse.c:1898
 #, c-format
 msgid "Pulse session limit, %d sessions\n"
 msgstr ""
 
-#: pulse.c:1734
+#: pulse.c:1907
 msgid "Unhandled Pulse auth request\n"
 msgstr "Kezeletlen Pulse hitelesítési kérés\n"
 
-#: pulse.c:1771
+#: pulse.c:1944
 msgid "Unexpected response instead of IF-T/TLS auth success:\n"
 msgstr ""
 
-#: pulse.c:1844
+#: pulse.c:2007
+msgid "EAP-TTLS failure: Flushing output with pending input bytes\n"
+msgstr ""
+
+#: pulse.c:2030
+msgid "Error creating EAP-TTLS buffer\n"
+msgstr ""
+
+#: pulse.c:2078
+#, c-format
+msgid "Failed to read EAP-TTLS Acknowledge: %s\n"
+msgstr ""
+
+#: pulse.c:2084 pulse.c:2124
 #, c-format
 msgid "Read %d bytes of IF-T/TLS EAP-TTLS record\n"
 msgstr "%d bájt kiolvasva az IF-T/TLS EAP-TTLS rekordból\n"
 
-#: pulse.c:1855
-msgid "Bad EAP-TTLS packet\n"
-msgstr "Rossz EAP-TTLS csomag\n"
+#: pulse.c:2095
+msgid "Bad EAP-TTLS Acknowledge packet\n"
+msgstr ""
 
-#: pulse.c:1968
+#: pulse.c:2135
+#, c-format
+msgid "Bad EAP-TTLS packet (len %d, left %d)\n"
+msgstr ""
+
+#: pulse.c:2292
 msgid "Unexpected Pulse config packet:\n"
 msgstr "Érvénytelen Pulse beállítási csomag:\n"
 
-#: pulse.c:2025
+#: pulse.c:2349
 #, c-format
 msgid "Receive route of unknown type 0x%08x\n"
 msgstr "Ismeretlen 0x%08x típusú útvonal érkezett\n"
 
-#: pulse.c:2096
+#: pulse.c:2420
 msgid "Invalid ESP config packet:\n"
 msgstr "Érvénytelen ESP beállítási csomag:\n"
 
-#: pulse.c:2108
+#: pulse.c:2432
 msgid "Invalid ESP setup\n"
 msgstr "Érvénytelen ESP beállítás\n"
 
-#: pulse.c:2183
+#: pulse.c:2507
 msgid "Bad IF-T/TLS packet when expecting configuration:\n"
 msgstr ""
 
-#: pulse.c:2191
+#: pulse.c:2515
 msgid "Unexpected IF-T/TLS packet when expecting configuration.\n"
 msgstr ""
 
-#: pulse.c:2342
+#: pulse.c:2666
 #, c-format
 msgid "Received data packet of %d bytes\n"
 msgstr ""
 
-#: pulse.c:2364
+#: pulse.c:2688
 msgid "ESP rekey failed\n"
 msgstr "ESP kulcsmegújítás sikertelen\n"
 
-#: pulse.c:2388
+#: pulse.c:2712
 msgid "Unknown Pulse packet\n"
 msgstr "Ismeretlen Pulse csomag\n"
 
-#: pulse.c:2566
+#: pulse.c:2890
 #, c-format
 msgid "Sending IF-T/TLS data packet of %d bytes\n"
 msgstr ""
@@ -4475,138 +4590,146 @@ msgstr "A(z) „%s” parancsfájl nem megfelelő módon lépett ki (%x)\n"
 msgid "Script '%s' returned error %d\n"
 msgstr "A(z) „%s” parancsfájl a következő hibakóddal tért vissza: %d\n"
 
-#: ssl.c:108
+#: ssl.c:111
+msgid "Failed select() for socket connect"
+msgstr ""
+
+#: ssl.c:116
 msgid "Socket connect cancelled\n"
 msgstr "Foglalat-csatlakozás megszakítva\n"
 
-#: ssl.c:217
+#: ssl.c:225
 #, c-format
 msgid "Failed to reconnect to proxy %s: %s\n"
 msgstr "Nem sikerült újracsatlakozni a(z) %s proxyhoz: %s\n"
 
-#: ssl.c:221
+#: ssl.c:229
 #, c-format
 msgid "Failed to reconnect to host %s: %s\n"
 msgstr "Nem sikerült újracsatlakozni a(z) %s géphez: %s\n"
 
-#: ssl.c:289
+#: ssl.c:297
 #, c-format
 msgid "Proxy from libproxy: %s://%s:%d/\n"
 msgstr "Proxy a libproxy könyvtárból: %s://%s:%d/\n"
 
-#: ssl.c:317
+#: ssl.c:325
 #, c-format
 msgid "getaddrinfo failed for host '%s': %s\n"
 msgstr "A getaddrinfo meghiúsult a(z) „%s” gépnél: %s\n"
 
-#: ssl.c:326 ssl.c:451
+#: ssl.c:334 ssl.c:460
 msgid "Reconnecting to DynDNS server using previously cached IP address\n"
 msgstr ""
 "Újracsatlakozás a DynDNS kiszolgálóhoz az előzőleg gyorsítótárazott IP-cím "
 "használatával\n"
 
-#: ssl.c:341
+#: ssl.c:349
 #, c-format
 msgid "Attempting to connect to proxy %s%s%s:%s\n"
 msgstr "Kapcsolódási kísérlet a következő proxy-hoz: %s%s%s:%s\n"
 
-#: ssl.c:342
+#: ssl.c:350
 #, c-format
 msgid "Attempting to connect to server %s%s%s:%s\n"
 msgstr "Kapcsolódási kísérlet a következő kiszolgálóhoz: %s%s%s:%s\n"
 
-#: ssl.c:362
+#: ssl.c:370
 #, c-format
 msgid "Connected to %s%s%s:%s\n"
 msgstr "Csatlakozva ide: %s%s%s:%s\n"
 
-#: ssl.c:374
+#: ssl.c:382
 msgid "Failed to allocate sockaddr storage\n"
 msgstr "Nem sikerült lefoglalni a sockaddr tárolót\n"
 
-#: ssl.c:416
+#: ssl.c:425
 #, c-format
 msgid "Failed to connect to %s%s%s:%s: %s\n"
 msgstr "Nem sikerült ide kapcsolódni: %s%s%s:%s: %s\n"
 
-#: ssl.c:434
+#: ssl.c:443
 msgid "Forgetting non-functional previous peer address\n"
 msgstr "A nem funkcionális előző csomópont címének elfelejtése\n"
 
-#: ssl.c:446
+#: ssl.c:455
 #, c-format
 msgid "Failed to connect to host %s\n"
 msgstr "Nem sikerült kapcsolódni a következő géphez: %s\n"
 
-#: ssl.c:465
+#: ssl.c:474
 #, c-format
 msgid "Reconnecting to proxy %s\n"
 msgstr "Újracsatlakozás a proxyhoz: „%s”\n"
 
-#: ssl.c:536
+#: ssl.c:545
 #, c-format
 msgid "statvfs: %s\n"
 msgstr "statvfs: %s\n"
 
-#: ssl.c:564
+#: ssl.c:573
 msgid "Could not obtain file system ID for passphrase\n"
 msgstr "Nem sikerült beszerezni a fájlrendszer azonosítót a jelszóhoz\n"
 
-#: ssl.c:575
+#: ssl.c:584
 #, c-format
 msgid "Failed to open private key file '%s': %s\n"
 msgstr "A(z) „%s” személyes kulcsfájl megnyitása nem sikerült: %s\n"
 
-#: ssl.c:603
+#: ssl.c:612
 #, c-format
 msgid "statfs: %s\n"
 msgstr "statfs: %s\n"
 
-#: ssl.c:694
+#: ssl.c:703
 msgid "No error"
 msgstr "Nincs hiba"
 
-#: ssl.c:695
+#: ssl.c:704
 msgid "Keystore locked"
 msgstr "Kulcstároló zárolva"
 
-#: ssl.c:696
+#: ssl.c:705
 msgid "Keystore uninitialized"
 msgstr "Kulcstároló nincs előkészítve"
 
-#: ssl.c:697
+#: ssl.c:706
 msgid "System error"
 msgstr "Rendszerhiba"
 
-#: ssl.c:698
+#: ssl.c:707
 msgid "Protocol error"
 msgstr "Protokollhiba"
 
-#: ssl.c:699
+#: ssl.c:708
 msgid "Permission denied"
 msgstr "Hozzáférés megtagadva"
 
-#: ssl.c:700
+#: ssl.c:709
 msgid "Key not found"
 msgstr "Kulcs nem található"
 
-#: ssl.c:701
+#: ssl.c:710
 msgid "Value corrupted"
 msgstr "Sérült érték"
 
-#: ssl.c:702
+#: ssl.c:711
 msgid "Undefined action"
 msgstr "Meghatározatlan művelet"
 
-#: ssl.c:706
+#: ssl.c:715
 msgid "Wrong password"
 msgstr "Hibás jelszó"
 
-#: ssl.c:707
+#: ssl.c:716
 msgid "Unknown error"
 msgstr "Ismeretlen hiba"
 
-#: ssl.c:896
+#: ssl.c:845
+msgid "Failed select() for command socket"
+msgstr ""
+
+#: ssl.c:909
 #, c-format
 msgid "openconnect_fopen_utf8() used with unsupported mode '%s'\n"
 msgstr ""
@@ -4614,34 +4737,76 @@ msgstr ""
 
 #: ssl.c:931
 #, c-format
+msgid "Failed to open %s: %s\n"
+msgstr "Nem sikerült megnyitni: %s: %s\n"
+
+#: ssl.c:938
+#, c-format
+msgid "Failed to fstat() %s: %s\n"
+msgstr "Nem sikerült az fstat() %s hívás: %s\n"
+
+#: ssl.c:945
+#, c-format
+msgid "File %s is empty\n"
+msgstr ""
+
+#: ssl.c:951
+#, c-format
+msgid "File %s has suspicious size %zd\n"
+msgstr ""
+
+#: ssl.c:960
+#, c-format
+msgid "Failed to allocate %d bytes for %s\n"
+msgstr "Nem sikerült %d bájtot lefoglalni ehhez: %s\n"
+
+#: ssl.c:968
+#, c-format
+msgid "Failed to read %s: %s\n"
+msgstr "Nem sikerült beolvasni: %s: %s\n"
+
+#: ssl.c:1004
+#, c-format
 msgid "Unknown protocol family %d. Cannot create UDP server address\n"
 msgstr "Ismeretlen protokollcsalád: %d. Nem hozható létre UDP kiszolgálócím\n"
 
-#: ssl.c:950
+#: ssl.c:1023
 msgid "Open UDP socket"
 msgstr "UDP foglalat megnyitása"
 
-#: ssl.c:981
+#: ssl.c:1056
 #, c-format
 msgid "Unknown protocol family %d. Cannot use UDP transport\n"
 msgstr "Ismeretlen protokollcsalád: %d. Nem használható az UDP átvitel\n"
 
-#: ssl.c:989
+#: ssl.c:1064
 msgid "Bind UDP socket"
 msgstr "UDP foglalat kötése"
 
-#: ssl.c:996
+#: ssl.c:1071
 msgid "Connect UDP socket\n"
 msgstr "UDP foglalat kapcsolódása\n"
 
-#: ssl.c:1034
+#: ssl.c:1078
+msgid "Make UDP socket non-blocking"
+msgstr ""
+
+#: ssl.c:1113
 msgid "Cookie is no longer valid, ending session\n"
 msgstr "A süti nem érvényes többé, munkamenet befejezése\n"
 
-#: ssl.c:1038
+#: ssl.c:1117
 #, c-format
 msgid "sleep %ds, remaining timeout %ds\n"
 msgstr "alvás: %dmp, hátralévő időkorlát: %dmp\n"
+
+#: ssl.c:1186
+msgid "Failed select() for socket send"
+msgstr ""
+
+#: ssl.c:1226
+msgid "Failed select() for socket recv"
+msgstr ""
 
 #: sspi.c:203
 #, c-format
@@ -4722,65 +4887,85 @@ msgstr "DecryptMessage sikertelen: %lx\n"
 msgid "Invalid SSPI protection response from proxy (%lu bytes)\n"
 msgstr "Érvénytelen SSPI védelem válasz a proxytól (%lu bájt)\n"
 
-#: stoken.c:77
+#: stoken.c:102
 msgid "Enter credentials to unlock software token."
 msgstr "Adja meg a hitelesítési adatokat a szoftveres token feloldásához."
 
-#: stoken.c:82
+#: stoken.c:107
 msgid "Device ID:"
 msgstr "Eszközazonosító:"
 
-#: stoken.c:118
+#: stoken.c:143
 msgid "User bypassed soft token.\n"
 msgstr "A felhasználó megkerülte a szoftveres tokent.\n"
 
-#: stoken.c:124 stoken.c:209
+#: stoken.c:149 stoken.c:234
 msgid "All fields are required; try again.\n"
 msgstr "Minden mező kötelező, próbálja újra.\n"
 
-#: stoken.c:134 stoken.c:301
+#: stoken.c:159 stoken.c:326
 msgid "General failure in libstoken.\n"
 msgstr "Általános hiba a libstoken könyvtárban.\n"
 
-#: stoken.c:138
+#: stoken.c:163
 msgid "Incorrect device ID or password; try again.\n"
 msgstr "Hibás eszközazonosító vagy jelszó, próbálja újra.\n"
 
-#: stoken.c:142
+#: stoken.c:167
 msgid "Soft token init was successful.\n"
 msgstr "A szoftveres token előkészítése sikeres volt.\n"
 
-#: stoken.c:185
+#: stoken.c:210
 msgid "Enter software token PIN."
 msgstr "Adja meg a szoftveres token PIN-kódját."
 
-#: stoken.c:189
+#: stoken.c:214
 msgid "PIN:"
 msgstr "PIN:"
 
-#: stoken.c:216
+#: stoken.c:241
 msgid "Invalid PIN format; try again.\n"
 msgstr "Érvénytelen PIN-formátum, próbálja újra.\n"
 
-#: stoken.c:296
+#: stoken.c:321
 msgid "Generating RSA token code\n"
 msgstr "RSA tokenkód előállítása\n"
 
-#: tun-win32.c:76
+#: tun-win32.c:75
 msgid "Error accessing registry key for network adapters\n"
 msgstr "Hiba a hálózati adatperek rendszerleíró kulcsához való hozzáféréskor\n"
 
-#: tun-win32.c:139
+#: tun-win32.c:101
 #, c-format
-msgid "Ignoring non-matching TAP interface \"%s\"\n"
-msgstr "Nem egyező „%s” TAP felület mellőzése\n"
+msgid "Cannot read %s\\%s or is not string\n"
+msgstr ""
 
-#: tun-win32.c:154
+#: tun-win32.c:108
+#, c-format
+msgid "%s\\ComponentId is '%s' not '%s'\n"
+msgstr ""
+
+#: tun-win32.c:114
+#, c-format
+msgid "Found %s at %s\n"
+msgstr ""
+
+#: tun-win32.c:131
+#, c-format
+msgid "Cannot open registry key %s\n"
+msgstr ""
+
+#: tun-win32.c:142
+#, c-format
+msgid "Cannot read registry key %s\\%s or is not string\n"
+msgstr ""
+
+#: tun-win32.c:158
 msgid "No Windows-TAP adapters found. Is the driver installed?\n"
 msgstr ""
 "Nem találhatók Windows-TAP adapterek. Telepítve van az illesztőprogram?\n"
 
-#: tun-win32.c:186
+#: tun-win32.c:192
 #, c-format
 msgid ""
 "GetAdapterIndex() failed: %s\n"
@@ -4789,77 +4974,82 @@ msgstr ""
 "GetAdapterIndex() sikertelen: %s\n"
 "Visszaállás a GetAdaptersInfo() függvényre\n"
 
-#: tun-win32.c:200
+#: tun-win32.c:206
 #, c-format
 msgid "GetAdaptersInfo() failed: %s\n"
 msgstr "GetAdaptersInfo() sikertelen: %s\n"
 
-#: tun-win32.c:231
+#: tun-win32.c:241
+#, c-format
+msgid "Ignoring non-matching TAP interface \"%s\"\n"
+msgstr "Nem egyező „%s” TAP felület mellőzése\n"
+
+#: tun-win32.c:252
 #, c-format
 msgid "Failed to open %s\n"
 msgstr "Nem sikerült megnyitni: %s\n"
 
-#: tun-win32.c:236
+#: tun-win32.c:257
 #, c-format
 msgid "Opened tun device %s\n"
 msgstr "Megnyitott tun eszköz: %s\n"
 
-#: tun-win32.c:244
+#: tun-win32.c:265
 #, c-format
 msgid "Failed to obtain TAP driver version: %s\n"
 msgstr "Nem sikerült megszerezni a TAP illesztőprogram verzióját: %s\n"
 
-#: tun-win32.c:250
+#: tun-win32.c:271
 #, c-format
 msgid "Error: TAP-Windows driver v9.9 or greater is required (found %ld.%ld)\n"
 msgstr ""
 "Hiba: TAP-Windows illesztőprogram v9.9 vagy újabb szükséges (%ld.%ld "
 "található)\n"
 
-#: tun-win32.c:271
+#: tun-win32.c:292
 #, c-format
 msgid "Failed to set TAP IP addresses: %s\n"
 msgstr "Nem sikerült beállítani a TAP IP-címeket: %s\n"
 
-#: tun-win32.c:283 tun-win32.c:406
+#: tun-win32.c:304 tun-win32.c:430
 #, c-format
 msgid "Failed to set TAP media status: %s\n"
 msgstr "Nem sikerült beállítani a TAP médiaállapotot: %s\n"
 
-#: tun-win32.c:316
+#: tun-win32.c:340
 msgid "TAP device aborted connectivity. Disconnecting.\n"
 msgstr "A TAP eszköz megszakította a kapcsolódási lehetőséget. Leválasztás.\n"
 
-#: tun-win32.c:321
+#: tun-win32.c:345
 #, c-format
 msgid "Failed to read from TAP device: %s\n"
 msgstr "Nem sikerült olvasni a TAP eszközről: %s\n"
 
-#: tun-win32.c:335
+#: tun-win32.c:359
 #, c-format
 msgid "Failed to complete read from TAP device: %s\n"
 msgstr "Nem sikerült befejezni az olvasást a TAP eszközről: %s\n"
 
-#: tun-win32.c:358
+#: tun-win32.c:382
 #, c-format
 msgid "Wrote %ld bytes to tun\n"
 msgstr "%ld bájt kiírva a tun eszközre\n"
 
-#: tun-win32.c:368
+#: tun-win32.c:392
 msgid "Waiting for tun write...\n"
 msgstr "Várakozás a tun írásra…\n"
 
-#: tun-win32.c:371
+#: tun-win32.c:395
 #, c-format
 msgid "Wrote %ld bytes to tun after waiting\n"
 msgstr "%ld bájt kiírva a tun eszközre a várakozás után\n"
 
-#: tun-win32.c:378
+#: tun-win32.c:402
 #, c-format
 msgid "Failed to write to TAP device: %s\n"
 msgstr "Nem sikerült írni a TAP eszközre: %s\n"
 
-#: tun-win32.c:423
+#: tun-win32.c:447
 msgid "Spawning tunnel scripts is not yet supported on Windows\n"
 msgstr "Alagút parancsfájlok indítása még nem támogatott Windows rendszeren\n"
 
@@ -4968,84 +5158,69 @@ msgstr "A(z) „%s” nem nyitható meg: %s\n"
 msgid "TUNSIFHEAD"
 msgstr "TUNSIFHEAD"
 
-#: tun.c:479
+#: tun.c:464
+#, c-format
+msgid "Failed to make tun socket nonblocking: %s\n"
+msgstr ""
+
+#: tun.c:483
 #, c-format
 msgid "socketpair failed: %s\n"
 msgstr "socketpair sikertelen: %s\n"
 
-#: tun.c:484
+#: tun.c:488
 #, c-format
 msgid "fork failed: %s\n"
 msgstr "fork sikertelen: %s\n"
 
-#: tun.c:488
+#: tun.c:492
 msgid "setpgid"
 msgstr "setpgid"
 
-#: tun.c:493
+#: tun.c:497
 msgid "execl"
 msgstr "execl"
 
-#: tun.c:498
+#: tun.c:502
 msgid "(script)"
 msgstr "(parancsfájl)"
 
-#: tun.c:566
+#: tun.c:570
 #, c-format
 msgid "Failed to write incoming packet: %s\n"
 msgstr "Nem sikerült a bejövő csomag írása: %s\n"
 
-#: xml.c:45
-#, c-format
-msgid "Failed to open %s: %s\n"
-msgstr "Nem sikerült megnyitni: %s: %s\n"
-
-#: xml.c:52
-#, c-format
-msgid "Failed to fstat() %s: %s\n"
-msgstr "Nem sikerült az fstat() %s hívás: %s\n"
-
-#: xml.c:62
-#, c-format
-msgid "Failed to allocate %d bytes for %s\n"
-msgstr "Nem sikerült %d bájtot lefoglalni ehhez: %s\n"
-
-#: xml.c:70
-#, c-format
-msgid "Failed to read %s: %s\n"
-msgstr "Nem sikerült beolvasni: %s: %s\n"
-
-#: xml.c:124 xml.c:149
+#: xml.c:75 xml.c:100
 #, c-format
 msgid "Treating host \"%s\" as a raw hostname\n"
 msgstr "A(z) „%s” gép kezelése nyers gépnévként\n"
 
-#: xml.c:131
+#: xml.c:82
 #, c-format
 msgid "Failed to SHA1 existing file\n"
 msgstr "A meglévő fájl SHA1 ellenőrzése nem sikerült\n"
 
-#: xml.c:139
+#: xml.c:90
 #, c-format
 msgid "XML config file SHA1: %s\n"
 msgstr "XML beállítófájl SHA1: %s\n"
 
-#: xml.c:147
+#: xml.c:98
 #, c-format
 msgid "Failed to parse XML config file %s\n"
 msgstr "Nem sikerült feldolgozni az XML beállítófájlt: %s\n"
 
-#: xml.c:184
+#: xml.c:135
 #, c-format
 msgid "Host \"%s\" has address \"%s\"\n"
 msgstr "A(z) „%s” gépnek „%s” címe van\n"
 
-#: xml.c:194
+#: xml.c:145
 #, c-format
 msgid "Host \"%s\" has UserGroup \"%s\"\n"
 msgstr "A „%s” gépnek „%s” felhasználói csoportja van\n"
 
-#: xml.c:208
+#: xml.c:159
 #, c-format
 msgid "Host \"%s\" not listed in config; treating as raw hostname\n"
 msgstr ""
@@ -5170,34 +5345,3 @@ msgstr "kiszámítás parancs"
 #: yubikey.c:627
 msgid "Unrecognised response from Yubikey when generating tokencode\n"
 msgstr "Azonosítatlan válasz a Yubikey-től a tokenkód előállításakor\n"
-
-#~ msgid "Failed to generate random keys for ESP:\n"
-#~ msgstr "Nem sikerült a véletlenszerű kulcsok előállítása az ESP-hez:\n"
-
-#~ msgid "Compatible with Juniper Network Connect / Pulse Secure SSL VPN"
-#~ msgstr ""
-#~ "Kompatibilis a Juniper hálózati csatlakozás / Pulse Secure SSL VPN-nel"
-
-#~ msgid "Failed to generate random keys for ESP: %s\n"
-#~ msgstr "Nem sikerült a véletlen kulcsok előállítása az ESP-hez: %s\n"
-
-#~ msgid "Failed to send DPD request (%d)\n"
-#~ msgstr "Nem sikerült a DPD kérés (%d) küldése\n"
-
-#~ msgid "Initiating IPv6 MTU detection\n"
-#~ msgstr "IPv6 MTU észlelés előkészítése\n"
-
-#~ msgid "Received MTU DPD probe (%u bytes of %u)\n"
-#~ msgstr "MTU DPD szonda fogadva (%u bájt / %u)\n"
-
-#~ msgid "Timeout while waiting for DPD response; resending probe.\n"
-#~ msgstr "Időtúllépés a DPD válaszra várva; szonda újraküldése.\n"
-
-#~ msgid "Timeout while waiting for DPD response; trying %d\n"
-#~ msgstr "Időtúllépés a DPD válaszra várva; próbálkozás: %d\n"
-
-#~ msgid "Sending MTU DPD probe (%u bytes, min=%u, max=%u)\n"
-#~ msgstr "MTU DPD szonda küldése (%u bájt, min=%u, max=%u)\n"
-
-#~ msgid "Initiating IPv4 MTU detection (min=%d, max=%d)\n"
-#~ msgstr "IPv4 MTU észlelés előkészítése (min=%d, max=%d)\n"
