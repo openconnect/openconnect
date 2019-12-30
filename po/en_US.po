@@ -3,13 +3,13 @@
 # This file is distributed under the same license as the PACKAGE package.
 #
 # Translators:
-# Margie Foster <margie@linux.intel.com>, 2011, 2012.
+# Margie Foster <margie@linux.intel.com>, 2011-2012
 msgid ""
 msgstr ""
 "Project-Id-Version: openconnect\n"
 "Report-Msgid-Bugs-To: openconnect-devel@lists.infradead.org\n"
 "POT-Creation-Date: 2019-12-30 00:19+0000\n"
-"PO-Revision-Date: 2012-11-15 08:31+0000\n"
+"PO-Revision-Date: 2014-02-19 09:05+0000\n"
 "Last-Translator: David Woodhouse <dwmw2@infradead.org>\n"
 "Language-Team: English (United States) (http://www.transifex.com/projects/p/"
 "meego/language/en_US/)\n"

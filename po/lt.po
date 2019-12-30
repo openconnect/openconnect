@@ -1,23 +1,24 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
+# Lithuanian translation of network-manager-openconnect.
+# Copyright (C) 2009-2010 Free Software Foundation, Inc.
+# This file is distributed under the same license as the network-manager-openconnect package.
+# Žygimantas Beručka <zygis@gnome.org>, 2009.
+# Aurimas Černius <aurisc4@gmail.com>, 2010-2018.
 #
-# Translators:
 msgid ""
 msgstr ""
-"Project-Id-Version: openconnect\n"
+"Project-Id-Version: network-manager-openconnect master\n"
 "Report-Msgid-Bugs-To: openconnect-devel@lists.infradead.org\n"
 "POT-Creation-Date: 2019-12-30 00:19+0000\n"
-"PO-Revision-Date: 2011-09-22 22:31+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Lithuanian (http://www.transifex.net/projects/p/meego/team/"
-"lt/)\n"
+"PO-Revision-Date: 2018-12-16 13:45+0200\n"
+"Last-Translator: Aurimas Černius <aurisc4@gmail.com>\n"
+"Language-Team: Lietuvių <gnome-lt@lists.akl.lt>\n"
 "Language: lt\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && (n"
-"%100<10 || n%100>=20) ? 1 : 2)\n"
+"%100<10 || n%100>=20) ? 1 : 2);\n"
+"X-Generator: Gtranslator 3.30.1\n"
 
 #: auth-globalprotect.c:129
 #, c-format
@@ -322,8 +323,8 @@ msgid ""
 msgstr ""
 "Klaida: serveris paprašė parsiųsti ir įvykdyti „Cisco Secure Desktop“ trojos "
 "arklį.\n"
-"Ši funkcija numatytai yra išjungta saugumo sumetimai, tad jūs galite norėti "
-"ją įjungti.\n"
+"Ši funkcija pagal numatymą yra išjungta saugumo sumetimai, tad jūs galite "
+"norėti ją įjungti.\n"
 
 #: auth.c:1068
 msgid "Trying to run Linux CSD trojan script.\n"
@@ -608,7 +609,8 @@ msgstr "Atliekamas CSTP raktų pakeitimas\n"
 #. if we failed rehandshake try establishing a new-tunnel instead of failing
 #: cstp.c:1098 oncp.c:1171 pulse.c:2810
 msgid "Rehandshake failed; attempting new-tunnel\n"
-msgstr "Pakartotinis rankos paspaudimas nepavyko; bandomas naujas tunelis\n"
+msgstr ""
+"Pakartotinis išankstinis suderinimas nepavyko; bandomas naujas tunelis\n"
 
 #: cstp.c:1109 oncp.c:1182 pulse.c:2821
 msgid "CSTP Dead Peer Detection detected dead peer!\n"
@@ -647,12 +649,12 @@ msgstr ""
 
 #: digest.c:252
 msgid "Attempting Digest authentication to proxy\n"
-msgstr "Bandoma nusiųsti tapatybės patvirtinimą į tarpinį serverį\n"
+msgstr "Bandoma nusiųsti tapatybės nustatymą į įgaliotąjį serverį\n"
 
 #: digest.c:255
 #, c-format
 msgid "Attempting Digest authentication to server '%s'\n"
-msgstr "Bandoma nusiųsti tapatybės patvirtinimą į tarpinį serverį „%s“\n"
+msgstr "Bandoma nusiųsti tapatybės nustatymą į serverį „%s“\n"
 
 #: dtls.c:113
 msgid "DTLS connection attempted with an existing fd\n"
@@ -665,12 +667,12 @@ msgstr "Nėra DTLS adreso\n"
 #. We probably didn't offer it any ciphers it liked
 #: dtls.c:126
 msgid "Server offered no DTLS cipher option\n"
-msgstr "Serveris nepasiūlė DTLS šifro parinkties\n"
+msgstr "Serveris nepasiūlė DTLS šifro parametro\n"
 
 #. XXX: Theoretically, SOCKS5 proxies can do UDP too
 #: dtls.c:133
 msgid "No DTLS when connected via proxy\n"
-msgstr "Nėra DTLS jungiantis per tarpinį serverį\n"
+msgstr "Nėra DTLS jungiantis per įgaliotąjį serverį\n"
 
 #: dtls.c:200
 #, c-format
@@ -722,7 +724,7 @@ msgstr "Atliekamas DTLS raktų pasikeitimas\n"
 
 #: dtls.c:363
 msgid "DTLS Rehandshake failed; reconnecting.\n"
-msgstr "Nepavyko DTLS rankos paspaudimas; jungiamasi iš naujo.\n"
+msgstr "Nepavyko DTLS išankstinis suderinimas; jungiamasi iš naujo.\n"
 
 #: dtls.c:372
 msgid "DTLS Dead Peer Detection detected dead peer!\n"
@@ -876,7 +878,7 @@ msgstr "ESP šifravimo tipo %s raktas 0x%s\n"
 #: esp.c:72
 #, c-format
 msgid "ESP authentication type %s key 0x%s\n"
-msgstr "ESP tapatybės patvirtinimo tipo %s raktas 0x%s\n"
+msgstr "ESP tapatybės nustatymo tipo %s raktas 0x%s\n"
 
 #: esp.c:90
 msgid "incoming"
@@ -1060,12 +1062,12 @@ msgstr "DTLS ryšio suspaudimas, naudojant %s.\n"
 
 #: gnutls-dtls.c:437 openssl-dtls.c:693 openssl-dtls.c:697
 msgid "DTLS handshake timed out\n"
-msgstr "DTLS rankos paspaudimo laikas baigėsi\n"
+msgstr "DTLS išankstinio suderinimo laikas baigėsi\n"
 
 #: gnutls-dtls.c:440
 #, c-format
 msgid "DTLS handshake failed: %s\n"
-msgstr "Nepavyko DTLS rankos paspaudimas: %s\n"
+msgstr "Nepavyko DTLS išankstinis suderinimas: %s\n"
 
 #: gnutls-dtls.c:444
 msgid "(Is a firewall preventing you from sending UDP packets?)\n"
@@ -1316,7 +1318,7 @@ msgstr "Naudojamas sistemos raktas %s\n"
 #: gnutls.c:1128 gnutls.c:1275
 #, c-format
 msgid "Error initialising private key structure: %s\n"
-msgstr "Klaida inicializuojant privataus rakto struktūrą: %s\n"
+msgstr "Klaida inicijuojant privačiojo rakto struktūrą: %s\n"
 
 #: gnutls.c:1139
 #, c-format
@@ -1346,12 +1348,12 @@ msgstr "Naudojamas PKCS#11 raktas %s\n"
 #: gnutls.c:1285
 #, c-format
 msgid "Error importing PKCS#11 key into private key structure: %s\n"
-msgstr "Klaida importuojant PKCS#11 raktą į privataus rakto struktūrą: %s\n"
+msgstr "Klaida importuojant PKCS#11 raktą į privačiojo rakto struktūrą: %s\n"
 
 #: gnutls.c:1303
 #, c-format
 msgid "Using private key file %s\n"
-msgstr "Naudojamas privataus rakto failas %s\n"
+msgstr "Naudojamas privačiojo rakto failas %s\n"
 
 #: gnutls.c:1314 openssl.c:656
 msgid "This version of OpenConnect was built without TPM support\n"
@@ -1368,12 +1370,12 @@ msgstr "Nepavyko interpretuoti PEM failo\n"
 #: gnutls.c:1370
 #, c-format
 msgid "Failed to load PKCS#1 private key: %s\n"
-msgstr "Nepavyko įkelti PKCS#1 privataus rakto: %s\n"
+msgstr "Nepavyko įkelti PKCS#1 privačiojo rakto: %s\n"
 
 #: gnutls.c:1383 gnutls.c:1397
 #, c-format
 msgid "Failed to load private key as PKCS#8: %s\n"
-msgstr "Nepavyko įkelti privataus rakto kaip PKCS#8: %s\n"
+msgstr "Nepavyko įkelti privačiojo rakto kaip PKCS#8: %s\n"
 
 #: gnutls.c:1405 gnutls.c:1438 openssl.c:1008 openssl.c:1018
 msgid "Failed to decrypt PKCS#8 certificate file\n"
@@ -1382,7 +1384,7 @@ msgstr "Nepavyko dešifruoti PKCS#8 liudijimo failo\n"
 #: gnutls.c:1430
 #, c-format
 msgid "Failed to determine type of private key %s\n"
-msgstr "Nepavyko nustatyti privataus rakto %s tipo\n"
+msgstr "Nepavyko nustatyti privačiojo rakto %s tipo\n"
 
 #: gnutls.c:1442 openssl.c:1014
 msgid "Enter PKCS#8 pass phrase:"
@@ -1396,7 +1398,7 @@ msgstr "Nepavyko gauti rakto ID: %s\n"
 #: gnutls.c:1503
 #, c-format
 msgid "Error signing test data with private key: %s\n"
-msgstr "Klaida pasirašant testinius duomenis privačiu raktu: %s\n"
+msgstr "Klaida pasirašant testinius duomenis privačiuoju raktu: %s\n"
 
 #: gnutls.c:1518
 #, c-format
@@ -1405,7 +1407,7 @@ msgstr "Klaida tikrinant parašą su liudijimu: %s\n"
 
 #: gnutls.c:1543
 msgid "No SSL certificate found to match private key\n"
-msgstr "Nerastas SSL liudijimas, atitinkantis privatų raktą\n"
+msgstr "Nerastas SSL liudijimas, atitinkantis privatųjį raktą\n"
 
 #: gnutls.c:1555 openssl.c:560 openssl.c:714
 #, c-format
@@ -1426,7 +1428,7 @@ msgid ""
 "WARNING: GnuTLS returned incorrect issuer certs; authentication may fail!\n"
 msgstr ""
 "ĮSPĖJIMAS: GnuTLS grąžino neteisingus išdavėjų liudijimus; tapatybės "
-"patvirtinimas gali nepavykti!\n"
+"nustatymas gali nepavykti!\n"
 
 #: gnutls.c:1652
 msgid "Got no issuer from PKCS#11\n"
@@ -1463,16 +1465,19 @@ msgstr "Serveris nepateikė liudijimo\n"
 #, c-format
 msgid "Error comparing server's cert on rehandshake: %s\n"
 msgstr ""
-"Klaida lyginant serverio liudijimą pakartotiniame rankos paspaudime: %s\n"
+"Klaida lyginant serverio liudijimą pakartotiniame išankstiniame suderinime: "
+"%s\n"
 
 #: gnutls.c:1958 openssl.c:1525
 msgid "Server presented different cert on rehandshake\n"
-msgstr "Serveris pateikė kitokį liudijimą pakartotiniame rankos paspaudime\n"
+msgstr ""
+"Serveris pateikė kitokį liudijimą pakartotiniame išankstiniame suderinime\n"
 
 #: gnutls.c:1963 openssl.c:1528
 msgid "Server presented identical cert on rehandshake\n"
 msgstr ""
-"Serveris pateikė identišką liudijimą pakartotiniame rankos paspaudime\n"
+"Serveris pateikė identišką liudijimą pakartotiniame išankstiniame "
+"suderinime\n"
 
 #: gnutls.c:1969
 msgid "Error initialising X509 cert structure\n"
@@ -1570,7 +1575,7 @@ msgstr "SSL ryšio klaida: %s\n"
 #: gnutls.c:2320
 #, c-format
 msgid "GnuTLS non-fatal return during handshake: %s\n"
-msgstr "GnuTLS nelemtinga grįžimas rankos paspaudimo metu: %s\n"
+msgstr "GnuTLS nelemtingas grįžimas išankstinio suderinimo metu: %s\n"
 
 #: gnutls.c:2326 openssl.c:1849
 #, c-format
@@ -2133,7 +2138,7 @@ msgstr ""
 
 #: gssapi.c:75
 msgid "Error importing GSSAPI name for authentication:\n"
-msgstr "Klaida importuojant GSSAPI pavadinimą tapatybės patvirtinimui:\n"
+msgstr "Klaida importuojant GSSAPI pavadinimą tapatybės nustatymui:\n"
 
 #: gssapi.c:128
 msgid "Error generating GSSAPI response:\n"
@@ -2141,16 +2146,16 @@ msgstr "Klaida generuojant GSSAPI atsakymą:\n"
 
 #: gssapi.c:145
 msgid "Attempting GSSAPI authentication to proxy\n"
-msgstr "Bandomas GSSAPI tapatybės patvirtinimą tarpiniame serveryje\n"
+msgstr "Bandomas GSSAPI tapatybės nustatymas įgaliotajame serveryje\n"
 
 #: gssapi.c:148
 #, c-format
 msgid "Attempting GSSAPI authentication to server '%s'\n"
-msgstr "Bandomas GSSAPI tapatybės patvirtinimą tarpiniame serveryje „%s“\n"
+msgstr "Bandomas GSSAPI tapatybės nustatymas serveryje „%s“\n"
 
 #: gssapi.c:200 gssapi.c:256 sspi.c:191 sspi.c:249
 msgid "GSSAPI authentication completed\n"
-msgstr "GSSAPI tapatybės patvirtinimas užbaigtas\n"
+msgstr "GSSAPI tapatybės nustatymas užbaigtas\n"
 
 #: gssapi.c:211
 #, c-format
@@ -2166,14 +2171,14 @@ msgstr "Siunčiama %zu baitų GSSAPI leksema\n"
 #, c-format
 msgid "Failed to send GSSAPI authentication token to proxy: %s\n"
 msgstr ""
-"Nepavyko išsiųsti GSSAPI tapatybės patvirtinimo leksemos į tarpinį serverį: "
+"Nepavyko išsiųsti GSSAPI tapatybės nustatymo leksemos į įgaliotąjį serverį: "
 "%s\n"
 
 #: gssapi.c:237 gssapi.c:264
 #, c-format
 msgid "Failed to receive GSSAPI authentication token from proxy: %s\n"
 msgstr ""
-"Nepavyko gauti GSSAPI tapatybės patvirtinimo leksemos iš tarpinio serverio: "
+"Nepavyko gauti GSSAPI tapatybės nustatymo leksemos iš įgaliotojo serverio: "
 "%s\n"
 
 #: gssapi.c:243
@@ -2198,12 +2203,12 @@ msgstr "Siunčiamas GSSAPI apsaugos prašymas iš %zu baitų\n"
 #: gssapi.c:299
 #, c-format
 msgid "Failed to send GSSAPI protection response to proxy: %s\n"
-msgstr "Nepavyko išsiųsti GSSAPI apsaugos atsakymo į tarpinį serverį: %s\n"
+msgstr "Nepavyko išsiųsti GSSAPI apsaugos atsakymo į įgaliotąjį serverį: %s\n"
 
 #: gssapi.c:307 gssapi.c:317
 #, c-format
 msgid "Failed to receive GSSAPI protection response from proxy: %s\n"
-msgstr "Nepavyko gauti GSSAPI apsaugos atsakymo iš tarpinio serverio: %s\n"
+msgstr "Nepavyko gauti GSSAPI apsaugos atsakymo iš įgaliotojo serverio: %s\n"
 
 #: gssapi.c:322
 #, c-format
@@ -2214,32 +2219,32 @@ msgstr "Gautas GSSAPI apsaugos atsakymas iš %zu baitų: %02x %02x %02x %02x\n"
 #, c-format
 msgid "Invalid GSSAPI protection response from proxy (%zu bytes)\n"
 msgstr ""
-"Netinkamas GSSAPI apsaugos atsakymas iš tarpinio serverio (%zu baitai)\n"
+"Netinkamas GSSAPI apsaugos atsakymas iš įgaliotojo serverio (%zu baitai)\n"
 
 #: gssapi.c:341 sspi.c:408
 msgid "SOCKS proxy demands message integrity, which is not supported\n"
 msgstr ""
-"SOCKS tarpinis serveris prašo pranešimų vientisumo, kuris nepalaikomas\n"
+"SOCKS įgaliotasis serveris prašo pranešimų vientisumo, kuris nepalaikomas\n"
 
 #: gssapi.c:345 sspi.c:412
 msgid "SOCKS proxy demands message confidentiality, which is not supported\n"
 msgstr ""
-"SOCKS tarpinis serveris prašo pranešimų konfidencialumo, kuris nepalaikomas\n"
+"SOCKS įgaliotasis serveris prašo pranešimų konfidencialumo, kuris "
+"nepalaikomas\n"
 
 #: gssapi.c:349 sspi.c:416
 #, c-format
 msgid "SOCKS proxy demands protection unknown type 0x%02x\n"
-msgstr "SOCKS tarpinis serveris prašo nežinomo tipo 0x%02x apsaugos\n"
+msgstr "SOCKS įgaliotasis serveris prašo nežinomo tipo 0x%02x apsaugos\n"
 
 #: http-auth.c:184
 msgid "Attempting HTTP Basic authentication to proxy\n"
-msgstr "Bandomas HTTP Basic tapatybės patvirtinimas tarpiniame serveryje\n"
+msgstr "Bandomas HTTP Basic tapatybės nustatymas įgaliotajame serveryje\n"
 
 #: http-auth.c:186
 #, c-format
 msgid "Attempting HTTP Basic authentication to server '%s'\n"
-msgstr ""
-"Bandomas HTTP Basic tapatybės patvirtinimas tarpiniame serveryje „%s“\n"
+msgstr "Bandomas HTTP Basic tapatybės nustatymas serveryje „%s“\n"
 
 #: http-auth.c:200 http.c:1315
 msgid "This version of OpenConnect was built without GSSAPI support\n"
@@ -2248,20 +2253,20 @@ msgstr "Ši OpenConnect versija sukurta be GSSAPI palaikymo\n"
 #: http-auth.c:240
 msgid "Proxy requested Basic authentication which is disabled by default\n"
 msgstr ""
-"Tarpinis serveris paprašė Basic tapatybės patvirtinimo, kuris yra numatytai "
-"išjungtas\n"
+"Įgaliotasis serveris paprašė Basic tapatybės nustatymo, kuris pagal numatymą "
+"yra išjungtas\n"
 
 #: http-auth.c:243
 #, c-format
 msgid ""
 "Server '%s' requested Basic authentication which is disabled by default\n"
 msgstr ""
-"Serveris „%s“ paprašė Basic tapatybės patvirtinimo, kuris yra numatytai "
+"Serveris „%s“ paprašė Basic tapatybės nustatymo, kuris pagal numatymą yra "
 "išjungtas\n"
 
 #: http-auth.c:256
 msgid "No more authentication methods to try\n"
-msgstr "Daugiau nebėra bandomų tapatybės patvirtinimo metodų\n"
+msgstr "Daugiau nebėra bandomų tapatybės nustatymo metodų\n"
 
 #: http.c:324
 msgid "No memory for allocating cookies\n"
@@ -2294,7 +2299,7 @@ msgstr "Pasiūlytas neteisingas slapukas: %s\n"
 
 #: http.c:532
 msgid "SSL certificate authentication failed\n"
-msgstr "SSL liudijimo tapatybės patvirtinimas nepavyko\n"
+msgstr "SSL liudijimo tapatybės nustatymas nepavyko\n"
 
 #: http.c:565
 #, c-format
@@ -2411,79 +2416,79 @@ msgstr ""
 #: http.c:1189
 msgid "Username and password for SOCKS authentication must be < 255 bytes\n"
 msgstr ""
-"Naudotojo vardas ir slaptažodis SOCKS tapatybės patvirtinimui turi būti < "
-"255 baitai\n"
+"Naudotojo vardas ir slaptažodis SOCKS tapatybės nustatymui turi būti < 255 "
+"baitai\n"
 
 #: http.c:1204 http.c:1267
 #, c-format
 msgid "Error writing auth request to SOCKS proxy: %s\n"
-msgstr "Klaida rašant auth užklausą į SOCKS tarpinį serverį: %s\n"
+msgstr "Klaida rašant auth užklausą į SOCKS įgaliotąjį serverį: %s\n"
 
 #: http.c:1212 http.c:1274
 #, c-format
 msgid "Error reading auth response from SOCKS proxy: %s\n"
-msgstr "Klaida skaitant auth atsakymą iš SOCKS tarpinio serverio: %s\n"
+msgstr "Klaida skaitant auth atsakymą iš SOCKS įgaliotojo serverio: %s\n"
 
 #: http.c:1219 http.c:1280
 #, c-format
 msgid "Unexpected auth response from SOCKS proxy: %02x %02x\n"
-msgstr "Netikėtas auth atsakymas iš SOCKS tarpinio serverio: %02x %02x\n"
+msgstr "Netikėtas auth atsakymas iš SOCKS įgaliotojo serverio: %02x %02x\n"
 
 #: http.c:1225
 msgid "Authenticated to SOCKS server using password\n"
-msgstr "Patvirtinta tapatybė SOCKS serveryje naudojant slaptažodį\n"
+msgstr "Tapatybė nustatyta SOCKS serveryje naudojant slaptažodį\n"
 
 #: http.c:1229
 msgid "Password authentication to SOCKS server failed\n"
-msgstr "Nepavyko patvirtinti tapatybės slaptažodžius SOCKS serveryje\n"
+msgstr "Nepavyko nustatyti tapatybės slaptažodžius SOCKS serveryje\n"
 
 #: http.c:1292 http.c:1299
 msgid "SOCKS server requested GSSAPI authentication\n"
-msgstr "Socks serveris paprašė GSSAPI tapatybės patvirtinimo\n"
+msgstr "Socks serveris paprašė GSSAPI tapatybės nustatymo\n"
 
 #: http.c:1305
 msgid "SOCKS server requested password authentication\n"
-msgstr "Socks serveris paprašė tapatybės patvirtinimo slaptažodžiu\n"
+msgstr "Socks serveris paprašė tapatybės nustatymo slaptažodžiu\n"
 
 #: http.c:1312
 msgid "SOCKS server requires authentication\n"
-msgstr "Socks serveris paprašė tapatybės patvirtinimo\n"
+msgstr "Socks serveris paprašė tapatybės nustatymo\n"
 
 #: http.c:1321
 #, c-format
 msgid "SOCKS server requested unknown authentication type %02x\n"
-msgstr "Socks serveris paprašė nežinomo tipo %02x tapatybės patvirtinimo\n"
+msgstr "Socks serveris paprašė nežinomo tipo %02x tapatybės nustatymo\n"
 
 #: http.c:1327
 #, c-format
 msgid "Requesting SOCKS proxy connection to %s:%d\n"
-msgstr "Prašomas SOCKS tarpinio serverio ryšio į %s:%d\n"
+msgstr "Užklausiamas SOCKS įgaliotojo serverio ryšio su %s:%d\n"
 
 #: http.c:1342
 #, c-format
 msgid "Error writing connect request to SOCKS proxy: %s\n"
-msgstr "Klaida rašant ryšio prašymą į SOCKS tarpinį serverį: %s\n"
+msgstr "Klaida rašant ryšio užklausą į SOCKS įgaliotąjį serverį: %s\n"
 
 #: http.c:1350 http.c:1392
 #, c-format
 msgid "Error reading connect response from SOCKS proxy: %s\n"
-msgstr "Klaida skaitant jungimosi atsakymą iš SOCKS tarpinio serverio: %s\n"
+msgstr "Klaida skaitant jungimosi atsakymą iš SOCKS įgaliotojo serverio: %s\n"
 
 #: http.c:1356
 #, c-format
 msgid "Unexpected connect response from SOCKS proxy: %02x %02x...\n"
 msgstr ""
-"Nelauktas jungimosi atsakymas iš SOCKS tarpinio serverio: %02x %02x...\n"
+"Nelauktas jungimosi atsakymas iš SOCKS įgaliotojo serverio: %02x %02x...\n"
 
 #: http.c:1364
 #, c-format
 msgid "SOCKS proxy error %02x: %s\n"
-msgstr "SOCKS tarpinio serverio klaida %02x: %s\n"
+msgstr "SOCKS įgaliotojo serverio klaida %02x: %s\n"
 
 #: http.c:1368
 #, c-format
 msgid "SOCKS proxy error %02x\n"
-msgstr "SOCKS tarpinio serverio klaida %02x\n"
+msgstr "SOCKS įgaliotojo serverio klaida %02x\n"
 
 #: http.c:1385
 #, c-format
@@ -2493,22 +2498,22 @@ msgstr "Nelauktas adreso tipas %02x SOCKS jungimosi atsakyme\n"
 #: http.c:1408
 #, c-format
 msgid "Requesting HTTP proxy connection to %s:%d\n"
-msgstr "Prašomas HTTP tarpinio serverio ryšio į %s:%d\n"
+msgstr "Užklausiamas HTTP įgaliotojo serverio ryšio su %s:%d\n"
 
 #: http.c:1443
 #, c-format
 msgid "Sending proxy request failed: %s\n"
-msgstr "Tarpinio serverio prašymo siuntimas nepavyko: %s\n"
+msgstr "Įgaliotojo serverio užklausos siuntimas nepavyko: %s\n"
 
 #: http.c:1466
 #, c-format
 msgid "Proxy CONNECT request failed: %d\n"
-msgstr "Tarpinio serverio CONNECT užklausa nepavyko: %d\n"
+msgstr "Įgaliotojo serverio CONNECT užklausa nepavyko: %d\n"
 
 #: http.c:1485
 #, c-format
 msgid "Unknown proxy type '%s'\n"
-msgstr "Nežinomas tarpinio serverio tipas „%s“\n"
+msgstr "Nežinomas įgaliotojo serverio tipas „%s“\n"
 
 #: http.c:1511
 #, c-format
@@ -2517,7 +2522,7 @@ msgstr ""
 
 #: http.c:1535
 msgid "Only http or socks(5) proxies supported\n"
-msgstr "Palaikomi tik http arba socks(5) tarpiniai serveriai\n"
+msgstr "Palaikomi tik http arba socks(5) įgaliotieji serveriai\n"
 
 #: library.c:116
 msgid "Cisco AnyConnect or openconnect"
@@ -2585,7 +2590,7 @@ msgstr ""
 
 #: library.c:1176
 msgid "No form handler; cannot authenticate.\n"
-msgstr "Nėra formos apdorotojo; negalima patvirtinti tapatybės.\n"
+msgstr "Nėra formos apdorotojo; negalima nustatyti tapatybės.\n"
 
 #: main.c:340
 #, c-format
@@ -2715,7 +2720,7 @@ msgstr "Nustatyti prisijungimo naudotojo vardą"
 
 #: main.c:804
 msgid "Disable password/SecurID authentication"
-msgstr "Išjungti slaptažodžio/SecurID tapatybės patvirtinimą"
+msgstr "Išjungti slaptažodžio/SecurID tapatybės nustatymą"
 
 #: main.c:805
 msgid "Do not expect user input; exit if it is required"
@@ -2727,7 +2732,7 @@ msgstr "Skaityti slaptažodį iš standartinės įvesties"
 
 #: main.c:807
 msgid "Choose authentication login selection"
-msgstr "Pasirinkite tapatybės patvirtinimo prisijungimo pasirinkimą"
+msgstr "Pasirinkite tapatybės nustatymo prisijungimo pasirinkimą"
 
 #: main.c:808
 msgid "Provide authentication form responses"
@@ -2739,7 +2744,7 @@ msgstr "Naudoti SSL kliento liudijimą CERT"
 
 #: main.c:810
 msgid "Use SSL private key file KEY"
-msgstr "Naudoti SSL privataus rakto failą RAKTAS"
+msgstr "Naudoti SSL privačiojo rakto failą RAKTAS"
 
 #: main.c:811
 msgid "Warn when certificate lifetime < DAYS"
@@ -2751,11 +2756,11 @@ msgstr "Nustatyti prisijungimo naudotojo grupę"
 
 #: main.c:813
 msgid "Set key passphrase or TPM SRK PIN"
-msgstr "Nustatyti rakto slaptažodį arba TPM SRK PIN"
+msgstr "Nustatyti rakto slaptafrazę arba TPM SRK PIN"
 
 #: main.c:814
 msgid "Key passphrase is fsid of file system"
-msgstr "Rakto slaptažodis yra failų sistemos fsid"
+msgstr "Rakto slaptafrazė yra failų sistemos fsid"
 
 #: main.c:815
 msgid "Software token type: rsa, totp or hotp"
@@ -2779,7 +2784,7 @@ msgstr "Serverio tikrinimas"
 
 #: main.c:825
 msgid "Server's certificate SHA1 fingerprint"
-msgstr "Serverio liudijimo SHA1 piršto atspaudas"
+msgstr "Serverio liudijimo SHA1 kontrolinis kodas"
 
 #: main.c:826
 msgid "Do not require server SSL cert to be valid"
@@ -2799,19 +2804,19 @@ msgstr "Interneto ryšys"
 
 #: main.c:831
 msgid "Set proxy server"
-msgstr "Nustatyti tarpinį serverį"
+msgstr "Nustatyti įgaliotąjį serverį"
 
 #: main.c:832
 msgid "Set proxy authentication methods"
-msgstr "Nustatyti tarpinio serverio tapatybės patvirtinimo metodus"
+msgstr "Nustatyti įgaliotojo serverio tapatybės nustatymo metodus"
 
 #: main.c:833
 msgid "Disable proxy"
-msgstr "Išjungti tarpinį serverį"
+msgstr "Išjungti įgaliotąjį serverį"
 
 #: main.c:834
 msgid "Use libproxy to automatically configure proxy"
-msgstr "Naudoti libproxy automatiniam tarpinio serverio konfigūravimui"
+msgstr "Naudoti libproxy automatiniam įgaliotojo serverio konfigūravimui"
 
 #: main.c:836
 msgid "(NOTE: libproxy disabled in this build)"
@@ -2847,7 +2852,7 @@ msgstr "Nuskaityti slapuką iš standartinės įvesties"
 
 #: main.c:846
 msgid "Authenticate only and print login info"
-msgstr "Tik patvirtinti tapatybę ir atspausdinti prisijungimo informaciją"
+msgstr "Tik nustatyti tapatybę ir atspausdinti prisijungimo informaciją"
 
 #: main.c:847
 msgid "Fetch and print cookie only; don't connect"
@@ -3012,7 +3017,7 @@ msgstr "Išjungti HTTP ryšio pakartotinį naudojimą"
 
 #: main.c:902
 msgid "Do not attempt XML POST authentication"
-msgstr "Nemėginti XML POST tapatybės patvirtinimo"
+msgstr "Nemėginti XML POST tapatybės nustatymo"
 
 #: main.c:924
 #, c-format
@@ -3416,26 +3421,25 @@ msgstr "Klaida komunikuojant su ntlm_auth pagalbininku\n"
 #: ntlm.c:265
 msgid "Attempting HTTP NTLM authentication to proxy (single-sign-on)\n"
 msgstr ""
-"Bandomas HTTP NTLM tapatybės patvirtinimas tarpiniame serveryje (vienas "
+"Bandomas HTTP NTLM tapatybės nustatymas įgaliotajame serveryje (vienas "
 "prisijungimas)\n"
 
 #: ntlm.c:268
 #, c-format
 msgid "Attempting HTTP NTLM authentication to server '%s' (single-sign-on)\n"
 msgstr ""
-"Bandomas HTTP NTLM tapatybės patvirtinimas tarpiniame serveryje „%s“ (vienas "
+"Bandomas HTTP NTLM tapatybės nustatymas serveryje „%s“ (vienas "
 "prisijungimas)\n"
 
 #: ntlm.c:978
 #, c-format
 msgid "Attempting HTTP NTLMv%d authentication to proxy\n"
-msgstr "Bandomas HTTP NTLM%d tapatybės patvirtinimas tarpiniame serveryje\n"
+msgstr "Bandomas HTTP NTLMv%d tapatybės nustatymas įgaliotajame serveryje\n"
 
 #: ntlm.c:982
 #, c-format
 msgid "Attempting HTTP NTLMv%d authentication to server '%s'\n"
-msgstr ""
-"Bandomas HTTP NTLM%d tapatybės patvirtinimas tarpiniame serveryje „%s“\n"
+msgstr "Bandomas HTTP NTLMv%d tapatybės nustatymas serveryje „%s“\n"
 
 #: oath.c:104
 msgid "Invalid base32 token string\n"
@@ -3493,7 +3497,7 @@ msgstr "Gautas DNS serveris %s\n"
 #: oncp.c:186 pulse.c:427
 #, c-format
 msgid "Received DNS search domain %.*s\n"
-msgstr "Gautas DNS paieškos domenas %.*s\n"
+msgstr "Gauta DNS paieškos sritis %.*s\n"
 
 #: oncp.c:201
 #, c-format
@@ -3508,7 +3512,7 @@ msgstr "Gauta tinklo kaukė %s\n"
 #: oncp.c:219 pulse.c:442
 #, c-format
 msgid "Received internal gateway address %s\n"
-msgstr "Gautas vidinis šliuzo adresas %s\n"
+msgstr "Gautas vidinis tinklų sietuvo adresas %s\n"
 
 #: oncp.c:232 pulse.c:2325
 #, c-format
@@ -3827,7 +3831,7 @@ msgstr ""
 #: openssl-dtls.c:701
 #, c-format
 msgid "DTLS handshake failed: %d\n"
-msgstr "Nepavyko DTLS rankos paspaudimas: %d\n"
+msgstr "Nepavyko DTLS išankstinis suderinimas: %d\n"
 
 #: openssl-esp.c:86
 msgid "Failed to initialise ESP cipher:\n"
@@ -3932,7 +3936,7 @@ msgstr "Liudijimas neturi viešojo rakto\n"
 
 #: openssl-pkcs11.c:507 openssl-pkcs11.c:530
 msgid "Certificate does not match private key\n"
-msgstr "Liudijimas neatitinka privataus rakto\n"
+msgstr "Liudijimas neatitinka privačiojo rakto\n"
 
 #: openssl-pkcs11.c:510
 msgid "Checking EC key matches cert\n"
@@ -3953,7 +3957,7 @@ msgstr "Nepavyko rasti PKCS#11 rakto „%s“\n"
 
 #: openssl-pkcs11.c:653
 msgid "Failed to instantiated private key from PKCS#11\n"
-msgstr "Nepavyko sukurti privataus rakto iš PKCS#11\n"
+msgstr "Nepavyko sukurti privačiojo rakto iš PKCS#11\n"
 
 #: openssl-pkcs11.c:682
 msgid "Add key from PKCS#11 failed\n"
@@ -4007,11 +4011,11 @@ msgstr "PKCS#12 neturėjo liudijimo!\n"
 
 #: openssl.c:570 openssl.c:941 openssl.c:957 openssl.c:978 openssl.c:1044
 msgid "Loading private key failed\n"
-msgstr "Nepavyko įkelti privataus rakto\n"
+msgstr "Nepavyko įkelti privačiojo rakto\n"
 
 #: openssl.c:577
 msgid "PKCS#12 contained no private key!\n"
-msgstr "PKCS#12 neturėjo privataus rakto!\n"
+msgstr "PKCS#12 neturėjo privačiojo rakto!\n"
 
 #: openssl.c:582
 msgid "PKCS#12"
@@ -4031,7 +4035,7 @@ msgstr "Nepavyko nustatyti TPM SRK slaptažodžio\n"
 
 #: openssl.c:635
 msgid "Failed to load TPM private key\n"
-msgstr "Nepavyko įkelti TPM privataus rakto\n"
+msgstr "Nepavyko įkelti TPM privačiojo rakto\n"
 
 #: openssl.c:641
 msgid "Add key from TPM failed\n"
@@ -4061,11 +4065,11 @@ msgstr "Nepavyko sukurti BIO iš įvesties elemento „%s“\n"
 
 #: openssl.c:807
 msgid "Loading private key failed (wrong passphrase?)\n"
-msgstr "Nepavyko įkelti privataus rakto (neteisingas slaptažodis?)\n"
+msgstr "Nepavyko įkelti privačiojo rakto (neteisinga slaptafrazė?)\n"
 
 #: openssl.c:813
 msgid "Loading private key failed (see above errors)\n"
-msgstr "Nepavyko įkelti privataus rakto (žiūrėkite klaidas aukščiau)\n"
+msgstr "Nepavyko įkelti privačiojo rakto (žiūrėkite klaidas aukščiau)\n"
 
 #: openssl.c:863
 msgid "Failed to load X509 certificate from keystore\n"
@@ -4077,12 +4081,12 @@ msgstr "Nepavyko naudoti X509 liudijimo iš įvesties\n"
 
 #: openssl.c:901
 msgid "Failed to use private key from keystore\n"
-msgstr "Nepavyko naudoti privataus rakto iš įvesties\n"
+msgstr "Nepavyko naudoti privačiojo rakto iš įvesties\n"
 
 #: openssl.c:917
 #, c-format
 msgid "Failed to open private key file %s: %s\n"
-msgstr "Nepavyko atverti privataus rakto failo %s: %s\n"
+msgstr "Nepavyko atverti privačiojo rakto failo %s: %s\n"
 
 #: openssl.c:1038
 msgid "Failed to convert PKCS#8 to OpenSSL EVP_PKEY\n"
@@ -4091,7 +4095,7 @@ msgstr "Nepavyko konvertuoti PKCS#8 į OpenSSL EVP_PKEY\n"
 #: openssl.c:1055
 #, c-format
 msgid "Failed to identify private key type in '%s'\n"
-msgstr "Nepavyko identifikuoti privataus rakto tipas iš „%s“\n"
+msgstr "Nepavyko identifikuoti privačiojo rakto tipą iš „%s“\n"
 
 #: openssl.c:1209
 #, c-format
@@ -4585,7 +4589,7 @@ msgstr "Lizdo jungimasis atšauktas\n"
 #: ssl.c:225
 #, c-format
 msgid "Failed to reconnect to proxy %s: %s\n"
-msgstr "Nepavyko pakartotinai prisijungti prie tarpinio serverio %s: %s\n"
+msgstr "Nepavyko pakartotinai prisijungti prie įgaliotojo serverio %s: %s\n"
 
 #: ssl.c:229
 #, c-format
@@ -4595,7 +4599,7 @@ msgstr "Nepavyko pakartotinai prisijungti prie serverio %s: %s\n"
 #: ssl.c:297
 #, c-format
 msgid "Proxy from libproxy: %s://%s:%d/\n"
-msgstr "Tarpinis serveris iš libproxy: %s://%s:%d/\n"
+msgstr "Įgaliotasis serveris iš libproxy: %s://%s:%d/\n"
 
 #: ssl.c:325
 #, c-format
@@ -4610,7 +4614,7 @@ msgstr ""
 #: ssl.c:349
 #, c-format
 msgid "Attempting to connect to proxy %s%s%s:%s\n"
-msgstr "Bandoma jungtis prie tarpinio serverio %s%s%s:%s\n"
+msgstr "Bandoma jungtis prie įgaliotojo serverio %s%s%s:%s\n"
 
 #: ssl.c:350
 #, c-format
@@ -4643,7 +4647,7 @@ msgstr "Nepavyko prisijungti prie serverio %s\n"
 #: ssl.c:474
 #, c-format
 msgid "Reconnecting to proxy %s\n"
-msgstr "Persijungiama prie tarpinio serverio %s\n"
+msgstr "Iš naujo jungiamasi prie įgaliotojo serverio %s\n"
 
 #: ssl.c:545
 #, c-format
@@ -4657,7 +4661,7 @@ msgstr "Nepavyko gauti failų sistemos ID ar slaptafrazės\n"
 #: ssl.c:584
 #, c-format
 msgid "Failed to open private key file '%s': %s\n"
-msgstr "Nepavyko atverti privataus rakto failo „%s“: %s\n"
+msgstr "Nepavyko atverti privačiojo rakto failo „%s“: %s\n"
 
 #: ssl.c:612
 #, c-format
@@ -4804,13 +4808,14 @@ msgstr "Siunčiama %lu baitų SSPI leksema\n"
 #, c-format
 msgid "Failed to send SSPI authentication token to proxy: %s\n"
 msgstr ""
-"Nepavyko išsiųsti SSPI tapatybės patvirtinimo leksemos į tarpinį serverį: "
+"Nepavyko išsiųsti SSPI tapatybės nustatymo leksemos į įgaliotąjį serverį: "
 "%s\n"
 
 #: sspi.c:229 sspi.c:257
 #, c-format
 msgid "Failed to receive SSPI authentication token from proxy: %s\n"
-msgstr "Nepavyko gauti SSPI tapatybės patvirtinimo leksemos iš serverio: %s\n"
+msgstr ""
+"Nepavyko gauti SSPI tapatybės nustatymo leksemos iš įgaliotojo serverio: %s\n"
 
 #: sspi.c:235
 msgid "SOCKS server reported SSPI context failure\n"
@@ -4849,12 +4854,12 @@ msgstr "Siunčiamas %u baitų SSPI apsaugos prašymas\n"
 #: sspi.c:355
 #, c-format
 msgid "Failed to send SSPI protection response to proxy: %s\n"
-msgstr "Nepavyko išsiųsti SSPI apsaugos atsakymo tarpiniam serveriui: %s\n"
+msgstr "Nepavyko išsiųsti SSPI apsaugos atsakymo įgaliotajam serveriui: %s\n"
 
 #: sspi.c:363 sspi.c:373
 #, c-format
 msgid "Failed to receive SSPI protection response from proxy: %s\n"
-msgstr "Nepavyko gauti SSPI apsaugos atsakymo iš tarpinio serverio: %s\n"
+msgstr "Nepavyko gauti SSPI apsaugos atsakymo iš įgaliotojo serverio: %s\n"
 
 #: sspi.c:378
 #, c-format
@@ -4869,7 +4874,8 @@ msgstr "DecryptMessage nepavyko: %lx\n"
 #: sspi.c:399
 #, c-format
 msgid "Invalid SSPI protection response from proxy (%lu bytes)\n"
-msgstr "Netinkamas SSPI apsaugos atsakymas iš tarpinio serverio (%lu baitai)\n"
+msgstr ""
+"Netinkamas SSPI apsaugos atsakymas iš įgaliotojo serverio (%lu baitai)\n"
 
 #: stoken.c:102
 msgid "Enter credentials to unlock software token."
@@ -4986,7 +4992,8 @@ msgstr "Nepavyko gauti TAP tvarkyklės versijos: %s\n"
 #, c-format
 msgid "Error: TAP-Windows driver v9.9 or greater is required (found %ld.%ld)\n"
 msgstr ""
-"Klaida: reikalinga TAP-Windows tvarkylė v9.9  arba naujesnė (rasta %ld.%ld)\n"
+"Klaida: reikalinga TAP-Windows tvarkyklė v9.9  arba naujesnė (rasta %ld."
+"%ld)\n"
 
 #: tun-win32.c:292
 #, c-format

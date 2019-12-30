@@ -1,21 +1,23 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-#
-# Translators:
+# Swedish translation for network-manager-openconnect.
+# Copyright © 2008, 2010, 2011, 2015, 2017 Free Software Foundation, Inc.
+# This file is distributed under the same license as the network-manager-openconnect package.
+# Daniel Nylander <po@danielnylander.se>, 2008, 2010, 2011.
+# Josef Andersson <josef.andersson@fripost.org>, 2015, 2017.
 msgid ""
 msgstr ""
-"Project-Id-Version: openconnect\n"
+"Project-Id-Version: network-manager-openconnect\n"
 "Report-Msgid-Bugs-To: openconnect-devel@lists.infradead.org\n"
 "POT-Creation-Date: 2019-12-30 00:19+0000\n"
-"PO-Revision-Date: 2011-09-22 22:31+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Swedish (http://www.transifex.net/projects/p/meego/team/sv/)\n"
+"PO-Revision-Date: 2017-08-25 22:58+0200\n"
+"Last-Translator: Josef Andersson <josef.andersson@fripost.org>\n"
+"Language-Team: Swedish <tp-sv@listor.tp-sv.se>\n"
 "Language: sv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 2.0.3\n"
+"X-Project-Style: gnome\n"
 
 #: auth-globalprotect.c:129
 #, c-format
@@ -303,8 +305,8 @@ msgid ""
 "Error: Server asked us to run CSD hostscan.\n"
 "You need to provide a suitable --csd-wrapper argument.\n"
 msgstr ""
-"Fel: Server bad oss att köra CSD hostscan. Du måste ange ett passande --csd-"
-"wrapper-argument.\n"
+"Fel: Server bad oss att köra CSD hostscan.\n"
+"Du måste ange ett passande --csd-wrapper-argument.\n"
 
 #: auth.c:1061
 msgid ""
@@ -312,8 +314,10 @@ msgid ""
 "This facility is disabled by default for security reasons, so you may wish "
 "to enable it.\n"
 msgstr ""
-"Fel: Server bad oss att hämta hem och köra ”Cisco Secure Desktop”. Denna "
-"möjlighet är inaktiverad som standard, du kan vilja aktivera den.\n"
+"Fel: Server bad oss att hämta hem och köra en ”Cisco Secure Desktop”-"
+"trojan.\n"
+"Denna möjlighet är inaktiverad som standard av säkerhetsskäl, du kan vilja "
+"aktivera den.\n"
 
 #: auth.c:1068
 msgid "Trying to run Linux CSD trojan script.\n"
@@ -401,7 +405,7 @@ msgstr "KRITISKT FEL: DTLS-huvudhemlighet är ej initierad. Rapportera detta.\n"
 
 #: cstp.c:312
 msgid "Error creating HTTPS CONNECT request\n"
-msgstr "Fel vid skapandet av HTTP CONNECT-begäran\n"
+msgstr "Fel vid skapandet av HTTPS CONNECT-begäran\n"
 
 #: cstp.c:328
 msgid "Error fetching HTTPS response\n"
@@ -486,7 +490,7 @@ msgstr "Återanslutning gav en annan IPv6-nätmask (%s != %s)\n"
 #: cstp.c:638
 #, c-format
 msgid "CSTP connected. DPD %d, Keepalive %d\n"
-msgstr "CTSP ansluten. DPD %d, Keepalive %d\n"
+msgstr "CSTP ansluten. DPD %d, Keepalive %d\n"
 
 #: cstp.c:640
 #, c-format
@@ -592,7 +596,7 @@ msgstr "SSL skrev för få byte! Frågade efter %d, skickade %d\n"
 #. the setting when we're asked for it.
 #: cstp.c:1091 oncp.c:1164 pulse.c:2803
 msgid "CSTP rekey due\n"
-msgstr "CTSP rekey due\n"
+msgstr "CSTP rekey due\n"
 
 #. if we failed rehandshake try establishing a new-tunnel instead of failing
 #: cstp.c:1098 oncp.c:1171 pulse.c:2810
@@ -919,7 +923,7 @@ msgstr "Misslyckades med att allokera minne för att dekryptera ESP-paket\n"
 
 #: esp.c:253
 msgid "LZO decompression of ESP packet failed\n"
-msgstr "LZ4-dekomprimering av ESP-paket misslyckades\n"
+msgstr "LZO-dekomprimering av ESP-paket misslyckades\n"
 
 #: esp.c:259
 #, c-format
@@ -932,7 +936,7 @@ msgstr "Rekey inte implementerad än för ESP\n"
 
 #: esp.c:277
 msgid "ESP detected dead peer\n"
-msgstr "ESP upptäckte en död motpart!\n"
+msgstr "ESP upptäckte en död motpart\n"
 
 #: esp.c:285
 msgid "Send ESP probes for DPD\n"
@@ -1215,7 +1219,7 @@ msgstr "Saknar DEK-Info: huvud from OpenSSL-krypterad nyckel\n"
 
 #: gnutls.c:716
 msgid "Cannot determine PEM encryption type\n"
-msgstr "Kan inte bestämma PEM-kryngstyp\n"
+msgstr "Kan inte bestämma PEM-krypteringstyp\n"
 
 #: gnutls.c:729
 #, c-format
@@ -2192,7 +2196,7 @@ msgstr "SOCKS-proxy kräver meddelandeintegritet vilket inte stöds\n"
 
 #: gssapi.c:345 sspi.c:412
 msgid "SOCKS proxy demands message confidentiality, which is not supported\n"
-msgstr "SOCK-proxy kräver meddelandekonfidentialitet vilket inte stöds\n"
+msgstr "SOCKS-proxy kräver meddelandekonfidentialitet vilket inte stöds\n"
 
 #: gssapi.c:349 sspi.c:416
 #, c-format
@@ -2422,7 +2426,7 @@ msgstr "SOCKS-server begärde okänd autentiseringstyp %02x\n"
 #: http.c:1327
 #, c-format
 msgid "Requesting SOCKS proxy connection to %s:%d\n"
-msgstr "Begär SOCKS-proxyanslutning till %s: %d\n"
+msgstr "Begär SOCKS-proxyanslutning till %s:%d\n"
 
 #: http.c:1342
 #, c-format
@@ -2457,7 +2461,7 @@ msgstr "Oväntad adresstyp %02x i SOCKS-anslutningssvar\n"
 #: http.c:1408
 #, c-format
 msgid "Requesting HTTP proxy connection to %s:%d\n"
-msgstr "Begär HTTP-proxyanslutning till %s: %d\n"
+msgstr "Begär HTTP-proxyanslutning till %s:%d\n"
 
 #: http.c:1443
 #, c-format
@@ -3082,7 +3086,7 @@ msgid ""
 "If this helps, please report to <openconnect-devel@lists.infradead.org>.\n"
 msgstr ""
 "Inaktiverar alla HTTP-anslutningsåteranvändningar pga --no-http-keepalive.\n"
-"Om detta hjälper, rapportera till  <openconnect-devel@lists.infradead.org>.\n"
+"Om detta hjälper, rapportera till <openconnect-devel@lists.infradead.org>.\n"
 
 #: main.c:1394
 #, c-format
@@ -4775,7 +4779,7 @@ msgstr "SOCKS-server rapporterade misslyckat SSPI-kontext\n"
 #: sspi.c:239
 #, c-format
 msgid "Unknown SSPI status response (0x%02x) from SOCKS server\n"
-msgstr "Okänd SAPI-status svar (0x%02x) från SOCKS-server\n"
+msgstr "Okänd SSPI-status svar (0x%02x) från SOCKS-server\n"
 
 #: sspi.c:261
 #, c-format
@@ -5045,7 +5049,7 @@ msgstr "Misslyckades med att öppna tun-enhet: %s\n"
 #: tun.c:253
 #, c-format
 msgid "Failed to bind local tun device (TUNSETIFF): %s\n"
-msgstr "Misslyckades med att binda lokal tun-enhet  (TUNSETIFF): %s\n"
+msgstr "Misslyckades med att binda lokal tun-enhet (TUNSETIFF): %s\n"
 
 #: tun.c:257
 msgid ""
@@ -5053,7 +5057,7 @@ msgid ""
 "See http://www.infradead.org/openconnect/nonroot.html for more information\n"
 msgstr ""
 "För att konfigurera lokalt nätverk måste openconnect köras som root\n"
-"Se  http://www.infradead.org/openconnect/nonroot.html för mer information\n"
+"Se http://www.infradead.org/openconnect/nonroot.html för mer information\n"
 
 #: tun.c:322
 #, c-format

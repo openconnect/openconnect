@@ -1,21 +1,29 @@
-# SOME DESCRIPTIVE TITLE.
+# translation of network-manager-openconnect.HEAD.po to Español
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
+# Jorge González <jorgegonz@svn.gnome.org>, 2008, 2010.
+# Nicolás Satragno <nsatragno@gnome.org>, 2013.
+# Javier Mazorra Rodríguez <mazi.debian@gmail.com>, 2012, 2013.
+# facundo Dario Illanes <fdillanes@gmail.com>, 2013.
+# Ignacio Acevedo Carrera <zourer@gmail.com>, 2016.
+# Rodrigo <rodhos92@gmail.com>, 2018-2019.
+# Rodrigo Lledó <rodhos92@gmail.com>, 2019.
+# Daniel Mustieles <daniel.mustieles@gmail.com>, 2011-2019.
 #
-# Translators:
 msgid ""
 msgstr ""
-"Project-Id-Version: openconnect\n"
+"Project-Id-Version: network-manager-openconnect.HEAD\n"
 "Report-Msgid-Bugs-To: openconnect-devel@lists.infradead.org\n"
 "POT-Creation-Date: 2019-12-30 00:19+0000\n"
-"Last-Translator: David Woodhouse <dwmw2@infradead.org>\n"
-"Language-Team: Spanish (Castilian) (http://www.transifex.net/projects/p/"
-"meego/language/es/)\n"
-"Language: es\n"
+"PO-Revision-Date: 2019-10-01 15:18+0200\n"
+"Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
+"Language-Team: Spanish - Spain <gnome-es-list@gnome.org>\n"
+"Language: es_ES\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+"X-Generator: Gtranslator 3.34.0\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: auth-globalprotect.c:129
 #, c-format
@@ -117,7 +125,7 @@ msgstr "No se puede gestionar el método='%s' del formulario, acción='%s'\n"
 #: auth-juniper.c:270
 #, c-format
 msgid "Unknown textarea field: '%s'\n"
-msgstr "Campo de área de texto desconocido: '%s'\n"
+msgstr "Campo de área de texto desconocido: «%s»\n"
 
 #: auth-juniper.c:318
 msgid "Failed to send cookie to TNCC\n"
@@ -250,7 +258,7 @@ msgstr "La respuesta XML no tiene nodo «auth»\n"
 
 #: auth.c:636
 msgid "Asked for password but '--no-passwd' set\n"
-msgstr "Se pidió la contraseña, pero se estableció '--no-passwd'\n"
+msgstr "Se pidió la contraseña, pero se estableció «--no-passwd»\n"
 
 #: auth.c:926
 msgid "Not downloading XML profile because SHA1 already matches\n"
@@ -279,7 +287,7 @@ msgid ""
 "Error: Running the 'Cisco Secure Desktop' trojan on this platform is not yet "
 "implemented.\n"
 msgstr ""
-"Error: La ejecución del «Cisco Secure Desktop» para troyano en esta "
+"Error: la ejecución del «Cisco Secure Desktop» para troyano en esta "
 "plataforma no se ha implementado.\n"
 
 #: auth.c:1004 mainloop.c:144
@@ -492,13 +500,12 @@ msgstr "La reconexión dio una máscara de red heredada distinta (%s != %s)\n"
 #: cstp.c:622 gpst.c:698
 #, c-format
 msgid "Reconnect gave different IPv6 address (%s != %s)\n"
-msgstr "La reconexión dio una dirección IPv6 heredada distinta (%s != %s)\n"
+msgstr "La reconexión dio una dirección IPv6 distinta (%s != %s)\n"
 
 #: cstp.c:630 gpst.c:706
 #, c-format
 msgid "Reconnect gave different IPv6 netmask (%s != %s)\n"
-msgstr ""
-"La reconexión dio una máscara de red IPv6 heredada distinta (%s != %s)\n"
+msgstr "La reconexión dio una máscara de red IPv6 distinta (%s != %s)\n"
 
 #: cstp.c:638
 #, c-format
@@ -572,7 +579,7 @@ msgstr "Se obtuvo la respuesta CSTP DPD\n"
 
 #: cstp.c:971
 msgid "Got CSTP Keepalive\n"
-msgstr "Se obtuvo Keppalive CSTP\n"
+msgstr "Se obtuvo Keepalive CSTP\n"
 
 #: cstp.c:976 oncp.c:1005
 #, c-format
@@ -582,7 +589,7 @@ msgstr "Se recibió el paquete de datos sin comprimir de %d bytes\n"
 #: cstp.c:993
 #, c-format
 msgid "Received server disconnect: %02x '%s'\n"
-msgstr "Se recibió el una desconexión del servidor: %02x '%s'\n"
+msgstr "Se recibió el una desconexión del servidor: %02x «%s»\n"
 
 #: cstp.c:996
 msgid "Received server disconnect\n"
@@ -809,7 +816,8 @@ msgstr ""
 #: dtls.c:616
 #, c-format
 msgid "Too long time in MTU detect loop; MTU set to %d.\n"
-msgstr "Demasiado tiempo en detectar el bucle MTU; MTU establecido a %d.\n"
+msgstr ""
+"Demasiado tiempo en el bucle de detección de la MTU; MTU establecida a %d.\n"
 
 #: dtls.c:633
 #, c-format
@@ -1439,7 +1447,7 @@ msgstr ""
 #: gnutls.c:1555 openssl.c:560 openssl.c:714
 #, c-format
 msgid "Using client certificate '%s'\n"
-msgstr "Usando el certificado del cliente '%s'\n"
+msgstr "Usando el certificado del cliente «%s»\n"
 
 #: gnutls.c:1562
 #, c-format
@@ -1473,7 +1481,7 @@ msgstr "Falló al asignar memoria para soportar certificados\n"
 #: gnutls.c:1706
 #, c-format
 msgid "Adding supporting CA '%s'\n"
-msgstr "Añadiendo soporte CA '%s'\n"
+msgstr "Añadiendo soporte CA «%s»\n"
 
 #: gnutls.c:1728
 msgid "Private key appears not to support RSA-PSS. Disabling TLSv1.3\n"
@@ -1574,7 +1582,7 @@ msgstr "Falló al leer certificados desde cafile: %s\n"
 #: gnutls.c:2167
 #, c-format
 msgid "Failed to open CA file '%s': %s\n"
-msgstr "Falló al abrir el archivo CA '%s': %s\n"
+msgstr "Falló al abrir el archivo CA «%s»: %s\n"
 
 #: gnutls.c:2180 openssl.c:1689
 msgid "Loading certificate failed. Aborting.\n"
@@ -1597,7 +1605,7 @@ msgstr "Conexión SSL cancelada\n"
 #: gnutls.c:2311
 #, c-format
 msgid "SSL connection failure: %s\n"
-msgstr "Fallo de la conexión TLS: %s\n"
+msgstr "Fallo de la conexión SSL: %s\n"
 
 #: gnutls.c:2320
 #, c-format
@@ -2316,7 +2324,7 @@ msgstr ""
 #: http.c:462
 #, c-format
 msgid "Failed to parse HTTP response '%s'\n"
-msgstr "Falló al analizar la respuesta HTTP '%s'\n"
+msgstr "Falló al analizar la respuesta HTTP «%s»\n"
 
 #: http.c:468
 #, c-format
@@ -2326,7 +2334,7 @@ msgstr "Se obtuvo la respuesta HTTP: %s\n"
 #: http.c:493
 #, c-format
 msgid "Ignoring unknown HTTP response line '%s'\n"
-msgstr "Ignorando línea no reconocida de la respuesta HTTP '%s'\n"
+msgstr "Ignorando línea no reconocida de la respuesta HTTP «%s»\n"
 
 #: http.c:512
 #, c-format
@@ -2379,7 +2387,7 @@ msgstr "Error recuperando el cuerpo de la respuesta HTTP\n"
 #, c-format
 msgid "Error in chunked decoding. Expected '', got: '%s'"
 msgstr ""
-"Error en el fragmentado de la decodificación. Se esperaba '', se obtuvo: '%s'"
+"Error en el fragmentado de la decodificación. Se esperaba «», se obtuvo: «%s»"
 
 #: http.c:685
 msgid "Cannot receive HTTP 1.0 body without closing connection\n"
@@ -2388,18 +2396,19 @@ msgstr "No se pudo recibir el cuerpo HTTP 1.0 sin cerrar la conexión\n"
 #: http.c:818
 #, c-format
 msgid "Failed to parse redirected URL '%s': %s\n"
-msgstr "Falló al analizar el URL redirigido '%s': %s\n"
+msgstr "Falló al analizar el URL redirigido «%s»: %s\n"
 
 #: http.c:842
 #, c-format
 msgid "Cannot follow redirection to non-https URL '%s'\n"
-msgstr "No se pudo seguir el redireccionamiento al URL no https '%s'\n"
+msgstr "No se pudo seguir el redireccionamiento al URL no https «%s»\n"
 
 #: http.c:870
 #, c-format
 msgid "Allocating new path for relative redirect failed: %s\n"
 msgstr ""
-"Asignando una nueva ruta para el redireccionamiento relativo fallido: %s\n"
+"Falló la asignación de una nueva ruta para el redireccionamiento relativo: "
+"%s\n"
 
 #: http.c:945
 msgid "HTTPS socket closed by peer; reopening\n"
@@ -2552,7 +2561,7 @@ msgstr "Falló la petición CONNECT del proxy: %d\n"
 #: http.c:1485
 #, c-format
 msgid "Unknown proxy type '%s'\n"
-msgstr "Tipo de proxy desconocido '%s'\n"
+msgstr "Tipo de proxy desconocido «%s»\n"
 
 #: http.c:1511
 #, c-format
@@ -2598,7 +2607,7 @@ msgstr "Compatible con la VPN Pulse Connect Secure SSL"
 #: library.c:237
 #, c-format
 msgid "Unknown VPN protocol '%s'\n"
-msgstr "Protocolo VPN '%s' desconocido\n"
+msgstr "Protocolo VPN «%s» desconocido\n"
 
 #: library.c:259
 msgid "Built against SSL library with no Cisco DTLS support\n"
@@ -2607,7 +2616,7 @@ msgstr "Compilado con la biblioteca SSL sin soporte para Cisco DTLS\n"
 #: library.c:686
 #, c-format
 msgid "Failed to parse server URL '%s'\n"
-msgstr "Falló al analizar el URL del servidor '%s'\n"
+msgstr "Falló al analizar el URL del servidor «%s»\n"
 
 #: library.c:692
 msgid "Only https:// permitted for server URL\n"
@@ -2727,7 +2736,7 @@ msgstr "Cambiar nombre de servidor «%s» a «%s»\n"
 #: main.c:793
 #, c-format
 msgid "Usage:  openconnect [options] <server>\n"
-msgstr "Uso:  openconnect [opciones] <servidor>\n"
+msgstr "Uso: openconnect [opciones] <servidor>\n"
 
 #: main.c:794
 #, c-format
@@ -2914,7 +2923,7 @@ msgstr "Continuar en segundo plano tras el arranque"
 
 #: main.c:853
 msgid "Write the daemon's PID to this file"
-msgstr "Escribir los PID de los demonios en este archivo"
+msgstr "Escribir el PID del demonio en este archivo"
 
 #: main.c:854
 msgid "Drop privileges after connecting"
@@ -3080,7 +3089,7 @@ msgstr "Opción no reconocida en la línea %d: «%s»\n"
 #: main.c:1047
 #, c-format
 msgid "Option '%s' does not take an argument at line %d\n"
-msgstr "La opción «%s» no coge un argumento en la línea %d\n"
+msgstr "La opción «%s» no acepta un argumento en la línea %d\n"
 
 #: main.c:1051
 #, c-format
@@ -3502,16 +3511,15 @@ msgstr "Esta versión de OpenConnect se compiló sin soporte PSKC\n"
 
 #: oath.c:311 oath.c:336 stoken.c:297 yubikey.c:507
 msgid "OK to generate INITIAL tokencode\n"
-msgstr "OK al generar el código de token INITIAL\n"
+msgstr "OK al generar el código de testigo INITIAL\n"
 
 #: oath.c:315 oath.c:339 stoken.c:302 yubikey.c:511
 msgid "OK to generate NEXT tokencode\n"
-msgstr "OK al generar el código de token NEXT\n"
+msgstr "OK al generar el código de testigo NEXT\n"
 
 #: oath.c:320 oath.c:343 stoken.c:307
 msgid "Server is rejecting the soft token; switching to manual entry\n"
-msgstr ""
-"El servidor está rechazando el token blando; cambiando a acceso manual\n"
+msgstr "El servidor está rechazando el testigo; cambiando a acceso manual\n"
 
 #: oath.c:377
 msgid "Generating OATH TOTP token code\n"
@@ -3854,7 +3862,7 @@ msgid ""
 "See http://rt.openssl.org/Ticket/Display.html?id=1751\n"
 "Use the --no-dtls command line option to avoid this message\n"
 msgstr ""
-"SSL_set_session() falló con el protocolo antiguo 0x%x\n"
+"SSL_set_session() falló con el protocolo antiguo versión 0x%x\n"
 "¿Está usando una versión de OpenSSL más antigua que la 0.9.8m?\n"
 "Consulte http://rt.openssl.org/Ticket/Display.html?id=1751\n"
 "Use la opción de la línea de comandos --no-dtls para evitar este mensaje\n"
@@ -3951,7 +3959,7 @@ msgstr "Encontrados %d certificados en la ranura «%s»\n"
 #: openssl-pkcs11.c:346 openssl-pkcs11.c:569
 #, c-format
 msgid "Failed to parse PKCS#11 URI '%s'\n"
-msgstr "Falló al analizar el URI PKCS#11 '%s'\n"
+msgstr "Falló al analizar el URI PKCS#11 «%s»\n"
 
 #: openssl-pkcs11.c:353 openssl-pkcs11.c:579
 msgid "Failed to enumerate PKCS#11 slots\n"
@@ -4618,27 +4626,27 @@ msgstr "Enviando paquete de datos IF-T/TLS de %d bytes\n"
 #: script.c:130
 #, c-format
 msgid "Discard bad split include: \"%s\"\n"
-msgstr "Descartar mala división que incluir: «%s»\n"
+msgstr "Descartar mala división que incluye: «%s»\n"
 
 #: script.c:134
 #, c-format
 msgid "Discard bad split exclude: \"%s\"\n"
-msgstr "Descartar mala división que excluir: «%s»\n"
+msgstr "Descartar mala división que excluye: «%s»\n"
 
 #: script.c:507 script.c:555
 #, c-format
 msgid "Failed to spawn script '%s' for %s: %s\n"
-msgstr "Falló al generar el script '%s' para %s: %s\n"
+msgstr "Falló al generar el script «%s» para %s: %s\n"
 
 #: script.c:562
 #, c-format
 msgid "Script '%s' exited abnormally (%x)\n"
-msgstr "El script '%s' terminó anormalmente (%x)\n"
+msgstr "El script «%s» terminó anormalmente (%x)\n"
 
 #: script.c:570
 #, c-format
 msgid "Script '%s' returned error %d\n"
-msgstr "El script '%s' devolvió el error %d\n"
+msgstr "El script «%s» devolvió el error %d\n"
 
 #: ssl.c:111
 msgid "Failed select() for socket connect"
@@ -4666,7 +4674,7 @@ msgstr "Proxy de libproxy: %s://%s:%d/\n"
 #: ssl.c:325
 #, c-format
 msgid "getaddrinfo failed for host '%s': %s\n"
-msgstr "getaddrinfo falló para el servidor '%s':%s\n"
+msgstr "getaddrinfo falló para el servidor «%s»:%s\n"
 
 #: ssl.c:334 ssl.c:460
 msgid "Reconnecting to DynDNS server using previously cached IP address\n"
@@ -4782,7 +4790,7 @@ msgstr ""
 #: ssl.c:909
 #, c-format
 msgid "openconnect_fopen_utf8() used with unsupported mode '%s'\n"
-msgstr "Usado openconnect_fopen_utf8() con el modo «%s» no soportado'\n"
+msgstr "Se ha usado openconnect_fopen_utf8() con el modo «%s» no soportado\n"
 
 #: ssl.c:931
 #, c-format
@@ -4942,7 +4950,7 @@ msgstr "Respuesta de protección SSPI no válida del proxy (%lu bytes)\n"
 
 #: stoken.c:102
 msgid "Enter credentials to unlock software token."
-msgstr "Introduzca credenciales para desbloquear el testigo software."
+msgstr "Introduzca credenciales para desbloquear el testigo."
 
 #: stoken.c:107
 msgid "Device ID:"
@@ -4950,7 +4958,7 @@ msgstr "ID del dispositivo:"
 
 #: stoken.c:143
 msgid "User bypassed soft token.\n"
-msgstr "El usuario saltó el token blando.\n"
+msgstr "El usuario omitió el testigo.\n"
 
 #: stoken.c:149 stoken.c:234
 msgid "All fields are required; try again.\n"
@@ -4966,7 +4974,7 @@ msgstr "ID del dispositivo o contraseña incorrectos; inténtelo de nuevo.\n"
 
 #: stoken.c:167
 msgid "Soft token init was successful.\n"
-msgstr "La inicialización del token blando tuvo éxito.\n"
+msgstr "La inicialización del testigo tuvo éxito.\n"
 
 #: stoken.c:210
 msgid "Enter software token PIN."
@@ -5178,7 +5186,7 @@ msgstr ""
 #, c-format
 msgid "Invalid interface name '%s'; must match 'utun%%d' or 'tun%%d'\n"
 msgstr ""
-"Nombre de interfaz '%s' no válido; debe coincidir con «utun%%d» o con «tun"
+"Nombre de interfaz «%s» no válido; debe coincidir con «utun%%d» o con «tun"
 "%%d»\n"
 
 #: tun.c:331
@@ -5203,7 +5211,7 @@ msgstr "Falló al conectar a la unidad utun: %s\n"
 #: tun.c:388
 #, c-format
 msgid "Invalid interface name '%s'; must match 'tun%%d'\n"
-msgstr "Nombre de interfaz '%s' no válido; debe coincidir con «tun%%d»\n"
+msgstr "Nombre de interfaz «%s» no válido; debe coincidir con «tun%%d»\n"
 
 #: tun.c:398
 #, c-format
@@ -5249,7 +5257,7 @@ msgstr "Falló al escribir el paquete entrante: %s\n"
 #: xml.c:75 xml.c:100
 #, c-format
 msgid "Treating host \"%s\" as a raw hostname\n"
-msgstr "Se trata el servidor «%s» como un nombre de servidor crudo\n"
+msgstr "Se trata el servidor «%s» como un nombre de servidor en bruto\n"
 
 #: xml.c:82
 #, c-format
@@ -5264,7 +5272,7 @@ msgstr "Archivo XML de configuración SHA1: %s\n"
 #: xml.c:98
 #, c-format
 msgid "Failed to parse XML config file %s\n"
-msgstr "Falló al analizar la el archivo XML de configuración %s\n"
+msgstr "Falló al analizar el archivo XML de configuración %s\n"
 
 #: xml.c:135
 #, c-format

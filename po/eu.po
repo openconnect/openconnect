@@ -1,22 +1,24 @@
-# SOME DESCRIPTIVE TITLE.
+# Basque translation of network-manager-openconnect.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 #
-# Translators:
+# Iñaki Larrañaga Murgoitio <dooteo@zundan.com>, 2009, 2010, 2014, 2015.
+# Edurne Labaka <elabaka@uzei.com>, 2015.
+#
 msgid ""
 msgstr ""
-"Project-Id-Version: openconnect\n"
+"Project-Id-Version: network-manager-openconnect master\n"
 "Report-Msgid-Bugs-To: openconnect-devel@lists.infradead.org\n"
 "POT-Creation-Date: 2019-12-30 00:19+0000\n"
-"PO-Revision-Date: 2012-06-20 08:43+0000\n"
-"Last-Translator: David Woodhouse <dwmw2@infradead.org>\n"
-"Language-Team: Basque (http://www.transifex.net/projects/p/meego/language/"
-"eu/)\n"
+"PO-Revision-Date: 2015-02-07 17:42+0100\n"
+"Last-Translator: Iñaki Larrañaga Murgoitio <dooteo@zundan.com>\n"
+"Language-Team: Basque <librezale@librezale.org>\n"
 "Language: eu\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Lokalize 1.4\n"
 
 #: auth-globalprotect.c:129
 #, c-format
@@ -566,7 +568,7 @@ msgstr "CSTP Keepalive jasota\n"
 #: cstp.c:976 oncp.c:1005
 #, c-format
 msgid "Received uncompressed data packet of %d bytes\n"
-msgstr "Konprimitu gabeko datuen paketea (%d byte) jasota\n"
+msgstr "Konprimatu gabeko datuen paketea (%d byte) jasota\n"
 
 #: cstp.c:993
 #, c-format
@@ -579,7 +581,7 @@ msgstr ""
 
 #: cstp.c:1004
 msgid "Compressed packet received in !deflate mode\n"
-msgstr "Konprimitutako paketea !hustu (!deflate) moduan jasota\n"
+msgstr "Konprimatutako paketea !hustu (!deflate) moduan jasota\n"
 
 #: cstp.c:1013
 msgid "received server terminate packet\n"
@@ -630,7 +632,7 @@ msgstr ""
 #: cstp.c:1177 oncp.c:1247
 #, c-format
 msgid "Sending uncompressed data packet of %d bytes\n"
-msgstr "Konprimitu gabeko datuen paketea (%d byte) bidaltzen\n"
+msgstr "Konprimatu gabeko datuen paketea (%d byte) bidaltzen\n"
 
 #: cstp.c:1217
 #, c-format
@@ -1055,7 +1057,7 @@ msgstr ""
 
 #: gnutls-dtls.c:437 openssl-dtls.c:693 openssl-dtls.c:697
 msgid "DTLS handshake timed out\n"
-msgstr "DTLS negoziazioaren denbora iraungituta\n"
+msgstr "DTLS negoziazioaren denbora iraungita\n"
 
 #: gnutls-dtls.c:440
 #, c-format
@@ -1140,7 +1142,7 @@ msgstr "Ezin izan da ziurtagiritik iraungitze-data erauzi\n"
 
 #: gnutls.c:333 openssl.c:1602
 msgid "Client certificate has expired at"
-msgstr "Bezeroaren ziurtagiria iraungituta: "
+msgstr "Bezeroaren ziurtagiria iraungita: "
 
 #: gnutls.c:335 openssl.c:1607
 msgid "Client certificate expires soon at"
@@ -1507,7 +1509,7 @@ msgstr "ziurtagiria ez da oraindik aktibatu"
 
 #: gnutls.c:2004
 msgid "certificate expired"
-msgstr "ziurtagiria iraungituta"
+msgstr "ziurtagiria iraungita"
 
 #. If this is set and no other reason, it apparently means
 #. that signature verification failed. Not entirely sure
@@ -2317,13 +2319,13 @@ msgstr "Huts egin du birbideratutako '%s' URLa analizatzean: %s\n"
 #: http.c:842
 #, c-format
 msgid "Cannot follow redirection to non-https URL '%s'\n"
-msgstr "Ezin da https ez den '%s' URLaren birbideraketara jarraipenik egin\n"
+msgstr "Ezin da https ez den '%s' URLaren birbideratzera jarraipenik egin\n"
 
 #: http.c:870
 #, c-format
 msgid "Allocating new path for relative redirect failed: %s\n"
 msgstr ""
-"Huts egin du birbideraketa erlatiboaren bide-izen berria esleitzean: %s\n"
+"Huts egin du birbideratze erlatiboaren bide-izen berria esleitzean: %s\n"
 
 #: http.c:945
 msgid "HTTPS socket closed by peer; reopening\n"
@@ -2332,7 +2334,7 @@ msgstr ""
 #: http.c:1115 oncp.c:591 pulse.c:1420
 #, c-format
 msgid "Unexpected %d result from server\n"
-msgstr "Ustekabeko %d emaitz zerbitzaritik\n"
+msgstr "Ustekabeko %d emaitza zerbitzaritik\n"
 
 #: http.c:1163
 msgid "request granted"
@@ -2360,7 +2362,7 @@ msgstr "helburuko ostalariak konexioa ukatu du"
 
 #: http.c:1169
 msgid "TTL expired"
-msgstr "TTL iraungituta"
+msgstr "TTL iraungita"
 
 #: http.c:1170
 msgid "command not supported / protocol error"
@@ -3259,7 +3261,7 @@ msgstr "Autentifikazioaren '%s' aukera ez dago erabilgarri\n"
 
 #: main.c:1911
 msgid "User input required in non-interactive mode\n"
-msgstr "Erabiltzailearen sarrera behar da modu ez-elkarreragilean\n"
+msgstr "Erabiltzailearen sarrera behar da modu ez-interaktiboan\n"
 
 #: main.c:2149
 #, c-format

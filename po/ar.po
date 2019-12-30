@@ -4,7 +4,6 @@
 #
 # Translators:
 # osama7 <madboy221@hotmail.com>, 2013
-# osama7 <madboy221@hotmail.com>, 2013
 msgid ""
 msgstr ""
 "Project-Id-Version: openconnect\n"

@@ -4,19 +4,22 @@
 #
 # Translators:
 # Jussa Jutila <ankka69@gmail.com>, 2011.
+# Jiri Grönroos <jiri.gronroos+l10n@iki.fi>, 2016.
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: openconnect\n"
 "Report-Msgid-Bugs-To: openconnect-devel@lists.infradead.org\n"
 "POT-Creation-Date: 2019-12-30 00:19+0000\n"
-"PO-Revision-Date: 2012-06-20 08:43+0000\n"
-"Last-Translator: David Woodhouse <dwmw2@infradead.org>\n"
-"Language-Team: Finnish <gnome-fi-laatu@lists.sourceforge.net>\n"
+"PO-Revision-Date: 2018-04-03 23:01+0300\n"
+"Last-Translator: Jiri Grönroos <jiri.gronroos+l10n@iki.fi>\n"
+"Language-Team: suomi <gnome-fi-laatu@lists.sourceforge.net>\n"
 "Language: fi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 2.0.6\n"
 
 #: auth-globalprotect.c:129
 #, c-format

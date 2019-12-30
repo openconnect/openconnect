@@ -1,21 +1,27 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
+# Catalan translations for network-manager-openconnect package
+# Traduccions al català del paquet «network-manager-openconnect».
+# Copyright (C) 2009 THE network-manager-openconnect'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the network-manager-openconnect package.
 #
-# Translators:
+# David Planella <david.planella@gmail.com>, 2009, 2011.
+# Jordi Estrada <jordi.estrada@gmail.com>, 2010.
+# Carles Ferrando Garcia <carles.ferrando@gmail.com>, 2015, 2017, 2018.
+# Walter Garcia-Fontes <walter.garcia@upf.edu>, 2016.
+# Jordi Serratosa <jordis@softcatala.cat>, 2017.
 msgid ""
 msgstr ""
-"Project-Id-Version: openconnect\n"
+"Project-Id-Version: network-manager-openconnect\n"
 "Report-Msgid-Bugs-To: openconnect-devel@lists.infradead.org\n"
 "POT-Creation-Date: 2019-12-30 00:19+0000\n"
-"PO-Revision-Date: 2011-09-22 22:31+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Catalan (http://www.transifex.net/projects/p/meego/team/ca/)\n"
+"PO-Revision-Date: 2019-03-05 19:27+0100\n"
+"Last-Translator: Carles Ferrando Garcia <carles.ferrando@gamil.com>\n"
+"Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
 "Language: ca\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Poedit 2.2.1\n"
 
 #: auth-globalprotect.c:129
 #, c-format
@@ -23,12 +29,12 @@ msgid ""
 "SAML login is required via %s to this URL:\n"
 "\t%s"
 msgstr ""
-"Cal l'usuari SAML via %s per aquesta URL:\n"
+"Cal l'usuari SAML via %s per aquest URL:\n"
 "\t%s"
 
 #: auth-globalprotect.c:131
 msgid "Please enter your username and password"
-msgstr "Entreu el vostre nom d'usuari i contrasenya"
+msgstr "Introduïu el vostre nom d'usuari i contrasenya"
 
 #: auth-globalprotect.c:140
 msgid "Username"
@@ -79,8 +85,7 @@ msgstr "  %s (%s)\n"
 #: auth-globalprotect.c:500 auth-juniper.c:739 auth.c:669
 msgid "Failed to generate OTP tokencode; disabling token\n"
 msgstr ""
-"Error en generar el codi de testimoni OTP; s'està deshabilitant el "
-"testimoni\n"
+"Error en generar el codi de testimoni OTP; s'està inhabilitant el testimoni\n"
 
 #: auth-globalprotect.c:596
 msgid "Server is neither a GlobalProtect portal nor a gateway.\n"
@@ -97,12 +102,12 @@ msgstr "Sortida de sessió amb èxit\n"
 #: auth-juniper.c:142
 #, c-format
 msgid "Ignoring unknown form submit item '%s'\n"
-msgstr "S'està ignorant l'element desconegut «%s» enviat pel formulari.\n"
+msgstr "S'està ignorant l'element desconegut «%s» enviat pel formulari\n"
 
 #: auth-juniper.c:153
 #, c-format
 msgid "Ignoring unknown form input type '%s'\n"
-msgstr "S'està ignorant el tipus d'entrada desconeguda «%s» al formulari.\n"
+msgstr "S'està ignorant el tipus d'entrada desconeguda «%s» al formulari\n"
 
 #: auth-juniper.c:163
 #, c-format
@@ -191,12 +196,12 @@ msgstr "Error en trobar o analitzar el formulari web a la pàgina d'accés\n"
 
 #: auth-juniper.c:684
 msgid "Encountered form with no ID\n"
-msgstr "S'ha trobat un formulari sense identificació\n"
+msgstr "S'ha trobat un formulari sense identificador\n"
 
 #: auth-juniper.c:722
 #, c-format
 msgid "Unknown form ID '%s'\n"
-msgstr "Formulari amb identificació «%s» desconeguda\n"
+msgstr "Formulari amb identificador «%s» desconegut\n"
 
 #: auth-juniper.c:725
 #, c-format
@@ -252,7 +257,7 @@ msgstr "S'ha preguntat per la contrasenya però està configurat «--no-passwd»
 
 #: auth.c:926
 msgid "Not downloading XML profile because SHA1 already matches\n"
-msgstr "No s'està descarregant el perfil XML ja que SHA1 concorda realment\n"
+msgstr "No s'està descarregant el perfil XML, ja que SHA1 concorda realment\n"
 
 #: auth.c:932 cstp.c:335 http.c:1058
 #, c-format
@@ -310,8 +315,7 @@ msgid ""
 "Error: Server asked us to run CSD hostscan.\n"
 "You need to provide a suitable --csd-wrapper argument.\n"
 msgstr ""
-"Error: El servidor us ha preguntat per executar l'escànner d'amfitrions "
-"CSD.\n"
+"Error: El servidor us ha preguntat per executar l'escàner d'amfitrions CSD.\n"
 "Cal que proporcioneu un argument «--csd-wrapper» adequat.\n"
 
 #: auth.c:1061
@@ -381,7 +385,7 @@ msgstr "POST XML habilitat\n"
 #: auth.c:1407
 #, c-format
 msgid "Refreshing %s after 1 second...\n"
-msgstr "S'està refrescant %s després d'1 segon ...\n"
+msgstr "S'està refrescant %s després d'1 segon...\n"
 
 #: compat.c:207
 #, c-format
@@ -539,7 +543,7 @@ msgstr "Tipus de compressió desconegut %d\n"
 #: cstp.c:829
 #, c-format
 msgid "Received %s compressed data packet of %d bytes (was %d)\n"
-msgstr "S'han rebuts %s paquets de dades comprimides de %d bytes (eren %d)\n"
+msgstr "S'han rebut %s paquets de dades comprimides de %d bytes (eren %d)\n"
 
 #: cstp.c:849
 #, c-format
@@ -581,11 +585,11 @@ msgstr "S'ha rebut paquet de dades descomprimides de %d bytes\n"
 #: cstp.c:993
 #, c-format
 msgid "Received server disconnect: %02x '%s'\n"
-msgstr "S'ha rebut el servidor desconnectat: %02x «%s»\n"
+msgstr "S'ha rebut una desconnexió del servidor: %02x «%s»\n"
 
 #: cstp.c:996
 msgid "Received server disconnect\n"
-msgstr "S'ha rebut el servidor desconnectat\n"
+msgstr "S'ha rebut una desconnexió del servidor\n"
 
 #: cstp.c:1004
 msgid "Compressed packet received in !deflate mode\n"
@@ -609,7 +613,7 @@ msgstr "SSL ha escrit molt pocs bytes! S'ha preguntat per %d, s'ha enviat %d\n"
 #. the setting when we're asked for it.
 #: cstp.c:1091 oncp.c:1164 pulse.c:2803
 msgid "CSTP rekey due\n"
-msgstr "Degut a la reclau CSTP\n"
+msgstr "S'espera la reclau CSTP\n"
 
 #. if we failed rehandshake try establishing a new-tunnel instead of failing
 #: cstp.c:1098 oncp.c:1171 pulse.c:2810
@@ -725,7 +729,7 @@ msgstr "Paquet desconegut DTLS de tipus %02x, longitud %d\n"
 
 #: dtls.c:356
 msgid "DTLS rekey due\n"
-msgstr "Degut a la reclau DTLS\n"
+msgstr "S'espera la reclau DTLS\n"
 
 #: dtls.c:363
 msgid "DTLS Rehandshake failed; reconnecting.\n"
@@ -834,7 +838,7 @@ msgstr "Rebuda la sonda DPD MTU (%u bytes)\n"
 #: dtls.c:701
 #, c-format
 msgid "Detected MTU of %d bytes (was %d)\n"
-msgstr "S'ha detectat MTP de %d bytes (era %d)\n"
+msgstr "S'ha detectat MTU de %d bytes (era %d)\n"
 
 #: dtls.c:704
 #, c-format
@@ -929,7 +933,7 @@ msgstr "S'ha rebut paquet ESP amb no vàlida SPI 0x%08x\n"
 #: esp.c:208
 #, c-format
 msgid "Received ESP packet with unrecognised payload type %02x\n"
-msgstr "S'ha rebut paquet ESP amb carrega útil no reconeguda del tipus %02x\n"
+msgstr "S'ha rebut paquet ESP amb càrrega útil no reconeguda del tipus %02x\n"
 
 #: esp.c:215
 #, c-format
@@ -1063,7 +1067,7 @@ msgstr "MTU DTLS reduït a %d\n"
 msgid "DTLS session resume failed; possible MITM attack. Disabling DTLS.\n"
 msgstr ""
 "Ha fallat la continuació de la sessió DTLS; possible atac MITM. S'està "
-"deshabilitant DTLS.\n"
+"inhabilitant DTLS.\n"
 
 #: gnutls-dtls.c:405
 #, c-format
@@ -1091,7 +1095,7 @@ msgstr "Error d'encaixat DTLS: %s\n"
 
 #: gnutls-dtls.c:444
 msgid "(Is a firewall preventing you from sending UDP packets?)\n"
-msgstr "(Està un tallafocs impedint que envieu paquets UDP?)\n"
+msgstr "(Un tallafoc impedeix que envieu paquets UDP?)\n"
 
 #: gnutls-esp.c:56
 #, c-format
@@ -1163,7 +1167,7 @@ msgstr "Ha fallat l'enviament SSL: %s\n"
 
 #: gnutls.c:328
 msgid "Could not extract expiration time of certificate\n"
-msgstr "No es pot extraure el temps caducitat del certificat\n"
+msgstr "No es pot extraure la data de caducitat del certificat\n"
 
 #: gnutls.c:333 openssl.c:1602
 msgid "Client certificate has expired at"
@@ -1208,7 +1212,7 @@ msgstr "Error en desxifrar el certificat del fitxer PKCS#12\n"
 
 #: gnutls.c:479 openssl.c:537
 msgid "Enter PKCS#12 pass phrase:"
-msgstr "Entreu la contrasenya PKCS#12:"
+msgstr "Introduïu la contrasenya PKCS#12:"
 
 #: gnutls.c:502
 #, c-format
@@ -1282,7 +1286,7 @@ msgstr "El desxifrat de la clau PEM ha fallat\n"
 
 #: gnutls.c:894 gnutls.c:1409 openssl.c:458
 msgid "Enter PEM pass phrase:"
-msgstr "Entreu la contrasenya PEM:"
+msgstr "Introduïu la contrasenya PEM:"
 
 #: gnutls.c:966
 msgid "This binary built without system key support\n"
@@ -1328,7 +1332,7 @@ msgstr "No s'ha trobat cap certificat al fitxer"
 #: gnutls.c:1107
 #, c-format
 msgid "Loading certificate failed: %s\n"
-msgstr "La carrega del certificat ha fallat: %s\n"
+msgstr "La càrrega del certificat ha fallat: %s\n"
 
 #: gnutls.c:1123
 #, c-format
@@ -1473,7 +1477,7 @@ msgstr "S'està afegint el suport CA «%s»\n"
 #: gnutls.c:1728
 msgid "Private key appears not to support RSA-PSS. Disabling TLSv1.3\n"
 msgstr ""
-"La clau privada sembla no suportar RSA-PSS. S'està deshabilitant TLSv1.3\n"
+"La clau privada sembla no suportar RSA-PSS. S'està inhabilitant TLSv1.3\n"
 
 #: gnutls.c:1752
 #, c-format
@@ -1571,7 +1575,7 @@ msgstr "Error en obrir el fitxer CA «%s»: %s\n"
 
 #: gnutls.c:2180 openssl.c:1689
 msgid "Loading certificate failed. Aborting.\n"
-msgstr "La carrega del certificat ha fallat. S'està avortant.\n"
+msgstr "La càrrega del certificat ha fallat. S'està avortant.\n"
 
 #: gnutls.c:2241
 #, c-format
@@ -1615,7 +1619,7 @@ msgstr "Cal PIN en %s"
 
 #: gnutls.c:2495 openssl-pkcs11.c:206
 msgid "Wrong PIN"
-msgstr "PIN dolent"
+msgstr "PIN incorrecte"
 
 #: gnutls.c:2498
 msgid "This is the final try before locking!"
@@ -1627,7 +1631,7 @@ msgstr "Només alguns intents abans de bloquejar-ho!"
 
 #: gnutls.c:2505 openssl-pkcs11.c:210
 msgid "Enter PIN:"
-msgstr "Entreu el PIN:"
+msgstr "Introduïu el PIN:"
 
 #: gnutls.c:2591 openssl.c:1979
 msgid "Unsupported OATH HMAC algorithm\n"
@@ -1708,7 +1712,7 @@ msgstr "Errada per a carregar la bombolla de clau TPM: %s\n"
 
 #: gnutls_tpm.c:205
 msgid "Enter TPM SRK PIN:"
-msgstr "Entreu el PIN SRK TPM:"
+msgstr "Introduïu el PIN SRK TPM:"
 
 #: gnutls_tpm.c:226
 #, c-format
@@ -1722,7 +1726,7 @@ msgstr "Errada per a assignar la política a la clau: %s\n"
 
 #: gnutls_tpm.c:240
 msgid "Enter TPM key PIN:"
-msgstr "Entreu la clau PIN de TPM:"
+msgstr "Introduïu la clau PIN de TPM:"
 
 #: gnutls_tpm.c:251
 #, c-format
@@ -1810,7 +1814,7 @@ msgstr "S'està creant la clau primària sota la jerarquia %s. \n"
 #: gnutls_tpm2_esys.c:205 gnutls_tpm2_ibm.c:262
 #, c-format
 msgid "Enter TPM2 %s hierarchy password:"
-msgstr "Entreu la contrasenya de jerarquia %s TPM2:"
+msgstr "Introduïu la contrasenya de jerarquia %s TPM2:"
 
 #: gnutls_tpm2_esys.c:213 gnutls_tpm2_esys.c:307 gnutls_tpm2_esys.c:378
 #, c-format
@@ -1828,14 +1832,12 @@ msgstr "Ha fallat Esys_CreatePrimary TPM2: 0x%x \n"
 
 #: gnutls_tpm2_esys.c:249
 msgid "Establishing connection with TPM.\n"
-msgstr "Connexió establida amb TPM, \n"
+msgstr "Connexió establida amb TPM.\n"
 
 #: gnutls_tpm2_esys.c:254
 #, c-format
 msgid "TPM2 Esys_Initialize failed: 0x%x\n"
-msgstr ""
-"Ha fallat Esys_Initialize TPM2:  0x%x \n"
-"\n"
+msgstr "Ha fallat Esys_Initialize TPM2:  0x%x \n"
 
 #: gnutls_tpm2_esys.c:262
 msgid ""
@@ -1858,7 +1860,7 @@ msgstr "Ha fallat Esys_TR_FromTPMPublic  per gestionar 0x%x: 0x%x \n"
 
 #: gnutls_tpm2_esys.c:299 gnutls_tpm2_ibm.c:278
 msgid "Enter TPM2 parent key password:"
-msgstr "Entreu la contrasenya de la clau pare TPM2:"
+msgstr "Introduïu la contrasenya de la clau pare TPM2:"
 
 #: gnutls_tpm2_esys.c:313
 #, c-format
@@ -1883,7 +1885,7 @@ msgstr "Ha fallat Esys_FlushContext TPM2 per al primari generat:  0x%x \n"
 
 #: gnutls_tpm2_esys.c:367 gnutls_tpm2_ibm.c:363 gnutls_tpm2_ibm.c:450
 msgid "Enter TPM2 key password:"
-msgstr "Entreu la contrasenya TPM2:"
+msgstr "Introduïu la contrasenya TPM2:"
 
 #: gnutls_tpm2_esys.c:399
 #, c-format
@@ -1998,8 +2000,8 @@ msgstr ""
 #: gpst.c:575 oncp.c:837
 msgid "Ignoring ESP keys since ESP support not available in this build\n"
 msgstr ""
-"S'està ignorant les claus ESP mentre el suport ESP no estigui disponible per "
-"a aquest muntatge\n"
+"S'estan ignorant les claus ESP mentre el suport ESP no estigui disponible "
+"per a aquest muntatge\n"
 
 #: gpst.c:593
 #, c-format
@@ -2302,14 +2304,14 @@ msgstr "Aquesta versió d'OpenConnect ha sigut muntada sense suport GSSAPI\n"
 msgid "Proxy requested Basic authentication which is disabled by default\n"
 msgstr ""
 "El servidor intermediari ha demanat autenticació bàsica que està "
-"deshabilitada per defecte\n"
+"inhabilitada per defecte\n"
 
 #: http-auth.c:243
 #, c-format
 msgid ""
 "Server '%s' requested Basic authentication which is disabled by default\n"
 msgstr ""
-"El servidor «%s» ha demanat per autenticació bàsica que està deshabilitada "
+"El servidor «%s» ha demanat per autenticació bàsica que està inhabilitada "
 "per defecte\n"
 
 #: http-auth.c:256
@@ -2404,7 +2406,7 @@ msgstr "Error per a analitzar la redirecció URL «%s»: %s\n"
 #: http.c:842
 #, c-format
 msgid "Cannot follow redirection to non-https URL '%s'\n"
-msgstr "No es pot seguir la redirecció a la URL no https «%s»\n"
+msgstr "No es pot seguir la redirecció a l'URL no https «%s»\n"
 
 #: http.c:870
 #, c-format
@@ -2582,7 +2584,7 @@ msgstr ""
 
 #: http.c:1535
 msgid "Only http or socks(5) proxies supported\n"
-msgstr "Sols estan suportats http o el servidor intermediaris socks(5)\n"
+msgstr "Sols estan suportats http o servidors intermediaris socks(5)\n"
 
 #: library.c:116
 msgid "Cisco AnyConnect or openconnect"
@@ -2623,7 +2625,7 @@ msgstr "Protocol VPN desconegut «%s»\n"
 
 #: library.c:259
 msgid "Built against SSL library with no Cisco DTLS support\n"
-msgstr "Muntatge de la llibreria SSL sense suport DTLS Cisco\n"
+msgstr "Muntatge de la biblioteca SSL sense suport DTLS Cisco\n"
 
 #: library.c:686
 #, c-format
@@ -2632,7 +2634,7 @@ msgstr "Error en analitzar el servidor URL  «%s»\n"
 
 #: library.c:692
 msgid "Only https:// permitted for server URL\n"
-msgstr "Sols està permès https:// per la URL servidor\n"
+msgstr "Sols està permès https:// per a l'URL del servidor\n"
 
 #: library.c:1086
 #, c-format
@@ -2688,7 +2690,7 @@ msgid ""
 "For assistance with OpenConnect, please see the web page at\n"
 "  http://www.infradead.org/openconnect/mail.html\n"
 msgstr ""
-"Per assistència amb OpenConnect, mireu la pàgina web a\n"
+"Per assistència amb OpenConnect, consulteu la pàgina web a\n"
 "  http://www.infradead.org/openconnect/mail.html\n"
 
 #: main.c:593
@@ -2721,7 +2723,7 @@ msgstr "Protocols suportats:"
 
 #: main.c:659 main.c:675
 msgid " (default)"
-msgstr "(per defecte)"
+msgstr " (per defecte)"
 
 #: main.c:672
 msgid "Set VPN protocol"
@@ -2782,7 +2784,7 @@ msgstr "Configura el nom d'usuari d'entrada"
 
 #: main.c:804
 msgid "Disable password/SecurID authentication"
-msgstr "Deshabilita l'autenticació de la contrasenya/SecurID"
+msgstr "Inhabilita l'autenticació de la contrasenya/SecurID"
 
 #: main.c:805
 msgid "Do not expect user input; exit if it is required"
@@ -2834,11 +2836,11 @@ msgstr "Testimoni secret de programari"
 
 #: main.c:818
 msgid "(NOTE: libstoken (RSA SecurID) disabled in this build)"
-msgstr "(NOTA: libstoken (RSA SecurID) deshabilitada en aquest muntatge)"
+msgstr "(NOTA: libstoken (RSA SecurID) inhabilitada en aquest muntatge)"
 
 #: main.c:821
 msgid "(NOTE: Yubikey OATH disabled in this build)"
-msgstr "(NOTA: Yubikey OATH deshabilitada en aquest muntatge)"
+msgstr "(NOTA: Yubikey OATH inhabilitada en aquest muntatge)"
 
 #: main.c:824
 msgid "Server validation"
@@ -2854,7 +2856,7 @@ msgstr "No es requereix el certificat SSL del servidor per validar-se"
 
 #: main.c:827
 msgid "Disable default system certificate authorities"
-msgstr "Deshabilita per defecte els certificats d'autoritats del sistema"
+msgstr "Inhabilita per defecte els certificats d'autoritats del sistema"
 
 #: main.c:828
 msgid "Cert file for server verification"
@@ -2874,7 +2876,7 @@ msgstr "Configura els mètodes d'autenticació del servidor intermediari"
 
 #: main.c:833
 msgid "Disable proxy"
-msgstr "Deshabilita el servidor intermediari"
+msgstr "Inhabilita el servidor intermediari"
 
 #: main.c:834
 msgid "Use libproxy to automatically configure proxy"
@@ -2883,7 +2885,7 @@ msgstr ""
 
 #: main.c:836
 msgid "(NOTE: libproxy disabled in this build)"
-msgstr "(NOTA: libproxy deshabilitat en aquest muntatge)"
+msgstr "(NOTA: libproxy inhabilitat en aquest muntatge)"
 
 #: main.c:838
 msgid "Connection retry timeout in seconds"
@@ -2891,7 +2893,7 @@ msgstr "Temps d'espera en segons per reintentar la connexió"
 
 #: main.c:839
 msgid "Use IP when connecting to HOST"
-msgstr "Usa l'IP quan et connectis a HOST"
+msgstr "Usa la IP quan et connectis a HOST"
 
 #: main.c:840
 msgid "copy TOS / TCLASS when using DTLS"
@@ -2959,7 +2961,7 @@ msgstr "Menys sortida"
 
 #: main.c:863
 msgid "Dump HTTP authentication traffic (implies --verbose)"
-msgstr "Bolca el trafic d'autenticació HTTP (implica --verbose)"
+msgstr "Bolca el trànsit d'autenticació HTTP (implica --verbose)"
 
 #: main.c:864
 msgid "Prepend timestamp to progress messages"
@@ -2967,7 +2969,7 @@ msgstr "Avantposa la marca horària per al progrés dels missatges"
 
 #: main.c:866
 msgid "VPN configuration script"
-msgstr "Script de configuració VPN."
+msgstr "Script de configuració VPN"
 
 #: main.c:867
 msgid "Use IFNAME for tunnel interface"
@@ -2985,7 +2987,7 @@ msgstr "per defecte"
 
 #: main.c:871
 msgid "Pass traffic to 'script' program, not tun"
-msgstr "Passa el trafic al «script» del programa, no al controlador de xarxa"
+msgstr "Passa el trànsit a l'«script» del programa, no al controlador de xarxa"
 
 #: main.c:874
 msgid "Tunnel control"
@@ -3013,7 +3015,7 @@ msgstr "Habilita la compressió amb estat (per defecte és sols sense estat)"
 
 #: main.c:880
 msgid "Disable all compression"
-msgstr "Deshabilita tota la compressió"
+msgstr "Inhabilita tota la compressió"
 
 #: main.c:881
 msgid "Set minimum Dead Peer Detection interval"
@@ -3025,7 +3027,7 @@ msgstr "Requerida confidencialitat directa perfecta"
 
 #: main.c:883
 msgid "Disable DTLS and ESP"
-msgstr "Deshabilita DTLS i ESP"
+msgstr "Inhabilita DTLS i ESP"
 
 #: main.c:884
 msgid "OpenSSL ciphers to support for DTLS"
@@ -3077,7 +3079,7 @@ msgstr "Errors de programari del servidor"
 
 #: main.c:901
 msgid "Disable HTTP connection re-use"
-msgstr "Deshabilita la reutilització de la connexió HTTP"
+msgstr "Inhabilita la reutilització de la connexió HTTP"
 
 #: main.c:902
 msgid "Do not attempt XML POST authentication"
@@ -3091,7 +3093,7 @@ msgstr "Error en assignar la cadena\n"
 #: main.c:997
 #, c-format
 msgid "Failed to get line from config file: %s\n"
-msgstr "Error en obtindre la línia del fitxer de configuració: %s\n"
+msgstr "Error en obtenir la línia del fitxer de configuració: %s\n"
 
 #: main.c:1037
 #, c-format
@@ -3132,7 +3134,7 @@ msgid ""
 msgstr ""
 "AVÍS: Aquesta versió d'openconnect ha estat muntada sense suport\n"
 "          per iconv però sembla que esteu utilitzant un caràcter antic\n"
-"         establert com «%s». S'esperen coses estranyes.\n"
+"         establert com a «%s». S'esperen coses estranyes.\n"
 
 #: main.c:1147
 #, c-format
@@ -3141,7 +3143,7 @@ msgid ""
 "         the libopenconnect library is %s\n"
 msgstr ""
 "AVÍS: Aquesta versió d'openconnect és %s però\n"
-"         la llibreria libopenconnect és %s\n"
+"         la biblioteca libopenconnect és %s\n"
 
 #: main.c:1157
 #, c-format
@@ -3185,7 +3187,7 @@ msgid ""
 "If this helps, please report to <openconnect-devel@lists.infradead.org>.\n"
 msgstr ""
 "Deshabiliteu la reutilització de totes les connexions HTTP degut a \n"
-"l'opció --no-http-keepalive. Si això ajuda informeu a <openconnect-"
+"l'opció --no-http-keepalive. Si això ajuda, informeu <openconnect-"
 "devel@lists.infradead.org>.\n"
 
 #: main.c:1394
@@ -3276,7 +3278,7 @@ msgstr ""
 
 #: main.c:1645
 msgid "See http://www.infradead.org/openconnect/vpnc-script.html\n"
-msgstr "Mireu http://www.infradead.org/openconnect/vpnc-script.html\n"
+msgstr "Consulteu http://www.infradead.org/openconnect/vpnc-script.html\n"
 
 #: main.c:1658
 #, c-format
@@ -3355,7 +3357,8 @@ msgstr "    --servercert %s\n"
 #, c-format
 msgid "Enter '%s' to accept, '%s' to abort; anything else to view: "
 msgstr ""
-"Entreu «%s» per acceptar, «%s» per avortar; qualsevol altra cosa per mostrar:"
+"Introduïu «%s» per acceptar, «%s» per avortar; qualsevol altra cosa per "
+"mostrar:"
 
 #: main.c:1826 main.c:1844
 msgid "no"
@@ -3466,7 +3469,7 @@ msgstr "Sense treball que fer; dormint durant %d ms...\n"
 #: mainloop.c:294
 #, c-format
 msgid "WaitForMultipleObjects failed: %s\n"
-msgstr "EsperantMultiplesObjectes ha fallat: %s\n"
+msgstr "WaitForMultipleObjects ha fallat: %s\n"
 
 #: mainloop.c:309
 msgid "Failed select() in mainloop"
@@ -3475,12 +3478,12 @@ msgstr ""
 #: ntlm.c:87 sspi.c:114 sspi.c:197
 #, c-format
 msgid "InitializeSecurityContext() failed: %lx\n"
-msgstr "InicialitzaContextSeguretat() ha fallat:  %lx\n"
+msgstr "InitializeSecurityContext() ha fallat:  %lx\n"
 
 #: ntlm.c:113 sspi.c:48
 #, c-format
 msgid "AcquireCredentialsHandle() failed: %lx\n"
-msgstr "GestorCredencialAdquirides() ha fallat:  %lx\n"
+msgstr "AcquireCredentialsHandle() ha fallat:  %lx\n"
 
 #: ntlm.c:246
 msgid "Error communicating with ntlm_auth helper\n"
@@ -3547,7 +3550,7 @@ msgstr "S'està generant el codi testimoni HOTP OATH\n"
 #: oncp.c:56
 #, c-format
 msgid "Invalid cookie '%s'\n"
-msgstr "Galeta no vàlida «%s»\n"
+msgstr "Galeta «%s» no vàlida\n"
 
 #: oncp.c:160
 #, c-format
@@ -3709,7 +3712,7 @@ msgstr "Esperat el missatge 301 KMP del servidor però s'ha obtingut %d\n"
 #: oncp.c:692
 #, c-format
 msgid "KMP message 301 from server too large (%d bytes)\n"
-msgstr "El missatge 301 de KMP del servidor és massa llarg (%d bytes)\n"
+msgstr "El missatge 301 de KMP del servidor és massa gran (%d bytes)\n"
 
 #: oncp.c:698
 #, c-format
@@ -3723,7 +3726,7 @@ msgstr "No s'ha pogut llegir la longitud del registre de continuació\n"
 #: oncp.c:711
 #, c-format
 msgid "Record of additional %d bytes too large; would make %d\n"
-msgstr "El registre de %d bytes addicionals és massa llarg; es farà de %d\n"
+msgstr "El registre de %d bytes addicionals és massa gran; es farà de %d\n"
 
 #: oncp.c:720
 #, c-format
@@ -3839,7 +3842,7 @@ msgstr "La inicialització de la sessió DTLSv1 ha fallat\n"
 
 #: openssl-dtls.c:275
 msgid "Too large application ID size\n"
-msgstr "La mida de la identificador és massa gran\n"
+msgstr "La mida de l'identificador és massa gran\n"
 
 #: openssl-dtls.c:308
 msgid "PSK callback\n"
@@ -3875,8 +3878,8 @@ msgid ""
 "Use the --no-dtls command line option to avoid this message\n"
 msgstr ""
 "SSL_set_session() ha fallat amb un protocol antic amb versió 0x%x\n"
-"Esteu utilitzant una versió de OpenSSL més vella que 0.9.8m?\n"
-"Mireu http://rt.openssl.org/Ticket/Display.html?id=1751\n"
+"Esteu utilitzant una versió d'OpenSSL més vella que 0.9.8m?\n"
+"Consulteu http://rt.openssl.org/Ticket/Display.html?id=1751\n"
 "Useu l'opció --no-dtls a la línia d'ordres per evitar aquest missatge\n"
 
 #: openssl-dtls.c:533
@@ -3900,8 +3903,8 @@ msgid ""
 "This is probably because your OpenSSL is broken\n"
 "See http://rt.openssl.org/Ticket/Display.html?id=2984\n"
 msgstr ""
-"Això és degut a que el vostre OpenSSL està trencat\n"
-"Mireu http://rt.openssl.org/Ticket/Display.html?id=2984\n"
+"Això és degut al fet que el vostre OpenSSL està trencat\n"
+"Consulteu http://rt.openssl.org/Ticket/Display.html?id=2984\n"
 
 #: openssl-dtls.c:701
 #, c-format
@@ -3951,7 +3954,7 @@ msgstr "Un altre usuari està realment connectat\n"
 
 #: openssl-pkcs11.c:283
 msgid "Unknown error logging in to PKCS#11 token\n"
-msgstr "Error desconegut al registrar-se al testimoni PKCS#11\n"
+msgstr "Error desconegut en registrar-se al testimoni PKCS#11\n"
 
 #: openssl-pkcs11.c:290
 #, c-format
@@ -4055,7 +4058,7 @@ msgstr "Error en llegir del sòcol SSL\n"
 msgid "SSL read error %d (server probably closed connection); reconnecting.\n"
 msgstr ""
 "Error %d de lectura SSL (el servidor probablement ha tancat la connexió); "
-"s'està tornant a connectar\n"
+"s'està tornant a connectar.\n"
 
 #: openssl.c:317
 #, c-format
@@ -4087,7 +4090,7 @@ msgstr "PKCS#12 no conté cap certificat!\n"
 
 #: openssl.c:570 openssl.c:941 openssl.c:957 openssl.c:978 openssl.c:1044
 msgid "Loading private key failed\n"
-msgstr "La carrega de la clau privativa ha fallat\n"
+msgstr "La càrrega de la clau privativa ha fallat\n"
 
 #: openssl.c:577
 msgid "PKCS#12 contained no private key!\n"
@@ -4115,7 +4118,7 @@ msgstr "Error en carregar la clau privada TPM\n"
 
 #: openssl.c:641
 msgid "Add key from TPM failed\n"
-msgstr "L'afegit de la clau de TPM a fallat\n"
+msgstr "L'afegit de la clau de TPM ha fallat\n"
 
 #: openssl.c:692 openssl.c:840
 #, c-format
@@ -4124,7 +4127,7 @@ msgstr "Error en obrir el fitxer certificat %s: %s\n"
 
 #: openssl.c:702
 msgid "Loading certificate failed\n"
-msgstr "La carrega del certificat ha fallat\n"
+msgstr "La càrrega del certificat ha fallat\n"
 
 #: openssl.c:740
 msgid "Failed to process all supporting certs. Trying anyway...\n"
@@ -4143,11 +4146,11 @@ msgstr "Error en crear BIO per a l'element «%s» del magatzem de claus\n"
 
 #: openssl.c:807
 msgid "Loading private key failed (wrong passphrase?)\n"
-msgstr "La carrega de la clau privada ha fallat (contrasenya dolenta? )\n"
+msgstr "La càrrega de la clau privada ha fallat (contrasenya dolenta? )\n"
 
 #: openssl.c:813
 msgid "Loading private key failed (see above errors)\n"
-msgstr "La carrega de la clau privada ha fallat (mireu amunt els errors)\n"
+msgstr "La càrrega de la clau privada ha fallat (mireu amunt els errors)\n"
 
 #: openssl.c:863
 msgid "Failed to load X509 certificate from keystore\n"
@@ -4232,7 +4235,7 @@ msgstr "Error en analitzar el nom de l'assumpte al certificat del parell\n"
 #: openssl.c:1356
 #, c-format
 msgid "Peer cert subject mismatch ('%s' != '%s')\n"
-msgstr "L'assumpte del certificat del parell no coincideix ('%s' != '%s')\n"
+msgstr "L'assumpte del certificat del parell no coincideix («%s» != «%s»)\n"
 
 #: openssl.c:1361 openssl.c:1395
 #, c-format
@@ -4717,7 +4720,7 @@ msgstr "No s'ha pogut connectar a %s%s%s:%s: %s\n"
 
 #: ssl.c:443
 msgid "Forgetting non-functional previous peer address\n"
-msgstr "S'estan oblidant les adreces parell prèvies no funcionals\n"
+msgstr "S'estan oblidant les adreces parelles prèvies no funcionals\n"
 
 #: ssl.c:455
 #, c-format
@@ -4737,7 +4740,7 @@ msgstr "statvfs: %s\n"
 #: ssl.c:573
 msgid "Could not obtain file system ID for passphrase\n"
 msgstr ""
-"No es pot obtindre la identificació del sistema de fitxers per la "
+"No es pot obtenir la identificació del sistema de fitxers per la "
 "contrasenya\n"
 
 #: ssl.c:584
@@ -4801,7 +4804,7 @@ msgstr ""
 #: ssl.c:909
 #, c-format
 msgid "openconnect_fopen_utf8() used with unsupported mode '%s'\n"
-msgstr "S'ha utilitzat openconnect_fopen_utf8() amb un medi no suportat «%s»\n"
+msgstr "S'ha utilitzat openconnect_fopen_utf8() amb un mode no suportat «%s»\n"
 
 #: ssl.c:931
 #, c-format
@@ -4929,7 +4932,7 @@ msgstr "EncryptMessage() ha fallat: %lx\n"
 #: sspi.c:325
 #, c-format
 msgid "EncryptMessage() result too large (%lu + %lu + %lu)\n"
-msgstr "El EncryptMessage() ha resultat massa gran (%lu + %lu + %lu)\n"
+msgstr "L'EncryptMessage() ha resultat massa gran (%lu + %lu + %lu)\n"
 
 #: sspi.c:350
 #, c-format
@@ -4968,11 +4971,12 @@ msgstr ""
 
 #: stoken.c:102
 msgid "Enter credentials to unlock software token."
-msgstr "Entreu les credencials per desbloquejar el testimoni del programari."
+msgstr ""
+"Introduïu les credencials per desbloquejar el testimoni del programari."
 
 #: stoken.c:107
 msgid "Device ID:"
-msgstr "Identificació del dispositiu: "
+msgstr "Identificació del dispositiu:"
 
 #: stoken.c:143
 msgid "User bypassed soft token.\n"
@@ -4980,7 +4984,7 @@ msgstr "L'usuari ha omès el testimoni tou.\n"
 
 #: stoken.c:149 stoken.c:234
 msgid "All fields are required; try again.\n"
-msgstr "Es requereixen tots els camps; torneu-ho a intentar\n"
+msgstr "Es requereixen tots els camps; torneu-ho a intentar.\n"
 
 #: stoken.c:159 stoken.c:326
 msgid "General failure in libstoken.\n"
@@ -4998,7 +5002,7 @@ msgstr "La inicialització del testimoni tou ha sigut un èxit.\n"
 
 #: stoken.c:210
 msgid "Enter software token PIN."
-msgstr "Entreu el PIN del testimoni de programari."
+msgstr "Introduïu el PIN del testimoni de programari."
 
 #: stoken.c:214
 msgid "PIN:"
@@ -5078,7 +5082,7 @@ msgstr "S'ha obert el dispositiu controlador de xarxa %s\n"
 #: tun-win32.c:265
 #, c-format
 msgid "Failed to obtain TAP driver version: %s\n"
-msgstr "Error en obtindre la versió del controlador TAP: %s\n"
+msgstr "Error en obtenir la versió del controlador TAP: %s\n"
 
 #: tun-win32.c:271
 #, c-format
@@ -5132,7 +5136,7 @@ msgstr "Error en escriure al dispositiu TAP: %s\n"
 
 #: tun-win32.c:447
 msgid "Spawning tunnel scripts is not yet supported on Windows\n"
-msgstr "L'engendrat de scripts de túnel no està encara suportat en Windows\n"
+msgstr "La generació de scripts de túnel no està encara suportat en Windows\n"
 
 #: tun.c:88
 msgid "Could not open /dev/tun for plumbing"
@@ -5200,7 +5204,8 @@ msgid ""
 msgstr ""
 "Per configurar la xarxa local, openconnect cal que sigui executat com a "
 "root\n"
-"Mireu http://www.infradead.org/openconnect/nonroot.html per més informació\n"
+"Consulteu http://www.infradead.org/openconnect/nonroot.html per més "
+"informació\n"
 
 #: tun.c:322
 #, c-format
@@ -5249,12 +5254,12 @@ msgstr ""
 #: tun.c:483
 #, c-format
 msgid "socketpair failed: %s\n"
-msgstr "El parell sòcol ha fallat: %s\n"
+msgstr "«socketpair» ha fallat: %s\n"
 
 #: tun.c:488
 #, c-format
 msgid "fork failed: %s\n"
-msgstr "La bifurcació ha fallat:  %s\n"
+msgstr "«fork» ha fallat: %s\n"
 
 #: tun.c:492
 msgid "setpgid"
@@ -5296,7 +5301,7 @@ msgstr "Error en analitzar el fitxer de configuració XML %s\n"
 #: xml.c:135
 #, c-format
 msgid "Host \"%s\" has address \"%s\"\n"
-msgstr "L'amfitrió \"%s\" té l'adreça \"%s\"\n"
+msgstr "L'amfitrió «%s» té l'adreça «%s»\n"
 
 #: xml.c:145
 #, c-format
@@ -5307,8 +5312,8 @@ msgstr "L'amfitrió «%s» té el grup d'usuari «%s»\n"
 #, c-format
 msgid "Host \"%s\" not listed in config; treating as raw hostname\n"
 msgstr ""
-"L'amfitrió «%s» no està llistat al fitxer de configuració; s'està com un nom "
-"d'amfitrió en brut\n"
+"L'amfitrió «%s» no està llistat al fitxer de configuració; es tractarà com "
+"un nom d'amfitrió en brut\n"
 
 #: yubikey.c:96
 #, c-format
@@ -5419,7 +5424,7 @@ msgstr "S'està generant el codi testimoni Yubikey\n"
 #: yubikey.c:575
 #, c-format
 msgid "Failed to obtain exclusive access to Yubikey: %s\n"
-msgstr "Error en obtindre l'accés exclusiu a Yubikey: %s\n"
+msgstr "Error en obtenir l'accés exclusiu a Yubikey: %s\n"
 
 #: yubikey.c:619
 msgid "calculate command"

@@ -1,23 +1,23 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
+# Translation of network-manager-openconnect into Indonesian
+# Copyright (C) 2009 THE network-manager-openconnect'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the network-manager-openconnect package.
 #
-# Translators:
-# Andika Triwidada <andika@gmail.com>, 2012.
+# Andika Triwidada <andika@gmail.com>, 2009-2014.
+# Dirgita <dirgitadevina@yahoo.co.id>, 2011.
 msgid ""
 msgstr ""
-"Project-Id-Version: openconnect\n"
+"Project-Id-Version: network-manager-openconnect master\n"
 "Report-Msgid-Bugs-To: openconnect-devel@lists.infradead.org\n"
 "POT-Creation-Date: 2019-12-30 00:19+0000\n"
-"PO-Revision-Date: 2012-11-15 08:31+0000\n"
-"Last-Translator: David Woodhouse <dwmw2@infradead.org>\n"
-"Language-Team: Indonesian (http://www.transifex.com/projects/p/meego/"
-"language/id/)\n"
+"PO-Revision-Date: 2019-11-12 23:25+0700\n"
+"Last-Translator: Andika Triwidada <andika@gmail.com>\n"
+"Language-Team: Indonesian <gnome@i15n.org>\n"
 "Language: id\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Poedit 2.2.4\n"
+"Plural-Forms: nplurals=2; plural=n!=1;\n"
 
 #: auth-globalprotect.c:129
 #, c-format
@@ -442,7 +442,7 @@ msgstr "<tak dibunyikan>"
 #: cstp.c:432
 #, c-format
 msgid "X-DTLS-Session-ID not 64 characters; is: \"%s\"\n"
-msgstr "X-DTLS-Session-ID buka 64 karacter; yaitu: \"%s\"\n"
+msgstr "X-DTLS-Session-ID bukan 64 karakter; yaitu: \"%s\"\n"
 
 #: cstp.c:449
 #, c-format
@@ -645,12 +645,12 @@ msgstr ""
 
 #: digest.c:252
 msgid "Attempting Digest authentication to proxy\n"
-msgstr "Mencoba otentikasi digest ke proksi\n"
+msgstr "Mencoba autentikasi digest ke proksi\n"
 
 #: digest.c:255
 #, c-format
 msgid "Attempting Digest authentication to server '%s'\n"
-msgstr "Mencoba otentikasi Digest ke server '%s'\n"
+msgstr "Mencoba autentikasi Digest ke server '%s'\n"
 
 #: dtls.c:113
 msgid "DTLS connection attempted with an existing fd\n"
@@ -712,7 +712,7 @@ msgstr "Paket DTLS terkompresi diterima ketika kompresi tidak difungsikan\n"
 #: dtls.c:334
 #, c-format
 msgid "Unknown DTLS packet type %02x, len %d\n"
-msgstr "Tipe paket DTLS tak dikenal %02x, len %d\n"
+msgstr "Tipe paket DTLS tidak dikenal %02x, len %d\n"
 
 #: dtls.c:356
 msgid "DTLS rekey due\n"
@@ -745,7 +745,7 @@ msgstr "Gagal mengirim permintaan keepalive. Mengharapkan pemutusan koneksi\n"
 #: dtls.c:432 tun.c:545
 #, c-format
 msgid "Unknown packet (len %d) received: %02x %02x %02x %02x...\n"
-msgstr "Paket tak dikenal (len %d) diterima: %02x %02x %02x %02x...\n"
+msgstr "Paket tidak dikenal (len %d) diterima: %02x %02x %02x %02x...\n"
 
 #: dtls.c:439
 #, c-format
@@ -881,7 +881,7 @@ msgstr "Tipe enkripsi ESP %s kunci 0x%s\n"
 #: esp.c:72
 #, c-format
 msgid "ESP authentication type %s key 0x%s\n"
-msgstr "Otentikasi ESP tipe %s kunci 0x%s\n"
+msgstr "Autentikasi ESP tipe %s kunci 0x%s\n"
 
 #: esp.c:90
 msgid "incoming"
@@ -922,7 +922,7 @@ msgstr "Panjang pad %02x tak valid dalam ESP\n"
 
 #: esp.c:227
 msgid "Invalid padding bytes in ESP\n"
-msgstr "Byte pad tak valid dalam ESP\n"
+msgstr "Byte pad tidak valid dalam ESP\n"
 
 #: esp.c:236
 msgid "ESP session established with server\n"
@@ -1146,7 +1146,7 @@ msgstr "SSL send gagal: %s\n"
 
 #: gnutls.c:328
 msgid "Could not extract expiration time of certificate\n"
-msgstr "Tak bisa mengekstrak waktu kedaluarsa dari sertifikat\n"
+msgstr "Tidak bisa mengekstrak waktu kedaluarsa dari sertifikat\n"
 
 #: gnutls.c:333 openssl.c:1602
 msgid "Client certificate has expired at"
@@ -1229,7 +1229,7 @@ msgstr "Kurang DEK-Info: header dari kunci terenkripsi OpenSSL\n"
 
 #: gnutls.c:716
 msgid "Cannot determine PEM encryption type\n"
-msgstr "Tak bisa menentukan tipe enkripsi PEM\n"
+msgstr "Tidak bisa menentukan tipe enkripsi PEM\n"
 
 #: gnutls.c:729
 #, c-format
@@ -1306,7 +1306,7 @@ msgstr "Berkas PKCS#11 tak memuat sertifikat\n"
 
 #: gnutls.c:1102
 msgid "No certificate found in file"
-msgstr "Tak ditemukan sertifikat dalam berkas"
+msgstr "Tidak ditemukan sertifikat dalam berkas"
 
 #: gnutls.c:1107
 #, c-format
@@ -1430,7 +1430,7 @@ msgstr "Gagal mengalokasikan memori untuk sertifikat\n"
 msgid ""
 "WARNING: GnuTLS returned incorrect issuer certs; authentication may fail!\n"
 msgstr ""
-"PERINGATAN: GnuTLS mengembalikan sert penerbit yang tak benar; otentikasi "
+"PERINGATAN: GnuTLS mengembalikan sert penerbit yang tak benar; autentikasi "
 "mungkin gagal!\n"
 
 #: gnutls.c:1652
@@ -1488,7 +1488,7 @@ msgstr "Galat ketika mengimpor sert server\n"
 
 #: gnutls.c:1984 main.c:1794
 msgid "Could not calculate hash of server's certificate\n"
-msgstr "Tak bisa menghitung hash dari sertifikat server\n"
+msgstr "Tidak bisa menghitung hash dari sertifikat server\n"
 
 #: gnutls.c:1989
 msgid "Error checking server cert status\n"
@@ -2121,7 +2121,7 @@ msgstr ""
 
 #: gssapi.c:75
 msgid "Error importing GSSAPI name for authentication:\n"
-msgstr "Galat saat mengimpor nama GSSAPI untuk otentikasi\n"
+msgstr "Galat saat mengimpor nama GSSAPI untuk autentikasi\n"
 
 #: gssapi.c:128
 msgid "Error generating GSSAPI response:\n"
@@ -2129,16 +2129,16 @@ msgstr "Galat saat menjangkitkan respons GSSAPI\n"
 
 #: gssapi.c:145
 msgid "Attempting GSSAPI authentication to proxy\n"
-msgstr "Mencoba otentikasi GSSAPI ke proksi\n"
+msgstr "Mencoba autentikasi GSSAPI ke proksi\n"
 
 #: gssapi.c:148
 #, c-format
 msgid "Attempting GSSAPI authentication to server '%s'\n"
-msgstr "Mencoba otentikasi GSSAPI ke server '%s'\n"
+msgstr "Mencoba autentikasi GSSAPI ke server '%s'\n"
 
 #: gssapi.c:200 gssapi.c:256 sspi.c:191 sspi.c:249
 msgid "GSSAPI authentication completed\n"
-msgstr "Otentikasi GSSAPI telah lengkap\n"
+msgstr "Autentikasi GSSAPI telah lengkap\n"
 
 #: gssapi.c:211
 #, c-format
@@ -2153,12 +2153,12 @@ msgstr "Sedang mengirim token GSSAPI berukuran %zu byte\n"
 #: gssapi.c:229
 #, c-format
 msgid "Failed to send GSSAPI authentication token to proxy: %s\n"
-msgstr "Gagal mengirim token otentikasi GSSAPI ke proksi: %s\n"
+msgstr "Gagal mengirim token autentikasi GSSAPI ke proksi: %s\n"
 
 #: gssapi.c:237 gssapi.c:264
 #, c-format
 msgid "Failed to receive GSSAPI authentication token from proxy: %s\n"
-msgstr "Gagal menerima token otentikasi GSSAPI dari proksi: %s\n"
+msgstr "Gagal menerima token autentikasi GSSAPI dari proksi: %s\n"
 
 #: gssapi.c:243
 msgid "SOCKS server reported GSSAPI context failure\n"
@@ -2214,12 +2214,12 @@ msgstr "Proksi SOCKS menuntuk proteksi yang tak dikenal bertipe 0x%02x\n"
 
 #: http-auth.c:184
 msgid "Attempting HTTP Basic authentication to proxy\n"
-msgstr "Mencoba otentikasi Dasar HTTP ke proksi\n"
+msgstr "Mencoba autentikasi Dasar HTTP ke proksi\n"
 
 #: http-auth.c:186
 #, c-format
 msgid "Attempting HTTP Basic authentication to server '%s'\n"
-msgstr "Mencoba otentikasi Dasar HTTP ke server '%s'\n"
+msgstr "Mencoba autentikasi Dasar HTTP ke server '%s'\n"
 
 #: http-auth.c:200 http.c:1315
 msgid "This version of OpenConnect was built without GSSAPI support\n"
@@ -2227,17 +2227,17 @@ msgstr "Versi OpenConnect ini dibangun tanpa dukungan GSSAPI\n"
 
 #: http-auth.c:240
 msgid "Proxy requested Basic authentication which is disabled by default\n"
-msgstr "Proksi meminta otentikasi Dasar yang secara baku dinonaktifkan\n"
+msgstr "Proksi meminta autentikasi Dasar yang secara baku dinonaktifkan\n"
 
 #: http-auth.c:243
 #, c-format
 msgid ""
 "Server '%s' requested Basic authentication which is disabled by default\n"
-msgstr "Server '%s' meminta otentikasi Dasar yang secara baku dinonaktifkan\n"
+msgstr "Server '%s' meminta autentikasi Dasar yang secara baku dinonaktifkan\n"
 
 #: http-auth.c:256
 msgid "No more authentication methods to try\n"
-msgstr "Tak ada lagi metoda otentikasi yang dapat dicoba\n"
+msgstr "Tak ada lagi metoda autentikasi yang dapat dicoba\n"
 
 #: http.c:324
 msgid "No memory for allocating cookies\n"
@@ -2270,7 +2270,7 @@ msgstr "Cookie yang tak valid ditawarkan: %s\n"
 
 #: http.c:532
 msgid "SSL certificate authentication failed\n"
-msgstr "Otentikasi sertifikat SSL gagal\n"
+msgstr "Autentikasi sertifikat SSL gagal\n"
 
 #: http.c:565
 #, c-format
@@ -2385,7 +2385,7 @@ msgstr "Server SOCKS meminta nama pengguna/sandi tapi kami tak punya\n"
 
 #: http.c:1189
 msgid "Username and password for SOCKS authentication must be < 255 bytes\n"
-msgstr "Nama pengguna dan sandi untuk otentikasi SOCKS mesti < 255 byte\n"
+msgstr "Nama pengguna dan sandi untuk autentikasi SOCKS mesti < 255 byte\n"
 
 #: http.c:1204 http.c:1267
 #, c-format
@@ -2404,28 +2404,28 @@ msgstr "Respon auth yang tak diharapkan dari proksi SOCKS: %02x %02x\n"
 
 #: http.c:1225
 msgid "Authenticated to SOCKS server using password\n"
-msgstr "Terotentikasi ke server SOCKS memakai sandi\n"
+msgstr "Terautentikasi ke server SOCKS memakai sandi\n"
 
 #: http.c:1229
 msgid "Password authentication to SOCKS server failed\n"
-msgstr "Otentikasi sandi ke server SOCKS gagal\n"
+msgstr "Autentikasi sandi ke server SOCKS gagal\n"
 
 #: http.c:1292 http.c:1299
 msgid "SOCKS server requested GSSAPI authentication\n"
-msgstr "Server SOCKS meminta otentikasi GSSAPI\n"
+msgstr "Server SOCKS meminta autentikasi GSSAPI\n"
 
 #: http.c:1305
 msgid "SOCKS server requested password authentication\n"
-msgstr "Server SOCKS meminta otentikasi sandi\n"
+msgstr "Server SOCKS meminta autentikasi sandi\n"
 
 #: http.c:1312
 msgid "SOCKS server requires authentication\n"
-msgstr "Server SOCKS memerlukan otentikasi\n"
+msgstr "Server SOCKS memerlukan autentikasi\n"
 
 #: http.c:1321
 #, c-format
 msgid "SOCKS server requested unknown authentication type %02x\n"
-msgstr "Server SOCKS meminta otentikasi yang tak dikenal bertipe %02x\n"
+msgstr "Server SOCKS meminta autentikasi yang tak dikenal bertipe %02x\n"
 
 #: http.c:1327
 #, c-format
@@ -2557,7 +2557,7 @@ msgstr ""
 
 #: library.c:1176
 msgid "No form handler; cannot authenticate.\n"
-msgstr "Tak ada penangan formulir; tak bisa mengotentikasi.\n"
+msgstr "Tak ada penangan formulir; tak bisa mengautentikasi.\n"
 
 #: main.c:340
 #, c-format
@@ -2628,7 +2628,7 @@ msgstr "Protokol yang didukung:"
 
 #: main.c:659 main.c:675
 msgid " (default)"
-msgstr "(baku)"
+msgstr " (baku)"
 
 #: main.c:672
 msgid "Set VPN protocol"
@@ -2689,7 +2689,7 @@ msgstr "Tata nama log masuk"
 
 #: main.c:804
 msgid "Disable password/SecurID authentication"
-msgstr "Matikan otentikasi sandi/SecurID"
+msgstr "Matikan autentikasi sandi/SecurID"
 
 #: main.c:805
 msgid "Do not expect user input; exit if it is required"
@@ -2701,7 +2701,7 @@ msgstr "Baca kata sandi dari masukan standar"
 
 #: main.c:807
 msgid "Choose authentication login selection"
-msgstr "Pilih otentikasi log masuk"
+msgstr "Pilih autentikasi log masuk"
 
 #: main.c:808
 msgid "Provide authentication form responses"
@@ -2713,7 +2713,7 @@ msgstr "Pakai sertifikat klien SSL SERT"
 
 #: main.c:810
 msgid "Use SSL private key file KEY"
-msgstr "Memakai berkas kunci pribadi SSL KEY"
+msgstr "Pakai berkas kunci pribadi SSL KUNCI"
 
 #: main.c:811
 msgid "Warn when certificate lifetime < DAYS"
@@ -2777,7 +2777,7 @@ msgstr "Tata server proksi"
 
 #: main.c:832
 msgid "Set proxy authentication methods"
-msgstr "Atur metoda otentikasi proksi"
+msgstr "Atur metoda autentikasi proksi"
 
 #: main.c:833
 msgid "Disable proxy"
@@ -2821,7 +2821,7 @@ msgstr "Baca cookie dari masukan standar"
 
 #: main.c:846
 msgid "Authenticate only and print login info"
-msgstr "Hanya otentikasi dan cetak info log masuk"
+msgstr "Hanya autentikasi dan cetak info log masuk"
 
 #: main.c:847
 msgid "Fetch and print cookie only; don't connect"
@@ -2865,7 +2865,7 @@ msgstr "Keluaran lebih sedikit"
 
 #: main.c:863
 msgid "Dump HTTP authentication traffic (implies --verbose)"
-msgstr "Curahkan trafik otentikasi HTTP (mengimplikasikan --verbose)"
+msgstr "Curahkan trafik autentikasi HTTP (mengimplikasikan --verbose)"
 
 #: main.c:864
 msgid "Prepend timestamp to progress messages"
@@ -2877,7 +2877,7 @@ msgstr ""
 
 #: main.c:867
 msgid "Use IFNAME for tunnel interface"
-msgstr "Memakai IFNAME untuk antar muka terowongan"
+msgstr "Pakai IFNAME untuk antar muka terowongan"
 
 #: main.c:868
 msgid "Shell command line for using a vpnc-compatible config script"
@@ -2945,7 +2945,7 @@ msgstr ""
 
 #: main.c:888
 msgid "HTTP header User-Agent: field"
-msgstr "HTTP header ruas User-Agent:"
+msgstr "HTTP header User-Agent: field"
 
 #: main.c:889
 msgid "Local hostname to advertise to server"
@@ -2985,7 +2985,7 @@ msgstr "Nonfungsikan pemakaian ulang koneksi HTTP"
 
 #: main.c:902
 msgid "Do not attempt XML POST authentication"
-msgstr "Jangan coba otentikasi XML POST"
+msgstr "Jangan coba autentikasi XML POST"
 
 #: main.c:924
 #, c-format
@@ -3257,7 +3257,7 @@ msgstr "    --servercert %s\n"
 msgid "Enter '%s' to accept, '%s' to abort; anything else to view: "
 msgstr ""
 "Masukkan '%s' untuk menerima, '%s' untuk menggugurkan; sebarang yang lain "
-"untuk menilik:"
+"untuk menilik: "
 
 #: main.c:1826 main.c:1844
 msgid "no"
@@ -3390,22 +3390,22 @@ msgstr "Galat saat berkomunikasi dengan pembantu ntlm_auth\n"
 
 #: ntlm.c:265
 msgid "Attempting HTTP NTLM authentication to proxy (single-sign-on)\n"
-msgstr "Mencoba otentikasi NTLM HTTP ke proksi (single-sign-on)\n"
+msgstr "Mencoba autentikasi NTLM HTTP ke proksi (single-sign-on)\n"
 
 #: ntlm.c:268
 #, c-format
 msgid "Attempting HTTP NTLM authentication to server '%s' (single-sign-on)\n"
-msgstr "Mencoba otentikasi NTLM HTTP ke server '%s' (single-sign-on)\n"
+msgstr "Mencoba autentikasi NTLM HTTP ke server '%s' (single-sign-on)\n"
 
 #: ntlm.c:978
 #, c-format
 msgid "Attempting HTTP NTLMv%d authentication to proxy\n"
-msgstr "Mencoba otentikasi NTLMv%d HTTP ke proksi\n"
+msgstr "Mencoba autentikasi NTLMv%d HTTP ke proksi\n"
 
 #: ntlm.c:982
 #, c-format
 msgid "Attempting HTTP NTLMv%d authentication to server '%s'\n"
-msgstr "Mencoba otentikasi NTLMv%d HTTP ke server '%s'\n"
+msgstr "Mencoba autentikasi NTLMv%d HTTP ke server '%s'\n"
 
 #: oath.c:104
 msgid "Invalid base32 token string\n"
@@ -4774,12 +4774,12 @@ msgstr "Mengirim token SSPI berukuran %lu byte\n"
 #: sspi.c:221
 #, c-format
 msgid "Failed to send SSPI authentication token to proxy: %s\n"
-msgstr "Gagal mengirim token otentikasi SSPI ke proksi: %s\n"
+msgstr "Gagal mengirim token autentikasi SSPI ke proksi: %s\n"
 
 #: sspi.c:229 sspi.c:257
 #, c-format
 msgid "Failed to receive SSPI authentication token from proxy: %s\n"
-msgstr "Gagal menerima token otentikasi SSPI dari proksi: %s\n"
+msgstr "Gagal menerima token autentikasi SSPI dari proksi: %s\n"
 
 #: sspi.c:235
 msgid "SOCKS server reported SSPI context failure\n"
@@ -4874,7 +4874,7 @@ msgstr "Masukkan PIN token perangkat lunak."
 
 #: stoken.c:214
 msgid "PIN:"
-msgstr "PIN: "
+msgstr "PIN:"
 
 #: stoken.c:241
 msgid "Invalid PIN format; try again.\n"

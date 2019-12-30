@@ -1,23 +1,23 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-#
-# Translators:
-# Margie Foster <margie@linux.intel.com>, 2011.
+# British English translation of NetworkManager-openconnect
+# Copyright (C) 2011 NetworkManager-openconnect'S COPYRIGHT HOLDER
+# This file is distributed under the same licence as the NetworkManager-openconnect package.
+# Bruce Cowan <bruce@bcowan.me.uk>, 2011, 2012.
+# Chris Leonard <cjlhomeaddress@gmail.com>, 2012.
 msgid ""
 msgstr ""
-"Project-Id-Version: openconnect\n"
+"Project-Id-Version: NetworkManager-openconnect\n"
 "Report-Msgid-Bugs-To: openconnect-devel@lists.infradead.org\n"
 "POT-Creation-Date: 2019-12-30 00:19+0000\n"
-"PO-Revision-Date: 2012-11-15 08:31+0000\n"
-"Last-Translator: David Woodhouse <dwmw2@infradead.org>\n"
-"Language-Team: English (United Kingdom) (http://www.transifex.com/projects/p/"
-"meego/language/en_GB/)\n"
+"PO-Revision-Date: 2012-09-23 20:24+0100\n"
+"Last-Translator: Bruce Cowan <bruce@bcowan.me.uk>\n"
+"Language-Team: British English <en@li.org>\n"
 "Language: en_GB\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Virtaal 0.7.1\n"
+"X-Project-Style: gnome\n"
 
 #: auth-globalprotect.c:129
 #, c-format

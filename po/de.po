@@ -1,21 +1,26 @@
-# SOME DESCRIPTIVE TITLE.
+# German translation of NetworkManager-openconnect module.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
+# This file is distributed under the same license as the network-manager-openconnect package.
+# Mario Blättermann <mario.blaettermann@gmail.com>, 2008, 2010-2013, 2016-2018.
+# Wolfgang Stöggl <c72578@yahoo.de>, 2010, 2015.
+# Christian Kirbach <christian.kirbach@gmail.com>, 2012-2013.
+# Benjamin Steinwender <b@stbe.at>, 2014.
+# Tim Sabsch <tim@sabsch.com>, 2018.
 #
-# Translators:
 msgid ""
 msgstr ""
-"Project-Id-Version: openconnect\n"
+"Project-Id-Version: NetworkManager-openconnect\n"
 "Report-Msgid-Bugs-To: openconnect-devel@lists.infradead.org\n"
 "POT-Creation-Date: 2019-12-30 00:19+0000\n"
-"PO-Revision-Date: 2012-11-15 08:31+0000\n"
-"Last-Translator: David Woodhouse <dwmw2@infradead.org>\n"
-"Language-Team: German <meego-de@lists.hendi.name>\n"
+"PO-Revision-Date: 2018-08-07 14:43+0200\n"
+"Last-Translator: Tim Sabsch <tim@sabsch.com>\n"
+"Language-Team: Deutsch <gnome-de@gnome.org>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 2.0.9\n"
 
 #: auth-globalprotect.c:129
 #, c-format
@@ -407,8 +412,8 @@ msgstr "TCP_MAXSEG %d\n"
 msgid ""
 "CRITICAL ERROR: DTLS master secret is uninitialised. Please report this.\n"
 msgstr ""
-"KRITISCHER FEHLER: DTLS-Hauptschlüssel ist  nicht initialisiert. Bitte "
-"melden Sie dies.\n"
+"KRITISCHER FEHLER: DTLS-Hauptschlüssel ist nicht initialisiert. Bitte melden "
+"Sie dies.\n"
 
 #: cstp.c:312
 msgid "Error creating HTTPS CONNECT request\n"
@@ -754,7 +759,7 @@ msgstr ""
 #: dtls.c:432 tun.c:545
 #, c-format
 msgid "Unknown packet (len %d) received: %02x %02x %02x %02x...\n"
-msgstr "Unbekanntes Paket empfangen (Länge %d) : %02x %02x %02x %02x...\n"
+msgstr "Unbekanntes Paket empfangen (Länge %d) : %02x %02x %02x %02x …\n"
 
 #: dtls.c:439
 #, c-format
@@ -1069,7 +1074,7 @@ msgstr "Festlegen der DTLS-MTU schlug fehl: %s\n"
 #: gnutls-dtls.c:416
 #, c-format
 msgid "Established DTLS connection (using GnuTLS). Ciphersuite %s.\n"
-msgstr "DTLS-Verbindung aufgebaut (mit GnuTLS).Schiffrierwerk %s.\n"
+msgstr "DTLS-Verbindung aufgebaut (mit GnuTLS). Schiffrierwerk %s.\n"
 
 #: gnutls-dtls.c:422 openssl-dtls.c:612
 #, c-format
@@ -1257,8 +1262,7 @@ msgstr "Ungültiges Salt in der verschlüsselten PEM-Datei\n"
 #: gnutls.c:791
 #, c-format
 msgid "Error base64-decoding encrypted PEM file: %s\n"
-msgstr ""
-"Fehler beim Dekodieren der verschlüsselten PEM-Datei nach  base64: %s\n"
+msgstr "Fehler beim Dekodieren der verschlüsselten PEM-Datei nach base64: %s\n"
 
 #: gnutls.c:799
 msgid "Encrypted PEM file too short\n"
@@ -1290,7 +1294,7 @@ msgstr "Diese Version wurde ohne Systemschlüssel-Unterstützung erstellt\n"
 
 #: gnutls.c:973
 msgid "This binary built without PKCS#11 support\n"
-msgstr "Dieses Binary wurde ohne PKCS#11-Unterstützung erstellt\n"
+msgstr "Diese Version wurde ohne PKCS#11-Unterstützung erstellt\n"
 
 #: gnutls.c:1017 openssl-pkcs11.c:411
 #, c-format
@@ -1380,7 +1384,7 @@ msgstr "Private Schlüsseldatei %s wird verwendet\n"
 #: gnutls.c:1314 openssl.c:656
 msgid "This version of OpenConnect was built without TPM support\n"
 msgstr ""
-"Diese Version von Openconnect wurde ohne Unterstützung für TPM erstellt\n"
+"Diese Version von OpenConnect wurde ohne Unterstützung für TPM erstellt\n"
 
 #: gnutls.c:1330
 msgid "This version of OpenConnect was built without TPM2 support\n"
@@ -1440,7 +1444,7 @@ msgstr "Client-Zertifikat »%s« wird verwendet\n"
 #: gnutls.c:1562
 #, c-format
 msgid "Setting certificate revocation list failed: %s\n"
-msgstr "Festlegen der Zertifikat-Wiederrufsliste schlug fehl: %s\n"
+msgstr "Festlegen der Zertifikat-Widerrufsliste schlug fehl: %s\n"
 
 #: gnutls.c:1583 gnutls.c:1593
 msgid "Failed to allocate memory for certificate\n"
@@ -2318,7 +2322,7 @@ msgstr "HTTP-Antwort erhalten: %s\n"
 #: http.c:493
 #, c-format
 msgid "Ignoring unknown HTTP response line '%s'\n"
-msgstr "Unbekannte  Zeile »%s« in HTTP-Antwort wird ignoriert\n"
+msgstr "Unbekannte Zeile »%s« in HTTP-Antwort wird ignoriert\n"
 
 #: http.c:512
 #, c-format
@@ -2461,7 +2465,7 @@ msgstr "Fehler beim Lesen der auth-Anforderung von SOCKS-Proxy: %s\n"
 #: http.c:1219 http.c:1280
 #, c-format
 msgid "Unexpected auth response from SOCKS proxy: %02x %02x\n"
-msgstr "UNerwartete auth-Antwort von SOCKS-Proxy: %02x %02x\n"
+msgstr "Unerwartete auth-Antwort von SOCKS-Proxy: %02x %02x\n"
 
 #: http.c:1225
 msgid "Authenticated to SOCKS server using password\n"
@@ -2506,7 +2510,7 @@ msgstr "Fehler beim Lesen der Verbindungsantwort von SOCKS-Proxy: %s\n"
 #: http.c:1356
 #, c-format
 msgid "Unexpected connect response from SOCKS proxy: %02x %02x...\n"
-msgstr "Unerwartete Verbindungsantwort vom SOCKS-Proxy: %02x %02x...\n"
+msgstr "Unerwartete Verbindungsantwort vom SOCKS-Proxy: %02x %02x …\n"
 
 #: http.c:1364
 #, c-format
@@ -2704,7 +2708,7 @@ msgstr "fgets (stdin)"
 #: main.c:754
 #, c-format
 msgid "Cannot process this executable path \"%s\""
-msgstr "Kann ausführbaren Pfad »%s« nicht verarbeiten"
+msgstr "Ausführbarer Pfad »%s« kann nicht verarbeitet werden"
 
 #: main.c:760
 #, c-format
@@ -3019,7 +3023,7 @@ msgstr "Lokaler Rechnername, der an den Server gemeldet wird"
 
 #: main.c:890
 msgid "OS type (linux,linux-64,win,...) to report"
-msgstr "zu berichtender Typ des Betriebssystems (linux,linux-64,win,...)"
+msgstr "zu berichtender Typ des Betriebssystems (linux, linux-64, win, …)"
 
 #: main.c:891
 msgid "reported version string during authentication"
@@ -3056,7 +3060,7 @@ msgstr "XML POST-Authentifizierung nicht versuchen"
 #: main.c:924
 #, c-format
 msgid "Failed to allocate string\n"
-msgstr "Anfordern der Zeichnkette ist fehlgeschlagen\n"
+msgstr "Anfordern der Zeichenkette ist fehlgeschlagen\n"
 
 #: main.c:997
 #, c-format
@@ -3257,7 +3261,7 @@ msgstr "Öffnen von »%s« zum Schreiben schlug fehl: %s\n"
 #: main.c:1670
 #, c-format
 msgid "Continuing in background; pid %d\n"
-msgstr "Fortsetzung im Hintergrund;  pid %d\n"
+msgstr "Fortsetzung im Hintergrund; pid %d\n"
 
 #: main.c:1687
 msgid "User requested reconnect\n"
@@ -4116,7 +4120,7 @@ msgstr "PEM-Datei"
 #: openssl.c:782
 #, c-format
 msgid "Failed to create BIO for keystore item '%s'\n"
-msgstr "Erstellen des BIO für das Schlüsselspeicher-Objekt  »%s« schlug fehl\n"
+msgstr "Erstellen des BIO für das Schlüsselspeicher-Objekt »%s« schlug fehl\n"
 
 #: openssl.c:807
 msgid "Loading private key failed (wrong passphrase?)\n"
@@ -4907,7 +4911,7 @@ msgstr "EncryptMessage schlug fehl: %lx\n"
 #: sspi.c:325
 #, c-format
 msgid "EncryptMessage() result too large (%lu + %lu + %lu)\n"
-msgstr "ergebnis von EncryptMessage() zu groß (%lu + %lu + %lu)\n"
+msgstr "Ergebnis von EncryptMessage() zu groß (%lu + %lu + %lu)\n"
 
 #: sspi.c:350
 #, c-format

@@ -1,22 +1,25 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
+# Hungarian translation for networkmanager-openconnect.
+# Copyright (C) 2008, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019 Free Software Foundation, Inc,
+# This file is distributed under the same license as the networkmanager-openconnect package.
 #
-# Translators:
+# Gábor Kelemen <kelemeng at gnome dot hu>, 2008, 2010, 2011, 2013.
+# Máté Őry <orymate at ubuntu dot com>, 2011.
+# Balázs Úr <ur.balazs at fsf dot hu>, 2014, 2015, 2019.
+# Gabor Kelemen <kelemeng at ubuntu dot com>, 2016, 2017, 2018.
 msgid ""
 msgstr ""
-"Project-Id-Version: openconnect\n"
+"Project-Id-Version: networkmanager-openconnect master\n"
 "Report-Msgid-Bugs-To: openconnect-devel@lists.infradead.org\n"
 "POT-Creation-Date: 2019-12-30 00:19+0000\n"
-"PO-Revision-Date: 2011-09-22 22:31+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Hungarian (http://www.transifex.net/projects/p/meego/team/"
-"hu/)\n"
+"PO-Revision-Date: 2019-09-07 18:30+0200\n"
+"Last-Translator: Balázs Úr <ur.balazs at fsf dot hu>\n"
+"Language-Team: Hungarian <gnome-hu-list at gnome dot org>\n"
 "Language: hu\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+"X-Generator: Lokalize 18.12.3\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: auth-globalprotect.c:129
 #, c-format
@@ -89,7 +92,7 @@ msgstr "A kiszolgáló nem GlobalProtect portál, sem átjáró.\n"
 
 #: auth-globalprotect.c:648 oncp.c:1275
 msgid "Logout failed.\n"
-msgstr "Kijelentkezés meghiúsult.\n"
+msgstr "Kijelentkezés sikertelen.\n"
 
 #: auth-globalprotect.c:650
 msgid "Logout successful\n"
@@ -850,7 +853,7 @@ msgstr ""
 #: esp-seqno.c:104
 #, c-format
 msgid "Discarding ancient ESP packet with seq %u (expected %<PRIu64>)\n"
-msgstr "Régi ESP csomag eldobása %u sorszámmal (várt érték: %<PRIu64>)\n"
+msgstr "A(z) %u sorszámú régi ESP csomag eldobása (várt érték: %<PRIu64>)\n"
 
 #: esp-seqno.c:109
 #, c-format
@@ -860,7 +863,7 @@ msgstr "A(z) %u sorszámú régi ESP csomag eltűrése (várt érték: %<PRIu64>
 #: esp-seqno.c:118
 #, c-format
 msgid "Discarding replayed ESP packet with seq %u\n"
-msgstr "Megismételt ESP csomag eldobása %u sorszámmal\n"
+msgstr "A(z) %u sorszámú megismételt ESP csomag eldobása\n"
 
 #: esp-seqno.c:123
 #, c-format
@@ -2250,7 +2253,7 @@ msgstr "Az OpenConnect ezen verziója GSSAPI támogatás nélkül készült\n"
 #: http-auth.c:240
 msgid "Proxy requested Basic authentication which is disabled by default\n"
 msgstr ""
-"A proxy Basic hitelesítést kért, amely alapértelmezetten le van tiltva\n"
+"A proxy alap hitelesítést kért, amely alapértelmezetten le van tiltva\n"
 
 #: http-auth.c:243
 #, c-format
@@ -3421,7 +3424,7 @@ msgstr "Hiba az ntlm_auth segítővel való kommunikációkor\n"
 
 #: ntlm.c:265
 msgid "Attempting HTTP NTLM authentication to proxy (single-sign-on)\n"
-msgstr "HTML NTLM hitelesítési kísérlet a proxyra (egyszeres bejelentkezés)\n"
+msgstr "HTTP NTLM hitelesítési kísérlet a proxyra (egyszeres bejelentkezés)\n"
 
 #: ntlm.c:268
 #, c-format
@@ -3433,7 +3436,7 @@ msgstr ""
 #: ntlm.c:978
 #, c-format
 msgid "Attempting HTTP NTLMv%d authentication to proxy\n"
-msgstr "HTML NTLMv%d hitelesítési kísérlet a proxyra\n"
+msgstr "HTTP NTLMv%d hitelesítési kísérlet a proxyra\n"
 
 #: ntlm.c:982
 #, c-format
@@ -3481,7 +3484,7 @@ msgstr "Érvénytelen süti: „%s”\n"
 #: oncp.c:160
 #, c-format
 msgid "Unexpected length %d for TLV %d/%d\n"
-msgstr "Váratlan hossz (%d) ehhez: TLV %d/%d\n"
+msgstr "Váratlan hossz (%d) ennél: TLV %d/%d\n"
 
 #: oncp.c:166 pulse.c:418
 #, c-format
@@ -4175,7 +4178,7 @@ msgstr "Egyező csomópont tanúsítvány tárgynév: „%s”\n"
 #: openssl.c:1457
 #, c-format
 msgid "Extra cert from cafile: '%s'\n"
-msgstr "További tanúsítvány a hitelesítés-szolgáltató fájlból: „%s”\n"
+msgstr "További tanúsítvány a hitelesítésszolgáltató fájlból: „%s”\n"
 
 #: openssl.c:1599
 msgid "Error in client cert notAfter field\n"

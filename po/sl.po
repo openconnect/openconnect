@@ -1,22 +1,25 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
+# Slovenian translations for network-manager-openconnect.
+# Copyright (C) 2009 network-manager-openconnect's COPYRIGHT HOLDER
+# This file is distributed under the same license as the network-manager-openconnect package.
 #
-# Translators:
+# Matej Urbančič <mateju@svn.gnome.org>, 2008-2014.
+#
 msgid ""
 msgstr ""
-"Project-Id-Version: openconnect\n"
+"Project-Id-Version: network-manager-openconnect master\n"
 "Report-Msgid-Bugs-To: openconnect-devel@lists.infradead.org\n"
 "POT-Creation-Date: 2019-12-30 00:19+0000\n"
-"PO-Revision-Date: 2012-11-15 08:31+0000\n"
-"Last-Translator: David Woodhouse <dwmw2@infradead.org>\n"
-"Language-Team: Slovenian <lugos-slo@lugos.si>\n"
+"PO-Revision-Date: 2014-02-26 19:42+0100\n"
+"Last-Translator: Matej Urbančič <mateju@svn.gnome.org>\n"
+"Language-Team: Slovenian GNOME Translation Team <gnome-si@googlegroups.com>\n"
 "Language: sl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n"
-"%100==4 ? 2 : 3);\n"
+"Plural-Forms: nplurals=4; plural=(n%100==1 ? 1 : n%100==2 ? 2 : n%100==3 || n"
+"%100==4 ? 3 : 0);\n"
+"X-Poedit-SourceCharset: utf-8\n"
+"X-Generator: Poedit 1.5.4\n"
 
 #: auth-globalprotect.c:129
 #, c-format
@@ -556,7 +559,7 @@ msgstr "Prejeta zahteva DPD CSTP\n"
 
 #: cstp.c:966
 msgid "Got CSTP DPD response\n"
-msgstr "Pridobljen je odziv CSTP DPD\n"
+msgstr "Prejet je odziv CSTP DPD\n"
 
 #: cstp.c:971
 msgid "Got CSTP Keepalive\n"
@@ -694,8 +697,7 @@ msgstr "Prejeta zahteva DPD DTLS\n"
 
 #: dtls.c:312
 msgid "Failed to send DPD response. Expect disconnect\n"
-msgstr ""
-"Pošiljanje odziva DPD je spodletelo. Pričakovana je prekinitev povezave.\n"
+msgstr "Pošiljanje odziva DPD je spodletelo. Pričakujte prekinitev povezave.\n"
 
 #: dtls.c:316
 msgid "Got DTLS DPD response\n"
@@ -1106,7 +1108,7 @@ msgstr ""
 
 #: gnutls.c:99 openssl.c:154
 msgid "SSL write cancelled\n"
-msgstr "Zapisovanje SSL je bilo preklicano\n"
+msgstr "Pisanje SSL je preklicano\n"
 
 #: gnutls.c:103
 #, c-format
@@ -1115,7 +1117,7 @@ msgstr "Pisanje v vtič SSL je spodletelo: %s\n"
 
 #: gnutls.c:154 gnutls.c:250 openssl.c:204 openssl.c:271
 msgid "SSL read cancelled\n"
-msgstr "Branje SSL je bilo preklicano\n"
+msgstr "Branje SSL je preklicano\n"
 
 #. We've seen this with HTTP 1.0 responses followed by abrupt
 #. socket closure and no clean SSL shutdown.
@@ -1293,7 +1295,7 @@ msgstr ""
 #: gnutls.c:1048 openssl.c:832
 #, c-format
 msgid "Using certificate file %s\n"
-msgstr "Uporabljena bo datoteka potrdila %s\n"
+msgstr "Uporaba datoteke potrdila %s\n"
 
 #: gnutls.c:1076
 msgid "PKCS#11 file contained no certificate\n"
@@ -1410,7 +1412,7 @@ msgstr "Z zasebnim ključem se ne ujema nobeno potrdilo SSL\n"
 #: gnutls.c:1555 openssl.c:560 openssl.c:714
 #, c-format
 msgid "Using client certificate '%s'\n"
-msgstr "Uporabljeno bo potrdilo odjemalca '%s'\n"
+msgstr "Uporaba potrdila odjemalca '%s'\n"
 
 #: gnutls.c:1562
 #, c-format
@@ -1457,7 +1459,7 @@ msgstr "Nastavljanje potrdila je spodletelo: %s\n"
 
 #: gnutls.c:1945
 msgid "Server presented no certificate\n"
-msgstr "Strežnik ni javil podatkov o potrdilu\n"
+msgstr "Strežnik ni dostavil potrdila\n"
 
 #: gnutls.c:1953
 #, c-format
@@ -1506,7 +1508,7 @@ msgstr "algoritem ni varen"
 
 #: gnutls.c:2002
 msgid "certificate not yet activated"
-msgstr "potrdilo  še ni omogočeno"
+msgstr "potrdilo še ni omogočeno"
 
 #: gnutls.c:2004
 msgid "certificate expired"
@@ -1530,12 +1532,12 @@ msgstr "Preverjanje potrdila strežnika je spodletelo: %s\n"
 
 #: gnutls.c:2130
 msgid "Failed to allocate memory for cafile certs\n"
-msgstr "Dodeljevanje pomnilnika podpornim potrdilom je spodletelo\n"
+msgstr "Dodeljevanje pomnilnika potrdilom iz datoteke potrdil je spodletelo\n"
 
 #: gnutls.c:2151
 #, c-format
 msgid "Failed to read certs from cafile: %s\n"
-msgstr "Ni mogoče prebrati potrdil iz datoteke cafile: %s\n"
+msgstr "Ni mogoče prebrati potrdil iz datoteke potrdil: %s\n"
 
 #: gnutls.c:2167
 #, c-format
@@ -1637,7 +1639,7 @@ msgstr "Nastavljanje vrednosti predmeta razpršila TPM je spodletelo: %s\n"
 #: gnutls_tpm.c:78
 #, c-format
 msgid "TPM hash signature failed: %s\n"
-msgstr "Ustvarjanje predmeta razpršila TPM je spodletelo: %s\n"
+msgstr "Podpis razpršila TPM je spodletel: %s\n"
 
 #: gnutls_tpm.c:100
 #, c-format
@@ -1694,7 +1696,7 @@ msgstr "Dodelitev pravil ključu je spodletela: %s\n"
 
 #: gnutls_tpm.c:240
 msgid "Enter TPM key PIN:"
-msgstr "Vnos ključa PIN TPM:"
+msgstr "Vnesite PIN ključa TPM:"
 
 #: gnutls_tpm.c:251
 #, c-format
@@ -2273,7 +2275,7 @@ msgstr "Telo odgovora ima negativno velikost (%d)\n"
 #: http.c:576
 #, c-format
 msgid "Unknown Transfer-Encoding: %s\n"
-msgstr "Neznano kodiranje prenosa: %s\n"
+msgstr "Neznano kodiranje prenosa vsebine: %s\n"
 
 #. Now the body, if there is one
 #: http.c:597
@@ -2552,7 +2554,7 @@ msgstr ""
 
 #: library.c:1176
 msgid "No form handler; cannot authenticate.\n"
-msgstr "Ni ročnika obrazca; vnosov ni mogoče overiti\n"
+msgstr "Ni ročnika obrazca; vnosov ni mogoče overiti.\n"
 
 #: main.c:340
 #, c-format
@@ -2678,7 +2680,7 @@ msgstr "Nastavi prijavno uporabniško ime"
 
 #: main.c:804
 msgid "Disable password/SecurID authentication"
-msgstr "Onemogoči overitev gesla/SecurID"
+msgstr "Onemogoči overjanje z geslom/SecurID"
 
 #: main.c:805
 msgid "Do not expect user input; exit if it is required"
@@ -2686,11 +2688,11 @@ msgstr "Ne pričakuj odziva uporabnika; prekini, če je obvezen"
 
 #: main.c:806
 msgid "Read password from standard input"
-msgstr "Preberi geslo z navadnega vhoda"
+msgstr "Preberi geslo s standardnega dovoda"
 
 #: main.c:807
 msgid "Choose authentication login selection"
-msgstr "Izbor načina overitvene prijave"
+msgstr "Izbor overjanja za način prijave"
 
 #: main.c:808
 msgid "Provide authentication form responses"
@@ -2702,7 +2704,7 @@ msgstr "Uporabi potrdilo SSL CERT"
 
 #: main.c:810
 msgid "Use SSL private key file KEY"
-msgstr "Uporabi zasebno datoteko KEY ključa SSL"
+msgstr "Uporabi datoteko KEY zasebnega ključa SSL"
 
 #: main.c:811
 msgid "Warn when certificate lifetime < DAYS"
@@ -2747,7 +2749,7 @@ msgstr "Prstni odtis potrdila SHA1 strežnika"
 
 #: main.c:826
 msgid "Do not require server SSL cert to be valid"
-msgstr "Ne zahtevaj veljavnosti potrdila strežnika SSL"
+msgstr "Ne zahtevaj, da je potrdilo strežnika SSL veljavno"
 
 #: main.c:827
 msgid "Disable default system certificate authorities"
@@ -2755,7 +2757,7 @@ msgstr ""
 
 #: main.c:828
 msgid "Cert file for server verification"
-msgstr "Datoteka potrdila za preverjanje istovetnosti strežnika"
+msgstr "Datoteka potrdila za overjanje strežnika"
 
 #: main.c:830
 msgid "Internet connectivity"
@@ -2783,7 +2785,7 @@ msgstr "(Opomba: knjižnica libproxy je v tej izgradnji onemogočena)"
 
 #: main.c:838
 msgid "Connection retry timeout in seconds"
-msgstr "Časovni zamik ponovnega vzpostavljanja povezave v sekundah"
+msgstr "Nastavitev časovne prekoračitve poskusa povezovanja v sekundah"
 
 #: main.c:839
 msgid "Use IP when connecting to HOST"
@@ -2807,7 +2809,7 @@ msgstr ""
 
 #: main.c:845
 msgid "Read cookie from standard input"
-msgstr "Preberi piškotek z navadnega vhoda"
+msgstr "Preberi piškotek z standardnega vhoda"
 
 #: main.c:846
 msgid "Authenticate only and print login info"
@@ -2835,7 +2837,7 @@ msgstr "Zapiši PID ozadnjega programa v navedeno datoteko"
 
 #: main.c:854
 msgid "Drop privileges after connecting"
-msgstr "Opusti dovoljenja po povezavi"
+msgstr "Opusti dovoljenja po povezovanju"
 
 #: main.c:857
 msgid "Logging (two-phase)"
@@ -2843,11 +2845,11 @@ msgstr ""
 
 #: main.c:859
 msgid "Use syslog for progress messages"
-msgstr "Uporabi sistem syslog za obdelavo sporočil"
+msgstr "Za sporočila o napredku uporabi sistemski dnevnik"
 
 #: main.c:861
 msgid "More output"
-msgstr "Več podrobnosti odvoda"
+msgstr "Dodatni odvod"
 
 #: main.c:862
 msgid "Less output"
@@ -2869,7 +2871,7 @@ msgstr ""
 
 #: main.c:867
 msgid "Use IFNAME for tunnel interface"
-msgstr "Za vmesnik tunela uporabi IFNAME"
+msgstr "Za tunelski vmesnik uporabi IFNAME"
 
 #: main.c:868
 msgid "Shell command line for using a vpnc-compatible config script"
@@ -2903,7 +2905,7 @@ msgstr ""
 
 #: main.c:878
 msgid "Indicate path MTU to/from server"
-msgstr "Nakaži pot MTU z/na strežnik"
+msgstr "Nakaži pot MTU s ali od strežnika"
 
 #: main.c:879
 msgid "Enable stateful compression (default is stateless only)"
@@ -2994,7 +2996,7 @@ msgstr "Pridobivanje vrstice iz nastavitvene datoteke je spodletelo: %s\n"
 #: main.c:1037
 #, c-format
 msgid "Unrecognised option at line %d: '%s'\n"
-msgstr "Neprepoznana možnost v vrstici %d: '%s'\n"
+msgstr "Neprepoznavna možnost v vrstici %d: '%s'\n"
 
 #: main.c:1047
 #, c-format
@@ -3338,7 +3340,7 @@ msgstr ""
 #: mainloop.c:134
 #, c-format
 msgid "Set up tun device failed\n"
-msgstr "Nastavitev naprave je spodletela\n"
+msgstr "Namestitev naprave TUN je spodletela\n"
 
 #: mainloop.c:265
 msgid "Caller paused the connection\n"
@@ -3923,11 +3925,11 @@ msgstr ""
 
 #: openssl.c:147
 msgid "Failed to write to SSL socket\n"
-msgstr "Pisanje v vtič SSL je spodletelo\n"
+msgstr "Pisanje v vtič SSL je spodletelo.\n"
 
 #: openssl.c:197 openssl.c:263
 msgid "Failed to read from SSL socket\n"
-msgstr "Branje iz vtiča SSL je spodletelo\n"
+msgstr "Branje z vtiča SSL je spodletelo\n"
 
 #: openssl.c:292
 #, c-format
@@ -3958,8 +3960,7 @@ msgstr "Dodatno potrdilo %s: '%s'\n"
 
 #: openssl.c:548
 msgid "Parse PKCS#12 failed (see above errors)\n"
-msgstr ""
-"Razčlenjevanje Parse PKCS#12 je spodletelo (napaka je navedena zgoraj)\n"
+msgstr "Razčlenjevanje PKCS#12 je spodletelo (napaka je navedena zgoraj)\n"
 
 #: openssl.c:563
 msgid "PKCS#12 contained no certificate!\n"
@@ -4042,7 +4043,7 @@ msgstr "Uporaba zasebnega ključa iz shrambe ključev je spodletelo\n"
 #: openssl.c:917
 #, c-format
 msgid "Failed to open private key file %s: %s\n"
-msgstr "Odpiranje zasebne datoteke ključa %s je spodletelo: %s\n"
+msgstr "Odpiranje datoteke zasebnega ključa %s je spodletelo: %s\n"
 
 #: openssl.c:1038
 msgid "Failed to convert PKCS#8 to OpenSSL EVP_PKEY\n"
@@ -4528,7 +4529,7 @@ msgstr "Oživljanje skripta '%s' za %s je spodletelo: %s\n"
 #: script.c:562
 #, c-format
 msgid "Script '%s' exited abnormally (%x)\n"
-msgstr "Skript '%s' je zaključen z napako (%x)\n"
+msgstr "Skript '%s' je neustrezno končan (%x)\n"
 
 #: script.c:570
 #, c-format
@@ -4630,7 +4631,7 @@ msgstr "Brez napake"
 
 #: ssl.c:704
 msgid "Keystore locked"
-msgstr "Shramba ključev je zaklenjena"
+msgstr "Zaklenjeni potegi"
 
 #: ssl.c:705
 msgid "Keystore uninitialized"
@@ -5005,7 +5006,7 @@ msgstr "Ni mogoče nastaviti ifname"
 #: tun.c:109
 #, c-format
 msgid "Can't open %s: %s"
-msgstr "Ni mogoče odpreti %s: %s"
+msgstr "%s ni mogoče odpreti: %s"
 
 #: tun.c:118
 #, c-format
@@ -5018,7 +5019,7 @@ msgstr "open /dev/tun"
 
 #: tun.c:145
 msgid "Failed to create new tun"
-msgstr "Ni mogoče ustvariti novega naprave tun"
+msgstr "Ni mogoče ustvariti nove naprave tun"
 
 #: tun.c:151
 msgid "Failed to put tun file descriptor into message-discard mode"
@@ -5040,7 +5041,7 @@ msgstr "SIOCSIFMTU"
 #: tun.c:242 tun.c:428
 #, c-format
 msgid "Failed to open tun device: %s\n"
-msgstr "Odpiranje naprave tun je spodletelo: %s\n"
+msgstr "Odpiranje naprave TUN je spodletelo: %s\n"
 
 #: tun.c:253
 #, c-format
@@ -5085,7 +5086,7 @@ msgstr "Neveljavno ime vmesnika '%s'; skladno mora biti z imenom 'tun%%d'\n"
 #: tun.c:398
 #, c-format
 msgid "Cannot open '%s': %s\n"
-msgstr "Ni mogoče odpreti  '%s': %s\n"
+msgstr "Ni mogoče odpreti '%s': %s\n"
 
 #: tun.c:437
 msgid "TUNSIFHEAD"
@@ -5121,7 +5122,7 @@ msgstr "(skript)"
 #: tun.c:570
 #, c-format
 msgid "Failed to write incoming packet: %s\n"
-msgstr "Zapisovanje prihajajočega paketa je spodletelo: %s\n"
+msgstr "Pisanje prihajajočega paketa je spodletelo: %s\n"
 
 #: xml.c:75 xml.c:100
 #, c-format

@@ -1,21 +1,27 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
+# Danish translation of network-manager-openconnect.
+# Copyright (C) 2018 og nedenstående oversættere.
+# This file is distributed under the same license as the network-manager-openconnect package.
+# Mads Bille Lundby <lundbymads@gmail.com>, 2009.
+# Kim Iskov <kimiskov@gmail.com>, 2010.
+# Joe Hansen <joedalton2@yahoo.dk>, 2011, 2012.
+# Alan Mortensen <alanmortensen.am@gmail.com>, 2017-19.
 #
-# Translators:
+# Using -> Anvender (for at undgå forvirring om Bruger er navne- eller udsagnsord)
+#
 msgid ""
 msgstr ""
-"Project-Id-Version: openconnect\n"
+"Project-Id-Version: network-manager-openconnect\n"
 "Report-Msgid-Bugs-To: openconnect-devel@lists.infradead.org\n"
 "POT-Creation-Date: 2019-12-30 00:19+0000\n"
-"PO-Revision-Date: 2011-09-22 22:31+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Danish (http://www.transifex.net/projects/p/meego/team/da/)\n"
+"PO-Revision-Date: 2019-01-26 15:53+0100\n"
+"Last-Translator: Alan Mortensen <alanmortensen.am@gmail.com>\n"
+"Language-Team: Dansk-gruppen <dansk@dansk-gruppen.dk>\n"
 "Language: da\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 2.0.6\n"
 
 #: auth-globalprotect.c:129
 #, c-format
@@ -98,27 +104,27 @@ msgstr "Logout lykkedes.\n"
 #: auth-juniper.c:142
 #, c-format
 msgid "Ignoring unknown form submit item '%s'\n"
-msgstr "Ignorerer ukendt indsend-element \"%s\" i formular\n"
+msgstr "Ignorerer ukendt indsend-element “%s” i formular\n"
 
 #: auth-juniper.c:153
 #, c-format
 msgid "Ignoring unknown form input type '%s'\n"
-msgstr "Ignorerer ukendt inputtype \"%s\" i formular\n"
+msgstr "Ignorerer ukendt inputtype “%s” i formular\n"
 
 #: auth-juniper.c:163
 #, c-format
 msgid "Discarding duplicate option '%s'\n"
-msgstr "Kasserer duplikeret indstilling \"%s\"\n"
+msgstr "Kasserer duplikeret indstilling “%s”\n"
 
 #: auth-juniper.c:239 auth.c:408
 #, c-format
 msgid "Cannot handle form method='%s', action='%s'\n"
-msgstr "Kan ikke håndtere formularmetode=\"%s\", handling=\"%s\"\n"
+msgstr "Kan ikke håndtere formularmetode=“%s”, handling=“%s”\n"
 
 #: auth-juniper.c:270
 #, c-format
 msgid "Unknown textarea field: '%s'\n"
-msgstr "Ukendt tekstområdefelt: \"%s\"\n"
+msgstr "Ukendt tekstområdefelt: “%s”\n"
 
 #: auth-juniper.c:318
 msgid "Failed to send cookie to TNCC\n"
@@ -197,7 +203,7 @@ msgstr "Stødte på formular uden ID\n"
 #: auth-juniper.c:722
 #, c-format
 msgid "Unknown form ID '%s'\n"
-msgstr "Ukendt formular-ID \"%s\"\n"
+msgstr "Ukendt formular-ID “%s”\n"
 
 #: auth-juniper.c:725
 #, c-format
@@ -245,11 +251,11 @@ msgstr "Modtog <client-cert-request>, selvom det ikke forventedes.\n"
 
 #: auth.c:603
 msgid "XML response has no \"auth\" node\n"
-msgstr "XML-svar har ingen \"auth\"-knude\n"
+msgstr "XML-svar har ingen “auth”-knude\n"
 
 #: auth.c:636
 msgid "Asked for password but '--no-passwd' set\n"
-msgstr "Bad om adgangskode, men \"--no-passwd\" angivet\n"
+msgstr "Bad om adgangskode, men “--no-passwd” angivet\n"
 
 #: auth.c:926
 msgid "Not downloading XML profile because SHA1 already matches\n"
@@ -277,8 +283,8 @@ msgid ""
 "Error: Running the 'Cisco Secure Desktop' trojan on this platform is not yet "
 "implemented.\n"
 msgstr ""
-"Fejl: Kørsel af \"Cisco Secure Desktop trojan\" er endnu ikke understøttet "
-"på denne platform\n"
+"Fejl: Kørsel af “Cisco Secure Desktop trojan” er endnu ikke understøttet på "
+"denne platform\n"
 
 #: auth.c:1004 mainloop.c:144
 #, c-format
@@ -303,7 +309,7 @@ msgstr "Ugyldigt bruger-uid=%ld: %s\n"
 #: auth.c:1032
 #, c-format
 msgid "Failed to change to CSD home directory '%s': %s\n"
-msgstr "Kunne ikke skifte til CSD-hjemmemappe \"%s\": %s\n"
+msgstr "Kunne ikke skifte til CSD-hjemmemappe “%s”: %s\n"
 
 #: auth.c:1054
 msgid ""
@@ -319,8 +325,8 @@ msgid ""
 "This facility is disabled by default for security reasons, so you may wish "
 "to enable it.\n"
 msgstr ""
-"Fejl: Serveren bad os om at downloade og køre en \"Cisco Secure Desktop "
-"trojan\".\n"
+"Fejl: Serveren bad os om at downloade og køre en “Cisco Secure Desktop "
+"trojan”.\n"
 "Af sikkerhedsgrunde er denne funktion som standard deaktiveret, så du vil "
 "måske aktivere den.\n"
 
@@ -331,7 +337,7 @@ msgstr "Prøver at køre Linux CSD-trojanskript.\n"
 #: auth.c:1095
 #, c-format
 msgid "Temporary directory '%s' is not writable: %s\n"
-msgstr "Den midlertidige mappe \"%s\" er skrivebeskyttet: %s\n"
+msgstr "Den midlertidige mappe “%s” er skrivebeskyttet: %s\n"
 
 #: auth.c:1103
 #, c-format
@@ -350,7 +356,7 @@ msgid ""
 "\t Use command line option \"--csd-user\"\n"
 msgstr ""
 "Advarsel: Du kører usikker CSD-kode med administratorrettigheder (root)\n"
-"\t Brug kommandolinjetilvalget \"--csd-user\"\n"
+"\t Brug kommandolinjetilvalget “--csd-user”\n"
 
 #: auth.c:1190
 #, c-format
@@ -377,7 +383,7 @@ msgstr "XML POST aktiveret\n"
 #: auth.c:1407
 #, c-format
 msgid "Refreshing %s after 1 second...\n"
-msgstr "Opdaterer %s efter 1 sekund ...\n"
+msgstr "Opdaterer %s efter 1 sekund …\n"
 
 #: compat.c:207
 #, c-format
@@ -444,12 +450,12 @@ msgstr "<elided>"
 #: cstp.c:432
 #, c-format
 msgid "X-DTLS-Session-ID not 64 characters; is: \"%s\"\n"
-msgstr "X-DTLS-Session-ID er ikke 64 tegn; er: \"%s\"\n"
+msgstr "X-DTLS-Session-ID er ikke 64 tegn; er: “%s”\n"
 
 #: cstp.c:449
 #, c-format
 msgid "X-DTLS-Session-ID is invalid; is: \"%s\"\n"
-msgstr "X-DTLS-Session-ID er ugyldig; er: \"%s\"\n"
+msgstr "X-DTLS-Session-ID er ugyldig; er: “%s”\n"
 
 #: cstp.c:467
 #, c-format
@@ -577,7 +583,7 @@ msgstr "Modtog ukomprimeret datapakke på %d byte\n"
 #: cstp.c:993
 #, c-format
 msgid "Received server disconnect: %02x '%s'\n"
-msgstr "Modtog serverafbrydelse: %02x \"%s\"\n"
+msgstr "Modtog serverafbrydelse: %02x “%s”\n"
 
 #: cstp.c:996
 msgid "Received server disconnect\n"
@@ -654,7 +660,7 @@ msgstr "Forsøger Digest-godkendelse til proxy\n"
 #: digest.c:255
 #, c-format
 msgid "Attempting Digest authentication to server '%s'\n"
-msgstr "Forsøger Digest-godkendelse til serveren \"%s\"\n"
+msgstr "Forsøger Digest-godkendelse til serveren “%s”\n"
 
 #: dtls.c:113
 msgid "DTLS connection attempted with an existing fd\n"
@@ -751,7 +757,7 @@ msgstr "Kunne ikke sende keepalive-forespørgsel; forvent afbrydelse\n"
 #: dtls.c:432 tun.c:545
 #, c-format
 msgid "Unknown packet (len %d) received: %02x %02x %02x %02x...\n"
-msgstr "Ukendt pakke (længde %d) modtaget: %02x %02x %02x %02x...\n"
+msgstr "Ukendt pakke (længde %d) modtaget: %02x %02x %02x %02x …\n"
 
 #: dtls.c:439
 #, c-format
@@ -1005,7 +1011,7 @@ msgstr "Kunne ikke initialisere DTLS: %s\n"
 #: gnutls-dtls.c:216
 #, c-format
 msgid "Failed to set DTLS priority: '%s': %s\n"
-msgstr "Kunne ikke angive DTLS-prioritet: \"%s\": %s\n"
+msgstr "Kunne ikke angive DTLS-prioritet: “%s”: %s\n"
 
 #: gnutls-dtls.c:240
 #, c-format
@@ -1030,7 +1036,7 @@ msgstr "Kunne ikke angive DTLS PSK-legitimationsoplysninger: %s\n"
 #: gnutls-dtls.c:309
 #, c-format
 msgid "Unknown DTLS parameters for requested CipherSuite '%s'\n"
-msgstr "Ukendte DTLS-parametre til forespurgt CipherSuite \"%s\"\n"
+msgstr "Ukendte DTLS-parametre til forespurgt CipherSuite “%s”\n"
 
 #: gnutls-dtls.c:324
 #, c-format
@@ -1169,7 +1175,7 @@ msgstr "Klientcertifikatet udløber snart den"
 #: gnutls.c:384 openssl.c:776
 #, c-format
 msgid "Failed to load item '%s' from keystore: %s\n"
-msgstr "Kunne ikke indlæse elementet \"%s\" fra nøglelageret: %s\n"
+msgstr "Kunne ikke indlæse elementet “%s” fra nøglelageret: %s\n"
 
 #: gnutls.c:397
 #, c-format
@@ -1248,7 +1254,7 @@ msgstr "Ikke-understøttet PEM-krypteringstype: %s\n"
 
 #: gnutls.c:754 gnutls.c:767
 msgid "Invalid salt in encrypted PEM file\n"
-msgstr "Ugyldig \"salt\" i krypteret PEM-fil\n"
+msgstr "Ugyldig “salt” i krypteret PEM-fil\n"
 
 #: gnutls.c:791
 #, c-format
@@ -1432,7 +1438,7 @@ msgstr "Fandt ikke et SSL-certifikat, der matcher privat nøgle\n"
 #: gnutls.c:1555 openssl.c:560 openssl.c:714
 #, c-format
 msgid "Using client certificate '%s'\n"
-msgstr "Anvender klientcertifikatet \"%s\"\n"
+msgstr "Anvender klientcertifikatet “%s”\n"
 
 #: gnutls.c:1562
 #, c-format
@@ -1458,7 +1464,7 @@ msgstr "Fik ingen udsteder fra PKCS#11\n"
 #: gnutls.c:1657
 #, c-format
 msgid "Got next CA '%s' from PKCS11\n"
-msgstr "Fik næste CA \"%s\" fra PKCS#11\n"
+msgstr "Fik næste CA “%s” fra PKCS#11\n"
 
 #: gnutls.c:1683
 msgid "Failed to allocate memory for supporting certificates\n"
@@ -1467,7 +1473,7 @@ msgstr "Kunne ikke allokere hukommelse til understøttelse af certifikater\n"
 #: gnutls.c:1706
 #, c-format
 msgid "Adding supporting CA '%s'\n"
-msgstr "Tilføjer understøttende CA \"%s\"\n"
+msgstr "Tilføjer understøttende CA “%s”\n"
 
 #: gnutls.c:1728
 msgid "Private key appears not to support RSA-PSS. Disabling TLSv1.3\n"
@@ -1567,7 +1573,7 @@ msgstr "Kunne ikke læse certifikater i CA-filen: %s\n"
 #: gnutls.c:2167
 #, c-format
 msgid "Failed to open CA file '%s': %s\n"
-msgstr "Kunne ikke åbne CA-filen \"%s\": %s\n"
+msgstr "Kunne ikke åbne CA-filen “%s”: %s\n"
 
 #: gnutls.c:2180 openssl.c:1689
 msgid "Loading certificate failed. Aborting.\n"
@@ -1576,7 +1582,7 @@ msgstr "Indlæsning af certifikat mislykkedes. Afbryder.\n"
 #: gnutls.c:2241
 #, c-format
 msgid "Failed to set TLS priority string (\"%s\"): %s\n"
-msgstr "Kunne ikke angive TLS-prioritetsstreng (\"%s\"): %s\n"
+msgstr "Kunne ikke angive TLS-prioritetsstreng (“%s”): %s\n"
 
 #: gnutls.c:2253 openssl.c:1806
 #, c-format
@@ -2176,7 +2182,7 @@ msgstr "Forsøger GSSAPI-godkendelse til proxy\n"
 #: gssapi.c:148
 #, c-format
 msgid "Attempting GSSAPI authentication to server '%s'\n"
-msgstr "Forsøger GSSAPI-godkendelse til serveren \"%s\"\n"
+msgstr "Forsøger GSSAPI-godkendelse til serveren “%s”\n"
 
 #: gssapi.c:200 gssapi.c:256 sspi.c:191 sspi.c:249
 msgid "GSSAPI authentication completed\n"
@@ -2261,7 +2267,7 @@ msgstr "Forsøger basal HTTP-godkendelse til proxy\n"
 #: http-auth.c:186
 #, c-format
 msgid "Attempting HTTP Basic authentication to server '%s'\n"
-msgstr "Forsøger basal HTTP-godkendelse til serveren \"%s\"\n"
+msgstr "Forsøger basal HTTP-godkendelse til serveren “%s”\n"
 
 #: http-auth.c:200 http.c:1315
 msgid "This version of OpenConnect was built without GSSAPI support\n"
@@ -2277,8 +2283,7 @@ msgstr "Proxy kræver basal godkendelse, hvilket som standard er deaktiveret\n"
 msgid ""
 "Server '%s' requested Basic authentication which is disabled by default\n"
 msgstr ""
-"Serveren \"%s\" kræver basal godkendelse, hvilket som standard er "
-"deaktiveret\n"
+"Serveren “%s” kræver basal godkendelse, hvilket som standard er deaktiveret\n"
 
 #: http-auth.c:256
 msgid "No more authentication methods to try\n"
@@ -2296,7 +2301,7 @@ msgstr ""
 #: http.c:462
 #, c-format
 msgid "Failed to parse HTTP response '%s'\n"
-msgstr "Kunne ikke fortolke HTTP-svaret \"%s\"\n"
+msgstr "Kunne ikke fortolke HTTP-svaret “%s”\n"
 
 #: http.c:468
 #, c-format
@@ -2306,7 +2311,7 @@ msgstr "Modtog HTTP-svar: %s\n"
 #: http.c:493
 #, c-format
 msgid "Ignoring unknown HTTP response line '%s'\n"
-msgstr "Ignorerer ukendt HTTP-svarlinje \"%s\"\n"
+msgstr "Ignorerer ukendt HTTP-svarlinje “%s”\n"
 
 #: http.c:512
 #, c-format
@@ -2369,12 +2374,12 @@ msgstr "Kan ikke modtage HTTP 1.0-indhold uden afsluttende forbindelse\n"
 #: http.c:818
 #, c-format
 msgid "Failed to parse redirected URL '%s': %s\n"
-msgstr "Kunne ikke fortolke omdirigeret URL \"%s\": %s\n"
+msgstr "Kunne ikke fortolke omdirigeret URL “%s”: %s\n"
 
 #: http.c:842
 #, c-format
 msgid "Cannot follow redirection to non-https URL '%s'\n"
-msgstr "Kan ikke følge omdirigering til ikke-https-URL \"%s\"\n"
+msgstr "Kan ikke følge omdirigering til ikke-https-URL “%s”\n"
 
 #: http.c:870
 #, c-format
@@ -2499,7 +2504,7 @@ msgstr ""
 #: http.c:1356
 #, c-format
 msgid "Unexpected connect response from SOCKS proxy: %02x %02x...\n"
-msgstr "Uventet forbindelsesanmodning fra SOCKS-proxy: %02x %02x...\n"
+msgstr "Uventet forbindelsesanmodning fra SOCKS-proxy: %02x %02x …\n"
 
 #: http.c:1364
 #, c-format
@@ -2534,7 +2539,7 @@ msgstr "Proxy CONNECT-anmodning mislykkedes: %d\n"
 #: http.c:1485
 #, c-format
 msgid "Unknown proxy type '%s'\n"
-msgstr "Ukendt proxytype \"%s\"\n"
+msgstr "Ukendt proxytype “%s”\n"
 
 #: http.c:1511
 #, c-format
@@ -2580,7 +2585,7 @@ msgstr ""
 #: library.c:237
 #, c-format
 msgid "Unknown VPN protocol '%s'\n"
-msgstr "Ukendt VPN-protokol \"%s\"\n"
+msgstr "Ukendt VPN-protokol “%s”\n"
 
 #: library.c:259
 msgid "Built against SSL library with no Cisco DTLS support\n"
@@ -2589,7 +2594,7 @@ msgstr "Bygget mod SSL-bibliotek uden understøttelse af Cisco DTLS\n"
 #: library.c:686
 #, c-format
 msgid "Failed to parse server URL '%s'\n"
-msgstr "Kunne ikke fortolke server-URL \"%s\"\n"
+msgstr "Kunne ikke fortolke server-URL “%s”\n"
 
 #: library.c:692
 msgid "Only https:// permitted for server URL\n"
@@ -2695,7 +2700,7 @@ msgstr "fgets (stdin)"
 #: main.c:754
 #, c-format
 msgid "Cannot process this executable path \"%s\""
-msgstr "Kan ikke behandle den eksekverbare sti \"%s\""
+msgstr "Kan ikke behandle den eksekverbare sti “%s”"
 
 #: main.c:760
 #, c-format
@@ -2705,7 +2710,7 @@ msgstr "Allokering af vpnc-skriptsti mislykkedes\n"
 #: main.c:780
 #, c-format
 msgid "Override hostname '%s' to '%s'\n"
-msgstr "Tilsidesæt værtsnavn \"%s\" til \"%s\"\n"
+msgstr "Tilsidesæt værtsnavn “%s” til “%s”\n"
 
 #: main.c:793
 #, c-format
@@ -2945,7 +2950,7 @@ msgstr "standard"
 
 #: main.c:871
 msgid "Pass traffic to 'script' program, not tun"
-msgstr "Videresend trafik til \"skriptprogram\" og ikke til tun"
+msgstr "Videresend trafik til “skriptprogram” og ikke til tun"
 
 #: main.c:874
 msgid "Tunnel control"
@@ -3010,7 +3015,7 @@ msgstr "Lokalt værtsnavn som skal annonceres til serveren"
 
 #: main.c:890
 msgid "OS type (linux,linux-64,win,...) to report"
-msgstr "OS-type (linux,linux-64,win,...) som rapporteres"
+msgstr "OS-type (linux,linux-64,win, …) som rapporteres"
 
 #: main.c:891
 msgid "reported version string during authentication"
@@ -3057,27 +3062,27 @@ msgstr "Kunne ikke få linje fra konfigurationsfil: %s\n"
 #: main.c:1037
 #, c-format
 msgid "Unrecognised option at line %d: '%s'\n"
-msgstr "Genkendte ikke tilvalget i linje %d: \"%s\"\n"
+msgstr "Genkendte ikke tilvalget i linje %d: “%s”\n"
 
 #: main.c:1047
 #, c-format
 msgid "Option '%s' does not take an argument at line %d\n"
-msgstr "Tilvalget \"%s\" tager ikke et argument i linje %d\n"
+msgstr "Tilvalget “%s” tager ikke et argument i linje %d\n"
 
 #: main.c:1051
 #, c-format
 msgid "Option '%s' requires an argument at line %d\n"
-msgstr "Tilvalget \"%s\" kræver et argument i linje %d\n"
+msgstr "Tilvalget “%s” kræver et argument i linje %d\n"
 
 #: main.c:1076
 #, c-format
 msgid "Invalid user \"%s\": %s\n"
-msgstr "Ugyldig bruger \"%s\": %s\n"
+msgstr "Ugyldig bruger “%s”: %s\n"
 
 #: main.c:1086
 #, c-format
 msgid "Invalid user ID \"%d\": %s\n"
-msgstr "Ugyldigt bruger-ID \"%d\": %s\n"
+msgstr "Ugyldigt bruger-ID “%d”: %s\n"
 
 #: main.c:1130
 #, c-format
@@ -3093,7 +3098,7 @@ msgid ""
 msgstr ""
 "ADVARSEL: Denne version af openconnect blev bygget uden\n"
 "          understøttelse af iconv, men det lader til, du bruger det\n"
-"          forældede tegnsæt \"%s\". Forvent mærkværdigheder.\n"
+"          forældede tegnsæt “%s”. Forvent mærkværdigheder.\n"
 
 #: main.c:1147
 #, c-format
@@ -3112,22 +3117,22 @@ msgstr "Kunne ikke allokere vpninfo-struktur\n"
 #: main.c:1215
 #, c-format
 msgid "Cannot use 'config' option inside config file\n"
-msgstr "Kan ikke brug tilvalget \"config\" inde i konfigurationsfilen\n"
+msgstr "Kan ikke brug tilvalget “config” inde i konfigurationsfilen\n"
 
 #: main.c:1223
 #, c-format
 msgid "Cannot open config file '%s': %s\n"
-msgstr "Kan ikke åbne konfigurationsfilen \"%s\": %s\n"
+msgstr "Kan ikke åbne konfigurationsfilen “%s”: %s\n"
 
 #: main.c:1239
 #, c-format
 msgid "Invalid compression mode '%s'\n"
-msgstr "Ugyldig komprimeringstilstand \"%s\"\n"
+msgstr "Ugyldig komprimeringstilstand “%s”\n"
 
 #: main.c:1260
 #, c-format
 msgid "Missing colon in resolve option\n"
-msgstr "Manglende kolon i tilvalget \"resolve\"\n"
+msgstr "Manglende kolon i tilvalget “resolve”\n"
 
 #: main.c:1265
 #, c-format
@@ -3173,12 +3178,12 @@ msgstr "OpenConnect version %s\n"
 #: main.c:1463
 #, c-format
 msgid "Invalid software token mode \"%s\"\n"
-msgstr "Ugyldig tilstand \"%s\" for softwaresymbol\n"
+msgstr "Ugyldig tilstand “%s” for softwaresymbol\n"
 
 #: main.c:1473
 #, c-format
 msgid "Invalid OS identity \"%s\"\n"
-msgstr "Ugyldig OS-identitet \"%s\"\n"
+msgstr "Ugyldig OS-identitet “%s”\n"
 
 #: main.c:1506
 #, c-format
@@ -3241,7 +3246,7 @@ msgstr "Se http://www.infradead.org/openconnect/vpnc-script.html\n"
 #: main.c:1658
 #, c-format
 msgid "Failed to open '%s' for write: %s\n"
-msgstr "Kunne ikke åbne \"%s\" til skrivning: %s\n"
+msgstr "Kunne ikke åbne “%s” til skrivning: %s\n"
 
 #: main.c:1670
 #, c-format
@@ -3295,7 +3300,7 @@ msgid ""
 "Reason: %s\n"
 msgstr ""
 "\n"
-"Certifikatet fra VPN-serveren \"%s\" kunne ikke bekræftes.\n"
+"Certifikatet fra VPN-serveren “%s” kunne ikke bekræftes.\n"
 "Årsag: %s\n"
 
 #: main.c:1819
@@ -3315,8 +3320,8 @@ msgstr "    --servercert %s\n"
 #, c-format
 msgid "Enter '%s' to accept, '%s' to abort; anything else to view: "
 msgstr ""
-"Indtast \"%s\" for at acceptere, \"%s\" for at afbryde eller alt andet for "
-"at vise: "
+"Indtast “%s” for at acceptere, “%s” for at afbryde eller alt andet for at "
+"vise: "
 
 #: main.c:1826 main.c:1844
 msgid "no"
@@ -3334,12 +3339,12 @@ msgstr "Servernøglens hash: %s\n"
 #: main.c:1887
 #, c-format
 msgid "Auth choice \"%s\" matches multiple options\n"
-msgstr "Godkendelsesvalget \"%s\" matcher flere muligheder\n"
+msgstr "Godkendelsesvalget “%s” matcher flere muligheder\n"
 
 #: main.c:1890
 #, c-format
 msgid "Auth choice \"%s\" not available\n"
-msgstr "Godkendelsesvalget \"%s\" er ikke tilgængeligt\n"
+msgstr "Godkendelsesvalget “%s” er ikke tilgængeligt\n"
 
 #: main.c:1911
 msgid "User input required in non-interactive mode\n"
@@ -3454,7 +3459,7 @@ msgstr "Forsøger HTTP NTLM-godkendelse til proxy (single-sign-on)\n"
 #: ntlm.c:268
 #, c-format
 msgid "Attempting HTTP NTLM authentication to server '%s' (single-sign-on)\n"
-msgstr "Forsøger HTTP NTLM-godkendelse til serveren \"%s\" (single-sign-on)\n"
+msgstr "Forsøger HTTP NTLM-godkendelse til serveren “%s” (single-sign-on)\n"
 
 #: ntlm.c:978
 #, c-format
@@ -3464,7 +3469,7 @@ msgstr "Forsøger HTTP NTLMv%d-godkendelse til proxy\n"
 #: ntlm.c:982
 #, c-format
 msgid "Attempting HTTP NTLMv%d authentication to server '%s'\n"
-msgstr "Forsøger HTTP NTLMv%d-godkendelse til serveren \"%s\"\n"
+msgstr "Forsøger HTTP NTLMv%d-godkendelse til serveren “%s”\n"
 
 #: oath.c:104
 msgid "Invalid base32 token string\n"
@@ -3488,7 +3493,7 @@ msgstr "OK til generering af NEXT-symbolkode\n"
 
 #: oath.c:320 oath.c:343 stoken.c:307
 msgid "Server is rejecting the soft token; switching to manual entry\n"
-msgstr "Server afviser det \"bløde\" symbol; skifter til manuel indtastning\n"
+msgstr "Server afviser det “bløde” symbol; skifter til manuel indtastning\n"
 
 #: oath.c:377
 msgid "Generating OATH TOTP token code\n"
@@ -3501,7 +3506,7 @@ msgstr "Genererer OATH HOTP-symbolkode\n"
 #: oncp.c:56
 #, c-format
 msgid "Invalid cookie '%s'\n"
-msgstr "Ugyldig cookie \"%s\"\n"
+msgstr "Ugyldig cookie “%s”\n"
 
 #: oncp.c:160
 #, c-format
@@ -3765,7 +3770,7 @@ msgstr "Logout lykkedes.\n"
 #: openconnect-internal.h:1174 openconnect-internal.h:1182
 #, c-format
 msgid "ERROR: %s() called with invalid UTF-8 for '%s' argument\n"
-msgstr "FEJL: %s() kaldt med ugyldig UTF-8 for argumentet \"%s\"\n"
+msgstr "FEJL: %s() kaldt med ugyldig UTF-8 for argumentet “%s”\n"
 
 #: openssl-dtls.c:94
 #, c-format
@@ -3905,22 +3910,22 @@ msgstr "Ukendt fejl under login til PKCS#11-symbol\n"
 #: openssl-pkcs11.c:290
 #, c-format
 msgid "Logged in to PKCS#11 slot '%s'\n"
-msgstr "Logget på til PKCS#11-pladsen \"%s\"\n"
+msgstr "Logget på til PKCS#11-pladsen “%s”\n"
 
 #: openssl-pkcs11.c:304
 #, c-format
 msgid "Failed to enumerate certs in PKCS#11 slot '%s'\n"
-msgstr "Kunne ikke optælle certifikater i PKCS#11-pladsen \"%s\"\n"
+msgstr "Kunne ikke optælle certifikater i PKCS#11-pladsen “%s”\n"
 
 #: openssl-pkcs11.c:310
 #, c-format
 msgid "Found %d certs in slot '%s'\n"
-msgstr "Fandt %d certifikater i pladsen \"%s\"\n"
+msgstr "Fandt %d certifikater i pladsen “%s”\n"
 
 #: openssl-pkcs11.c:346 openssl-pkcs11.c:569
 #, c-format
 msgid "Failed to parse PKCS#11 URI '%s'\n"
-msgstr "Kunne ikke fortolke PKCS#11-URI'en \"%s\"\n"
+msgstr "Kunne ikke fortolke PKCS#11-URI'en “%s”\n"
 
 #: openssl-pkcs11.c:353 openssl-pkcs11.c:579
 msgid "Failed to enumerate PKCS#11 slots\n"
@@ -3929,12 +3934,12 @@ msgstr "Kunne ikke optælle PKCS#11-pladser\n"
 #: openssl-pkcs11.c:387 openssl-pkcs11.c:621
 #, c-format
 msgid "Logging in to PKCS#11 slot '%s'\n"
-msgstr "Logger på til PKCS#11-pladsen \"%s\"\n"
+msgstr "Logger på til PKCS#11-pladsen “%s”\n"
 
 #: openssl-pkcs11.c:397
 #, c-format
 msgid "Failed to find PKCS#11 cert '%s'\n"
-msgstr "Kunne ikke finde PKCS#11-certifikatet \"%s\"\n"
+msgstr "Kunne ikke finde PKCS#11-certifikatet “%s”\n"
 
 #: openssl-pkcs11.c:405
 msgid "Certificate X.509 content not fetched by libp11\n"
@@ -3947,12 +3952,12 @@ msgstr "Kunne ikke installere certifikatet i OpenSLL-kontekst\n"
 #: openssl-pkcs11.c:462
 #, c-format
 msgid "Failed to enumerate keys in PKCS#11 slot '%s'\n"
-msgstr "Kunne ikke optælle nøgler i PKCS#11-pladsen \"%s\"\n"
+msgstr "Kunne ikke optælle nøgler i PKCS#11-pladsen “%s”\n"
 
 #: openssl-pkcs11.c:468
 #, c-format
 msgid "Found %d keys in slot '%s'\n"
-msgstr "Fandt %d nøgler i pladsen \"%s\"\n"
+msgstr "Fandt %d nøgler i pladsen “%s”\n"
 
 #: openssl-pkcs11.c:501
 msgid "Certificate has no public key\n"
@@ -3977,7 +3982,7 @@ msgstr "Kunne ikke underskrive eksempeldata til validering af EC-nøgle\n"
 #: openssl-pkcs11.c:642
 #, c-format
 msgid "Failed to find PKCS#11 key '%s'\n"
-msgstr "Anvender PKCS#11-nøglen \"%s\"\n"
+msgstr "Anvender PKCS#11-nøglen “%s”\n"
 
 # Google translate og microsoft har instantiere. Det er ikke i RO, men bruges inden for programmering og sprogteori (iflg. google-søgning).
 #: openssl-pkcs11.c:653
@@ -4026,7 +4031,7 @@ msgstr "PEM-adgangskode for lang (%d ≥ %d)\n"
 #: openssl.c:498
 #, c-format
 msgid "Extra cert from %s: '%s'\n"
-msgstr "Ekstra certifikat fra %s: \"%s\"\n"
+msgstr "Ekstra certifikat fra %s: “%s”\n"
 
 #: openssl.c:548
 msgid "Parse PKCS#12 failed (see above errors)\n"
@@ -4089,7 +4094,7 @@ msgstr "PEM-fil"
 #: openssl.c:782
 #, c-format
 msgid "Failed to create BIO for keystore item '%s'\n"
-msgstr "Kunne ikke oprette BIO for nøglelagerelementet \"%s\"\n"
+msgstr "Kunne ikke oprette BIO for nøglelagerelementet “%s”\n"
 
 #: openssl.c:807
 msgid "Loading private key failed (wrong passphrase?)\n"
@@ -4123,17 +4128,17 @@ msgstr "Kunne ikke konvertere PKCS#8 til OpenSSL EVP_PKEY\n"
 #: openssl.c:1055
 #, c-format
 msgid "Failed to identify private key type in '%s'\n"
-msgstr "Kunne ikke bestemme privat nøgletype i \"%s\"\n"
+msgstr "Kunne ikke bestemme privat nøgletype i “%s”\n"
 
 #: openssl.c:1209
 #, c-format
 msgid "Matched DNS altname '%s'\n"
-msgstr "Matchede DNS-altnavn \"%s\"\n"
+msgstr "Matchede DNS-altnavn “%s”\n"
 
 #: openssl.c:1216
 #, c-format
 msgid "No match for altname '%s'\n"
-msgstr "Intet match for DNS-altnavn \"%s\"\n"
+msgstr "Intet match for DNS-altnavn “%s”\n"
 
 #: openssl.c:1230
 #, c-format
@@ -4143,32 +4148,32 @@ msgstr "Certifikatet har GEN_IPADD-altnavn med falsk længde %d\n"
 #: openssl.c:1241 openssl.c:1387
 #, c-format
 msgid "Matched %s address '%s'\n"
-msgstr "Matchede %s-adresse \"%s\"\n"
+msgstr "Matchede %s-adresse “%s”\n"
 
 #: openssl.c:1248
 #, c-format
 msgid "No match for %s address '%s'\n"
-msgstr "Intet match for %s-adresse \"%s\"\n"
+msgstr "Intet match for %s-adresse “%s”\n"
 
 #: openssl.c:1290
 #, c-format
 msgid "URI '%s' has non-empty path; ignoring\n"
-msgstr "URI'en \"%s\" har ikke-tom sti; ignorerer\n"
+msgstr "URI'en “%s” har ikke-tom sti; ignorerer\n"
 
 #: openssl.c:1295
 #, c-format
 msgid "Matched URI '%s'\n"
-msgstr "Matchede URI \"%s\"\n"
+msgstr "Matchede URI “%s”\n"
 
 #: openssl.c:1306
 #, c-format
 msgid "No match for URI '%s'\n"
-msgstr "Intet match for URI \"%s\"\n"
+msgstr "Intet match for URI “%s”\n"
 
 #: openssl.c:1321
 #, c-format
 msgid "No altname in peer cert matched '%s'\n"
-msgstr "Intet altnavn i peercertifikatet matchede \"%s\"\n"
+msgstr "Intet altnavn i peercertifikatet matchede “%s”\n"
 
 #: openssl.c:1329
 msgid "No subject name in peer cert!\n"
@@ -4186,12 +4191,12 @@ msgstr "Uoverensstemmelse i peercertifikats emnenavn ('%s' != '%s')\n"
 #: openssl.c:1361 openssl.c:1395
 #, c-format
 msgid "Matched peer certificate subject name '%s'\n"
-msgstr "Matchede peercertifikats emnenavn \"%s\"\n"
+msgstr "Matchede peercertifikats emnenavn “%s”\n"
 
 #: openssl.c:1457
 #, c-format
 msgid "Extra cert from cafile: '%s'\n"
-msgstr "Ekstra certifikat fra ca-fil: \"%s\"\n"
+msgstr "Ekstra certifikat fra ca-fil: “%s”\n"
 
 #: openssl.c:1599
 msgid "Error in client cert notAfter field\n"
@@ -4212,12 +4217,12 @@ msgstr "SSL-certifikat og nøgle passer ikke sammen\n"
 #: openssl.c:1729
 #, c-format
 msgid "Failed to read certs from CA file '%s'\n"
-msgstr "Kunne ikke læse certifikater fra CA-fil \"%s\"\n"
+msgstr "Kunne ikke læse certifikater fra CA-fil “%s”\n"
 
 #: openssl.c:1762
 #, c-format
 msgid "Failed to open CA file '%s'\n"
-msgstr "Kunne ikke åbne CA-filen \"%s\"\n"
+msgstr "Kunne ikke åbne CA-filen “%s”\n"
 
 #: openssl.c:1822
 msgid "SSL connection failure\n"
@@ -4584,27 +4589,27 @@ msgstr ""
 #: script.c:130
 #, c-format
 msgid "Discard bad split include: \"%s\"\n"
-msgstr "Forkast ugyldigt opdelt inkludér: \"%s\"\n"
+msgstr "Forkast ugyldigt opdelt inkludér: “%s”\n"
 
 #: script.c:134
 #, c-format
 msgid "Discard bad split exclude: \"%s\"\n"
-msgstr "Forkast ugyldigt opdelt ekskludér: \"%s\"\n"
+msgstr "Forkast ugyldigt opdelt ekskludér: “%s”\n"
 
 #: script.c:507 script.c:555
 #, c-format
 msgid "Failed to spawn script '%s' for %s: %s\n"
-msgstr "Kunne ikke kalde skriptet \"%s\" for %s: %s\n"
+msgstr "Kunne ikke kalde skriptet “%s” for %s: %s\n"
 
 #: script.c:562
 #, c-format
 msgid "Script '%s' exited abnormally (%x)\n"
-msgstr "Skriptet \"%s\" afsluttede unormalt (%x)\n"
+msgstr "Skriptet “%s” afsluttede unormalt (%x)\n"
 
 #: script.c:570
 #, c-format
 msgid "Script '%s' returned error %d\n"
-msgstr "Skriptet \"%s\" returnerede fejl %d\n"
+msgstr "Skriptet “%s” returnerede fejl %d\n"
 
 #: ssl.c:111
 msgid "Failed select() for socket connect"
@@ -4676,7 +4681,7 @@ msgstr "Kunne ikke oprette forbindelse til værten %s\n"
 #: ssl.c:474
 #, c-format
 msgid "Reconnecting to proxy %s\n"
-msgstr "Genopretter forbindelse til proxyen \"%s\"\n"
+msgstr "Genopretter forbindelse til proxyen “%s”\n"
 
 #: ssl.c:545
 #, c-format
@@ -4690,7 +4695,7 @@ msgstr "Kunne ikke opnå filsystem-ID for adgangsfrase\n"
 #: ssl.c:584
 #, c-format
 msgid "Failed to open private key file '%s': %s\n"
-msgstr "Kunne ikke åbne den private nøglefil \"%s\": %s\n"
+msgstr "Kunne ikke åbne den private nøglefil “%s”: %s\n"
 
 #: ssl.c:612
 #, c-format
@@ -4748,8 +4753,7 @@ msgstr ""
 #: ssl.c:909
 #, c-format
 msgid "openconnect_fopen_utf8() used with unsupported mode '%s'\n"
-msgstr ""
-"openconnect_fopen_utf8() anvendt med ikke-understøttet tilstand \"%s\"\n"
+msgstr "openconnect_fopen_utf8() anvendt med ikke-understøttet tilstand “%s”\n"
 
 #: ssl.c:931
 #, c-format
@@ -4915,7 +4919,7 @@ msgstr "Enheds-ID:"
 
 #: stoken.c:143
 msgid "User bypassed soft token.\n"
-msgstr "Bruger omgik \"blødt\" symbol.\n"
+msgstr "Bruger omgik “blødt” symbol.\n"
 
 #: stoken.c:149 stoken.c:234
 msgid "All fields are required; try again.\n"
@@ -4931,7 +4935,7 @@ msgstr "Ukorrekt enheds-ID eller adgangskode; prøv igen.\n"
 
 #: stoken.c:167
 msgid "Soft token init was successful.\n"
-msgstr "Initiering af \"blødt\" symbol lykkedes.\n"
+msgstr "Initiering af “blødt” symbol lykkedes.\n"
 
 #: stoken.c:210
 msgid "Enter software token PIN."
@@ -4999,7 +5003,7 @@ msgstr "GetAdapterInfo() mislykkedes: %s\n"
 #: tun-win32.c:241
 #, c-format
 msgid "Ignoring non-matching TAP interface \"%s\"\n"
-msgstr "Ignorerer ikke-matchende TAP-grænseflade \"%s\"\n"
+msgstr "Ignorerer ikke-matchende TAP-grænseflade “%s”\n"
 
 #: tun-win32.c:252
 #, c-format
@@ -5101,7 +5105,7 @@ msgstr "Kunne ikke oprette ny tun"
 
 #: tun.c:151
 msgid "Failed to put tun file descriptor into message-discard mode"
-msgstr "Kunne ikke placere tunfildeskriptor i \"message-discard\"-tilstand"
+msgstr "Kunne ikke placere tunfildeskriptor i “message-discard”-tilstand"
 
 #: tun.c:183
 msgid "tun device is unsupported on this platform\n"
@@ -5138,8 +5142,7 @@ msgstr ""
 #: tun.c:322
 #, c-format
 msgid "Invalid interface name '%s'; must match 'utun%%d' or 'tun%%d'\n"
-msgstr ""
-"Ugyldigt grænsefladenavn \"%s\"; skal matche \"utun%%d\" eller \"tun%%d\"\n"
+msgstr "Ugyldigt grænsefladenavn “%s”; skal matche “utun%%d” eller “tun%%d”\n"
 
 #: tun.c:331
 #, c-format
@@ -5163,12 +5166,12 @@ msgstr "Kunne ikke tilslutte utun-enhed: %s\n"
 #: tun.c:388
 #, c-format
 msgid "Invalid interface name '%s'; must match 'tun%%d'\n"
-msgstr "Ugyldigt grænsefladenavn \"%s\"; skal matche \"utun%%d\"\n"
+msgstr "Ugyldigt grænsefladenavn “%s”; skal matche “utun%%d”\n"
 
 #: tun.c:398
 #, c-format
 msgid "Cannot open '%s': %s\n"
-msgstr "Kan ikke åbne \"%s\": %s\n"
+msgstr "Kan ikke åbne “%s”: %s\n"
 
 #: tun.c:437
 msgid "TUNSIFHEAD"
@@ -5209,7 +5212,7 @@ msgstr "Kunne ikke skrive indgående pakke: %s\n"
 #: xml.c:75 xml.c:100
 #, c-format
 msgid "Treating host \"%s\" as a raw hostname\n"
-msgstr "Behandler værten \"%s\" som et råt (raw) værtsnavn\n"
+msgstr "Behandler værten “%s” som et råt (raw) værtsnavn\n"
 
 #: xml.c:82
 #, c-format
@@ -5229,34 +5232,34 @@ msgstr "Kunne ikke fortolke XML-konfigurationsfilen %s\n"
 #: xml.c:135
 #, c-format
 msgid "Host \"%s\" has address \"%s\"\n"
-msgstr "Værten \"%s\" har adressen \"%s\"\n"
+msgstr "Værten “%s” har adressen “%s”\n"
 
 #: xml.c:145
 #, c-format
 msgid "Host \"%s\" has UserGroup \"%s\"\n"
-msgstr "Værten \"%s\" har brugergruppen (UserGroup) \"%s\"\n"
+msgstr "Værten “%s” har brugergruppen (UserGroup) “%s”\n"
 
 #: xml.c:159
 #, c-format
 msgid "Host \"%s\" not listed in config; treating as raw hostname\n"
 msgstr ""
-"Værten \"%s\" er ikke opført i konfigurationen; betragter det som råt (raw) "
+"Værten “%s” er ikke opført i konfigurationen; betragter det som råt (raw) "
 "værtsnavn\n"
 
 #: yubikey.c:96
 #, c-format
 msgid "Failed to send \"%s\" to ykneo-oath applet: %s\n"
-msgstr "Kunne ikke sende \"%s\" til ykneo-oath-applet: %s\n"
+msgstr "Kunne ikke sende “%s” til ykneo-oath-applet: %s\n"
 
 #: yubikey.c:103
 #, c-format
 msgid "Invalid short response to \"%s\" from ykneo-oath applet\n"
-msgstr "Ugyldigt kort svar til \"%s\" fra  ykneo-oath-applet\n"
+msgstr "Ugyldigt kort svar til “%s” fra  ykneo-oath-applet\n"
 
 #: yubikey.c:120
 #, c-format
 msgid "Failure response to \"%s\": %04x\n"
-msgstr "Fejlsvar til \"%s\": %04x\n"
+msgstr "Fejlsvar til “%s”: %04x\n"
 
 #: yubikey.c:174
 msgid "select applet command"
@@ -5281,7 +5284,7 @@ msgstr "Yubikey-PIN:"
 
 #: yubikey.c:257
 msgid "Failed to calculate Yubikey unlock response\n"
-msgstr "Kunne ikke beregne Yubikey \"lås op\"-svar\n"
+msgstr "Kunne ikke beregne Yubikey “lås op”-svar\n"
 
 #: yubikey.c:274
 msgid "unlock command"
@@ -5308,17 +5311,17 @@ msgstr "Kunne ikke søge i læserliste: %s\n"
 #: yubikey.c:392
 #, c-format
 msgid "Failed to connect to PC/SC reader '%s': %s\n"
-msgstr "Kunne ikke forbinde til PC/SC-læseren \"%s\": %s\n"
+msgstr "Kunne ikke forbinde til PC/SC-læseren “%s”: %s\n"
 
 #: yubikey.c:397
 #, c-format
 msgid "Connected PC/SC reader '%s'\n"
-msgstr "Forbundet til PC/SC-læseren \"%s\"\n"
+msgstr "Forbundet til PC/SC-læseren “%s”\n"
 
 #: yubikey.c:402
 #, c-format
 msgid "Failed to obtain exclusive access to reader '%s': %s\n"
-msgstr "Kunne ikke opnå eksklusiv adgang til læseren \"%s\": %s\n"
+msgstr "Kunne ikke opnå eksklusiv adgang til læseren “%s”: %s\n"
 
 #: yubikey.c:412
 msgid "list keys command"
@@ -5329,15 +5332,14 @@ msgstr "vis nøglekommandoer"
 #: yubikey.c:445
 #, c-format
 msgid "Found %s/%s key '%s' on '%s'\n"
-msgstr "Fandt %s/%s-nøglen \"%s\" på \"%s\"\n"
+msgstr "Fandt %s/%s-nøglen “%s” på “%s”\n"
 
 #: yubikey.c:468
 #, c-format
 msgid ""
 "Token '%s' not found on Yubikey '%s'. Searching for another Yubikey...\n"
 msgstr ""
-"Token \"%s\" blev ikke fundet på Yubikey \"%s\". Leder efter en anden "
-"Yubikey …\n"
+"Token “%s” blev ikke fundet på Yubikey “%s”. Leder efter en anden Yubikey …\n"
 
 #: yubikey.c:516
 msgid "Server is rejecting the Yubikey token; switching to manual entry\n"
