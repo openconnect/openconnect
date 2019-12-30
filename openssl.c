@@ -1466,10 +1466,14 @@ int openconnect_get_peer_cert_chain(struct openconnect_info *vpninfo,
 {
 	struct oc_cert *chain, *p;
 	X509_STORE_CTX *ctx = vpninfo->cert_list_handle;
-	STACK_OF(X509) *untrusted = X509_STORE_CTX_get0_untrusted(ctx);
+	STACK_OF(X509) *untrusted;
 	int i, cert_list_size;
 
 	if (!ctx)
+		return -EINVAL;
+
+	untrusted = X509_STORE_CTX_get0_untrusted(ctx);
+	if (!untrusted)
 		return -EINVAL;
 
 	cert_list_size = sk_X509_num(untrusted);
