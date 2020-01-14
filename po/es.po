@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: network-manager-openconnect.HEAD\n"
 "Report-Msgid-Bugs-To: openconnect-devel@lists.infradead.org\n"
 "POT-Creation-Date: 2019-12-30 00:19+0000\n"
-"PO-Revision-Date: 2019-10-01 15:18+0200\n"
+"PO-Revision-Date: 2019-12-31 08:51+0100\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: Spanish - Spain <gnome-es-list@gnome.org>\n"
 "Language: es_ES\n"
@@ -129,7 +129,7 @@ msgstr "Campo de área de texto desconocido: «%s»\n"
 
 #: auth-juniper.c:318
 msgid "Failed to send cookie to TNCC\n"
-msgstr ""
+msgstr "Falló al enviar la cookie a TNCC\n"
 
 #: auth-juniper.c:344
 msgid "TNCC support not implemented yet on Windows\n"
@@ -657,7 +657,7 @@ msgstr "Enviar paquete BYE: %s\n"
 
 #: cstp.c:1224
 msgid "Short write writing BYE packet\n"
-msgstr ""
+msgstr "Escritura corta al escribir el paquete BYE\n"
 
 #: digest.c:252
 msgid "Attempting Digest authentication to proxy\n"
@@ -1136,7 +1136,7 @@ msgstr "Falló al cifrar el paquete ESP: %s\n"
 
 #: gnutls.c:95 gnutls.c:149 gnutls.c:246 gnutls.c:2300
 msgid "Failed select() for TLS"
-msgstr ""
+msgstr "Falló select() para TLS"
 
 #: gnutls.c:99 openssl.c:154
 msgid "SSL write cancelled\n"
@@ -2183,7 +2183,7 @@ msgstr "Enviando paquete de datos IPv%d de %d bytes\n"
 
 #: gpst.c:1362 oncp.c:1321
 msgid "Failed to send ESP probe\n"
-msgstr ""
+msgstr "Falló al enviar la prueba ESP\n"
 
 #: gssapi.c:75
 msgid "Error importing GSSAPI name for authentication:\n"
@@ -2319,7 +2319,7 @@ msgstr "Sin memoria para asignar cookies\n"
 #: http.c:451 http.c:477
 #, c-format
 msgid "Error reading HTTP response: %s\n"
-msgstr ""
+msgstr "Error al leer la respuesta HTTP: %s\n"
 
 #: http.c:462
 #, c-format
@@ -2412,7 +2412,7 @@ msgstr ""
 
 #: http.c:945
 msgid "HTTPS socket closed by peer; reopening\n"
-msgstr ""
+msgstr "Socket HTTPS cerrado por el par; volviendo a abrir\n"
 
 #: http.c:1115 oncp.c:591 pulse.c:1420
 #, c-format
@@ -3391,7 +3391,7 @@ msgstr "La cadena de testigo débil no es válida\n"
 #: main.c:2208
 #, c-format
 msgid "Can't open stoken file\n"
-msgstr ""
+msgstr "No se puede abrir el archivo stoken\n"
 
 #: main.c:2210
 #, c-format
@@ -3459,7 +3459,7 @@ msgstr "Falló WaitForMultipleObjects: %s\n"
 
 #: mainloop.c:309
 msgid "Failed select() in mainloop"
-msgstr ""
+msgstr "Falló select() en el bucle principal"
 
 #: ntlm.c:87 sspi.c:114 sspi.c:197
 #, c-format
@@ -3771,7 +3771,7 @@ msgstr "Paquete de datos no reconocido\n"
 #: oncp.c:1051
 #, c-format
 msgid "Failed to set up ESP: %s\n"
-msgstr ""
+msgstr "Falló al establecer ESP: %s\n"
 
 #: oncp.c:1061
 #, c-format
@@ -4416,35 +4416,35 @@ msgstr "Contraseña secundaria:"
 
 #: pulse.c:1132
 msgid "Password expired. Please change password:"
-msgstr ""
+msgstr "La contraseña ha caducado. Por favor cámbiela:"
 
 #: pulse.c:1136
 msgid "Current password:"
-msgstr ""
+msgstr "Contraseña actual:"
 
 #: pulse.c:1141
 msgid "New password:"
-msgstr ""
+msgstr "Contraseña nueva:"
 
 #: pulse.c:1146
 msgid "Verify new password:"
-msgstr ""
+msgstr "Verifique la contraseña nueva:"
 
 #: pulse.c:1158
 msgid "Passwords not provided.\n"
-msgstr ""
+msgstr "Contraseñas no proporcionadas.\n"
 
 #: pulse.c:1164
 msgid "Passwords do not match.\n"
-msgstr ""
+msgstr "Las contraseñas no coinciden.\n"
 
 #: pulse.c:1169
 msgid "Current password too long.\n"
-msgstr ""
+msgstr "Contraseña actual demasiado larga.\n"
 
 #: pulse.c:1174
 msgid "New password too long.\n"
-msgstr ""
+msgstr "Contraseña nueva demasiado larga.\n"
 
 #: pulse.c:1233
 msgid "Token code request:"
@@ -4499,15 +4499,17 @@ msgstr "Fallo de autenticación: código 0x%02x\n"
 msgid ""
 "Unknown D73 prompt value 0x%x. Will prompt for both username and password.\n"
 msgstr ""
+"Valor de solicitud D73 desconocido 0x%x. Se solicitará nombre de usuario y "
+"contraseña.\n"
 
 #: pulse.c:1753
 msgid "Please report this value and the behaviour of the official client.\n"
-msgstr ""
+msgstr "Informe de este valor y del comportamiento del cliente oficial.\n"
 
 #: pulse.c:1806
 #, c-format
 msgid "Authentication failure: %.*s\n"
-msgstr ""
+msgstr "Fallo de autenticación: %.*s\n"
 
 #: pulse.c:1830
 msgid "Unhandled Pulse authentication packet, or authentication failure\n"
@@ -4535,6 +4537,8 @@ msgstr "Solicitud de autenticación de contraseña, código 0x%02x\n"
 #, c-format
 msgid "Pulse password request with unknown code 0x%02x. Please report.\n"
 msgstr ""
+"Solicitud de contraseña Pulse con código 0x%02x desconocido. Informe de "
+"esto.\n"
 
 #: pulse.c:1887
 msgid "Pulse password general token code request\n"
@@ -4556,15 +4560,16 @@ msgstr "Respuesta no esperada en lugar de autenticación IF-T/TLS correcta:\n"
 #: pulse.c:2007
 msgid "EAP-TTLS failure: Flushing output with pending input bytes\n"
 msgstr ""
+"Fallo de EAP-TTLS: vaciado de la salida con bytes de entrada pendientes\n"
 
 #: pulse.c:2030
 msgid "Error creating EAP-TTLS buffer\n"
-msgstr ""
+msgstr "Error al crear el búfer EAP-TTLS\n"
 
 #: pulse.c:2078
 #, c-format
 msgid "Failed to read EAP-TTLS Acknowledge: %s\n"
-msgstr ""
+msgstr "Falló al leer la confirmación EAP-TTLS: %s\n"
 
 #: pulse.c:2084 pulse.c:2124
 #, c-format
@@ -4573,12 +4578,12 @@ msgstr "Leer %d bytes del registro IF-T/TLS EAP-TTLS\n"
 
 #: pulse.c:2095
 msgid "Bad EAP-TTLS Acknowledge packet\n"
-msgstr ""
+msgstr "Paquete de confirmación EAP-TTLS incorrecto\n"
 
 #: pulse.c:2135
 #, c-format
 msgid "Bad EAP-TTLS packet (len %d, left %d)\n"
-msgstr ""
+msgstr "Paquete EAP-TTLS incorrecto (longitud %d, pendiente %d)\n"
 
 #: pulse.c:2292
 msgid "Unexpected Pulse config packet:\n"
@@ -4650,7 +4655,7 @@ msgstr "El script «%s» devolvió el error %d\n"
 
 #: ssl.c:111
 msgid "Failed select() for socket connect"
-msgstr ""
+msgstr "Falló select() para la conexión del socket"
 
 #: ssl.c:116
 msgid "Socket connect cancelled\n"
@@ -4785,7 +4790,7 @@ msgstr "Error desconocido"
 
 #: ssl.c:845
 msgid "Failed select() for command socket"
-msgstr ""
+msgstr "Falló select() para el socket del comando"
 
 #: ssl.c:909
 #, c-format
@@ -4805,12 +4810,12 @@ msgstr "Falló al hacer fstat() %s: %s\n"
 #: ssl.c:945
 #, c-format
 msgid "File %s is empty\n"
-msgstr ""
+msgstr "El archivo %s está vacío\n"
 
 #: ssl.c:951
 #, c-format
 msgid "File %s has suspicious size %zd\n"
-msgstr ""
+msgstr "El archivo %s tiene un tamaño %zd sospechoso\n"
 
 #: ssl.c:960
 #, c-format
@@ -4849,7 +4854,7 @@ msgstr "Conectar al socket UDP\n"
 
 #: ssl.c:1078
 msgid "Make UDP socket non-blocking"
-msgstr ""
+msgstr "Hacer el socket UDP no bloqueante"
 
 #: ssl.c:1113
 msgid "Cookie is no longer valid, ending session\n"
@@ -4862,11 +4867,11 @@ msgstr "dormir %ds, timeout restante %ds\n"
 
 #: ssl.c:1186
 msgid "Failed select() for socket send"
-msgstr ""
+msgstr "Falló select() para envío por el socket"
 
 #: ssl.c:1226
 msgid "Failed select() for socket recv"
-msgstr ""
+msgstr "Falló select() para la recepción del socket"
 
 #: sspi.c:203
 #, c-format
@@ -4999,27 +5004,27 @@ msgstr "Error al acceder a la clave del registro para adaptadores de red\n"
 #: tun-win32.c:101
 #, c-format
 msgid "Cannot read %s\\%s or is not string\n"
-msgstr ""
+msgstr "No se puede leer %s\\%s o no es una cadena\n"
 
 #: tun-win32.c:108
 #, c-format
 msgid "%s\\ComponentId is '%s' not '%s'\n"
-msgstr ""
+msgstr "%s\\ComponentId es «%s» no «%s»\n"
 
 #: tun-win32.c:114
 #, c-format
 msgid "Found %s at %s\n"
-msgstr ""
+msgstr "Encontrado %s en %s\n"
 
 #: tun-win32.c:131
 #, c-format
 msgid "Cannot open registry key %s\n"
-msgstr ""
+msgstr "No se puede abrir la clave del registro %s\n"
 
 #: tun-win32.c:142
 #, c-format
 msgid "Cannot read registry key %s\\%s or is not string\n"
-msgstr ""
+msgstr "No se puede leer la clave del registro %s\\%s o no es una cadena\n"
 
 #: tun-win32.c:158
 msgid "No Windows-TAP adapters found. Is the driver installed?\n"
@@ -5225,7 +5230,7 @@ msgstr "TUNSIFHEAD"
 #: tun.c:464
 #, c-format
 msgid "Failed to make tun socket nonblocking: %s\n"
-msgstr ""
+msgstr "Falló al hacer el socket tun no bloqueante: %s\n"
 
 #: tun.c:483
 #, c-format
