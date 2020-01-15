@@ -1085,6 +1085,15 @@ int do_https_request(struct openconnect_info *vpninfo, const char *method,
 
 	result = process_http_response(vpninfo, 0, http_auth_hdrs, buf);
 	if (result < 0) {
+		if (rq_retry) {
+			openconnect_close_https(vpninfo, 0);
+			vpn_progress(vpninfo, PRG_INFO,
+				     _("Retrying failed %s request on new connection\n"),
+				     method);
+			/* All the way back to 'redirected' since we need to rebuild
+			 * the request in 'buf' from scratch. */
+			goto redirected;
+		}
 		goto out;
 	}
 	if (vpninfo->dump_http_traffic && buf->pos)
