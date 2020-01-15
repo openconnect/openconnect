@@ -2028,6 +2028,7 @@ int pulse_eap_ttls_recv(struct openconnect_info *vpninfo, void *data, int len)
 		if (pushbuf->pos < 0x1a) {
 			vpn_progress(vpninfo, PRG_ERR,
 				     _("Error creating EAP-TTLS buffer\n"));
+			buf_free(pushbuf);
 			return -EIO;
 		}
 
@@ -2077,6 +2078,8 @@ int pulse_eap_ttls_recv(struct openconnect_info *vpninfo, void *data, int len)
 					vpn_progress(vpninfo, PRG_ERR,
 						     _("Failed to read EAP-TTLS Acknowledge: %s\n"),
 						     strerror(-ret));
+					buf_free(pushbuf);
+					buf_free(frag);
 					return ret;
 				}
 				if (ret > 0 && vpninfo->dump_http_traffic) {
@@ -2093,6 +2096,8 @@ int pulse_eap_ttls_recv(struct openconnect_info *vpninfo, void *data, int len)
 				    vpninfo->ttls_recvbuf[0x19] != 0) {
 					vpn_progress(vpninfo, PRG_ERR,
 						     _("Bad EAP-TTLS Acknowledge packet\n"));
+					buf_free(pushbuf);
+					buf_free(frag);
 					return -EIO;
 				}
 				vpninfo->ttls_eap_ident = vpninfo->ttls_recvbuf[0x15];
