@@ -2041,7 +2041,7 @@ int pulse_eap_ttls_recv(struct openconnect_info *vpninfo, void *data, int len)
 
 			if (buf_error(frag)) {
 				buf_free(pushbuf);
-				return buf_error(frag);
+				return buf_free(frag);
 			}
 
 			remaining = pushbuf->pos - 0x1a;
