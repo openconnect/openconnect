@@ -110,11 +110,15 @@ static int parse_prelogin_xml(struct openconnect_info *vpninfo, xmlNode *xml_nod
 	}
 
 	/* XX: Alt-secret form field must be specified for SAML, because we can't autodetect it */
-	if ((saml_method || saml_path) && !ctx->alt_secret) {
-		vpn_progress(vpninfo, PRG_ERR, "SAML authentication via %s to %s is required.\n"
-					 "Must specify destination form field by appending :field_name to login URL.\n",
-					 saml_method, saml_path);
-		result = -EINVAL;
+	if (saml_method || saml_path) {
+		if (!ctx->alt_secret) {
+			vpn_progress(vpninfo, PRG_ERR, "SAML authentication via %s to %s is required.\n"
+						 "Must specify destination form field by appending :field_name to login URL.\n",
+						 saml_method, saml_path);
+			result = -EINVAL;
+		} else
+			vpn_progress(vpninfo, PRG_DEBUG, _("Destination form field %s was specified; assuming SAML %s authentication is complete.\n"),
+			             ctx->alt_secret, saml_method);
 	}
 
 	/* Replace old form */
