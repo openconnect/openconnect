@@ -112,13 +112,21 @@ static int parse_prelogin_xml(struct openconnect_info *vpninfo, xmlNode *xml_nod
 	/* XX: Alt-secret form field must be specified for SAML, because we can't autodetect it */
 	if (saml_method || saml_path) {
 		if (!ctx->alt_secret) {
-			vpn_progress(vpninfo, PRG_ERR, "SAML authentication via %s to %s is required.\n"
-						 "Must specify destination form field by appending :field_name to login URL.\n",
-						 saml_method, saml_path);
+			if (saml_method && !strcmp(saml_method, "REDIRECT"))
+				vpn_progress(vpninfo, PRG_ERR,
+				             _("SAML %s authentication is required via %s\n"),
+				             saml_method, saml_path);
+			else
+				vpn_progress(vpninfo, PRG_ERR,
+				             _("SAML %s authentication is required via external script.\n"),
+				             saml_method);
+			vpn_progress(vpninfo, PRG_ERR,
+			             _("When SAML authentication is complete, specify destination form field by appending :field_name to login URL.\n"));
 			result = -EINVAL;
+			goto out;
 		} else
 			vpn_progress(vpninfo, PRG_DEBUG, _("Destination form field %s was specified; assuming SAML %s authentication is complete.\n"),
-			             ctx->alt_secret, saml_method);
+			             saml_method, ctx->alt_secret);
 	}
 
 	/* Replace old form */
@@ -130,10 +138,6 @@ static int parse_prelogin_xml(struct openconnect_info *vpninfo, xmlNode *xml_nod
 		result = -ENOMEM;
 		goto out;
 	}
-	if (saml_method || saml_path)
-		if (!ctx->alt_secret)
-			if (asprintf(&form->banner, _("SAML login is required via %s to this URL:\n\t%s"), saml_method, saml_path) == 0)
-				goto nomem;
 	form->message = prompt ? : strdup(_("Please enter your username and password"));
 	prompt = NULL;
 	form->auth_id = strdup("_login");
