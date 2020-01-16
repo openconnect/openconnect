@@ -126,8 +126,10 @@ static int parse_prelogin_xml(struct openconnect_info *vpninfo, xmlNode *xml_nod
 		result = -ENOMEM;
 		goto out;
 	}
-	if (saml_path && asprintf(&form->banner, _("SAML login is required via %s to this URL:\n\t%s"), saml_method, saml_path) == 0)
-		goto nomem;
+	if (saml_method || saml_path)
+		if (!ctx->alt_secret)
+			if (asprintf(&form->banner, _("SAML login is required via %s to this URL:\n\t%s"), saml_method, saml_path) == 0)
+				goto nomem;
 	form->message = prompt ? : strdup(_("Please enter your username and password"));
 	prompt = NULL;
 	form->auth_id = strdup("_login");
