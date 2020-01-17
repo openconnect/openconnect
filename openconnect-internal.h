@@ -223,8 +223,9 @@ struct oc_text_buf {
 #define AUTH_TYPE_NTLM		1
 #define AUTH_TYPE_DIGEST	2
 #define AUTH_TYPE_BASIC		3
+#define AUTH_TYPE_BEARER	4
 
-#define MAX_AUTH_TYPES		4
+#define MAX_AUTH_TYPES		5
 
 #define AUTH_DEFAULT_DISABLED	-3
 #define AUTH_DISABLED		-2
@@ -419,6 +420,8 @@ struct openconnect_info {
 	int proxy_fd;
 	char *proxy_user;
 	char *proxy_pass;
+	char *bearer_token;
+	char *proxy_bearer_token;
 	int proxy_close_during_auth;
 	int retry_on_auth_fail;
 	int try_http_auth;

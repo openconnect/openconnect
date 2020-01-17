@@ -192,6 +192,7 @@ enum {
 	OPT_PROTOCOL,
 	OPT_PASSTOS,
 	OPT_VERSION,
+	OPT_BEARER_TOKEN,
 };
 
 #ifdef __sun__
@@ -279,6 +280,7 @@ static const struct option long_options[] = {
 #ifdef OPENCONNECT_GNUTLS
 	OPTION("gnutls-debug", 1, OPT_GNUTLS_DEBUG),
 #endif
+	OPTION("bearer-token", 1, OPT_BEARER_TOKEN),
 	OPTION(NULL, 0, 0)
 };
 
@@ -820,6 +822,7 @@ static void usage(void)
 #ifndef HAVE_LIBPCSCLITE
 	printf("                                  %s\n", _("(NOTE: Yubikey OATH disabled in this build)"));
 #endif
+	printf("      --bearer-token=FILE		  %s\n", _("Use HTTP bearer token from file"));
 
 	printf("\n%s:\n", _("Server validation"));
 	printf("      --servercert=FINGERPRINT    %s\n", _("Server's certificate SHA1 fingerprint"));
@@ -1494,6 +1497,9 @@ int main(int argc, char **argv)
 			gnutls_global_set_log_function(oc_gnutls_log_func);
 			break;
 #endif
+		case OPT_BEARER_TOKEN:
+			read_file_into_string(vpninfo, config_arg, &vpninfo->bearer_token);
+			break;
 		default:
 			usage();
 		}
