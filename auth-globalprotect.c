@@ -244,6 +244,10 @@ static const struct gp_login_arg gp_login_args[] = {
 	{ .opt="password-expiration-days", .show=1 },   /* days until password expires, if not -1 */
 	{ .opt="clientVer", .err_missing=1, .check="4100" },
 	{ .opt="preferred-ip", .save=1 },
+	{ .opt="portal-userauthcookie", .show=1},
+	{ .opt="portal-prelogonuserauthcookie", .show=1},
+	{ .unknown=1 },
+	{ .unknown=1 },				        /* have seen value of "4" in some logs */
 };
 static const int gp_login_nargs = (sizeof(gp_login_args)/sizeof(*gp_login_args));
 
