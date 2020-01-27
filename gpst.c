@@ -1391,7 +1391,7 @@ int gpst_esp_send_probes(struct openconnect_info *vpninfo)
 		iph->ip_id = htons(0x4747); /* what the Windows client uses */
 		iph->ip_off = htons(IP_DF); /* don't fragment, frag offset = 0 */
 		iph->ip_ttl = 64; /* hops */
-		iph->ip_p = 1; /* ICMP */
+		iph->ip_p = IPPROTO_ICMP;
 		iph->ip_src.s_addr = inet_addr(vpninfo->ip_info.addr);
 		iph->ip_dst.s_addr = vpninfo->esp_magic;
 		iph->ip_sum = csum((uint16_t *)iph, sizeof(*iph)/2);
@@ -1420,10 +1420,10 @@ int gpst_esp_catch_probe(struct openconnect_info *vpninfo, struct pkt *pkt)
 	struct ip *iph = (void *)(pkt->data);
 
 	return ( pkt->len >= 21 && iph->ip_v==4 /* IPv4 header */
-		 && iph->ip_p==1 /* IPv4 protocol field == ICMP */
+		 && iph->ip_p==IPPROTO_ICMP /* IPv4 protocol field == ICMP */
 		 && iph->ip_src.s_addr == vpninfo->esp_magic /* source == magic address */
 		 && pkt->len >= (iph->ip_hl<<2) + ICMP_MINLEN + sizeof(magic_ping_payload) /* No short-packet segfaults */
-		 && pkt->data[iph->ip_hl<<2]==0 /* ICMP reply */
+		 && pkt->data[iph->ip_hl<<2]==ICMP_ECHOREPLY /* ICMP reply */
 		 && !memcmp(&pkt->data[(iph->ip_hl<<2) + ICMP_MINLEN], magic_ping_payload, sizeof(magic_ping_payload)) /* Same magic payload in response */
 	       );
 }
