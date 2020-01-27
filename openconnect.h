@@ -345,6 +345,7 @@ typedef enum {
 	OC_TOKEN_MODE_TOTP,
 	OC_TOKEN_MODE_HOTP,
 	OC_TOKEN_MODE_YUBIOATH,
+	OC_TOKEN_MODE_OIDC,
 } oc_token_mode_t;
 
 typedef enum {
