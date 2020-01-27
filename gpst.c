@@ -1080,17 +1080,16 @@ int gpst_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable)
 		return 0;
 	case DTLS_SECRET:
 	case DTLS_SLEEPING:
-		if (!ka_check_deadline(timeout, time(NULL), vpninfo->new_dtls_started + 5)) {
-			/* Allow 5 seconds after configuration for ESP to start */
+		/* Allow 5 seconds after configuration for ESP to start */
+		if (!ka_check_deadline(timeout, time(NULL), vpninfo->new_dtls_started + 5))
 			return 0;
-		} else {
-			/* ... before we switch to HTTPS instead */
-			vpn_progress(vpninfo, PRG_ERR,
+
+		/* ... before we switch to HTTPS instead */
+		vpn_progress(vpninfo, PRG_ERR,
 				     _("Failed to connect ESP tunnel; using HTTPS instead.\n"));
-			if (gpst_connect(vpninfo)) {
-				vpninfo->quit_reason = "GPST connect failed";
-				return 1;
-			}
+		if (gpst_connect(vpninfo)) {
+			vpninfo->quit_reason = "GPST connect failed";
+			return 1;
 		}
 		break;
 	case DTLS_NOSECRET:
