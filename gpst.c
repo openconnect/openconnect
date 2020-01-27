@@ -1072,28 +1072,11 @@ int gpst_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable)
 		vpninfo->dtls_state = DTLS_CONNECTED;
 		/* fall through */
 	case DTLS_CONNECTED:
-		/* Rekey if needed */
+		/* Rekey or check-and-resubmit HIP if needed */
 		if (keepalive_action(&vpninfo->ssl_times, timeout) == KA_REKEY)
 			goto do_rekey;
-		/* Submit HIP check if needed and only do it here, ie when
-		 * using an ESP tunnel, because when using an HTTPS tunnel the
-		 * one supported HTTPS connection is used by the HTTPS tunnel
-		 * and unavailable for checking and submitting the HIP
-		 * report */
-		else if (trojan_check_deadline(vpninfo, timeout)) {
-			vpn_progress(vpninfo, PRG_INFO, _("GlobalProtect HIP check due\n"));
-			ret = check_and_maybe_submit_hip_report(vpninfo);
-			/* Close HTTPS connection to prevent trying to read
-			 * from it, eg fetching HTTPS response to next HIP
-			 * check submission, after the GP gateway half-closes
-			 * it after 60 seconds. */
-			openconnect_close_https(vpninfo, 0);
-			if (ret) {
-				vpn_progress(vpninfo, PRG_ERR, _("HIP check or report failed\n"));
-				vpninfo->quit_reason = "HIP check or report failed";
-				return ret;
-			}
-		}
+		else if (trojan_check_deadline(vpninfo, timeout))
+			goto do_recheck_hip;
 		return 0;
 	case DTLS_SECRET:
 	case DTLS_SLEEPING:
@@ -1241,6 +1224,31 @@ int gpst_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable)
 			free(vpninfo->current_ssl_pkt);
 
 		vpninfo->current_ssl_pkt = NULL;
+	}
+
+	if (trojan_check_deadline(vpninfo, timeout)) {
+	do_recheck_hip:
+		vpn_progress(vpninfo, PRG_INFO, _("GlobalProtect HIP check due\n"));
+		/* We could just be lazy and treat this as a reconnect, but that
+		 * would require us to repull the routing configuration and new ESP
+		 * keys, instead of just redoing the HIP check/submission.
+		 *
+		 * Therefore we'll just close the HTTPS tunnel (if up),
+		 * redo the HIP check/submission, and reconnect the HTTPS tunnel
+		 * if needed.
+		 */
+		if (vpninfo->dtls_state == DTLS_NOSECRET || vpninfo->dtls_state == DTLS_DISABLED)
+			openconnect_close_https(vpninfo, 0);
+		ret = check_and_maybe_submit_hip_report(vpninfo);
+		if (ret) {
+			vpn_progress(vpninfo, PRG_ERR, _("HIP check or report failed\n"));
+			vpninfo->quit_reason = "HIP check or report failed";
+			return ret;
+		}
+		if (vpninfo->dtls_state == DTLS_DISABLED || vpninfo->dtls_state == DTLS_NOSECRET)
+			if (gpst_connect(vpninfo))
+				vpninfo->quit_reason = "GPST connect failed";
+		return 1;
 	}
 
 	switch (keepalive_action(&vpninfo->ssl_times, timeout)) {
