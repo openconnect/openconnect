@@ -880,7 +880,7 @@ static void usage(void)
 	printf("      --base-mtu=MTU              %s\n", _("Indicate path MTU to/from server"));
 	printf("  -d, --deflate                   %s\n", _("Enable stateful compression (default is stateless only)"));
 	printf("  -D, --no-deflate                %s\n", _("Disable all compression"));
-	printf("      --force-dpd=INTERVAL        %s\n", _("Set minimum Dead Peer Detection interval"));
+	printf("      --force-dpd=INTERVAL        %s\n", _("Set minimum Dead Peer Detection interval (in seconds)"));
 	printf("      --pfs                       %s\n", _("Require perfect forward secrecy"));
 	printf("      --no-dtls                   %s\n", _("Disable DTLS and ESP"));
 	printf("      --dtls-ciphers=LIST         %s\n", _("OpenSSL ciphers to support for DTLS"));
@@ -897,12 +897,12 @@ static void usage(void)
 	printf("\n%s:\n", _("Trojan binary (CSD) execution"));
 	printf("      --csd-user=USER             %s\n", _("Drop privileges during trojan execution"));
 	printf("      --csd-wrapper=SCRIPT        %s\n", _("Run SCRIPT instead of trojan binary"));
+	printf("      --force-trojan=INTERVAL     %s\n", _("Set minimum interval for rerunning trojan (in seconds)"));
 #endif
 
 	printf("\n%s:\n", _("Server bugs"));
 	printf("      --no-http-keepalive         %s\n", _("Disable HTTP connection re-use"));
 	printf("      --no-xmlpost                %s\n", _("Do not attempt XML POST authentication"));
-	printf("      --force-trojan=INTERVAL     %s\n", _("Run trojan every INTERVAL secs"));
 
 	printf("\n");
 
