@@ -357,10 +357,21 @@ static int parse_portal_xml(struct openconnect_info *vpninfo, xmlNode *xml_node,
 			else if (xmlnode_is_named(x, "hip-collection")) {
 				/* don't find and set HIP interval if already
 				 * set with --force-trojan */
-				if (!vpninfo->trojan_interval)
-					for (grandchild = x->children; grandchild; grandchild = grandchild->next)
-						if (!xmlnode_get_val(grandchild, "hip-report-interval", &hip_interval))
-							vpninfo->trojan_interval = atoi(hip_interval);
+				for (grandchild = x->children; grandchild; grandchild = grandchild->next)
+					if (!xmlnode_get_val(grandchild, "hip-report-interval", &hip_interval)) {
+						int sec = atoi(hip_interval);
+						if (!vpninfo->csd_wrapper)
+							vpn_progress(vpninfo, PRG_INFO, _("Ignoring portal's HIP report interval (%d minutes), because no HIP report script provided.\n"),
+										 sec/60);
+						else if (vpninfo->trojan_interval)
+							vpn_progress(vpninfo, PRG_INFO, _("Ignoring portal's HIP report interval (%d minutes), because interval is already set to %d minutes.\n"),
+										 sec/60, vpninfo->trojan_interval/60);
+						else {
+							vpninfo->trojan_interval = sec;
+							vpn_progress(vpninfo, PRG_INFO, _("Portal set HIP report interval to %d minutes).\n"),
+										 sec/60);
+						}
+					}
 			} else
 				xmlnode_get_val(x, "portal-name", &portal);
 		}

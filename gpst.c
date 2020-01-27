@@ -605,12 +605,6 @@ static int gpst_parse_config_xml(struct openconnect_info *vpninfo, xmlNode *xml_
 		vpninfo->ssl_times.dpd = 10;
 	vpninfo->ssl_times.keepalive = vpninfo->esp_ssl_fallback = vpninfo->ssl_times.dpd;
 
-	/* Default HIP check to 3600 seconds unless already set by
-	 * --force-trojan or portal config */
-	if (!vpninfo->trojan_interval)
-		vpninfo->trojan_interval = 3600;
-	vpninfo->last_trojan = time(NULL);
-
 	free(s);
 	return 0;
 }
@@ -923,8 +917,8 @@ static int run_hip_script(struct openconnect_info *vpninfo)
 	if (!vpninfo->csd_wrapper) {
 		vpn_progress(vpninfo, PRG_ERR,
 		             _("WARNING: Server asked us to submit HIP report with md5sum %s.\n"
-		               "VPN connectivity may be disabled or limited without HIP report submission.\n"
-		               "You need to provide a --csd-wrapper argument with the HIP report submission script.\n"),
+		               "    VPN connectivity may be disabled or limited without HIP report submission.\n"
+		               "    You need to provide a --csd-wrapper argument with the HIP report submission script.\n"),
 		             vpninfo->csd_token);
 		/* XXX: Many GlobalProtect VPNs work fine despite allegedly requiring HIP report submission */
 		return 0;
@@ -1045,10 +1039,21 @@ int gpst_setup(struct openconnect_info *vpninfo)
 	if (ret)
 		goto out;
 
-	/* Check HIP */
-	ret = check_and_maybe_submit_hip_report(vpninfo);
-	if (ret)
-		goto out;
+	/* Always check HIP once (even if no --csd-wrapper specified) */
+	if (!vpninfo->last_trojan) {
+		ret = check_and_maybe_submit_hip_report(vpninfo);
+		if (ret)
+			goto out;
+	}
+
+	/* Default HIP re-checking to 3600 seconds unless already set by
+	 * --force-trojan or portal config. There's no point to rechecking
+	 * HIP if --csd-wrapper wasn't specified: either the VPN will
+	 * work despite lack of HIP submission, or it won't.
+	 */
+	if (vpninfo->csd_wrapper && !vpninfo->trojan_interval)
+		vpninfo->trojan_interval = 3600;
+	vpninfo->last_trojan = time(NULL);
 
 	/* Connect tunnel immediately if ESP is not going to be used */
 	ret = gpst_connect(vpninfo);
