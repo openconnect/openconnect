@@ -729,6 +729,13 @@ static int gpst_connect(struct openconnect_info *vpninfo)
 	const char start_tunnel[12] = "START_TUNNEL"; /* NOT zero-terminated */
 	char buf[256];
 
+	/* We do NOT actually start the HTTPS tunnel if ESP is enabled and we received
+	 * ESP keys, because the ESP keys become invalid as soon as the HTTPS tunnel
+	 * is connected! >:-(
+	 */
+	if (vpninfo->dtls_state != DTLS_DISABLED && vpninfo->dtls_state != DTLS_NOSECRET)
+		return 0;
+
 	/* Connect to SSL VPN tunnel */
 	vpn_progress(vpninfo, PRG_DEBUG,
 		     _("Connecting to HTTPS tunnel endpoint ...\n"));
@@ -1043,12 +1050,8 @@ int gpst_setup(struct openconnect_info *vpninfo)
 	if (ret)
 		goto out;
 
-	/* We do NOT actually start the HTTPS tunnel yet if we want to
-	 * use ESP, because the ESP tunnel won't work if the HTTPS tunnel
-	 * is connected! >:-(
-	 */
-	if (vpninfo->dtls_state == DTLS_DISABLED || vpninfo->dtls_state == DTLS_NOSECRET)
-		ret = gpst_connect(vpninfo);
+	/* Connect tunnel immediately if ESP is not going to be used */
+	ret = gpst_connect(vpninfo);
 
 out:
 	return ret;
@@ -1087,6 +1090,8 @@ int gpst_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable)
 		/* ... before we switch to HTTPS instead */
 		vpn_progress(vpninfo, PRG_ERR,
 				     _("Failed to connect ESP tunnel; using HTTPS instead.\n"));
+		/* XX: gpst_connect does nothing if ESP is enabled and has secrets */
+		vpninfo->dtls_state = DTLS_NOSECRET;
 		if (gpst_connect(vpninfo)) {
 			vpninfo->quit_reason = "GPST connect failed";
 			return 1;
@@ -1244,9 +1249,8 @@ int gpst_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable)
 			vpninfo->quit_reason = "HIP check or report failed";
 			return ret;
 		}
-		if (vpninfo->dtls_state == DTLS_DISABLED || vpninfo->dtls_state == DTLS_NOSECRET)
-			if (gpst_connect(vpninfo))
-				vpninfo->quit_reason = "GPST connect failed";
+		if (gpst_connect(vpninfo))
+			vpninfo->quit_reason = "GPST connect failed";
 		return 1;
 	}
 
