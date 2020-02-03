@@ -1251,8 +1251,7 @@ int gpst_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable)
 		 * redo the HIP check/submission, and reconnect the HTTPS tunnel
 		 * if needed.
 		 */
-		if (vpninfo->dtls_state == DTLS_NOSECRET || vpninfo->dtls_state == DTLS_DISABLED)
-			openconnect_close_https(vpninfo, 0);
+		openconnect_close_https(vpninfo, 0);
 		ret = check_and_maybe_submit_hip_report(vpninfo);
 		if (ret) {
 			vpn_progress(vpninfo, PRG_ERR, _("HIP check or report failed\n"));
