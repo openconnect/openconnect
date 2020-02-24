@@ -766,7 +766,7 @@ void gather_dtls_ciphers(struct openconnect_info *vpninfo, struct oc_text_buf *b
 				   (buf_error(buf) || !buf->pos) ? "" : ":",
 				   name);
 		} else if (!strcmp(vers, "TLSv1.2")) {
-			buf_append(buf12, "%s%s:",
+			buf_append(buf12, "%s%s",
 				   (buf_error(buf12) || !buf12->pos) ? "" : ":",
 				   name);
 		}
