@@ -21,13 +21,18 @@ else
     XMLSTARLET=true
 fi
 
-DATA='endpoint.os.version="Linux";
-endpoint.os.servicepack="4.17.9-200.fc28.x86_64";
-endpoint.os.architecture="x64";
+export RESPONSE=$(mktemp /tmp/csdresponseXXXXXXX)
+trap 'rm $RESPONSE' EXIT
+
+
+cat >> $RESPONSE <<EOF
+endpoint.os.version="$(uname -s)";
+endpoint.os.servicepack="$(uname -r)";
+endpoint.os.architecture="$(uname -m)";
 endpoint.policy.location="Default";
 endpoint.device.protection="none";
 endpoint.device.protection_version="3.1.03103";
-endpoint.device.hostname="vpnclient.example.com";
+endpoint.device.hostname="$(hostname)";
 endpoint.device.port["9217"]="true";
 endpoint.device.port["139"]="true";
 endpoint.device.port["53"]="true";
@@ -54,7 +59,8 @@ endpoint.fw["IPTablesFW"].exists="true";
 endpoint.fw["IPTablesFW"].description="IPTables (Linux)";
 endpoint.fw["IPTablesFW"].version="1.6.1";
 endpoint.fw["IPTablesFW"].enabled="ok";
-'
+EOF
+
 shift
 
 TICKET=
@@ -73,7 +79,75 @@ if [ -n "$XMLSTARLET" ]; then
 else
     TOKEN=$(curl $PINNEDPUBKEY -s "$URL" | sed -n '/<token>/s^.*<token>\(.*\)</token>^\1^p' )
 fi
+
+if [ -n "$XMLSTARLET" ]; then
+    URL="https://$CSD_HOSTNAME/CACHE/sdesktop/data.xml"
+
+    curl $PINNEDPUBKEY -s "$URL" | xmlstarlet sel -t -v '/data/hostscan/field/@value' | while read -r ENTRY; do
+	# XX: How are ' and , characters escaped in this?
+	TYPE="$(sed "s/^'\(.*\)','\(.*\)','\(.*\)'$/\1/" <<< "$ENTRY")"
+	NAME="$(sed "s/^'\(.*\)','\(.*\)','\(.*\)'$/\2/" <<< "$ENTRY")"
+	VALUE="$(sed "s/^'\(.*\)','\(.*\)','\(.*\)'$/\3/" <<< "$ENTRY")"
+
+	if [ "$TYPE" != "$ENTRY" ]; then
+	    case "$TYPE" in
+		File)
+		    BASENAME="$(basename "$VALUE")"
+		    cat >> $RESPONSE <<EOF
+endpoint.file["$NAME"]={};
+endpoint.file["$NAME"].path="$VALUE";
+endpoint.file["$NAME"].name="$BASENAME";
+EOF
+		    TS=$(stat -c %Y "$VALUE" 2>/dev/null)
+		    if [ "$TS" = "" ]; then
+		    cat >> $RESPONSE <<EOF
+endpoint.file["$NAME"].exists="false";
+EOF
+		    else
+			LASTMOD=$(( $(date +%s) - $TS ))
+		    cat >> $RESPONSE <<EOF
+endpoint.file["$NAME"].exists="true";
+endpoint.file["$NAME"].lastmodified="$LASTMOD";
+endpoint.file["$NAME"].timestamp="$TS";
+EOF
+			CRC32=$(crc32 "$VALUE")
+			if [ "$CRC32" != "" ]; then
+		    cat >> $RESPONSE <<EOF
+endpoint.file["$NAME"].crc32="0x$CRC32";
+EOF
+			fi
+		    fi
+		    ;;
+
+		Process)
+		    if pidof "$VALUE" 2> /dev/null; then
+			EXISTS=true
+		    else
+			EXISTS=false
+		    fi
+		    cat >> $RESPONSE <<EOF
+endpoint.process["$NAME"]={};
+endpoint.process["$NAME"].name="$VALUE";
+endpoint.process["$NAME"].exists="$EXISTS";
+EOF
+		    ## XX: Add '.path' if it's running?
+		    ;;
+
+		Registry)
+		    # We silently ignore registry entry requests
+		    ;;
+
+		*)
+		    echo "Unhandled hostscan element of type '$TYPE': '$NAME'/'$VALUE'"
+		    ;;
+	    esac
+	else
+	    echo "Unhandled hostscan field '$ENTRY'"
+	fi
+    done
+fi
+
 COOKIE_HEADER="Cookie: sdesktop=$TOKEN"
 CONTENT_HEADER="Content-Type: text/xml"
 URL="https://$CSD_HOSTNAME/+CSCOE+/sdesktop/scan.xml?reusebrowser=1"
-curl $PINNEDPUBKEY -H "$CONTENT_HEADER" -H "$COOKIE_HEADER" --data "$DATA;type=text/xml" "$URL"
+curl $PINNEDPUBKEY -v -H "$CONTENT_HEADER" -H "$COOKIE_HEADER" --data @$RESPONSE "$URL"
