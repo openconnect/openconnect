@@ -995,6 +995,7 @@ int decrypt_esp_packet(struct openconnect_info *vpninfo, struct esp *esp, struct
 int encrypt_esp_packet(struct openconnect_info *vpninfo, struct pkt *pkt, int crypt_len);
 
 /* {gnutls,openssl}.c */
+const char *openconnect_get_tls_library_version();
 int ssl_nonblock_read(struct openconnect_info *vpninfo, void *buf, int maxlen);
 int ssl_nonblock_write(struct openconnect_info *vpninfo, void *buf, int buflen);
 int openconnect_open_https(struct openconnect_info *vpninfo);

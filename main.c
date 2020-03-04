@@ -591,11 +591,7 @@ static void print_build_opts(void)
 {
 	const char *comma = ", ", *sep = comma + 1;
 
-#if defined(OPENCONNECT_OPENSSL)
-	printf(_("Using OpenSSL. Features present:"));
-#elif defined(OPENCONNECT_GNUTLS)
-	printf(_("Using GnuTLS. Features present:"));
-#endif
+	printf(_("Built with %s. Features present:"), openconnect_get_tls_library_version());
 
 	if (openconnect_has_tss_blob_support()) {
 		printf("%sTPM", sep);

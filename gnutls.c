@@ -67,6 +67,17 @@ static int gnutls_pin_callback(void *priv, int attempt, const char *uri,
 	(GNUTLS_VERSION_NUMBER >= ( ((a) << 16) + ((b) << 8) + (c) ) || \
 	 gnutls_check_version(#a "." #b "." #c)))
 
+static char tls_library_version[32] = "";
+
+const char *openconnect_get_tls_library_version()
+{
+	if (!*tls_library_version) {
+		snprintf(tls_library_version, sizeof(tls_library_version), "GnuTLS v%d.%d.%d",
+		         (GNUTLS_VERSION_NUMBER>>16), (GNUTLS_VERSION_NUMBER>>8)&0xff, GNUTLS_VERSION_NUMBER&0xff);
+	}
+	return tls_library_version;
+}
+
 /* Helper functions for reading/writing lines over SSL. */
 static int _openconnect_gnutls_write(gnutls_session_t ses, int fd, struct openconnect_info *vpninfo, char *buf, size_t len)
 {
