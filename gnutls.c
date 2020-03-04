@@ -2222,17 +2222,19 @@ int openconnect_open_https(struct openconnect_info *vpninfo)
 	* 28065ce3896b1b0f87972d0bce9b17641ebb69b9
 	*/
 
+        if (!strlen(vpninfo->gnutls_prio)) {
 #ifdef DEFAULT_PRIO
-	default_prio = DEFAULT_PRIO ":%COMPAT";
+		default_prio = DEFAULT_PRIO ":%COMPAT";
 #else
-	/* GnuTLS 3.5.19 and onward refuse to negotiate AES-CBC-HMAC-SHA256
-	 * by default but some Cisco servers can't do anything better, so
-	 * explicitly add '+SHA256' to allow it. Yay Cisco. */
-	default_prio = "NORMAL:-VERS-SSL3.0:+SHA256:%COMPAT";
+		/* GnuTLS 3.5.19 and onward refuse to negotiate AES-CBC-HMAC-SHA256
+		 * by default but some Cisco servers can't do anything better, so
+		 * explicitly add '+SHA256' to allow it. Yay Cisco. */
+		default_prio = "NORMAL:-VERS-SSL3.0:+SHA256:%COMPAT";
 #endif
 
-	snprintf(vpninfo->gnutls_prio, sizeof(vpninfo->gnutls_prio), "%s%s%s",
-		 default_prio, vpninfo->pfs?":-RSA":"", vpninfo->no_tls13?":-VERS-TLS1.3":"");
+		snprintf(vpninfo->gnutls_prio, sizeof(vpninfo->gnutls_prio), "%s%s%s",
+		         default_prio, vpninfo->pfs?":-RSA":"", vpninfo->no_tls13?":-VERS-TLS1.3":"");
+        }
 
 	err = gnutls_priority_set_direct(vpninfo->https_sess,
 					 vpninfo->gnutls_prio, NULL);

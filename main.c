@@ -162,6 +162,7 @@ enum {
 	OPT_DUMP_HTTP,
 	OPT_FORCE_DPD,
 	OPT_GNUTLS_DEBUG,
+	OPT_GNUTLS_PRIORITY,
 	OPT_JUNIPER,
 	OPT_KEY_PASSWORD_FROM_FSID,
 	OPT_LIBPROXY,
@@ -278,6 +279,7 @@ static const struct option long_options[] = {
 	OPTION("form-entry", 1, 'F'),
 #ifdef OPENCONNECT_GNUTLS
 	OPTION("gnutls-debug", 1, OPT_GNUTLS_DEBUG),
+	OPTION("gnutls-priority", 1, OPT_GNUTLS_PRIORITY),
 #endif
 	OPTION(NULL, 0, 0)
 };
@@ -1492,6 +1494,14 @@ int main(int argc, char **argv)
 		case OPT_GNUTLS_DEBUG:
 			gnutls_global_set_log_level(atoi(config_arg));
 			gnutls_global_set_log_function(oc_gnutls_log_func);
+			break;
+		case OPT_GNUTLS_PRIORITY:
+			fprintf(stderr,
+			        _("WARNING: You specified --gnutls-priority. This should not be\n"
+			          "         necessary; please report cases where a priority string\n"
+			          "         override is necessary to connect to a server\n"
+			          "         to <openconnect-devel@lists.infradead.org>.\n"));
+			strncpy(vpninfo->gnutls_prio, config_arg, sizeof(vpninfo->gnutls_prio) - 1);
 			break;
 #endif
 		default:
