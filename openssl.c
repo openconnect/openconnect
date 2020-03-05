@@ -1888,8 +1888,8 @@ int openconnect_open_https(struct openconnect_info *vpninfo)
 	vpninfo->ssl_gets = openconnect_openssl_gets;
 
 
-	vpn_progress(vpninfo, PRG_INFO, _("Connected to HTTPS on %s\n"),
-		     vpninfo->hostname);
+	vpn_progress(vpninfo, PRG_INFO, _("Connected to HTTPS on %s with ciphersuite %s\n"),
+		     vpninfo->hostname, vpninfo->cstp_cipher);
 
 	return 0;
 }

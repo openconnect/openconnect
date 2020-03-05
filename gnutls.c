@@ -2275,9 +2275,6 @@ int openconnect_open_https(struct openconnect_info *vpninfo)
 	if (err)
 		return err;
 
-	gnutls_free(vpninfo->cstp_cipher);
-	vpninfo->cstp_cipher = get_gnutls_cipher(vpninfo->https_sess);
-
 	vpninfo->ssl_fd = ssl_sock;
 
 	vpninfo->ssl_read = openconnect_gnutls_read;
@@ -2335,12 +2332,15 @@ int cstp_handshake(struct openconnect_info *vpninfo, unsigned init)
 		}
 	}
 
+	gnutls_free(vpninfo->cstp_cipher);
+	vpninfo->cstp_cipher = get_gnutls_cipher(vpninfo->https_sess);
+
 	if (init) {
-		vpn_progress(vpninfo, PRG_INFO, _("Connected to HTTPS on %s\n"),
-			     vpninfo->hostname);
+		vpn_progress(vpninfo, PRG_INFO, _("Connected to HTTPS on %s with ciphersuite %s\n"),
+			     vpninfo->hostname, vpninfo->cstp_cipher);
 	} else {
-		vpn_progress(vpninfo, PRG_INFO, _("Renegotiated SSL on %s\n"),
-			     vpninfo->hostname);
+		vpn_progress(vpninfo, PRG_INFO, _("Renegotiated SSL on %s with ciphersuite %s\n"),
+			     vpninfo->hostname, vpninfo->cstp_cipher);
 	}
 
 	return 0;
