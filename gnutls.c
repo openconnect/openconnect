@@ -2233,7 +2233,7 @@ int openconnect_open_https(struct openconnect_info *vpninfo)
 	* 28065ce3896b1b0f87972d0bce9b17641ebb69b9
 	*/
 
-        if (!strlen(vpninfo->gnutls_prio)) {
+        if (!strlen(vpninfo->ciphersuite_config)) {
 #ifdef DEFAULT_PRIO
 		default_prio = DEFAULT_PRIO ":%COMPAT";
 #else
@@ -2243,16 +2243,16 @@ int openconnect_open_https(struct openconnect_info *vpninfo)
 		default_prio = "NORMAL:-VERS-SSL3.0:+SHA256:%COMPAT";
 #endif
 
-		snprintf(vpninfo->gnutls_prio, sizeof(vpninfo->gnutls_prio), "%s%s%s",
+		snprintf(vpninfo->ciphersuite_config, sizeof(vpninfo->ciphersuite_config), "%s%s%s",
 		         default_prio, vpninfo->pfs?":-RSA":"", vpninfo->no_tls13?":-VERS-TLS1.3":"");
         }
 
 	err = gnutls_priority_set_direct(vpninfo->https_sess,
-					 vpninfo->gnutls_prio, NULL);
+					 vpninfo->ciphersuite_config, NULL);
 	if (err) {
 		vpn_progress(vpninfo, PRG_ERR,
-			     _("Failed to set TLS priority string (\"%s\"): %s\n"),
-			     vpninfo->gnutls_prio, gnutls_strerror(err));
+			     _("Failed to set GnuTLS priority string (\"%s\"): %s\n"),
+			     vpninfo->ciphersuite_config, gnutls_strerror(err));
 		gnutls_deinit(vpninfo->https_sess);
 		vpninfo->https_sess = NULL;
 		closesocket(ssl_sock);
@@ -2662,7 +2662,7 @@ void *establish_eap_ttls(struct openconnect_info *vpninfo)
 	gnutls_credentials_set(ttls_sess, GNUTLS_CRD_CERTIFICATE, vpninfo->https_cred);
 
 	err = gnutls_priority_set_direct(ttls_sess,
-				   vpninfo->gnutls_prio, NULL);
+				   vpninfo->ciphersuite_config, NULL);
 
 	err = gnutls_handshake(ttls_sess);
 	if (!err) {

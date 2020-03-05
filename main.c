@@ -156,13 +156,13 @@ enum {
 	OPT_COOKIE_ON_STDIN,
 	OPT_CSD_USER,
 	OPT_CSD_WRAPPER,
+	OPT_CIPHERSUITES,
 	OPT_DISABLE_IPV6,
 	OPT_DTLS_CIPHERS,
 	OPT_DTLS12_CIPHERS,
 	OPT_DUMP_HTTP,
 	OPT_FORCE_DPD,
 	OPT_GNUTLS_DEBUG,
-	OPT_GNUTLS_PRIORITY,
 	OPT_JUNIPER,
 	OPT_KEY_PASSWORD_FROM_FSID,
 	OPT_LIBPROXY,
@@ -279,7 +279,9 @@ static const struct option long_options[] = {
 	OPTION("form-entry", 1, 'F'),
 #ifdef OPENCONNECT_GNUTLS
 	OPTION("gnutls-debug", 1, OPT_GNUTLS_DEBUG),
-	OPTION("gnutls-priority", 1, OPT_GNUTLS_PRIORITY),
+	OPTION("gnutls-priority", 1, OPT_CIPHERSUITES),
+#elif defined(OPENCONNECT_OPENSSL)
+	OPTION("openssl-ciphers", 1, OPT_CIPHERSUITES),
 #endif
 	OPTION(NULL, 0, 0)
 };
@@ -1491,15 +1493,20 @@ int main(int argc, char **argv)
 			gnutls_global_set_log_level(atoi(config_arg));
 			gnutls_global_set_log_function(oc_gnutls_log_func);
 			break;
-		case OPT_GNUTLS_PRIORITY:
+#endif
+		case OPT_CIPHERSUITES:
 			fprintf(stderr,
+#ifdef OPENCONNECT_GNUTLS
 			        _("WARNING: You specified --gnutls-priority. This should not be\n"
 			          "         necessary; please report cases where a priority string\n"
+#elif defined(OPENCONNECT_OPENSSL)
+			        _("WARNING: You specified --openssl-ciphers. This should not be\n"
+			          "         necessary; please report cases where a cipher list\n"
+#endif
 			          "         override is necessary to connect to a server\n"
 			          "         to <openconnect-devel@lists.infradead.org>.\n"));
-			strncpy(vpninfo->gnutls_prio, config_arg, sizeof(vpninfo->gnutls_prio) - 1);
+			strncpy(vpninfo->ciphersuite_config, config_arg, sizeof(vpninfo->ciphersuite_config) - 1);
 			break;
-#endif
 		default:
 			usage();
 		}

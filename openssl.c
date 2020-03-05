@@ -1733,8 +1733,21 @@ int openconnect_open_https(struct openconnect_info *vpninfo)
 		if (!vpninfo->no_system_trust)
 			SSL_CTX_set_default_verify_paths(vpninfo->https_ctx);
 
-		if (vpninfo->pfs)
-			SSL_CTX_set_cipher_list(vpninfo->https_ctx, "HIGH:!aNULL:!eNULL:-RSA");
+		if (!strlen(vpninfo->ciphersuite_config)) {
+			strncpy(vpninfo->ciphersuite_config, vpninfo->pfs ? "HIGH:!aNULL:!eNULL:-RSA" : "DEFAULT",
+				sizeof(vpninfo->ciphersuite_config)-1);
+		}
+
+		if (!SSL_CTX_set_cipher_list(vpninfo->https_ctx, vpninfo->ciphersuite_config)) {
+			vpn_progress(vpninfo, PRG_ERR,
+				     _("Failed to set OpenSSL cipher list (\"%s\")\n"),
+				     vpninfo->ciphersuite_config);
+			openconnect_report_ssl_errors(vpninfo);
+			SSL_CTX_free(vpninfo->https_ctx);
+			vpninfo->https_ctx = NULL;
+			closesocket(ssl_sock);
+			return -EIO;
+		}
 
 #ifdef ANDROID_KEYSTORE
 		if (vpninfo->cafile && !strncmp(vpninfo->cafile, "keystore:", 9)) {
