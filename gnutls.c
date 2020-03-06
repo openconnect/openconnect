@@ -529,33 +529,6 @@ static int load_pkcs12_certificate(struct openconnect_info *vpninfo,
 	return 0;
 }
 
-/* Older versions of GnuTLS didn't actually bother to check this, so we'll
-   do it for them. Is there a bug reference for this? Or just the git commit
-   reference (c1ef7efb in master, 5196786c in gnutls_3_0_x-2)? */
-static int check_issuer_sanity(gnutls_x509_crt_t cert, gnutls_x509_crt_t issuer)
-{
-#if GNUTLS_VERSION_NUMBER > 0x030014
-	return 0;
-#else
-	unsigned char id1[512], id2[512];
-	size_t id1_size = 512, id2_size = 512;
-	int err;
-
-	err = gnutls_x509_crt_get_authority_key_id(cert, id1, &id1_size, NULL);
-	if (err)
-		return 0;
-
-	err = gnutls_x509_crt_get_subject_key_id(issuer, id2, &id2_size, NULL);
-	if (err)
-		return 0;
-	if (id1_size == id2_size && !memcmp(id1, id2, id1_size))
-		return 0;
-
-	/* EEP! */
-	return -EIO;
-#endif
-}
-
 static int count_x509_certificates(gnutls_datum_t *datum)
 {
 	int count = 0;
@@ -1616,8 +1589,7 @@ static int load_certificate(struct openconnect_info *vpninfo)
 
 		for (i = 0; i < nr_extra_certs; i++) {
 			if (extra_certs[i] &&
-			    gnutls_x509_crt_check_issuer(last_cert, extra_certs[i]) &&
-			    !check_issuer_sanity(last_cert, extra_certs[i]))
+			    gnutls_x509_crt_check_issuer(last_cert, extra_certs[i]))
 				break;
 		}
 
@@ -1630,16 +1602,6 @@ static int load_certificate(struct openconnect_info *vpninfo)
 			/* Look for it in the system trust cafile too. */
 			err = gnutls_certificate_get_issuer(vpninfo->https_cred,
 							    last_cert, &issuer, 0);
-			/* The check_issuer_sanity() function works fine as a workaround where
-			   it was used above, but when gnutls_certificate_get_issuer() returns
-			   a bogus cert, there's nothing we can do to fix it up. We don't get
-			   to iterate over all the available certs like we can over our own
-			   list. */
-			if (!err && check_issuer_sanity(last_cert, issuer)) {
-				vpn_progress(vpninfo, PRG_ERR,
-					     _("WARNING: GnuTLS returned incorrect issuer certs; authentication may fail!\n"));
-				break;
-			}
 			free_issuer = 0;
 
 #ifdef HAVE_P11KIT
@@ -2386,15 +2348,7 @@ int openconnect_init_ssl(void)
 
 char *get_gnutls_cipher(gnutls_session_t session)
 {
-	char *str;
-#if GNUTLS_VERSION_NUMBER > 0x03010a
-	str = gnutls_session_get_desc(session);
-#else
-	str = gnutls_strdup(gnutls_cipher_suite_get_name(
-		gnutls_kx_get(session), gnutls_cipher_get(session),
-		gnutls_mac_get(session)));
-#endif
-	return str;
+	return gnutls_session_get_desc(session);
 }
 
 int openconnect_sha1(unsigned char *result, void *data, int datalen)

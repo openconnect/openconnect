@@ -35,9 +35,6 @@
 #include <gnutls/dtls.h>
 #include "gnutls.h"
 
-#if GNUTLS_VERSION_NUMBER < 0x030200
-# define GNUTLS_DTLS1_2 202
-#endif
 #if GNUTLS_VERSION_NUMBER < 0x030400
 # define GNUTLS_CIPHER_CHACHA20_POLY1305 23
 #endif
