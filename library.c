@@ -389,11 +389,14 @@ void openconnect_vpninfo_free(struct openconnect_info *vpninfo)
 	free(vpninfo->ifname);
 	free(vpninfo->dtls_cipher);
 	free(vpninfo->peer_cert_hash);
-#if defined(OPENCONNECT_OPENSSL) && defined (HAVE_BIO_METH_FREE)
+#if defined(OPENCONNECT_OPENSSL)
+	free(vpninfo->cstp_cipher);
+#if defined(HAVE_BIO_METH_FREE)
 	if (vpninfo->ttls_bio_meth)
 		BIO_meth_free(vpninfo->ttls_bio_meth);
+#endif
 #elif defined(OPENCONNECT_GNUTLS)
-	gnutls_free(vpninfo->cstp_cipher); /* In OpenSSL this is const */
+	gnutls_free(vpninfo->cstp_cipher);
 #ifdef HAVE_DTLS
 	gnutls_free(vpninfo->gnutls_dtls_cipher);
 #endif

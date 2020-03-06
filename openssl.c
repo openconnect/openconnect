@@ -1670,6 +1670,7 @@ int openconnect_open_https(struct openconnect_info *vpninfo)
 	}
 	free(vpninfo->peer_cert_hash);
 	vpninfo->peer_cert_hash = NULL;
+	free(vpninfo->cstp_cipher);
 	vpninfo->cstp_cipher = NULL;
 
 	ssl_sock = connect_https_socket(vpninfo);
@@ -1878,7 +1879,12 @@ int openconnect_open_https(struct openconnect_info *vpninfo)
 		}
 	}
 
-	vpninfo->cstp_cipher = (char *)SSL_get_cipher_name(https_ssl);
+	if (asprintf(&vpninfo->cstp_cipher, "%s-%s",
+		     SSL_get_version(https_ssl), SSL_get_cipher_name(https_ssl)) < 0) {
+		SSL_free(https_ssl);
+		closesocket(ssl_sock);
+		return -ENOMEM;
+	}
 
 	vpninfo->ssl_fd = ssl_sock;
 	vpninfo->https_ssl = https_ssl;
