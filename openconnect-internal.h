@@ -572,8 +572,8 @@ struct openconnect_info {
 	   have fewer ifdefs and accessor macros for it. */
 	gnutls_session_t dtls_ssl;
 #endif
-	char *cstp_cipher;
-	char *dtls_cipher_desc; /* library-dependent description of DTLS cipher */
+	char *cstp_cipher; /* library-dependent description of TLS cipher */
+	char *dtls_cipher_desc; /* library-dependent description of DTLS cipher, cached for openconnect_get_dtls_cipher() */
 
 	int dtls_state;
 	int dtls_need_reconnect;
@@ -585,8 +585,9 @@ struct openconnect_info {
 
 	uint32_t ift_seq;
 
-	int cisco_dtls12;
-	char *dtls_cipher;
+	int cisco_dtls12; /* If Cisco server sent X-DTLS12-CipherSuite header, rather than X-DTLS-CipherSuite */
+	char *dtls_cipher; /* Value of aforementioned header (PSK-NEGOTIATE, or an OpenSSL cipher name) */
+
 	char *vpnc_script;
 #ifndef _WIN32
 	int uid_csd_given;
