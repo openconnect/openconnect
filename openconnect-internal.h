@@ -571,9 +571,9 @@ struct openconnect_info {
 	   NULL or not or pass it to DTLS_SEND/DTLS_RECV. This way we
 	   have fewer ifdefs and accessor macros for it. */
 	gnutls_session_t dtls_ssl;
-	char *gnutls_dtls_cipher; /* cached for openconnect_get_dtls_cipher() */
 #endif
 	char *cstp_cipher;
+	char *dtls_cipher_desc; /* library-dependent description of DTLS cipher */
 
 	int dtls_state;
 	int dtls_need_reconnect;

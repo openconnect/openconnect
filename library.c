@@ -395,10 +395,14 @@ void openconnect_vpninfo_free(struct openconnect_info *vpninfo)
 	if (vpninfo->ttls_bio_meth)
 		BIO_meth_free(vpninfo->ttls_bio_meth);
 #endif
+	free(vpninfo->cstp_cipher);
+#ifdef HAVE_DTLS
+	free(vpninfo->dtls_cipher_desc);
+#endif
 #elif defined(OPENCONNECT_GNUTLS)
 	gnutls_free(vpninfo->cstp_cipher);
 #ifdef HAVE_DTLS
-	gnutls_free(vpninfo->gnutls_dtls_cipher);
+	gnutls_free(vpninfo->dtls_cipher_desc);
 #endif
 #endif
 	free(vpninfo->dtls_addr);
@@ -1008,23 +1012,27 @@ const char *openconnect_get_dtls_compression(struct openconnect_info * vpninfo)
 
 const char *openconnect_get_dtls_cipher(struct openconnect_info *vpninfo)
 {
+	if (vpninfo->dtls_state != DTLS_CONNECTED || !vpninfo->dtls_ssl) {
 #if defined(OPENCONNECT_GNUTLS)
-	if (vpninfo->dtls_state != DTLS_CONNECTED) {
-		gnutls_free(vpninfo->gnutls_dtls_cipher);
-		vpninfo->gnutls_dtls_cipher = NULL;
+		gnutls_free(vpninfo->dtls_cipher_desc);
+#else
+		free(vpninfo->dtls_cipher_desc);
+#endif
+		vpninfo->dtls_cipher_desc = NULL;
 		return NULL;
 	}
 	/* in DTLS rehandshakes don't switch the ciphersuite as only
 	 * one is enabled. */
-	if (vpninfo->gnutls_dtls_cipher == NULL)
-		vpninfo->gnutls_dtls_cipher = get_gnutls_cipher(vpninfo->dtls_ssl);
-	return vpninfo->gnutls_dtls_cipher;
+	if (vpninfo->dtls_cipher_desc == NULL) {
+#if defined(OPENCONNECT_GNUTLS)
+        vpninfo->dtls_cipher_desc = get_gnutls_cipher(vpninfo->dtls_ssl);
 #else
-	if (vpninfo->dtls_ssl)
-		return SSL_get_cipher(vpninfo->dtls_ssl);
-	else
-		return NULL;
+		if (asprintf(&vpninfo->dtls_cipher_desc, "%s-%s",
+		             SSL_get_version(dtls_ssl), SSL_get_cipher_name(dtls_ssl)) < 0)
+			return NULL;
 #endif
+	}
+    return vpninfo->dtls_cipher_desc;
 }
 
 int openconnect_set_csd_environ(struct openconnect_info *vpninfo,
