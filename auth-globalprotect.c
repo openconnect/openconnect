@@ -323,11 +323,12 @@ err_out:
 static int parse_portal_xml(struct openconnect_info *vpninfo, xmlNode *xml_node, void *cb_data)
 {
 	struct oc_auth_form *form;
-	xmlNode *x = NULL;
+	xmlNode *x, *x2, *x3, *gateways = NULL;
 	struct oc_form_opt_select *opt;
 	struct oc_text_buf *buf = NULL;
 	int max_choices = 0, result;
 	char *portal = NULL;
+	char *hip_interval = NULL;
 
 	form = calloc(1, sizeof(*form));
 	if (!form)
@@ -349,32 +350,45 @@ static int parse_portal_xml(struct openconnect_info *vpninfo, xmlNode *xml_node,
 	/*
 	 * The portal contains a ton of stuff, but basically none of it is
 	 * useful to a VPN client that wishes to give control to the client
-	 * user, as opposed to the VPN administrator.  The exception is the
-	 * list of gateways in policy/gateways/external/list
+	 * user, as opposed to the VPN administrator.  The exceptions are the
+	 * list of gateways in policy/gateways/external/list and the interval
+	 * for HIP checks in policy/hip-collection/hip-report-interval
 	 */
 	if (xmlnode_is_named(xml_node, "policy")) {
-		for (x = xml_node->children, xml_node = NULL; x; x = x->next) {
-			if (xmlnode_is_named(x, "gateways"))
-				xml_node = x;
-			else
+		for (x = xml_node->children; x; x = x->next) {
+			if (xmlnode_is_named(x, "gateways")) {
+				for (x2 = x->children; x2; x2 = x2->next)
+					if (xmlnode_is_named(x2, "external"))
+						for (x3 = x2->children; x3; x3 = x3->next)
+							if (xmlnode_is_named(x3, "list"))
+							    gateways = x3;
+			} else if (xmlnode_is_named(x, "hip-collection")) {
+				for (x2 = x->children; x2; x2 = x2->next) {
+					if (!xmlnode_get_val(x2, "hip-report-interval", &hip_interval)) {
+						int sec = atoi(hip_interval);
+						if (!vpninfo->csd_wrapper)
+							vpn_progress(vpninfo, PRG_INFO, _("Ignoring portal's HIP report interval (%d minutes), because no HIP report script provided.\n"),
+										 sec/60);
+						else if (vpninfo->trojan_interval)
+							vpn_progress(vpninfo, PRG_INFO, _("Ignoring portal's HIP report interval (%d minutes), because interval is already set to %d minutes.\n"),
+										 sec/60, vpninfo->trojan_interval/60);
+						else {
+							vpninfo->trojan_interval = sec;
+							vpn_progress(vpninfo, PRG_INFO, _("Portal set HIP report interval to %d minutes).\n"),
+										 sec/60);
+						}
+					}
+				}
+			} else
 				xmlnode_get_val(x, "portal-name", &portal);
 		}
 	}
 
-	if (xml_node) {
-		for (xml_node = xml_node->children; xml_node; xml_node = xml_node->next)
-			if (xmlnode_is_named(xml_node, "external")) {
-				for (xml_node = xml_node->children; xml_node; xml_node = xml_node->next) {
-					if (xmlnode_is_named(xml_node, "list"))
-						goto gateways;
-				}
-				break;
-			}
+	if (!gateways) {
+		result = -EINVAL;
+		goto out;
 	}
-	result = -EINVAL;
-	goto out;
 
-gateways:
 	if (vpninfo->write_new_config) {
 		buf = buf_alloc();
 		buf_append(buf, "<GPPortal>\n  <ServerList>\n");
@@ -389,7 +403,7 @@ gateways:
 	}
 
 	/* first, count the number of gateways */
-	for (x = xml_node->children; x; x = x->next)
+	for (x = gateways->children; x; x = x->next)
 		if (xmlnode_is_named(x, "entry"))
 			max_choices++;
 
@@ -401,17 +415,17 @@ gateways:
 
 	/* each entry looks like <entry name="host[:443]"><description>Label</description></entry> */
 	vpn_progress(vpninfo, PRG_INFO, _("%d gateway servers available:\n"), max_choices);
-	for (xml_node = xml_node->children; xml_node; xml_node = xml_node->next) {
-		if (xmlnode_is_named(xml_node, "entry")) {
+	for (x = gateways->children; x; x = x->next) {
+		if (xmlnode_is_named(x, "entry")) {
 			struct oc_choice *choice = calloc(1, sizeof(*choice));
 			if (!choice) {
 				result = -ENOMEM;
 				goto out;
 			}
 
-			xmlnode_get_prop(xml_node, "name", &choice->name);
-			for (x = xml_node->children; x; x=x->next)
-				if (!xmlnode_get_val(x, "description", &choice->label)) {
+			xmlnode_get_prop(x, "name", &choice->name);
+			for (x2 = x->children; x2; x2=x2->next)
+				if (!xmlnode_get_val(x2, "description", &choice->label)) {
 					if (vpninfo->write_new_config) {
 						buf_append(buf, "      <HostEntry><HostName>");
 						buf_append_xmlescaped(buf, choice->label);
@@ -424,6 +438,12 @@ gateways:
 			vpn_progress(vpninfo, PRG_INFO, _("  %s (%s)\n"),
 				     choice->label, choice->name);
 		}
+	}
+	if (!opt->nr_choices) {
+		vpn_progress(vpninfo, PRG_ERR,
+					 _("GlobalProtect portal configuration lists no gateway servers.\n"));
+		result = -EINVAL;
+		goto out;
 	}
 	if (!vpninfo->authgroup && opt->nr_choices)
 		vpninfo->authgroup = strdup(opt->choices[0]->name);
@@ -452,6 +472,7 @@ gateways:
 out:
 	buf_free(buf);
 	free(portal);
+	free(hip_interval);
 	free_auth_form(form);
 	return result;
 }

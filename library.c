@@ -580,6 +580,11 @@ void openconnect_set_dpd(struct openconnect_info *vpninfo, int min_seconds)
 		vpninfo->dtls_times.dpd = vpninfo->ssl_times.dpd = 2;
 }
 
+void openconnect_set_trojan_interval(struct openconnect_info *vpninfo, int seconds)
+{
+	vpninfo->trojan_interval = seconds;
+}
+
 int openconnect_get_idle_timeout(struct openconnect_info *vpninfo)
 {
 	return vpninfo->idle_timeout;

@@ -723,6 +723,13 @@ static int gpst_connect(struct openconnect_info *vpninfo)
 	const char start_tunnel[12] = "START_TUNNEL"; /* NOT zero-terminated */
 	char buf[256];
 
+	/* We do NOT actually start the HTTPS tunnel if ESP is enabled and we received
+	 * ESP keys, because the ESP keys become invalid as soon as the HTTPS tunnel
+	 * is connected! >:-(
+	 */
+	if (vpninfo->dtls_state != DTLS_DISABLED && vpninfo->dtls_state != DTLS_NOSECRET)
+		return 0;
+
 	/* Connect to SSL VPN tunnel */
 	vpn_progress(vpninfo, PRG_DEBUG,
 		     _("Connecting to HTTPS tunnel endpoint ...\n"));
@@ -910,9 +917,14 @@ static int run_hip_script(struct openconnect_info *vpninfo)
 	if (!vpninfo->csd_wrapper) {
 		vpn_progress(vpninfo, PRG_ERR,
 		             _("WARNING: Server asked us to submit HIP report with md5sum %s.\n"
-		               "VPN connectivity may be disabled or limited without HIP report submission.\n"
-		               "You need to provide a --csd-wrapper argument with the HIP report submission script.\n"),
-		             vpninfo->csd_token);
+		               "    VPN connectivity may be disabled or limited without HIP report submission.\n    %s\n"),
+		             vpninfo->csd_token,
+#if defined(_WIN32) || defined(__native_client__)
+		             _("However, running the HIP report submission script on this platform is not yet implemented.")
+#else
+		             _("You need to provide a --csd-wrapper argument with the HIP report submission script.")
+#endif
+			);
 		/* XXX: Many GlobalProtect VPNs work fine despite allegedly requiring HIP report submission */
 		return 0;
 	}
@@ -1003,6 +1015,22 @@ static int run_hip_script(struct openconnect_info *vpninfo)
 #endif /* !_WIN32 && !__native_client__ */
 }
 
+static int check_and_maybe_submit_hip_report(struct openconnect_info *vpninfo)
+{
+	int ret;
+
+	ret = check_or_submit_hip_report(vpninfo, NULL);
+	if (ret == -EAGAIN) {
+		vpn_progress(vpninfo, PRG_DEBUG,
+					 _("Gateway says HIP report submission is needed.\n"));
+		ret = run_hip_script(vpninfo);
+	} else if (ret == 0)
+		vpn_progress(vpninfo, PRG_DEBUG,
+					 _("Gateway says no HIP report submission is needed.\n"));
+
+	return ret;
+}
+
 int gpst_setup(struct openconnect_info *vpninfo)
 {
 	int ret;
@@ -1016,24 +1044,24 @@ int gpst_setup(struct openconnect_info *vpninfo)
 	if (ret)
 		goto out;
 
-	/* Check HIP */
-	ret = check_or_submit_hip_report(vpninfo, NULL);
-	if (ret == -EAGAIN) {
-		vpn_progress(vpninfo, PRG_DEBUG,
-					 _("Gateway says HIP report submission is needed.\n"));
-		ret = run_hip_script(vpninfo);
-		if (ret != 0)
+	/* Always check HIP once (even if no --csd-wrapper specified) */
+	if (!vpninfo->last_trojan) {
+		ret = check_and_maybe_submit_hip_report(vpninfo);
+		if (ret)
 			goto out;
-	} else if (ret == 0)
-		vpn_progress(vpninfo, PRG_DEBUG,
-					 _("Gateway says no HIP report submission is needed.\n"));
+	}
 
-	/* We do NOT actually start the HTTPS tunnel yet if we want to
-	 * use ESP, because the ESP tunnel won't work if the HTTPS tunnel
-	 * is connected! >:-(
+	/* Default HIP re-checking to 3600 seconds unless already set by
+	 * --force-trojan or portal config. There's no point to rechecking
+	 * HIP if --csd-wrapper wasn't specified: either the VPN will
+	 * work despite lack of HIP submission, or it won't.
 	 */
-	if (vpninfo->dtls_state == DTLS_DISABLED || vpninfo->dtls_state == DTLS_NOSECRET)
-		ret = gpst_connect(vpninfo);
+	if (vpninfo->csd_wrapper && !vpninfo->trojan_interval)
+		vpninfo->trojan_interval = 3600;
+	vpninfo->last_trojan = time(NULL);
+
+	/* Connect tunnel immediately if ESP is not going to be used */
+	ret = gpst_connect(vpninfo);
 
 out:
 	return ret;
@@ -1064,23 +1092,26 @@ int gpst_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable)
 				*timeout = vpninfo->dtls_times.dpd * 1000;
 		/* fall through */
 	case DTLS_CONNECTED:
-		/* Rekey if needed */
+		/* Rekey or check-and-resubmit HIP if needed */
 		if (keepalive_action(&vpninfo->ssl_times, timeout) == KA_REKEY)
 			goto do_rekey;
+		else if (trojan_check_deadline(vpninfo, timeout))
+			goto do_recheck_hip;
 		return 0;
 	case DTLS_SECRET:
 	case DTLS_SLEEPING:
-		if (!ka_check_deadline(timeout, time(NULL), vpninfo->new_dtls_started + 5)) {
-			/* Allow 5 seconds after configuration for ESP to start */
+		/* Allow 5 seconds after configuration for ESP to start */
+		if (!ka_check_deadline(timeout, time(NULL), vpninfo->new_dtls_started + 5))
 			return 0;
-		} else {
-			/* ... before we switch to HTTPS instead */
-			vpn_progress(vpninfo, PRG_ERR,
+
+		/* ... before we switch to HTTPS instead */
+		vpn_progress(vpninfo, PRG_ERR,
 				     _("Failed to connect ESP tunnel; using HTTPS instead.\n"));
-			if (gpst_connect(vpninfo)) {
-				vpninfo->quit_reason = "GPST connect failed";
-				return 1;
-			}
+		/* XX: gpst_connect does nothing if ESP is enabled and has secrets */
+		vpninfo->dtls_state = DTLS_NOSECRET;
+		if (gpst_connect(vpninfo)) {
+			vpninfo->quit_reason = "GPST connect failed";
+			return 1;
 		}
 		break;
 	case DTLS_NOSECRET:
@@ -1217,6 +1248,29 @@ int gpst_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable)
 		vpninfo->current_ssl_pkt = NULL;
 	}
 
+	if (trojan_check_deadline(vpninfo, timeout)) {
+	do_recheck_hip:
+		vpn_progress(vpninfo, PRG_INFO, _("GlobalProtect HIP check due\n"));
+		/* We could just be lazy and treat this as a reconnect, but that
+		 * would require us to repull the routing configuration and new ESP
+		 * keys, instead of just redoing the HIP check/submission.
+		 *
+		 * Therefore we'll just close the HTTPS tunnel (if up),
+		 * redo the HIP check/submission, and reconnect the HTTPS tunnel
+		 * if needed.
+		 */
+		openconnect_close_https(vpninfo, 0);
+		ret = check_and_maybe_submit_hip_report(vpninfo);
+		if (ret) {
+			vpn_progress(vpninfo, PRG_ERR, _("HIP check or report failed\n"));
+			vpninfo->quit_reason = "HIP check or report failed";
+			return ret;
+		}
+		if (gpst_connect(vpninfo))
+			vpninfo->quit_reason = "GPST connect failed";
+		return 1;
+	}
+
 	switch (keepalive_action(&vpninfo->ssl_times, timeout)) {
 	case KA_REKEY:
 	do_rekey:
@@ -1344,7 +1398,7 @@ int gpst_esp_send_probes(struct openconnect_info *vpninfo)
 		iph->ip_id = htons(0x4747); /* what the Windows client uses */
 		iph->ip_off = htons(IP_DF); /* don't fragment, frag offset = 0 */
 		iph->ip_ttl = 64; /* hops */
-		iph->ip_p = 1; /* ICMP */
+		iph->ip_p = IPPROTO_ICMP;
 		iph->ip_src.s_addr = inet_addr(vpninfo->ip_info.addr);
 		iph->ip_dst.s_addr = vpninfo->esp_magic;
 		iph->ip_sum = csum((uint16_t *)iph, sizeof(*iph)/2);
@@ -1374,10 +1428,10 @@ int gpst_esp_catch_probe(struct openconnect_info *vpninfo, struct pkt *pkt)
 	struct ip *iph = (void *)(pkt->data);
 
 	return ( pkt->len >= 21 && iph->ip_v==4 /* IPv4 header */
-		 && iph->ip_p==1 /* IPv4 protocol field == ICMP */
+		 && iph->ip_p==IPPROTO_ICMP /* IPv4 protocol field == ICMP */
 		 && iph->ip_src.s_addr == vpninfo->esp_magic /* source == magic address */
 		 && pkt->len >= (iph->ip_hl<<2) + ICMP_MINLEN + sizeof(magic_ping_payload) /* No short-packet segfaults */
-		 && pkt->data[iph->ip_hl<<2]==0 /* ICMP reply */
+		 && pkt->data[iph->ip_hl<<2]==ICMP_ECHOREPLY /* ICMP reply */
 		 && !memcmp(&pkt->data[(iph->ip_hl<<2) + ICMP_MINLEN], magic_ping_payload, sizeof(magic_ping_payload)) /* Same magic payload in response */
 	       );
 }

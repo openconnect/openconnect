@@ -398,3 +398,17 @@ int keepalive_action(struct keepalive_info *ka, int *timeout)
 
 	return KA_NONE;
 }
+
+int trojan_check_deadline(struct openconnect_info *vpninfo, int *timeout)
+{
+	time_t now = time(NULL);
+
+	if (vpninfo->trojan_interval &&
+	    ka_check_deadline(timeout, now,
+			      vpninfo->last_trojan + vpninfo->trojan_interval)) {
+		vpninfo->last_trojan = now;
+		return 1;
+	} else {
+		return 0;
+	}
+}

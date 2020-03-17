@@ -15,6 +15,7 @@ openconnect \- Multi-protocol VPN client, for Cisco AnyConnect VPNs and others
 .OP \-d,\-\-deflate
 .OP \-D,\-\-no\-deflate
 .OP \-\-force\-dpd interval
+.OP \-\-force\-trojan interval
 .OP \-F,\-\-form\-entry form:opt=value
 .OP \-g,\-\-usergroup group
 .OP \-h,\-\-help
@@ -175,7 +176,7 @@ compression can be disabled by setting the mode to
 .B \-\-force\-dpd=INTERVAL
 Use
 .I INTERVAL
-as minimum Dead Peer Detection interval for CSTP and DTLS, forcing use of DPD even when the server doesn't request it.
+as minimum Dead Peer Detection interval (in seconds) for CSTP and DTLS, forcing use of DPD even when the server doesn't request it.
 .TP
 .B \-g,\-\-usergroup=GROUP
 Use
@@ -232,6 +233,12 @@ Drop privileges during execution of trojan binary or script (CSD, TNCC, or HIP).
 Run
 .I SCRIPT
 instead of the trojan binary or script.
+.TP
+.B \-\-force-trojan=INTERVAL
+Use
+.I INTERVAL
+as interval (in seconds) for repeat execution of Trojan binary or script, overriding default and/or
+server-set interval.
 .TP
 .B \-m,\-\-mtu=MTU
 Request
