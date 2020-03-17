@@ -224,10 +224,11 @@ struct gp_login_arg {
 	unsigned show:1;
 	unsigned warn_missing:1;
 	unsigned err_missing:1;
+	unsigned unknown:1;
 	const char *check;
 };
 static const struct gp_login_arg gp_login_args[] = {
-	{ .opt="unknown-arg0", .show=1 },
+	{ .unknown=1 },                                 /* seemingly always empty */
 	{ .opt="authcookie", .save=1, .err_missing=1 },
 	{ .opt="persistent-cookie", .warn_missing=1 },  /* 40 hex digits; persists across sessions */
 	{ .opt="portal", .save=1, .warn_missing=1 },
@@ -235,22 +236,27 @@ static const struct gp_login_arg gp_login_args[] = {
 	{ .opt="authentication-source", .show=1 },      /* LDAP-auth, AUTH-RADIUS_RSA_OTP, etc. */
 	{ .opt="configuration", .warn_missing=1 },      /* usually vsys1 (sometimes vsys2, etc.) */
 	{ .opt="domain", .save=1, .warn_missing=1 },
-	{ .opt="unknown-arg8", .show=1 },
-	{ .opt="unknown-arg9", .show=1 },
-	{ .opt="unknown-arg10", .show=1 },
-	{ .opt="unknown-arg11", .show=1 },
+	{ .unknown=1 },                                 /* 4 arguments, seemingly always empty */
+	{ .unknown=1 },
+	{ .unknown=1 },
+	{ .unknown=1 },
 	{ .opt="connection-type", .err_missing=1, .check="tunnel" },
 	{ .opt="password-expiration-days", .show=1 },   /* days until password expires, if not -1 */
 	{ .opt="clientVer", .err_missing=1, .check="4100" },
 	{ .opt="preferred-ip", .save=1 },
-	{ .opt=NULL },
+	{ .opt="portal-userauthcookie", .show=1},
+	{ .opt="portal-prelogonuserauthcookie", .show=1},
+	{ .unknown=1 },
+	{ .unknown=1 },				        /* have seen value of "4" in some logs */
 };
+static const int gp_login_nargs = (sizeof(gp_login_args)/sizeof(*gp_login_args));
 
 static int parse_login_xml(struct openconnect_info *vpninfo, xmlNode *xml_node, void *cb_data)
 {
 	struct oc_text_buf *cookie = buf_alloc();
 	char *value = NULL;
 	const struct gp_login_arg *arg;
+	int argn, unknown_args = 0, fatal_args = 0;
 
 	if (!xmlnode_is_named(xml_node, "jnlp"))
 		goto err_out;
@@ -263,43 +269,65 @@ static int parse_login_xml(struct openconnect_info *vpninfo, xmlNode *xml_node, 
 		goto err_out;
 
 	xml_node = xml_node->children;
-	for (arg = gp_login_args; arg->opt; arg++) {
+	/* XXX: Loop as long as there are EITHER more known arguments OR more XML tags,
+	 * so that we catch both more-than-expected and fewer-than-expected arguments. */
+	for (argn = 0; argn < gp_login_nargs || xml_node; argn++) {
 		while (xml_node && xml_node->type != XML_ELEMENT_NODE)
 			xml_node = xml_node->next;
 
-		if (xml_node && !xmlnode_get_val(xml_node, "argument", &value)) {
+		if (!xml_node)
+			value = NULL;
+		else if (!xmlnode_get_val(xml_node, "argument", &value)) {
 			if (value && (!value[0] || !strcmp(value, "(null)") || !strcmp(value, "-1"))) {
 				free(value);
 				value = NULL;
 			}
 			xml_node = xml_node->next;
-		} else if (xml_node)
+		} else
 			goto err_out;
 
-		if (arg->check && (!value || strcmp(value, arg->check))) {
-			vpn_progress(vpninfo, arg->err_missing ? PRG_ERR : PRG_DEBUG,
-				     _("GlobalProtect login returned %s=%s (expected %s)\n"),
-				     arg->opt, value, arg->check);
-			if (arg->err_missing)
-				goto err_out;
+		/* XX: argument 0 is unknown so we reuse this for extra arguments */
+		arg = &gp_login_args[(argn < gp_login_nargs) ? argn : 0];
+
+		if (arg->unknown && value) {
+			unknown_args++;
+			vpn_progress(vpninfo, PRG_ERR,
+						 _("GlobalProtect login returned unexpected argument value arg[%d]=%s\n"),
+						 argn, value);
+		} else if (arg->check && (!value || strcmp(value, arg->check))) {
+			unknown_args++;
+			fatal_args += arg->err_missing;
+            vpn_progress(vpninfo, PRG_ERR,
+			             _("GlobalProtect login returned %s=%s (expected %s)\n"),
+			             arg->opt, value, arg->check);
 		} else if ((arg->err_missing || arg->warn_missing) && !value) {
-			vpn_progress(vpninfo, arg->err_missing ? PRG_ERR : PRG_DEBUG,
-				     _("GlobalProtect login returned empty or missing %s\n"),
-				     arg->opt);
-			if (arg->err_missing)
-				goto err_out;
+			unknown_args++;
+			fatal_args += arg->err_missing;
+			vpn_progress(vpninfo, PRG_ERR,
+			             _("GlobalProtect login returned empty or missing %s\n"),
+			             arg->opt);
 		} else if (value && arg->show) {
 			vpn_progress(vpninfo, PRG_INFO,
-				     _("GlobalProtect login returned %s=%s\n"),
-				     arg->opt, value);
+			             _("GlobalProtect login returned %s=%s\n"),
+			             arg->opt, value);
 		}
 
 		if (value && arg->save)
 			append_opt(cookie, arg->opt, value);
+
 		free(value);
 		value = NULL;
 	}
 	append_opt(cookie, "computer", vpninfo->localname);
+
+	if (unknown_args)
+		vpn_progress(vpninfo, PRG_ERR,
+					 _("Please report %d unexpected values above (of which %d fatal) to <openconnect-devel@lists.infradead.org>\n"),
+					 unknown_args, fatal_args);
+	if (fatal_args) {
+		buf_free(cookie);
+		return -EPERM;
+	}
 
 	if (!buf_error(cookie)) {
 		vpninfo->cookie = cookie->data;
