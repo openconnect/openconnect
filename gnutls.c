@@ -56,6 +56,14 @@ static int gnutls_pin_callback(void *priv, int attempt, const char *uri,
 #define GNUTLS_E_PREMATURE_TERMINATION GNUTLS_E_UNEXPECTED_PACKET_LENGTH
 #endif
 
+/* GnuTLS 3.5.0 added this flag to send a client cert, even if its issuer is
+ * mismatched to the list of issuers requested by the server. OpenSSL does
+ * this by default.
+ * https://github.com/curl/curl/issues/1411
+ */
+#ifndef GNUTLS_FORCE_CLIENT_CERT
+#define GNUTLS_FORCE_CLIENT_CERT 0
+#endif
 
 /* Compile-time optimisable GnuTLS version check. We should never be
  * run against a version of GnuTLS which is *older* than the one we
