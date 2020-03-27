@@ -395,7 +395,6 @@ void openconnect_vpninfo_free(struct openconnect_info *vpninfo)
 	if (vpninfo->ttls_bio_meth)
 		BIO_meth_free(vpninfo->ttls_bio_meth);
 #endif
-	free(vpninfo->cstp_cipher);
 #ifdef HAVE_DTLS
 	free(vpninfo->dtls_cipher_desc);
 #endif
@@ -1028,7 +1027,7 @@ const char *openconnect_get_dtls_cipher(struct openconnect_info *vpninfo)
         vpninfo->dtls_cipher_desc = get_gnutls_cipher(vpninfo->dtls_ssl);
 #else
 		if (asprintf(&vpninfo->dtls_cipher_desc, "%s-%s",
-		             SSL_get_version(dtls_ssl), SSL_get_cipher_name(dtls_ssl)) < 0)
+		             SSL_get_version(vpninfo->dtls_ssl), SSL_get_cipher_name(vpninfo->dtls_ssl)) < 0)
 			return NULL;
 #endif
 	}

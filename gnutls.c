@@ -72,8 +72,8 @@ static char tls_library_version[32] = "";
 const char *openconnect_get_tls_library_version()
 {
 	if (!*tls_library_version) {
-		snprintf(tls_library_version, sizeof(tls_library_version), "GnuTLS v%d.%d.%d",
-		         (GNUTLS_VERSION_NUMBER>>16), (GNUTLS_VERSION_NUMBER>>8)&0xff, GNUTLS_VERSION_NUMBER&0xff);
+		snprintf(tls_library_version, sizeof(tls_library_version), "GnuTLS %s",
+		         gnutls_check_version(NULL));
 	}
 	return tls_library_version;
 }

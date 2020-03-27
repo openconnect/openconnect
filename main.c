@@ -593,7 +593,7 @@ static void print_build_opts(void)
 {
 	const char *comma = ", ", *sep = comma + 1;
 
-	printf(_("Built with %s. Features present:"), openconnect_get_tls_library_version());
+	printf(_("Using %s. Features present:"), openconnect_get_tls_library_version());
 
 	if (openconnect_has_tss_blob_support()) {
 		printf("%sTPM", sep);

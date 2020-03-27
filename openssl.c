@@ -24,6 +24,7 @@
 
 #include "openconnect-internal.h"
 
+#include <openssl/crypto.h>
 #include <openssl/ssl.h>
 #include <openssl/err.h>
 #include <openssl/engine.h>
@@ -53,27 +54,9 @@ static char tls_library_version[32] = "";
 
 const char *openconnect_get_tls_library_version()
 {
-	char patch[1] = "";
-	char status[10];
-#ifdef OPENSSL_VERSION_NUMBER
-	const char *name = "OpenSSL";
-	const int vn = (int) OPENSSL_VERSION_NUMBER;
-#elif defined(LIBRESSL_VERSION_NUMBER)
-	const char *name = "LibreSSL";
-	const int vn = (int) LIBRESSL_VERSION_NUMBER;
-#endif
-
 	if (!*tls_library_version) {
-		/* https://www.openssl.org/docs/man1.1.0/man3/OPENSSL_VERSION_NUMBER.html */
-		patch[0] = ((vn>>4)&0xff) ? (((vn>>4)&0xff) + 'a' - 1) : 0;
-		switch (vn & 0xf) {
-		case 0:   snprintf(status, sizeof(status), "dev"); break;
-		case 0xf: snprintf(status, sizeof(status), "release"); break;
-		default:  snprintf(status, sizeof(status), "beta %d", vn & 0xf);
-		}
-		snprintf(tls_library_version, sizeof(tls_library_version), "%s v%d.%d.%d%.1s %s",
-		         name, vn>>28, (vn>>20)&0xff, (vn>>12)&0xff,
-		         patch, status);
+		strncpy(tls_library_version, SSLeay_version(SSLEAY_VERSION), sizeof(tls_library_version));
+		tls_library_version[sizeof(tls_library_version)-1]='\0';
 	}
 	return tls_library_version;
 }
