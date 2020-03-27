@@ -44,9 +44,9 @@ environment, without having to manually give it the <tt>--proxy</tt> argument
 on the command line.</p>
 
 <h2>Install vpnc-script</h2>
- <p>OpenConnect requires a default <a href="vpnc-script.html">vpnc-script</a> for
- network configuration (routing and DNS). It needs to be told at compile time
- where to find the script.</p>
+ <p>OpenConnect should be given a default <a href="vpnc-script.html">vpnc-script</a>
+ for network configuration (routing and DNS) at compile-time. This can be overriden
+ at runtime (with <tt>--script</tt>).</p>
  <p>The <tt>configure</tt> script will check whether <tt>/etc/vpnc/vpnc-script</tt>
  exists and can be executed, and will fail if not. If you don't already have
  a copy then you should install one. It might be in a separate <tt>vpnc-script</tt>
@@ -82,6 +82,19 @@ If you want it to use OpenSSL instead, then add <tt>--without-gnutls</tt> to the
 <b>development</b> packages for all the required libraries mentioned above. If
 it still doesn't build, please send the full output in a plain-text mail to the
 <a href="mail.html">mailing list</a>.</p>
+
+
+<h2>Test suite</h2>
+
+<p>The included test suite can be run as <tt>make check</tt>.</p>
+
+<p>It depends on the following programs and libraries being available:</p>
+<ul>
+  <li><a href="/ocserv">ocserv</a></li>
+  <li><a href="https://cwrap.org/socket_wrapper.html">socket_wrapper</a></li>
+  <li><a href="https://cwrap.org/uid_wrapper.html">uid_wrapper</a></li>
+</ul>
+
 
 
 <h2>Test suite</h2>
