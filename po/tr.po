@@ -1474,8 +1474,8 @@ msgstr ""
 
 #: gnutls.c:1638
 #, c-format
-msgid "Got next CA '%s' from PKCS11\n"
-msgstr "PKCS11'dan sonraki CA '%s' alındı\n"
+msgid "Got next CA '%s' from PKCS#11\n"
+msgstr "PKCS#11'dan sonraki CA '%s' alındı\n"
 
 #: gnutls.c:1664
 msgid "Failed to allocate memory for supporting certificates\n"

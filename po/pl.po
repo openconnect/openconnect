@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: NetworkManager-openconnect\n"
 "Report-Msgid-Bugs-To: openconnect-devel@lists.infradead.org\n"
-"POT-Creation-Date: 2020-03-30 09:58+0100\n"
+"POT-Creation-Date: 2020-03-30 12:13+0100\n"
 "PO-Revision-Date: 2020-01-19 13:25+0100\n"
 "Last-Translator: Piotr Drąg <piotrdrag@gmail.com>\n"
 "Language-Team: Polish <community-poland@mozilla.org>\n"
@@ -140,9 +140,9 @@ msgstr "Serwer nie jest portalem ani bramą GlobalProtect.\n"
 msgid "Logout failed.\n"
 msgstr "Wylogowanie się nie powiodło.\n"
 
-#: auth-globalprotect.c:709
-msgid "Logout successful\n"
-msgstr "Pomyślnie wylogowano\n"
+#: auth-globalprotect.c:709 oncp.c:1283
+msgid "Logout successful.\n"
+msgstr "Pomyślnie wylogowano.\n"
 
 #: auth-juniper.c:142
 #, c-format
@@ -1496,7 +1496,7 @@ msgstr "Nie otrzymano wystawiającego z PKCS#11\n"
 
 #: gnutls.c:1638
 #, c-format
-msgid "Got next CA '%s' from PKCS11\n"
+msgid "Got next CA '%s' from PKCS#11\n"
 msgstr "Otrzymano następne CA „%s” z PKCS#11\n"
 
 #: gnutls.c:1664
@@ -3846,10 +3846,6 @@ msgstr "Wychodzący pakiet:\n"
 #: oncp.c:1149
 msgid "Sent ESP enable control packet\n"
 msgstr "Wysłano pakiet kontroli włączenia ESP\n"
-
-#: oncp.c:1283
-msgid "Logout successful.\n"
-msgstr "Pomyślnie wylogowano.\n"
 
 #: openconnect-internal.h:1179 openconnect-internal.h:1187
 #, c-format

@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: network-manager-openconnect\n"
 "Report-Msgid-Bugs-To: openconnect-devel@lists.infradead.org\n"
-"POT-Creation-Date: 2020-03-30 09:58+0100\n"
+"POT-Creation-Date: 2020-03-30 12:13+0100\n"
 "PO-Revision-Date: 2019-01-26 15:53+0100\n"
 "Last-Translator: Alan Mortensen <alanmortensen.am@gmail.com>\n"
 "Language-Team: Dansk-gruppen <dansk@dansk-gruppen.dk>\n"
@@ -145,9 +145,8 @@ msgstr "Serveren er hverken en GlobalProtect-portal eller -gateway.\n"
 msgid "Logout failed.\n"
 msgstr "Logout mislykkedes.\n"
 
-# Punktum i den tilsvarende med "mislykkedes"
-#: auth-globalprotect.c:709
-msgid "Logout successful\n"
+#: auth-globalprotect.c:709 oncp.c:1283
+msgid "Logout successful.\n"
 msgstr "Logout lykkedes.\n"
 
 #: auth-juniper.c:142
@@ -1504,7 +1503,7 @@ msgstr "Fik ingen udsteder fra PKCS#11\n"
 # Mangler # på engelsk
 #: gnutls.c:1638
 #, c-format
-msgid "Got next CA '%s' from PKCS11\n"
+msgid "Got next CA '%s' from PKCS#11\n"
 msgstr "Fik næste CA “%s” fra PKCS#11\n"
 
 #: gnutls.c:1664
@@ -3839,10 +3838,6 @@ msgstr "Pakke udgående:\n"
 #: oncp.c:1149
 msgid "Sent ESP enable control packet\n"
 msgstr "Sendte kontrolpakke til aktivering af ESP\n"
-
-#: oncp.c:1283
-msgid "Logout successful.\n"
-msgstr "Logout lykkedes.\n"
 
 #: openconnect-internal.h:1179 openconnect-internal.h:1187
 #, c-format

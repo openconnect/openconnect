@@ -1475,7 +1475,7 @@ msgstr "Нисам добио издавача из ПКЦС#11\n"
 
 #: gnutls.c:1638
 #, c-format
-msgid "Got next CA '%s' from PKCS11\n"
+msgid "Got next CA '%s' from PKCS#11\n"
 msgstr "Добих следећег издавача уверења „%s“ из ПКЦС11\n"
 
 #: gnutls.c:1664

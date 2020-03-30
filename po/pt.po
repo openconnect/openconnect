@@ -1482,7 +1482,7 @@ msgstr ""
 
 #: gnutls.c:1638
 #, c-format
-msgid "Got next CA '%s' from PKCS11\n"
+msgid "Got next CA '%s' from PKCS#11\n"
 msgstr "Obtido CA \"%s\" seguinte de PKCS#11\n"
 
 #: gnutls.c:1664

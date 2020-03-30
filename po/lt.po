@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: network-manager-openconnect master\n"
 "Report-Msgid-Bugs-To: openconnect-devel@lists.infradead.org\n"
-"POT-Creation-Date: 2020-03-30 09:58+0100\n"
+"POT-Creation-Date: 2020-03-30 12:13+0100\n"
 "PO-Revision-Date: 2018-12-16 13:45+0200\n"
 "Last-Translator: Aurimas Černius <aurisc4@gmail.com>\n"
 "Language-Team: Lietuvių <gnome-lt@lists.akl.lt>\n"
@@ -140,8 +140,8 @@ msgstr "Serveris nėra nei GlobalProtect portalas, nei tinklų sietuvas.\n"
 msgid "Logout failed.\n"
 msgstr "Atsijungimas nepavyko.\n"
 
-#: auth-globalprotect.c:709
-msgid "Logout successful\n"
+#: auth-globalprotect.c:709 oncp.c:1283
+msgid "Logout successful.\n"
 msgstr "Atsijungimas sėkmingas.\n"
 
 #: auth-juniper.c:142
@@ -1476,8 +1476,8 @@ msgstr "Negauta jokio išdavėjo iš PKCS#11\n"
 
 #: gnutls.c:1638
 #, c-format
-msgid "Got next CA '%s' from PKCS11\n"
-msgstr "Gauta kita LĮ „%s“ iš PKCS11\n"
+msgid "Got next CA '%s' from PKCS#11\n"
+msgstr "Gauta kita LĮ „%s“ iš PKCS#11\n"
 
 #: gnutls.c:1664
 msgid "Failed to allocate memory for supporting certificates\n"
@@ -3809,10 +3809,6 @@ msgstr "Išeinantys paketai:\n"
 #: oncp.c:1149
 msgid "Sent ESP enable control packet\n"
 msgstr "Išsiųsta ESP įjungimo kontrolinis paketas\n"
-
-#: oncp.c:1283
-msgid "Logout successful.\n"
-msgstr "Atsijungimas sėkmingas.\n"
 
 #: openconnect-internal.h:1179 openconnect-internal.h:1187
 #, c-format

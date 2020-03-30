@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: network-manager-openconnect\n"
 "Report-Msgid-Bugs-To: openconnect-devel@lists.infradead.org\n"
-"POT-Creation-Date: 2020-03-30 09:58+0100\n"
+"POT-Creation-Date: 2020-03-30 12:13+0100\n"
 "PO-Revision-Date: 2020-02-02 12:10+0200\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <kde-i18n-uk@kde.org>\n"
@@ -143,9 +143,9 @@ msgstr "Сервер не є ні порталом GlobalProtect, ні шлюз�
 msgid "Logout failed.\n"
 msgstr "Не вдалося вийти.\n"
 
-#: auth-globalprotect.c:709
-msgid "Logout successful\n"
-msgstr "Успішний вихід\n"
+#: auth-globalprotect.c:709 oncp.c:1283
+msgid "Logout successful.\n"
+msgstr "Успішний вихід.\n"
 
 #: auth-juniper.c:142
 #, c-format
@@ -1510,8 +1510,8 @@ msgstr "Не отримати видавця з PKCS#11\n"
 
 #: gnutls.c:1638
 #, c-format
-msgid "Got next CA '%s' from PKCS11\n"
-msgstr "Отримано наступну CA «%s» з PKCS11\n"
+msgid "Got next CA '%s' from PKCS#11\n"
+msgstr "Отримано наступну CA «%s» з PKCS#11\n"
 
 #: gnutls.c:1664
 msgid "Failed to allocate memory for supporting certificates\n"
@@ -3879,10 +3879,6 @@ msgstr "Вихідний пакет:\n"
 #: oncp.c:1149
 msgid "Sent ESP enable control packet\n"
 msgstr "Надіслано пакет вмикання керування ESP\n"
-
-#: oncp.c:1283
-msgid "Logout successful.\n"
-msgstr "Успішний вихід.\n"
 
 #: openconnect-internal.h:1179 openconnect-internal.h:1187
 #, c-format

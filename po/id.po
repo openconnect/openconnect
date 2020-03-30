@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: network-manager-openconnect master\n"
 "Report-Msgid-Bugs-To: openconnect-devel@lists.infradead.org\n"
-"POT-Creation-Date: 2020-03-30 09:58+0100\n"
+"POT-Creation-Date: 2020-03-30 12:13+0100\n"
 "PO-Revision-Date: 2019-11-12 23:25+0700\n"
 "Last-Translator: Andika Triwidada <andika@gmail.com>\n"
 "Language-Team: Indonesian <gnome@i15n.org>\n"
@@ -139,9 +139,9 @@ msgstr "Server bukan portal GlobalProtect maupun gateway.\n"
 msgid "Logout failed.\n"
 msgstr "Log keluar gagal.\n"
 
-#: auth-globalprotect.c:709
-msgid "Logout successful\n"
-msgstr "Logout sukses\n"
+#: auth-globalprotect.c:709 oncp.c:1283
+msgid "Logout successful.\n"
+msgstr "Log keluar sukses.\n"
 
 #: auth-juniper.c:142
 #, c-format
@@ -1480,8 +1480,8 @@ msgstr "Tidak memperoleh penerbit dari PKCS#11\n"
 
 #: gnutls.c:1638
 #, c-format
-msgid "Got next CA '%s' from PKCS11\n"
-msgstr "Mendapat CA berikutnya '%s' dari PKCS11\n"
+msgid "Got next CA '%s' from PKCS#11\n"
+msgstr "Mendapat CA berikutnya '%s' dari PKCS#11\n"
 
 #: gnutls.c:1664
 msgid "Failed to allocate memory for supporting certificates\n"
@@ -3779,10 +3779,6 @@ msgstr "Paket keluar:\n"
 #: oncp.c:1149
 msgid "Sent ESP enable control packet\n"
 msgstr "Mengirim paket kendali fungsikan ESP\n"
-
-#: oncp.c:1283
-msgid "Logout successful.\n"
-msgstr "Log keluar sukses.\n"
 
 #: openconnect-internal.h:1179 openconnect-internal.h:1187
 #, c-format

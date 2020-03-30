@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: NetworkManager-openconnect\n"
 "Report-Msgid-Bugs-To: openconnect-devel@lists.infradead.org\n"
-"POT-Creation-Date: 2020-03-30 09:58+0100\n"
+"POT-Creation-Date: 2020-03-30 12:13+0100\n"
 "PO-Revision-Date: 2018-08-07 14:43+0200\n"
 "Last-Translator: Tim Sabsch <tim@sabsch.com>\n"
 "Language-Team: Deutsch <gnome-de@gnome.org>\n"
@@ -142,9 +142,9 @@ msgstr "Der Server ist weder ein GlobalProtect-Portal noch ein Gateway.\n"
 msgid "Logout failed.\n"
 msgstr "Abmelden ist fehlgeschlagen.\n"
 
-#: auth-globalprotect.c:709
-msgid "Logout successful\n"
-msgstr "Abmelden war erfolgreich\n"
+#: auth-globalprotect.c:709 oncp.c:1283
+msgid "Logout successful.\n"
+msgstr "Abmelden war erfolgreich.\n"
 
 #: auth-juniper.c:142
 #, c-format
@@ -1506,8 +1506,8 @@ msgstr "Kein Herausgeber von PKCS#11 erhalten\n"
 
 #: gnutls.c:1638
 #, c-format
-msgid "Got next CA '%s' from PKCS11\n"
-msgstr "Nächste CA »%s« von PKCS11 erhalten\n"
+msgid "Got next CA '%s' from PKCS#11\n"
+msgstr "Nächste CA »%s« von PKCS#11 erhalten\n"
 
 #: gnutls.c:1664
 msgid "Failed to allocate memory for supporting certificates\n"
@@ -3859,10 +3859,6 @@ msgstr "Paket ausgehend:\n"
 #: oncp.c:1149
 msgid "Sent ESP enable control packet\n"
 msgstr "Steuerpaket zur ESP-Aktivierung wurde gesendet\n"
-
-#: oncp.c:1283
-msgid "Logout successful.\n"
-msgstr "Abmelden war erfolgreich.\n"
 
 #: openconnect-internal.h:1179 openconnect-internal.h:1187
 #, c-format

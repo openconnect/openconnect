@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: network-manager-openconnect\n"
 "Report-Msgid-Bugs-To: openconnect-devel@lists.infradead.org\n"
-"POT-Creation-Date: 2020-03-30 09:58+0100\n"
+"POT-Creation-Date: 2020-03-30 12:13+0100\n"
 "PO-Revision-Date: 2019-09-14 04:51-0300\n"
 "Last-Translator: Rafael Fontenelle <rafaelff@gnome.org>\n"
 "Language-Team: Brazilian Portuguese <gnome-pt_br-list@gnome.org>\n"
@@ -143,9 +143,9 @@ msgstr "O servidor não é um portal nem gateway GlobalProtect.\n"
 msgid "Logout failed.\n"
 msgstr "Desconexão falhou\n"
 
-#: auth-globalprotect.c:709
-msgid "Logout successful\n"
-msgstr "Desconexão feita com sucesso\n"
+#: auth-globalprotect.c:709 oncp.c:1283
+msgid "Logout successful.\n"
+msgstr "Desconexão feita com sucesso.\n"
 
 #: auth-juniper.c:142
 #, c-format
@@ -1484,8 +1484,8 @@ msgstr "Nenhum emissor obtido da PKCS#11\n"
 
 #: gnutls.c:1638
 #, c-format
-msgid "Got next CA '%s' from PKCS11\n"
-msgstr "Próxima AC “%s” obtida de PKCS11\n"
+msgid "Got next CA '%s' from PKCS#11\n"
+msgstr "Próxima AC “%s” obtida de PKCS#11\n"
 
 #: gnutls.c:1664
 msgid "Failed to allocate memory for supporting certificates\n"
@@ -3816,10 +3816,6 @@ msgstr "Pacote de saída:\n"
 #: oncp.c:1149
 msgid "Sent ESP enable control packet\n"
 msgstr "Enviado pacote de controle com capacidade de ESP\n"
-
-#: oncp.c:1283
-msgid "Logout successful.\n"
-msgstr "Desconexão feita com sucesso.\n"
 
 #: openconnect-internal.h:1179 openconnect-internal.h:1187
 #, c-format

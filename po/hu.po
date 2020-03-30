@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: networkmanager-openconnect master\n"
 "Report-Msgid-Bugs-To: openconnect-devel@lists.infradead.org\n"
-"POT-Creation-Date: 2020-03-30 09:58+0100\n"
+"POT-Creation-Date: 2020-03-30 12:13+0100\n"
 "PO-Revision-Date: 2019-09-07 18:30+0200\n"
 "Last-Translator: Balázs Úr <ur.balazs at fsf dot hu>\n"
 "Language-Team: Hungarian <gnome-hu-list at gnome dot org>\n"
@@ -143,9 +143,9 @@ msgstr "A kiszolgáló nem GlobalProtect portál, sem átjáró.\n"
 msgid "Logout failed.\n"
 msgstr "Kijelentkezés sikertelen.\n"
 
-#: auth-globalprotect.c:709
-msgid "Logout successful\n"
-msgstr "Kijelentkezés sikeres\n"
+#: auth-globalprotect.c:709 oncp.c:1283
+msgid "Logout successful.\n"
+msgstr "Kijelentkezés sikeres.\n"
 
 #: auth-juniper.c:142
 #, c-format
@@ -1496,8 +1496,8 @@ msgstr "Nem kapott kibocsátót a PKCS#11-ből\n"
 
 #: gnutls.c:1638
 #, c-format
-msgid "Got next CA '%s' from PKCS11\n"
-msgstr "A következő „%s” CA lekérve a PKCS11-ből\n"
+msgid "Got next CA '%s' from PKCS#11\n"
+msgstr "A következő „%s” CA lekérve a PKCS#11-ből\n"
 
 #: gnutls.c:1664
 msgid "Failed to allocate memory for supporting certificates\n"
@@ -3817,10 +3817,6 @@ msgstr "Kimenő csomag:\n"
 #: oncp.c:1149
 msgid "Sent ESP enable control packet\n"
 msgstr "ESP engedélyezési vezérlőcsomag elküldve\n"
-
-#: oncp.c:1283
-msgid "Logout successful.\n"
-msgstr "Kijelentkezés sikeres.\n"
 
 #: openconnect-internal.h:1179 openconnect-internal.h:1187
 #, c-format

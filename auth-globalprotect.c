@@ -706,7 +706,7 @@ int gpst_bye(struct openconnect_info *vpninfo, const char *reason)
 	if (result < 0)
 		vpn_progress(vpninfo, PRG_ERR, _("Logout failed.\n"));
 	else
-		vpn_progress(vpninfo, PRG_INFO, _("Logout successful\n"));
+		vpn_progress(vpninfo, PRG_INFO, _("Logout successful.\n"));
 
 out:
 	buf_free(request_body);

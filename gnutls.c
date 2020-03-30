@@ -1635,7 +1635,7 @@ static int load_certificate(struct openconnect_info *vpninfo)
 					get_cert_name(issuer, name, sizeof(name));
 
 					vpn_progress(vpninfo, PRG_ERR,
-						     _("Got next CA '%s' from PKCS11\n"), name);
+						     _("Got next CA '%s' from PKCS#11\n"), name);
 				}
 			}
 #endif
