@@ -15,6 +15,12 @@
 <ul>
    <li><b>OpenConnect HEAD</b>
      <ul>
+       <li><i>No changelog entries yet</i></li>
+     </ul><br/>
+  </li>
+  <li><b><a href="ftp://ftp.infradead.org/pub/openconnect/openconnect-8.06.tar.gz">OpenConnect v8.06</a></b>
+     <i>(<a href="ftp://ftp.infradead.org/pub/openconnect/openconnect-8.06.tar.gz.asc">PGP signature</a>)</i> &#8212; 2020-03-31
+     <ul>
        <li>Implement EAP-TTLS fragmentation.</li>
        <li>Fix Windows build with MSYS2 (<a href="https://gitlab.com/openconnect/openconnect/issues/74">#74</a>).</li>
        <li>Allow custom stoken rcfile to be specified (<a href="https://gitlab.com/openconnect/openconnect/issues/71">#71</a>).</li>

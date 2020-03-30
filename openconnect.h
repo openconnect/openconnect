@@ -36,7 +36,7 @@ extern "C" {
 #define OPENCONNECT_API_VERSION_MINOR 6
 
 /*
- * API version 5.6:
+ * API version 5.6 (v8.06; 2020-03-31):
  *  - Add openconnect_set_trojan_interval()
  *
  * API version 5.5 (v8.00; 2019-01-05):

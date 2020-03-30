@@ -17,12 +17,22 @@
 
 <p>
 <!-- latest-release-start -->
-The latest release is <a href="ftp://ftp.infradead.org/pub/openconnect/openconnect-8.05.tar.gz">OpenConnect v8.05</a>
-<i>(<a href="ftp://ftp.infradead.org/pub/openconnect/openconnect-8.05.tar.gz.asc">PGP signature</a>)</i>,
-released on 2019-09-12 with the following changelog:</p>
+The latest release is <a href="ftp://ftp.infradead.org/pub/openconnect/openconnect-8.06.tar.gz">OpenConnect v8.06</a>
+<i>(<a href="ftp://ftp.infradead.org/pub/openconnect/openconnect-8.06.tar.gz.asc">PGP signature</a>)</i>,
+released on 2020-03-31 with the following changelog:</p>
      <ul>
-       <li>Fix GlobalProtect ESP stall (<a href="https://gitlab.com/openconnect/openconnect/merge_requests/55">#55</a>).</li>
-       <li>Fix HTTP chunked encoding buffer overflow (CVE-2019-16239).</li>
+       <li>Implement EAP-TTLS fragmentation.</li>
+       <li>Fix Windows build with MSYS2 (<a href="https://gitlab.com/openconnect/openconnect/issues/74">#74</a>).</li>
+       <li>Allow custom stoken rcfile to be specified (<a href="https://gitlab.com/openconnect/openconnect/issues/71">#71</a>).</li>
+       <li>Periodic HIP checking for GlobalProtect, and cross-protocol API (<a href="https://gitlab.com/openconnect/openconnect/merge_requests/56">!56</a>).</li>
+       <li>Ciphersuite priority override options (<a href="https://gitlab.com/openconnect/openconnect/merge_requests/71">!71</a>).</li>
+       <li>Clearer GlobalProtect debugging/SAML output (<a href="https://gitlab.com/openconnect/openconnect/merge_requests/66">!66</a>, <a href="https://gitlab.com/openconnect/openconnect/merge_requests/69">!69</a>).</li>
+       <li>Explain experimental Pulse support for servers where Juniper oNCP is disabled (<a href="https://gitlab.com/openconnect/openconnect/merge_requests/48">!48</a>).</li>
+       <li>Ignore missing Cisco CSD stub and simply CSD subprocess invocation (<a href="https://gitlab.com/openconnect/openconnect/merge_requests/77">!77</a>, <a href="https://gitlab.com/openconnect/openconnect/merge_requests/74">!74</a>).</li>
+       <li>Pass <tt>IDLE_TIMEOUT</tt> to vpnc-script (<a href="https://gitlab.com/openconnect/openconnect/merge_requests/67">!67</a>).</li>
+       <li>Windows line-ending flexibility for standard input (<a href="https://gitlab.com/openconnect/openconnect/merge_requests/78">!78</a>).</li>
+       <li>Disable DTLS for GnuTLS versions between 3.6.3 and 3.6.13 inclusive due to <a href="https://gitlab.com/gnutls/gnutls/-/issues/960">GnuTLS #960</a>.</li>
+       <li>Add RFC6750 Bearer token support (<a href="https://gitlab.com/openconnect/openconnect/-/merge_requests/70">!70</a>).</li>
      </ul>
 <!-- latest-release-end -->
 
