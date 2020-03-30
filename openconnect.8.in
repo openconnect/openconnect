@@ -81,8 +81,10 @@ protocols for data transport.
 
 It was originally written to support Cisco "AnyConnect" VPN servers,
 and has since been extended with experimental support for Juniper
-Network Connect and Junos Pulse VPN servers
+Network Connect
 .RB ( \-\-protocol=nc )
+and Junos Pulse VPN servers
+.RB ( \-\-protocol=pulse )
 and PAN GlobalProtect VPN servers
 .RB ( \-\-protocol=gp ).
 
@@ -464,9 +466,19 @@ to be used for the connection. Supported protocols are
 for Cisco AnyConnect (the default),
 .I nc
 for experimental support for Juniper Network Connect (also supported
-by Junos Pulse servers), and
+by most Junos Pulse servers),
+.I pulse
+for experimental support for Junos Pulse, and
 .I gp
 for experimental support for PAN GlobalProtect.
+
+OpenConnect does not yet support all of the authentication options used
+by Pulse, nor does it support Host Checker/TNCC with Pulse. If your
+Junos Pulse VPN is not yet supported with
+.BR \-\-protocol=pulse ,
+then
+.B \-\-protocol=nc
+may be a useful fallback option.
 .TP
 .B \-\-token\-mode=MODE
 Enable one-time password generation using the

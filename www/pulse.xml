@@ -36,8 +36,8 @@ should be usable with OpenConnect in Pulse mode too.</p>
 
 <h3>Host Checker</h3>
 
-<p>Not yet investigated and implemented for Pulse mode. The Juniper support may
-suffice for some users.</p>
+<p>Support for Host Checker, also known as TNCC, has not yet been investigated and
+implemented for Pulse mode. The Juniper support may suffice for some users.</p>
 
 <h2>Connectivity</h2>
 
