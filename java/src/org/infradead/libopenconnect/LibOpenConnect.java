@@ -127,6 +127,7 @@ public abstract class LibOpenConnect {
 	public synchronized native int passphraseFromFSID();
 	public synchronized native void setCertExpiryWarning(int seconds);
 	public synchronized native void setDPD(int minSeconds);
+	public synchronized native void setTrojanInterval(int seconds);
 	public synchronized native int setProxyAuth(String methods);
 	public synchronized native int setHTTPProxy(String proxy);
 	public synchronized native void setXMLSHA1(String hash);
