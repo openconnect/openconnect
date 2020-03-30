@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: network-manager-openconnect master\n"
 "Report-Msgid-Bugs-To: openconnect-devel@lists.infradead.org\n"
-"POT-Creation-Date: 2020-03-30 09:58+0100\n"
+"POT-Creation-Date: 2020-03-31 00:27+0100\n"
 "PO-Revision-Date: 2014-02-26 19:42+0100\n"
 "Last-Translator: Matej Urbančič <mateju@svn.gnome.org>\n"
 "Language-Team: Slovenian GNOME Translation Team <gnome-si@googlegroups.com>\n"
@@ -141,8 +141,8 @@ msgstr ""
 msgid "Logout failed.\n"
 msgstr ""
 
-#: auth-globalprotect.c:709
-msgid "Logout successful\n"
+#: auth-globalprotect.c:709 oncp.c:1283
+msgid "Logout successful.\n"
 msgstr ""
 
 #: auth-juniper.c:142
@@ -390,7 +390,17 @@ msgstr "Odpiranje začasne datoteke skripta CSD je spodletelo: %s\n"
 msgid "Failed to write temporary CSD script file: %s\n"
 msgstr "Zapisovanje začasne datoteke skripta CSD je spodletelo: %s\n"
 
-#: auth.c:1142
+#: auth.c:1129
+#, c-format
+msgid "CSD script '%s' exited abnormally\n"
+msgstr ""
+
+#: auth.c:1134
+#, c-format
+msgid "CSD script '%s' returned non-zero status: %d\n"
+msgstr ""
+
+#: auth.c:1162
 #, c-format
 msgid ""
 "Warning: you are running insecure CSD code with root privileges\n"
@@ -399,33 +409,33 @@ msgstr ""
 "Opozorilo: kodo CSD, ki ni varna, zaganjate s skrbniškimi dovoljenji.\n"
 "\t Uporabite možnost ukazne vrstice \"--csd-user\"\n"
 
-#: auth.c:1190
+#: auth.c:1210
 #, c-format
 msgid "Failed to exec CSD script %s\n"
 msgstr "Izvajanje skripta CSD %s je spodletelo.\n"
 
-#: auth.c:1222
+#: auth.c:1230
 msgid "Unknown response from server\n"
 msgstr "Neznan odgovor s strežnika.\n"
 
-#: auth.c:1344
+#: auth.c:1352
 msgid "Server requested SSL client certificate after one was provided\n"
 msgstr ""
 "Strežnik je zahteval potrdilo odjemalca SSL, ko je bilo že posredovano\n"
 
-#: auth.c:1348
+#: auth.c:1356
 msgid "Server requested SSL client certificate; none was configured\n"
 msgstr "Strežnik je zahteval potrdilo odjemalca SSL; nobeno ni nastavljeno\n"
 
-#: auth.c:1364
+#: auth.c:1372
 msgid "XML POST enabled\n"
 msgstr "Omogočena zmožnost XML POST\n"
 
-#: auth.c:1388
+#: auth.c:1396
 msgid "Couldn't fetch CSD stub. Proceeding anyway with CSD wrapper script.\n"
 msgstr ""
 
-#: auth.c:1413
+#: auth.c:1421
 #, c-format
 msgid "Refreshing %s after 1 second...\n"
 msgstr "Osveževanje %s po steklo po 1 sekundi ...\n"
@@ -1152,7 +1162,7 @@ msgstr ""
 msgid "Failed to encrypt ESP packet: %s\n"
 msgstr ""
 
-#: gnutls.c:114 gnutls.c:168 gnutls.c:265 gnutls.c:2280
+#: gnutls.c:114 gnutls.c:168 gnutls.c:265 gnutls.c:2289
 msgid "Failed select() for TLS"
 msgstr ""
 
@@ -1525,7 +1535,7 @@ msgstr "Napaka pri začenjanju strukture potrdil X509\n"
 msgid "Error importing server's cert\n"
 msgstr "Napaka med uvažanjem potrdila strežnika\n"
 
-#: gnutls.c:1965 main.c:1820
+#: gnutls.c:1965 main.c:1822
 msgid "Could not calculate hash of server's certificate\n"
 msgstr ""
 
@@ -1601,66 +1611,72 @@ msgstr ""
 msgid "SSL negotiation with %s\n"
 msgstr "Poteka pogajanje SSL z %s\n"
 
-#: gnutls.c:2284 openssl.c:1858
+#: gnutls.c:2248
+msgid ""
+"Disabling DTLS: This version of the GnuTLS library has an insecure DTLS "
+"implementation.\n"
+msgstr ""
+
+#: gnutls.c:2293 openssl.c:1858
 msgid "SSL connection cancelled\n"
 msgstr "Povezava SSL je preklicana\n"
 
-#: gnutls.c:2291
+#: gnutls.c:2300
 #, c-format
 msgid "SSL connection failure: %s\n"
 msgstr "Povezava SSL je spodletela: %s\n"
 
-#: gnutls.c:2300
+#: gnutls.c:2309
 #, c-format
 msgid "GnuTLS non-fatal return during handshake: %s\n"
 msgstr "Vrnjena je ne-usodna napaka GnuTLS med izmenjavo signalov: %s\n"
 
-#: gnutls.c:2309 openssl.c:1880
+#: gnutls.c:2318 openssl.c:1880
 #, c-format
 msgid "Connected to HTTPS on %s with ciphersuite %s\n"
 msgstr ""
 
-#: gnutls.c:2312
+#: gnutls.c:2321
 #, c-format
 msgid "Renegotiated SSL on %s with ciphersuite %s\n"
 msgstr ""
 
-#: gnutls.c:2466 openssl-pkcs11.c:203
+#: gnutls.c:2475 openssl-pkcs11.c:203
 #, c-format
 msgid "PIN required for %s"
 msgstr "Za %s je zahtevana koda PIN"
 
-#: gnutls.c:2470 openssl-pkcs11.c:206
+#: gnutls.c:2479 openssl-pkcs11.c:206
 msgid "Wrong PIN"
 msgstr "Napačna koda PIN"
 
-#: gnutls.c:2473
+#: gnutls.c:2482
 msgid "This is the final try before locking!"
 msgstr "To je zadnji poskus pred zaklepom!"
 
-#: gnutls.c:2475
+#: gnutls.c:2484
 msgid "Only a few tries left before locking!"
 msgstr "Ostaja le še nekaj poskusov do zaklepa!"
 
-#: gnutls.c:2480 openssl-pkcs11.c:210
+#: gnutls.c:2489 openssl-pkcs11.c:210
 msgid "Enter PIN:"
 msgstr "Koda PIN:"
 
-#: gnutls.c:2566 openssl.c:2010
+#: gnutls.c:2575 openssl.c:2010
 msgid "Unsupported OATH HMAC algorithm\n"
 msgstr ""
 
-#: gnutls.c:2575
+#: gnutls.c:2584
 #, c-format
 msgid "Failed to calculate OATH HMAC: %s\n"
 msgstr ""
 
-#: gnutls.c:2589
+#: gnutls.c:2598
 #, c-format
 msgid "ttls_pull_timeout_func %dms\n"
 msgstr ""
 
-#: gnutls.c:2632 openssl.c:2125
+#: gnutls.c:2641 openssl.c:2125
 msgid "Established EAP-TTLS session\n"
 msgstr ""
 
@@ -2279,21 +2295,26 @@ msgstr ""
 msgid "Attempting HTTP Basic authentication to server '%s'\n"
 msgstr ""
 
-#: http-auth.c:200 http.c:1324
+#: http-auth.c:213
+#, c-format
+msgid "Attempting HTTP Bearer authentication to server '%s'\n"
+msgstr ""
+
+#: http-auth.c:227 http.c:1324
 msgid "This version of OpenConnect was built without GSSAPI support\n"
 msgstr ""
 
-#: http-auth.c:240
+#: http-auth.c:268
 msgid "Proxy requested Basic authentication which is disabled by default\n"
 msgstr ""
 
-#: http-auth.c:243
+#: http-auth.c:271
 #, c-format
 msgid ""
 "Server '%s' requested Basic authentication which is disabled by default\n"
 msgstr ""
 
-#: http-auth.c:256
+#: http-auth.c:284
 msgid "No more authentication methods to try\n"
 msgstr ""
 
@@ -2599,28 +2620,28 @@ msgstr ""
 msgid "Built against SSL library with no Cisco DTLS support\n"
 msgstr "Izgrajeno na osnovi knjižnice SSL brez podpore za Cisco DTLS.\n"
 
-#: library.c:697
+#: library.c:698
 #, c-format
 msgid "Failed to parse server URL '%s'\n"
 msgstr "Napaka med razčlenjevanjem naslova URL strežnika '%s'\n"
 
-#: library.c:703
+#: library.c:704
 msgid "Only https:// permitted for server URL\n"
 msgstr "Za strežniški naslov URL je dovoljen le protokol https://\n"
 
-#: library.c:1101
+#: library.c:1104
 #, c-format
 msgid "Unknown certificate hash: %s.\n"
 msgstr ""
 
-#: library.c:1130
+#: library.c:1133
 #, c-format
 msgid ""
 "The size of the provided fingerprint is less than the minimum required "
 "(%u).\n"
 msgstr ""
 
-#: library.c:1191
+#: library.c:1194
 msgid "No form handler; cannot authenticate.\n"
 msgstr "Ni ročnika obrazca; vnosov ni mogoče overiti.\n"
 
@@ -2786,12 +2807,12 @@ msgid "Key passphrase is fsid of file system"
 msgstr "Šifrirno geslo ključa je fsid datotečnega sistema"
 
 #: main.c:822
-msgid "Software token type: rsa, totp or hotp"
+msgid "Software token type: rsa, totp, hotp or oidc"
 msgstr ""
 
 #: main.c:823
-msgid "Software token secret"
-msgstr "Skrivnost programskega žetona"
+msgid "Software token secret or oidc token"
+msgstr ""
 
 #: main.c:825
 msgid "(NOTE: libstoken (RSA SecurID) disabled in this build)"
@@ -3168,17 +3189,17 @@ msgstr "Ničelna dolžina uvrstitve ni dovoljena; uporabljena bo 1\n"
 msgid "OpenConnect version %s\n"
 msgstr "Različica OpenConnect %s\n"
 
-#: main.c:1474
+#: main.c:1476
 #, c-format
 msgid "Invalid software token mode \"%s\"\n"
 msgstr "Neveljaven način programskega žetona \"%s\"\n"
 
-#: main.c:1484
+#: main.c:1486
 #, c-format
 msgid "Invalid OS identity \"%s\"\n"
 msgstr "Neveljavna istovetnost OS \"%s\"\n"
 
-#: main.c:1510
+#: main.c:1512
 #, c-format
 msgid ""
 "WARNING: You specified %s. This should not be\n"
@@ -3187,114 +3208,114 @@ msgid ""
 "         to <openconnect-devel@lists.infradead.org>.\n"
 msgstr ""
 
-#: main.c:1532
+#: main.c:1534
 #, c-format
 msgid "Too many arguments on command line\n"
 msgstr "Navedenih je preveč argumentov v ukazni vrstici.\n"
 
-#: main.c:1535
+#: main.c:1537
 #, c-format
 msgid "No server specified\n"
 msgstr "Ni določenega strežnika\n"
 
-#: main.c:1551
+#: main.c:1553
 #, c-format
 msgid "This version of openconnect was built without libproxy support\n"
 msgstr "Ta različica openconnect je zgrajena brez podpore libproxy\n"
 
-#: main.c:1581
+#: main.c:1583
 #, c-format
 msgid "Error opening cmd pipe\n"
 msgstr ""
 
-#: main.c:1614
+#: main.c:1616
 #, c-format
 msgid "Failed to obtain WebVPN cookie\n"
 msgstr "Pridobivanje piškotka WebVPN je spodletelo\n"
 
-#: main.c:1635
+#: main.c:1637
 #, c-format
 msgid "Creating SSL connection failed\n"
 msgstr "Ustvarjanje povezave SSL je spodletelo.\n"
 
-#: main.c:1651
+#: main.c:1653
 #, c-format
 msgid "Set up UDP failed; using SSL instead\n"
 msgstr ""
 
-#: main.c:1659
+#: main.c:1661
 #, c-format
 msgid "Connected as %s%s%s, using SSL%s%s, with %s%s%s %s\n"
 msgstr ""
 
-#: main.c:1665
+#: main.c:1667
 msgid "disabled"
 msgstr ""
 
-#: main.c:1665
+#: main.c:1667
 msgid "in progress"
 msgstr ""
 
-#: main.c:1669
+#: main.c:1671
 msgid "No --script argument provided; DNS and routing are not configured\n"
 msgstr ""
 "Ni navedenega argumenta --script; Vrednosti DNS in nastavitve preusmerjanja "
 "niso nastavljene.\n"
 
-#: main.c:1671
+#: main.c:1673
 msgid "See http://www.infradead.org/openconnect/vpnc-script.html\n"
 msgstr "Oglejte si http://www.infradead.org/openconnect/vpnc-script.html\n"
 
-#: main.c:1684
+#: main.c:1686
 #, c-format
 msgid "Failed to open '%s' for write: %s\n"
 msgstr "Datoteke '%s' ni mogoče odpreti za pisanje: %s\n"
 
-#: main.c:1696
+#: main.c:1698
 #, c-format
 msgid "Continuing in background; pid %d\n"
 msgstr "Izvajanje programa je poslano v ozadje; pid %d\n"
 
-#: main.c:1713
+#: main.c:1715
 msgid "User requested reconnect\n"
 msgstr ""
 
-#: main.c:1721
+#: main.c:1723
 msgid "Cookie was rejected on reconnection; exiting.\n"
 msgstr ""
 
-#: main.c:1725
+#: main.c:1727
 msgid "Session terminated by server; exiting.\n"
 msgstr ""
 
-#: main.c:1729
+#: main.c:1731
 msgid "User cancelled (SIGINT/SIGTERM); exiting.\n"
 msgstr ""
 
-#: main.c:1733
+#: main.c:1735
 msgid "User detached from session (SIGHUP); exiting.\n"
 msgstr ""
 
-#: main.c:1737
+#: main.c:1739
 msgid "Unknown error; exiting.\n"
 msgstr ""
 
-#: main.c:1756
+#: main.c:1758
 #, c-format
 msgid "Failed to open %s for write: %s\n"
 msgstr "Datoteke %s ni mogoče odpreti za pisanje: %s\n"
 
-#: main.c:1764
+#: main.c:1766
 #, c-format
 msgid "Failed to write config to %s: %s\n"
 msgstr "Zapisovanje nastavitev v %s je spodletelo: %s\n"
 
-#: main.c:1823
+#: main.c:1825
 #, c-format
 msgid "Server SSL certificate didn't match: %s\n"
 msgstr "Potrdilo SSL strežnika se ne ujema: %s\n"
 
-#: main.c:1842
+#: main.c:1844
 #, c-format
 msgid ""
 "\n"
@@ -3305,107 +3326,117 @@ msgstr ""
 "Overjanje potrdila strežnika VPN \"%s\" je spodletelo.\n"
 "Vzrok: %s\n"
 
-#: main.c:1845
+#: main.c:1847
 #, c-format
 msgid ""
 "To trust this server in future, perhaps add this to your command line:\n"
 msgstr ""
 
-#: main.c:1846
+#: main.c:1848
 #, c-format
 msgid "    --servercert %s\n"
 msgstr ""
 
-#: main.c:1851
+#: main.c:1853
 #, c-format
 msgid "Enter '%s' to accept, '%s' to abort; anything else to view: "
 msgstr "Vnesite '%s' za sprejem, '%s' za prekinitev; vse drugo za pogled: "
 
-#: main.c:1852 main.c:1870
+#: main.c:1854 main.c:1872
 msgid "no"
 msgstr "ne"
 
-#: main.c:1852 main.c:1858
+#: main.c:1854 main.c:1860
 msgid "yes"
 msgstr "da"
 
-#: main.c:1879
+#: main.c:1881
 #, c-format
 msgid "Server key hash: %s\n"
 msgstr ""
 
-#: main.c:1913
+#: main.c:1915
 #, c-format
 msgid "Auth choice \"%s\" matches multiple options\n"
 msgstr ""
 
-#: main.c:1916
+#: main.c:1918
 #, c-format
 msgid "Auth choice \"%s\" not available\n"
 msgstr "Izbira overitve \"%s\" ni na voljo.\n"
 
-#: main.c:1937
+#: main.c:1939
 msgid "User input required in non-interactive mode\n"
 msgstr "Zahtevano je uporabniško posredovanje v načinu brez posredovanja.\n"
 
-#: main.c:2175
+#: main.c:2177
 #, c-format
 msgid "Failed to open token file for write: %s\n"
 msgstr ""
 
-#: main.c:2183
+#: main.c:2185
 #, c-format
 msgid "Failed to write token: %s\n"
 msgstr ""
 
-#: main.c:2230 main.c:2254
+#: main.c:2232 main.c:2256
 #, c-format
 msgid "Soft token string is invalid\n"
 msgstr "Uporabniški prstni odtis je neveljaven\n"
 
-#: main.c:2234
+#: main.c:2236
 #, c-format
 msgid "Can't open stoken file\n"
 msgstr ""
 
-#: main.c:2236
+#: main.c:2238
 #, c-format
 msgid "Can't open ~/.stokenrc file\n"
 msgstr "Ni mogoče odpreti datoteke ~/.stokenrc.\n"
 
-#: main.c:2239
+#: main.c:2241
 #, c-format
 msgid "OpenConnect was not built with libstoken support\n"
 msgstr "Program OpenConnect ni izgrajen s podporo za libstoken\n"
 
-#: main.c:2242
+#: main.c:2244
 #, c-format
 msgid "General failure in libstoken\n"
 msgstr "Splošna napaka v knjižnici libstoken.\n"
 
-#: main.c:2257
+#: main.c:2259
 #, c-format
 msgid "OpenConnect was not built with liboath support\n"
 msgstr "Program OpenConnect ni izgrajen s podporo za liboath\n"
 
-#: main.c:2260
+#: main.c:2262
 #, c-format
 msgid "General failure in liboath\n"
 msgstr "Splošna napaka v knjižnici liboath.\n"
 
-#: main.c:2271
+#: main.c:2273
 #, c-format
 msgid "Yubikey token not found\n"
 msgstr ""
 
-#: main.c:2274
+#: main.c:2276
 #, c-format
 msgid "OpenConnect was not built with Yubikey support\n"
 msgstr ""
 
-#: main.c:2277
+#: main.c:2279
 #, c-format
 msgid "General Yubikey failure: %s\n"
+msgstr ""
+
+#: main.c:2288
+#, c-format
+msgid "Can't open oidc file\n"
+msgstr ""
+
+#: main.c:2291
+#, c-format
+msgid "General failure in oidc token\n"
 msgstr ""
 
 #: mainloop.c:127
@@ -3770,11 +3801,7 @@ msgstr ""
 msgid "Sent ESP enable control packet\n"
 msgstr ""
 
-#: oncp.c:1283
-msgid "Logout successful.\n"
-msgstr ""
-
-#: openconnect-internal.h:1179 openconnect-internal.h:1187
+#: openconnect-internal.h:1184 openconnect-internal.h:1192
 #, c-format
 msgid "ERROR: %s() called with invalid UTF-8 for '%s' argument\n"
 msgstr ""
