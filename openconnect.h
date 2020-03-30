@@ -185,6 +185,7 @@ extern "C" {
 #define OC_PROTO_AUTH_CERT	(1<<2)
 #define OC_PROTO_AUTH_OTP	(1<<3)
 #define OC_PROTO_AUTH_STOKEN	(1<<4)
+#define OC_PROTO_PERIODIC_TROJAN	(1<<4)
 
 struct oc_vpn_proto {
 	const char *name;
@@ -437,7 +438,7 @@ int openconnect_init_ssl(void);
 const char *openconnect_get_cstp_cipher(struct openconnect_info *);
 const char *openconnect_get_dtls_cipher(struct openconnect_info *);
 
-/* These return a descriptive string of the compression algorithm 
+/* These return a descriptive string of the compression algorithm
  * in use (LZS, LZ4, ...). If no compression then NULL is returned. */
 const char *openconnect_get_cstp_compression(struct openconnect_info *);
 const char *openconnect_get_dtls_compression(struct openconnect_info *);
