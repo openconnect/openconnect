@@ -156,6 +156,7 @@ enum {
 	OPT_COOKIE_ON_STDIN,
 	OPT_CSD_USER,
 	OPT_CSD_WRAPPER,
+	OPT_CIPHERSUITES,
 	OPT_DISABLE_IPV6,
 	OPT_DTLS_CIPHERS,
 	OPT_DTLS12_CIPHERS,
@@ -280,6 +281,9 @@ static const struct option long_options[] = {
 	OPTION("form-entry", 1, 'F'),
 #ifdef OPENCONNECT_GNUTLS
 	OPTION("gnutls-debug", 1, OPT_GNUTLS_DEBUG),
+	OPTION("gnutls-priority", 1, OPT_CIPHERSUITES),
+#elif defined(OPENCONNECT_OPENSSL)
+	OPTION("openssl-ciphers", 1, OPT_CIPHERSUITES),
 #endif
 	OPTION(NULL, 0, 0)
 };
@@ -596,11 +600,7 @@ static void print_build_opts(void)
 {
 	const char *comma = ", ", *sep = comma + 1;
 
-#if defined(OPENCONNECT_OPENSSL)
-	printf(_("Using OpenSSL. Features present:"));
-#elif defined(OPENCONNECT_GNUTLS)
-	printf(_("Using GnuTLS. Features present:"));
-#endif
+	printf(_("Using %s. Features present:"), openconnect_get_tls_library_version());
 
 	if (openconnect_has_tss_blob_support()) {
 		printf("%sTPM", sep);
@@ -1505,6 +1505,19 @@ int main(int argc, char **argv)
 			gnutls_global_set_log_function(oc_gnutls_log_func);
 			break;
 #endif
+		case OPT_CIPHERSUITES:
+			fprintf(stderr,
+#ifdef OPENCONNECT_GNUTLS
+			        _("WARNING: You specified --gnutls-priority. This should not be\n"
+			          "         necessary; please report cases where a priority string\n"
+#elif defined(OPENCONNECT_OPENSSL)
+			        _("WARNING: You specified --openssl-ciphers. This should not be\n"
+			          "         necessary; please report cases where a cipher list\n"
+#endif
+			          "         override is necessary to connect to a server\n"
+			          "         to <openconnect-devel@lists.infradead.org>.\n"));
+			strncpy(vpninfo->ciphersuite_config, config_arg, sizeof(vpninfo->ciphersuite_config) - 1);
+			break;
 		default:
 			usage();
 		}

@@ -523,7 +523,6 @@ struct openconnect_info {
 	gnutls_certificate_credentials_t https_cred;
 	gnutls_psk_client_credentials_t psk_cred;
 	char local_cert_md5[MD5_SIZE * 2 + 1]; /* For CSD */
-	char gnutls_prio[256];
 #ifdef HAVE_TROUSERS
 	struct oc_tpm1_ctx *tpm1;
 #endif
@@ -531,6 +530,7 @@ struct openconnect_info {
 	struct oc_tpm2_ctx *tpm2;
 #endif
 #endif /* OPENCONNECT_GNUTLS */
+	char ciphersuite_config[256];
 	struct oc_text_buf *ttls_pushbuf;
 	uint8_t ttls_eap_ident;
 	unsigned char *ttls_recvbuf;
@@ -573,9 +573,9 @@ struct openconnect_info {
 	   NULL or not or pass it to DTLS_SEND/DTLS_RECV. This way we
 	   have fewer ifdefs and accessor macros for it. */
 	gnutls_session_t dtls_ssl;
-	char *gnutls_dtls_cipher; /* cached for openconnect_get_dtls_cipher() */
 #endif
-	char *cstp_cipher;
+	char *cstp_cipher; /* library-dependent description of TLS cipher */
+	char *dtls_cipher_desc; /* library-dependent description of DTLS cipher, cached for openconnect_get_dtls_cipher() */
 
 	int dtls_state;
 	int dtls_need_reconnect;
@@ -587,8 +587,9 @@ struct openconnect_info {
 
 	uint32_t ift_seq;
 
-	int cisco_dtls12;
-	char *dtls_cipher;
+	int cisco_dtls12; /* If Cisco server sent X-DTLS12-CipherSuite header, rather than X-DTLS-CipherSuite */
+	char *dtls_cipher; /* Value of aforementioned header (PSK-NEGOTIATE, or an OpenSSL cipher name) */
+
 	char *vpnc_script;
 #ifndef _WIN32
 	int uid_csd_given;
@@ -997,6 +998,7 @@ int decrypt_esp_packet(struct openconnect_info *vpninfo, struct esp *esp, struct
 int encrypt_esp_packet(struct openconnect_info *vpninfo, struct pkt *pkt, int crypt_len);
 
 /* {gnutls,openssl}.c */
+const char *openconnect_get_tls_library_version();
 int ssl_nonblock_read(struct openconnect_info *vpninfo, void *buf, int maxlen);
 int ssl_nonblock_write(struct openconnect_info *vpninfo, void *buf, int buflen);
 int openconnect_open_https(struct openconnect_info *vpninfo);

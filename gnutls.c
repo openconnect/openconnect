@@ -75,6 +75,17 @@ static int gnutls_pin_callback(void *priv, int attempt, const char *uri,
 	(GNUTLS_VERSION_NUMBER >= ( ((a) << 16) + ((b) << 8) + (c) ) || \
 	 gnutls_check_version(#a "." #b "." #c)))
 
+static char tls_library_version[32] = "";
+
+const char *openconnect_get_tls_library_version()
+{
+	if (!*tls_library_version) {
+		snprintf(tls_library_version, sizeof(tls_library_version), "GnuTLS %s",
+		         gnutls_check_version(NULL));
+	}
+	return tls_library_version;
+}
+
 /* Helper functions for reading/writing lines over SSL. */
 static int _openconnect_gnutls_write(gnutls_session_t ses, int fd, struct openconnect_info *vpninfo, char *buf, size_t len)
 {
@@ -524,33 +535,6 @@ static int load_pkcs12_certificate(struct openconnect_info *vpninfo,
 		return -EINVAL;
 	}
 	return 0;
-}
-
-/* Older versions of GnuTLS didn't actually bother to check this, so we'll
-   do it for them. Is there a bug reference for this? Or just the git commit
-   reference (c1ef7efb in master, 5196786c in gnutls_3_0_x-2)? */
-static int check_issuer_sanity(gnutls_x509_crt_t cert, gnutls_x509_crt_t issuer)
-{
-#if GNUTLS_VERSION_NUMBER > 0x030014
-	return 0;
-#else
-	unsigned char id1[512], id2[512];
-	size_t id1_size = 512, id2_size = 512;
-	int err;
-
-	err = gnutls_x509_crt_get_authority_key_id(cert, id1, &id1_size, NULL);
-	if (err)
-		return 0;
-
-	err = gnutls_x509_crt_get_subject_key_id(issuer, id2, &id2_size, NULL);
-	if (err)
-		return 0;
-	if (id1_size == id2_size && !memcmp(id1, id2, id1_size))
-		return 0;
-
-	/* EEP! */
-	return -EIO;
-#endif
 }
 
 static int count_x509_certificates(gnutls_datum_t *datum)
@@ -1613,8 +1597,7 @@ static int load_certificate(struct openconnect_info *vpninfo)
 
 		for (i = 0; i < nr_extra_certs; i++) {
 			if (extra_certs[i] &&
-			    gnutls_x509_crt_check_issuer(last_cert, extra_certs[i]) &&
-			    !check_issuer_sanity(last_cert, extra_certs[i]))
+			    gnutls_x509_crt_check_issuer(last_cert, extra_certs[i]))
 				break;
 		}
 
@@ -1627,16 +1610,6 @@ static int load_certificate(struct openconnect_info *vpninfo)
 			/* Look for it in the system trust cafile too. */
 			err = gnutls_certificate_get_issuer(vpninfo->https_cred,
 							    last_cert, &issuer, 0);
-			/* The check_issuer_sanity() function works fine as a workaround where
-			   it was used above, but when gnutls_certificate_get_issuer() returns
-			   a bogus cert, there's nothing we can do to fix it up. We don't get
-			   to iterate over all the available certs like we can over our own
-			   list. */
-			if (!err && check_issuer_sanity(last_cert, issuer)) {
-				vpn_progress(vpninfo, PRG_ERR,
-					     _("WARNING: GnuTLS returned incorrect issuer certs; authentication may fail!\n"));
-				break;
-			}
 			free_issuer = 0;
 
 #ifdef HAVE_P11KIT
@@ -2230,24 +2203,26 @@ int openconnect_open_https(struct openconnect_info *vpninfo)
 	* 28065ce3896b1b0f87972d0bce9b17641ebb69b9
 	*/
 
+        if (!strlen(vpninfo->ciphersuite_config)) {
 #ifdef DEFAULT_PRIO
-	default_prio = DEFAULT_PRIO ":%COMPAT";
+		default_prio = DEFAULT_PRIO ":%COMPAT";
 #else
-	/* GnuTLS 3.5.19 and onward refuse to negotiate AES-CBC-HMAC-SHA256
-	 * by default but some Cisco servers can't do anything better, so
-	 * explicitly add '+SHA256' to allow it. Yay Cisco. */
-	default_prio = "NORMAL:-VERS-SSL3.0:+SHA256:%COMPAT";
+		/* GnuTLS 3.5.19 and onward refuse to negotiate AES-CBC-HMAC-SHA256
+		 * by default but some Cisco servers can't do anything better, so
+		 * explicitly add '+SHA256' to allow it. Yay Cisco. */
+		default_prio = "NORMAL:-VERS-SSL3.0:+SHA256:%COMPAT";
 #endif
 
-	snprintf(vpninfo->gnutls_prio, sizeof(vpninfo->gnutls_prio), "%s%s%s",
-		 default_prio, vpninfo->pfs?":-RSA":"", vpninfo->no_tls13?":-VERS-TLS1.3":"");
+		snprintf(vpninfo->ciphersuite_config, sizeof(vpninfo->ciphersuite_config), "%s%s%s",
+		         default_prio, vpninfo->pfs?":-RSA":"", vpninfo->no_tls13?":-VERS-TLS1.3":"");
+        }
 
 	err = gnutls_priority_set_direct(vpninfo->https_sess,
-					 vpninfo->gnutls_prio, NULL);
+					 vpninfo->ciphersuite_config, NULL);
 	if (err) {
 		vpn_progress(vpninfo, PRG_ERR,
-			     _("Failed to set TLS priority string (\"%s\"): %s\n"),
-			     vpninfo->gnutls_prio, gnutls_strerror(err));
+			     _("Failed to set GnuTLS priority string (\"%s\"): %s\n"),
+			     vpninfo->ciphersuite_config, gnutls_strerror(err));
 		gnutls_deinit(vpninfo->https_sess);
 		vpninfo->https_sess = NULL;
 		closesocket(ssl_sock);
@@ -2269,9 +2244,6 @@ int openconnect_open_https(struct openconnect_info *vpninfo)
 	err = cstp_handshake(vpninfo, 1);
 	if (err)
 		return err;
-
-	gnutls_free(vpninfo->cstp_cipher);
-	vpninfo->cstp_cipher = get_gnutls_cipher(vpninfo->https_sess);
 
 	vpninfo->ssl_fd = ssl_sock;
 
@@ -2330,12 +2302,15 @@ int cstp_handshake(struct openconnect_info *vpninfo, unsigned init)
 		}
 	}
 
+	gnutls_free(vpninfo->cstp_cipher);
+	vpninfo->cstp_cipher = get_gnutls_cipher(vpninfo->https_sess);
+
 	if (init) {
-		vpn_progress(vpninfo, PRG_INFO, _("Connected to HTTPS on %s\n"),
-			     vpninfo->hostname);
+		vpn_progress(vpninfo, PRG_INFO, _("Connected to HTTPS on %s with ciphersuite %s\n"),
+			     vpninfo->hostname, vpninfo->cstp_cipher);
 	} else {
-		vpn_progress(vpninfo, PRG_INFO, _("Renegotiated SSL on %s\n"),
-			     vpninfo->hostname);
+		vpn_progress(vpninfo, PRG_INFO, _("Renegotiated SSL on %s with ciphersuite %s\n"),
+			     vpninfo->hostname, vpninfo->cstp_cipher);
 	}
 
 	return 0;
@@ -2381,15 +2356,7 @@ int openconnect_init_ssl(void)
 
 char *get_gnutls_cipher(gnutls_session_t session)
 {
-	char *str;
-#if GNUTLS_VERSION_NUMBER > 0x03010a
-	str = gnutls_session_get_desc(session);
-#else
-	str = gnutls_strdup(gnutls_cipher_suite_get_name(
-		gnutls_kx_get(session), gnutls_cipher_get(session),
-		gnutls_mac_get(session)));
-#endif
-	return str;
+	return gnutls_session_get_desc(session);
 }
 
 int openconnect_sha1(unsigned char *result, void *data, int datalen)
@@ -2657,7 +2624,7 @@ void *establish_eap_ttls(struct openconnect_info *vpninfo)
 	gnutls_credentials_set(ttls_sess, GNUTLS_CRD_CERTIFICATE, vpninfo->https_cred);
 
 	err = gnutls_priority_set_direct(ttls_sess,
-				   vpninfo->gnutls_prio, NULL);
+				   vpninfo->ciphersuite_config, NULL);
 
 	err = gnutls_handshake(ttls_sess);
 	if (!err) {

@@ -24,6 +24,7 @@
 
 #include "openconnect-internal.h"
 
+#include <openssl/crypto.h>
 #include <openssl/ssl.h>
 #include <openssl/err.h>
 #include <openssl/engine.h>
@@ -48,6 +49,17 @@ typedef int (*X509_STORE_CTX_get_issuer_fn)(X509 **issuer,
 					    X509_STORE_CTX *ctx, X509 *x);
 #define X509_STORE_CTX_get_get_issuer(ctx) ((ctx)->get_issuer)
 #endif
+
+static char tls_library_version[32] = "";
+
+const char *openconnect_get_tls_library_version()
+{
+	if (!*tls_library_version) {
+		strncpy(tls_library_version, SSLeay_version(SSLEAY_VERSION), sizeof(tls_library_version));
+		tls_library_version[sizeof(tls_library_version)-1]='\0';
+	}
+	return tls_library_version;
+}
 
 int openconnect_sha1(unsigned char *result, void *data, int len)
 {
@@ -1641,6 +1653,7 @@ int openconnect_open_https(struct openconnect_info *vpninfo)
 	}
 	free(vpninfo->peer_cert_hash);
 	vpninfo->peer_cert_hash = NULL;
+	free(vpninfo->cstp_cipher);
 	vpninfo->cstp_cipher = NULL;
 
 	ssl_sock = connect_https_socket(vpninfo);
@@ -1704,8 +1717,21 @@ int openconnect_open_https(struct openconnect_info *vpninfo)
 		if (!vpninfo->no_system_trust)
 			SSL_CTX_set_default_verify_paths(vpninfo->https_ctx);
 
-		if (vpninfo->pfs)
-			SSL_CTX_set_cipher_list(vpninfo->https_ctx, "HIGH:!aNULL:!eNULL:-RSA");
+		if (!strlen(vpninfo->ciphersuite_config)) {
+			strncpy(vpninfo->ciphersuite_config, vpninfo->pfs ? "HIGH:!aNULL:!eNULL:-RSA" : "DEFAULT",
+				sizeof(vpninfo->ciphersuite_config)-1);
+		}
+
+		if (!SSL_CTX_set_cipher_list(vpninfo->https_ctx, vpninfo->ciphersuite_config)) {
+			vpn_progress(vpninfo, PRG_ERR,
+				     _("Failed to set OpenSSL cipher list (\"%s\")\n"),
+				     vpninfo->ciphersuite_config);
+			openconnect_report_ssl_errors(vpninfo);
+			SSL_CTX_free(vpninfo->https_ctx);
+			vpninfo->https_ctx = NULL;
+			closesocket(ssl_sock);
+			return -EIO;
+		}
 
 #ifdef ANDROID_KEYSTORE
 		if (vpninfo->cafile && !strncmp(vpninfo->cafile, "keystore:", 9)) {
@@ -1836,7 +1862,12 @@ int openconnect_open_https(struct openconnect_info *vpninfo)
 		}
 	}
 
-	vpninfo->cstp_cipher = (char *)SSL_get_cipher_name(https_ssl);
+	if (asprintf(&vpninfo->cstp_cipher, "%s-%s",
+		     SSL_get_version(https_ssl), SSL_get_cipher_name(https_ssl)) < 0) {
+		SSL_free(https_ssl);
+		closesocket(ssl_sock);
+		return -ENOMEM;
+	}
 
 	vpninfo->ssl_fd = ssl_sock;
 	vpninfo->https_ssl = https_ssl;
@@ -1846,8 +1877,8 @@ int openconnect_open_https(struct openconnect_info *vpninfo)
 	vpninfo->ssl_gets = openconnect_openssl_gets;
 
 
-	vpn_progress(vpninfo, PRG_INFO, _("Connected to HTTPS on %s\n"),
-		     vpninfo->hostname);
+	vpn_progress(vpninfo, PRG_INFO, _("Connected to HTTPS on %s with ciphersuite %s\n"),
+		     vpninfo->hostname, vpninfo->cstp_cipher);
 
 	return 0;
 }

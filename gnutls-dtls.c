@@ -35,9 +35,6 @@
 #include <gnutls/dtls.h>
 #include "gnutls.h"
 
-#if GNUTLS_VERSION_NUMBER < 0x030200
-# define GNUTLS_DTLS1_2 202
-#endif
 #if GNUTLS_VERSION_NUMBER < 0x030400
 # define GNUTLS_CIPHER_CHACHA20_POLY1305 23
 #endif
@@ -121,7 +118,7 @@ void gather_dtls_ciphers(struct openconnect_info *vpninfo, struct oc_text_buf *b
 
 	buf_append(buf, "PSK-NEGOTIATE");
 
-	ret = gnutls_priority_init(&cache, vpninfo->gnutls_prio, NULL);
+	ret = gnutls_priority_init(&cache, vpninfo->ciphersuite_config, NULL);
 	if (ret < 0) {
 		buf->error = -EIO;
 		return;
@@ -192,7 +189,7 @@ static int start_dtls_psk_handshake(struct openconnect_info *vpninfo, int dtls_f
 	}
 
 	prio = buf_alloc();
-	buf_append(prio, "%s:-VERS-TLS-ALL:+VERS-DTLS-ALL:-KX-ALL:+PSK", vpninfo->gnutls_prio);
+	buf_append(prio, "%s:-VERS-TLS-ALL:+VERS-DTLS-ALL:-KX-ALL:+PSK", vpninfo->ciphersuite_config);
 	if (buf_error(prio)) {
 		vpn_progress(vpninfo, PRG_ERR,
 			     _("Failed to generate DTLS priority string\n"));
