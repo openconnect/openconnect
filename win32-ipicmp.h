@@ -19,7 +19,7 @@
 #include <stdint.h>
 #include <ws2tcpip.h>
 
-/* IPv4 header and flags used in esp.c */
+/* IPv4 header and flags used in gpst.c */
 
 #define	IP_DF 0x4000			/* dont fragment flag */
 #define	IP_MF 0x2000			/* more fragments flag */
@@ -37,10 +37,12 @@ struct ip {
 	struct	in_addr ip_src,ip_dst;	/* source and dest address */
 };
 
-/* ICMP header and flags used in esp.c */
+/* ICMP header and flags used in gpst.c */
 
+#define IPPROTO_ICMP    1
 #define	ICMP_MINLEN	8		/* abs minimum  */
 #define ICMP_ECHO	8		/* Echo Request */
+#define ICMP_ECHOREPLY	0		/* Echo Reply */
 
 #define	icmp_pptr	icmp_hun.ih_pptr
 #define	icmp_gwaddr	icmp_hun.ih_gwaddr
