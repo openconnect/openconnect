@@ -1383,8 +1383,14 @@ newgroup:
 
 			buflen = do_https_request(vpninfo, "GET", NULL, NULL, &form_buf, 0);
 			if (buflen <= 0) {
-				result = -EINVAL;
-				goto out;
+				if (vpninfo->csd_wrapper) {
+					vpn_progress(vpninfo, PRG_ERR,
+					             _("Couldn't fetch CSD stub. Proceeding anyway with CSD wrapper script.\n"));
+					buflen = 0;
+				} else {
+					result = -EINVAL;
+					goto out;
+				}
 			}
 		}
 
