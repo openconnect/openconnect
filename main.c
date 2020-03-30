@@ -1507,15 +1507,17 @@ int main(int argc, char **argv)
 #endif
 		case OPT_CIPHERSUITES:
 			fprintf(stderr,
-#ifdef OPENCONNECT_GNUTLS
-			        _("WARNING: You specified --gnutls-priority. This should not be\n"
+			        _("WARNING: You specified %s. This should not be\n"
 			          "         necessary; please report cases where a priority string\n"
-#elif defined(OPENCONNECT_OPENSSL)
-			        _("WARNING: You specified --openssl-ciphers. This should not be\n"
-			          "         necessary; please report cases where a cipher list\n"
-#endif
 			          "         override is necessary to connect to a server\n"
-			          "         to <openconnect-devel@lists.infradead.org>.\n"));
+			          "         to <openconnect-devel@lists.infradead.org>.\n"),
+#ifdef OPENCONNECT_GNUTLS
+				  "--gnutls-priority"
+#elif defined(OPENCONNECT_OPENSSL)
+				  "--openssl-ciphers"
+#endif
+				  );
+
 			strncpy(vpninfo->ciphersuite_config, config_arg, sizeof(vpninfo->ciphersuite_config) - 1);
 			break;
 		default:
