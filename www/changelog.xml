@@ -25,6 +25,7 @@
        <li>Ignore missing Cisco CSD stub and simply CSD subprocess invocation (<a href="https://gitlab.com/openconnect/openconnect/merge_requests/77">!77</a>, <a href="https://gitlab.com/openconnect/openconnect/merge_requests/74">!74</a>).</li>
        <li>Pass <tt>IDLE_TIMEOUT</tt> to vpnc-script (<a href="https://gitlab.com/openconnect/openconnect/merge_requests/67">!67</a>).</li>
        <li>Windows line-ending flexibility for standard input (<a href="https://gitlab.com/openconnect/openconnect/merge_requests/78">!78</a>).</li>
+       <li>Disable DTLS for GnuTLS versions between 3.6.3 and 3.6.13 inclusive due to <a href="https://gitlab.com/gnutls/gnutls/-/issues/960">GnuTLS #960</a>.</li>
        <li>Add RFC6750 Bearer token support (<a href="https://gitlab.com/openconnect/openconnect/-/merge_requests/70">!70</a>).</li>
      </ul><br/>
   </li>
