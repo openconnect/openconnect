@@ -819,8 +819,8 @@ static void usage(void)
 	printf("  -g, --usergroup=GROUP           %s\n", _("Set login usergroup"));
 	printf("  -p, --key-password=PASS         %s\n", _("Set key passphrase or TPM SRK PIN"));
 	printf("      --key-password-from-fsid    %s\n", _("Key passphrase is fsid of file system"));
-	printf("      --token-mode=MODE           %s\n", _("Software token type: rsa, totp or hotp"));
-	printf("      --token-secret=STRING       %s\n", _("Software token secret"));
+	printf("      --token-mode=MODE           %s\n", _("Software token type: rsa, totp, hotp or oidc"));
+	printf("      --token-secret=STRING       %s\n", _("Software token secret or oidc token"));
 #ifndef HAVE_LIBSTOKEN
 	printf("                                  %s\n", _("(NOTE: libstoken (RSA SecurID) disabled in this build)"));
 #endif
@@ -1470,6 +1470,8 @@ int main(int argc, char **argv)
 				token_mode = OC_TOKEN_MODE_HOTP;
 			} else if (strcasecmp(config_arg, "yubioath") == 0) {
 				token_mode = OC_TOKEN_MODE_YUBIOATH;
+			} else if (strcasecmp(config_arg, "oidc") == 0) {
+				token_mode = OC_TOKEN_MODE_OIDC;
 			} else {
 				fprintf(stderr, _("Invalid software token mode \"%s\"\n"),
 					config_arg);
@@ -2278,6 +2280,19 @@ static void init_token(struct openconnect_info *vpninfo,
 			exit(1);
 		}
 
+	case OC_TOKEN_MODE_OIDC:
+		switch (ret) {
+		case 0:
+			return;
+		case -ENOENT:
+			fprintf(stderr, _("Can't open oidc file\n"));
+			exit(1);
+		default:
+			fprintf(stderr, _("General failure in oidc token\n"));
+			exit(1);
+		}
+
+		break;
 	case OC_TOKEN_MODE_NONE:
 		/* No-op */
 		break;

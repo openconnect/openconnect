@@ -491,7 +491,8 @@ will call liboath to generate an RFC 6238 time-based password, and
 .B \-\-token\-mode=hotp
 will call liboath to generate an RFC 4226 HMAC-based password. Yubikey
 tokens which generate OATH codes in hardware are supported with
-.B \-\-token\-mode=yubioath
+.B \-\-token\-mode=yubioath. \-\-token\-mode=oidc will use the provided 
+OpenIDConnect token as an RFC 6750 bearer token.
 .TP
 .B \-\-token\-secret={ SECRET[,COUNTER] | @FILENAME }
 The secret to use when generating one-time passwords/verification codes.
@@ -505,6 +506,8 @@ CTF string (with or without dashes).
 For Yubikey OATH the token secret specifies the name of the credential to be
 used. If not provided, the first OATH credential found on the device will be
 used.
+
+For OIDC the secret is the bearer token to be used.
 
 .IR FILENAME ,
 if specified, can contain any of the above strings.  Or, it can contain a

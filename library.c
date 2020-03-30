@@ -488,6 +488,7 @@ void openconnect_vpninfo_free(struct openconnect_info *vpninfo)
 	free(vpninfo->tun_pkt);
 	free(vpninfo->dtls_pkt);
 	free(vpninfo->cstp_pkt);
+	free(vpninfo->bearer_token);
 	free(vpninfo);
 }
 
@@ -897,6 +898,8 @@ int openconnect_set_token_mode(struct openconnect_info *vpninfo,
 	case OC_TOKEN_MODE_YUBIOATH:
 		return set_yubikey_mode(vpninfo, token_str);
 #endif
+	case OC_TOKEN_MODE_OIDC:
+		return set_oidc_token(vpninfo, token_str);
 	default:
 		return -EOPNOTSUPP;
 	}
