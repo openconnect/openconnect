@@ -408,8 +408,13 @@ static void read_stdin(char **string, int hidden, int allow_fail)
 		nr_read = wcslen(wbuf);
 	}
 	if (nr_read >= 2 && wbuf[nr_read - 1] == 10 && wbuf[nr_read - 2] == 13) {
+		/* remove trailing "\r\n" */
 		wbuf[nr_read - 2] = 0;
 		nr_read -= 2;
+	} else if (nr_read >= 1 && wbuf[nr_read - 1] == 10) {
+		/* remove trailing "\n" */
+		wbuf[nr_read - 1] = 0;
+		nr_read -= 1;
 	}
 
 	nr_read = WideCharToMultiByte(CP_UTF8, 0, wbuf, -1, NULL, 0, NULL, NULL);
