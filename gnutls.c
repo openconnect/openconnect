@@ -2243,7 +2243,7 @@ int openconnect_open_https(struct openconnect_info *vpninfo)
 
 #ifdef HAVE_DTLS
 	if (vpninfo->dtls_state != DTLS_DISABLED && vpninfo->proto->udp_setup == dtls_setup &&
-	    gnutls_check_version_numeric(3,6,3) && !gnutls_check_version_numeric(3,6,12)) {
+	    gnutls_check_version_numeric(3,6,3) && !gnutls_check_version_numeric(3,6,13)) {
 		vpn_progress(vpninfo, PRG_ERR,
 			     _("Disabling DTLS: This version of the GnuTLS library has an insecure DTLS implementation.\n"));
 		vpninfo->dtls_state = DTLS_DISABLED;

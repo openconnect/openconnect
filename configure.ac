@@ -390,6 +390,8 @@ fi
 
 AC_ARG_WITH([openssl-version-check],
     AS_HELP_STRING([--without-openssl-version-check], [Do not check for known-broken OpenSSL versions]))
+AC_ARG_WITH([gnutls-version-check],
+    AS_HELP_STRING([--without-gnutls-version-check], [Do not check for known-broken GnuTLS versions]))
 AC_ARG_WITH([default-gnutls-priority],
     AS_HELP_STRING([--with-default-gnutls-priority=STRING],
 	[Provide a default string as GnuTLS priority string]),
@@ -527,6 +529,24 @@ case "$ssl_library" in
 	CFLAGS="$CFLAGS $GNUTLS_CFLAGS"
 	esp=yes
 	dtls=yes
+
+	# Check for the known-broken versions of GnuTLS,
+	if test "$with_gnutls_version_check" != "no"; then
+           AC_MSG_CHECKING([for known-broken versions of GnuTLS])
+           AC_COMPILE_IFELSE([AC_LANG_PROGRAM([#include <gnutls/gnutls.h>],
+			       [#if GNUTLS_VERSION_NUMBER >= 0x030603 && GNUTLS_VERSION_NUMBER <= 0x030612
+			       #error Bad GnuTLS
+			       #endif
+			       ])],
+			 [],
+			 [AC_MSG_RESULT(yes)
+			  AC_MSG_ERROR([DTLS is insecure in GnuTLS v3.6.3 through v3.6.12.]
+[See https://gitlab.com/gnutls/gnutls/issues/960]
+[Add --without-gnutls-version-check to configure args to avoid this check (DTLS]
+[will still be disabled at runtime), or build with another version.])])
+	   AC_MSG_RESULT(no)
+       fi
+
 	AC_CHECK_FUNC(gnutls_system_key_add_x509,
 		      [AC_DEFINE(HAVE_GNUTLS_SYSTEM_KEYS, 1, [From GnuTLS 3.4.0])], [])
 	AC_CHECK_FUNC(gnutls_pkcs11_add_provider,
