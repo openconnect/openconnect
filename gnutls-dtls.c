@@ -317,6 +317,48 @@ static int start_dtls_resume_handshake(struct openconnect_info *vpninfo, gnutls_
 	return 0;
 }
 
+/*
+ * GnuTLS version between 3.6.3 and 3.6.12 send zero'ed ClientHello. Make sure
+ * we are not hitting that bug. Adapted from:
+ * https://gitlab.com/gnutls/gnutls/-/blob/3.6.13/tests/tls_hello_random_value.c
+ */
+static int check_client_hello_random(gnutls_session_t ttls_sess, unsigned int type,
+				     unsigned hook, unsigned int incoming, const gnutls_datum_t *msg)
+{
+	unsigned non_zero = 0, i;
+	struct openconnect_info *vpninfo = (struct openconnect_info *)gnutls_session_get_ptr(ttls_sess);
+
+	if (type == GNUTLS_HANDSHAKE_CLIENT_HELLO && hook == GNUTLS_HOOK_POST) {
+		gnutls_datum_t buf;
+		gnutls_session_get_random(ttls_sess, &buf, NULL);
+		if (buf.size != 32) {
+			vpn_progress(vpninfo, PRG_ERR,
+				     _("GnuTLS used %d ClientHello random bytes; this should never happen\n"),
+				     buf.size);
+			return GNUTLS_E_INVALID_REQUEST;
+		}
+
+		for (i = 0; i < buf.size; ++i) {
+			if (buf.data[i] != 0) {
+				non_zero++;
+			}
+		}
+
+		/* The GnuTLS bug was that *all* bytes were zero, but as part of the unit test
+		 * they also slipped in a coincidental check on how well the random number
+		 * generator is behaving. Eight or more zeroes is a bad thing whatever the
+		 * reason for it. So we have the same check. */
+		if (non_zero <= 8) {
+			/* TODO: mention CVE number in log message once it's assigned */
+			vpn_progress(vpninfo, PRG_ERR,
+			     _("GnuTLS sent insecure ClientHello random. Upgrade to 3.6.13 or newer.\n"));
+			return GNUTLS_E_INVALID_REQUEST;
+		}
+	}
+
+	return 0;
+}
+
 int start_dtls_handshake(struct openconnect_info *vpninfo, int dtls_fd)
 {
 	gnutls_session_t dtls_ssl;
@@ -333,19 +375,23 @@ int start_dtls_handshake(struct openconnect_info *vpninfo, int dtls_fd)
 	gnutls_transport_set_ptr(dtls_ssl,
 				 (gnutls_transport_ptr_t)(intptr_t)dtls_fd);
 
-
 	if (!strcmp(vpninfo->dtls_cipher, "PSK-NEGOTIATE"))
 		ret = start_dtls_psk_handshake(vpninfo, dtls_ssl);
 	else
 		ret = start_dtls_resume_handshake(vpninfo, dtls_ssl);
 
 	if (ret) {
-	fail:
 		if (ret != -EAGAIN)
 			vpninfo->dtls_attempt_period = 0;
 		gnutls_deinit(dtls_ssl);
 		return ret;
 	}
+
+	if (gnutls_check_version_numeric(3,6,3) && !gnutls_check_version_numeric(3,6,13)) {
+		gnutls_handshake_set_hook_function(dtls_ssl, GNUTLS_HANDSHAKE_CLIENT_HELLO,
+						   GNUTLS_HOOK_POST, check_client_hello_random);
+	}
+
 
 	vpninfo->dtls_ssl = dtls_ssl;
 	return 0;
