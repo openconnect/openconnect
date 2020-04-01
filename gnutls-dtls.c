@@ -175,9 +175,8 @@ void gather_dtls_ciphers(struct openconnect_info *vpninfo, struct oc_text_buf *b
  * identifier in the client hello (draft-jay-tls-psk-identity-extension
  * could be used in the future). The session is not actually resumed.
  */
-static int start_dtls_psk_handshake(struct openconnect_info *vpninfo, int dtls_fd)
+static int start_dtls_psk_handshake(struct openconnect_info *vpninfo, gnutls_session_t dtls_ssl)
 {
-	gnutls_session_t dtls_ssl;
 	gnutls_datum_t key;
 	struct oc_text_buf *prio;
 	int err;
@@ -193,19 +192,9 @@ static int start_dtls_psk_handshake(struct openconnect_info *vpninfo, int dtls_f
 	if (buf_error(prio)) {
 		vpn_progress(vpninfo, PRG_ERR,
 			     _("Failed to generate DTLS priority string\n"));
-		vpninfo->dtls_attempt_period = 0;
 		return buf_free(prio);
 	}
 
-
-	err = gnutls_init(&dtls_ssl, GNUTLS_CLIENT|GNUTLS_DATAGRAM|GNUTLS_NONBLOCK|GNUTLS_NO_EXTENSIONS);
-	if (err) {
-		vpn_progress(vpninfo, PRG_ERR,
-			     _("Failed to initialize DTLS: %s\n"),
-			     gnutls_strerror(err));
-		goto fail;
-	}
-	gnutls_session_set_ptr(dtls_ssl, (void *) vpninfo);
 
 	err = gnutls_priority_set_direct(dtls_ssl, prio->data, NULL);
 	if (err) {
@@ -226,9 +215,6 @@ static int start_dtls_psk_handshake(struct openconnect_info *vpninfo, int dtls_f
 
 		gnutls_session_set_id(dtls_ssl, &id);
 	}
-
-	gnutls_transport_set_ptr(dtls_ssl,
-				 (gnutls_transport_ptr_t)(intptr_t)dtls_fd);
 
 	/* set PSK credentials */
 	err = gnutls_psk_allocate_client_credentials(&vpninfo->psk_cred);
@@ -275,26 +261,20 @@ static int start_dtls_psk_handshake(struct openconnect_info *vpninfo, int dtls_f
 	}
 
 	buf_free(prio);
-	vpninfo->dtls_ssl = dtls_ssl;
 	return 0;
+
  fail:
 	buf_free(prio);
-	gnutls_deinit(dtls_ssl);
 	gnutls_psk_free_client_credentials(vpninfo->psk_cred);
 	vpninfo->psk_cred = NULL;
-	vpninfo->dtls_attempt_period = 0;
 	return -EINVAL;
 }
 
-int start_dtls_handshake(struct openconnect_info *vpninfo, int dtls_fd)
+static int start_dtls_resume_handshake(struct openconnect_info *vpninfo, gnutls_session_t dtls_ssl)
 {
-	gnutls_session_t dtls_ssl;
 	gnutls_datum_t master_secret, session_id;
 	int err;
 	int cipher;
-
-	if (strcmp(vpninfo->dtls_cipher, "PSK-NEGOTIATE") == 0)
-		return start_dtls_psk_handshake(vpninfo, dtls_fd);
 
 	for (cipher = 0; cipher < sizeof(gnutls_dtls_ciphers)/sizeof(gnutls_dtls_ciphers[0]); cipher++) {
 		if (gnutls_dtls_ciphers[cipher].cisco_dtls12 != vpninfo->cisco_dtls12 ||
@@ -305,28 +285,18 @@ int start_dtls_handshake(struct openconnect_info *vpninfo, int dtls_fd)
 	}
 	vpn_progress(vpninfo, PRG_ERR, _("Unknown DTLS parameters for requested CipherSuite '%s'\n"),
 		     vpninfo->dtls_cipher);
-	vpninfo->dtls_attempt_period = 0;
-
 	return -EINVAL;
 
  found_cipher:
-	gnutls_init(&dtls_ssl, GNUTLS_CLIENT|GNUTLS_DATAGRAM|GNUTLS_NONBLOCK);
-	gnutls_session_set_ptr(dtls_ssl, (void *) vpninfo);
-
 	err = gnutls_priority_set_direct(dtls_ssl,
 					 gnutls_dtls_ciphers[cipher].prio,
 					 NULL);
 	if (err) {
 		vpn_progress(vpninfo, PRG_ERR,
-			     _("Failed to set DTLS priority: %s\n"),
-			     gnutls_strerror(err));
-		gnutls_deinit(dtls_ssl);
-		vpninfo->dtls_attempt_period = 0;
+			     _("Failed to set DTLS priority: '%s': %s\n"),
+			     gnutls_dtls_ciphers[cipher].prio, gnutls_strerror(err));
 		return -EINVAL;
 	}
-
-	gnutls_transport_set_ptr(dtls_ssl,
-				 (gnutls_transport_ptr_t)(intptr_t)dtls_fd);
 
 	gnutls_record_disable_padding(dtls_ssl);
 	master_secret.data = vpninfo->dtls_secret;
@@ -341,9 +311,40 @@ int start_dtls_handshake(struct openconnect_info *vpninfo, int dtls_fd)
 		vpn_progress(vpninfo, PRG_ERR,
 			     _("Failed to set DTLS session parameters: %s\n"),
 			     gnutls_strerror(err));
-		gnutls_deinit(dtls_ssl);
-		vpninfo->dtls_attempt_period = 0;
 		return -EINVAL;
+	}
+
+	return 0;
+}
+
+int start_dtls_handshake(struct openconnect_info *vpninfo, int dtls_fd)
+{
+	gnutls_session_t dtls_ssl;
+	int err, ret;
+
+	err = gnutls_init(&dtls_ssl, GNUTLS_CLIENT|GNUTLS_DATAGRAM|GNUTLS_NONBLOCK|GNUTLS_NO_EXTENSIONS);
+	if (err) {
+		vpn_progress(vpninfo, PRG_ERR,
+			     _("Failed to initialize DTLS: %s\n"),
+			     gnutls_strerror(err));
+		return -EINVAL;
+	}
+	gnutls_session_set_ptr(dtls_ssl, (void *) vpninfo);
+	gnutls_transport_set_ptr(dtls_ssl,
+				 (gnutls_transport_ptr_t)(intptr_t)dtls_fd);
+
+
+	if (!strcmp(vpninfo->dtls_cipher, "PSK-NEGOTIATE"))
+		ret = start_dtls_psk_handshake(vpninfo, dtls_ssl);
+	else
+		ret = start_dtls_resume_handshake(vpninfo, dtls_ssl);
+
+	if (ret) {
+	fail:
+		if (ret != -EAGAIN)
+			vpninfo->dtls_attempt_period = 0;
+		gnutls_deinit(dtls_ssl);
+		return ret;
 	}
 
 	vpninfo->dtls_ssl = dtls_ssl;
