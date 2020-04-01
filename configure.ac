@@ -534,7 +534,7 @@ case "$ssl_library" in
 	if test "$with_gnutls_version_check" != "no"; then
            AC_MSG_CHECKING([for known-broken versions of GnuTLS])
            AC_COMPILE_IFELSE([AC_LANG_PROGRAM([#include <gnutls/gnutls.h>],
-			       [#if GNUTLS_VERSION_NUMBER >= 0x030603 && GNUTLS_VERSION_NUMBER <= 0x030612
+			       [#if GNUTLS_VERSION_NUMBER >= 0x030603 && GNUTLS_VERSION_NUMBER <= 0x03060c
 			       #error Bad GnuTLS
 			       #endif
 			       ])],
