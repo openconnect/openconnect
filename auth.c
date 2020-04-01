@@ -84,6 +84,14 @@ static int parse_auth_choice(struct openconnect_info *vpninfo, struct oc_auth_fo
 	xmlNode *opt_node;
 	int max_choices = 0, selection = 0;
 
+	for (opt_node = xml_node->children; opt_node; opt_node = opt_node->next)
+		max_choices++;
+
+	/* Return early when there is a <select/> tag with no children */
+	if (max_choices == 0) {
+	    return 0;
+	}
+
 	opt = calloc(1, sizeof(*opt));
 	if (!opt)
 		return -ENOMEM;
@@ -98,8 +106,6 @@ static int parse_auth_choice(struct openconnect_info *vpninfo, struct oc_auth_fo
 		return -EINVAL;
 	}
 
-	for (opt_node = xml_node->children; opt_node; opt_node = opt_node->next)
-		max_choices++;
 
 	opt->choices = calloc(1, max_choices * sizeof(struct oc_choice *));
 	if (!opt->choices) {
