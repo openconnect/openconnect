@@ -1693,10 +1693,13 @@ static int pulse_authenticate(struct openconnect_info *vpninfo, int connecting)
 			char md5buf[MD5_SIZE * 2 + 1];
 			get_cert_md5_fingerprint(vpninfo, vpninfo->peer_cert, md5buf);
 			if (avp_len != MD5_SIZE * 2 || strncasecmp(avp_p, md5buf, MD5_SIZE * 2)) {
-				vpn_progress(vpninfo, PRG_ERR,
-					     _("Server certificate mismatch. Aborting due to suspected MITM attack\n"));
-				ret = -EPERM;
-				goto out;
+				/* This actually happens in the wild and the official clients don't seem to
+				 * care. It's too late because we've already authenticated at this point,
+				 * and it's only MD5 anyway. I find it hard to care. Just whine and continue
+				 * anyway. */
+				vpn_progress(vpninfo, PRG_INFO,
+					     _("WARNING: Server provided certificate MD5 does not match its actual certificate.\n"));
+				continue;
 			}
 		}
 		if (avp_vendor == VENDOR_JUNIPER2 && avp_code == 0xd65) {
