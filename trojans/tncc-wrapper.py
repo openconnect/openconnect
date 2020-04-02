@@ -31,7 +31,8 @@ class Tncc:
         self.plugin_jar = '/usr/share/icedtea-web/plugin.jar'
 
         if not os.path.isfile(self.plugin_jar):
-            raise Exception(self.plugin_jar + ' not found')
+            print('WARNING: no IcedTea Java web plugin JAR found at %s' % self.plugin_jar, file=sys.stderr)
+            self.plugin_jar = None
         self.user_agent = 'Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.0.1) Gecko/2008071615 Fedora/3.0.1-1.fc9 Firefox/3.0.1'
         
     def tncc_init(self):
@@ -57,14 +58,14 @@ class Tncc:
                     break
                 except:
                     pass
-
-        if self.class_name is None:
-            raise Exception('Could not find class name for', self.tncc_jar)
+            else:
+                raise Exception('Could not find class name for', self.tncc_jar)
 
         self.tncc_preload = \
             os.path.expanduser('~/.juniper_networks/tncc_preload.so')
         if not os.path.isfile(self.tncc_preload):
-            raise Exception('Missing', self.tncc_preload)
+            print('WARNING: no tncc_preload found at %s' % self.tncc_preload, file=sys.stderr)
+            self.tncc_preload = None
 
     def tncc_start(self):
         # tncc is the host checker app. It can check different
@@ -79,7 +80,7 @@ class Tncc:
             self.tncc_init()
 
         self.tncc_process = subprocess.Popen(['java',
-            '-classpath', self.tncc_jar + ':' + self.plugin_jar,
+            '-classpath', self.tncc_jar + (':' + self.plugin_jar if self.plugin_jar else ''),
             self.class_name,
             'log_level', '100',
             'postRetries', '6',
@@ -87,7 +88,7 @@ class Tncc:
             'home_dir', os.path.expanduser('~'),
             'Parameter0', '',
             'user_agent', self.user_agent,
-            ], env={'LD_PRELOAD': self.tncc_preload})
+            ], env={'LD_PRELOAD': self.tncc_preload} if self.tncc_preload else {})
 
 
         
