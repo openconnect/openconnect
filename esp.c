@@ -326,6 +326,13 @@ int esp_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable)
 				}
 			}
 
+			/* XX: Must precede in-place encryption of the packet, because
+			   IP header fields (version and TOS) are garbled afterward.
+			   If TOS optname is set, we want to copy the TOS/TCLASS header
+			   to the outer UDP packet */
+			if (vpninfo->dtls_tos_optname)
+				udp_tos_update(vpninfo, this);
+
 			len = construct_esp_packet(vpninfo, this, 0);
 			if (len < 0) {
 				/* Should we disable ESP? */
