@@ -400,7 +400,13 @@ static int tncc_preauth(struct openconnect_info *vpninfo)
 		for (i = 3; i < 1024 ; i++)
 			close(i);
 
+		if (setenv("TNCC_SHA256", openconnect_get_peer_cert_hash(vpninfo)+11, 1))  /* remove initial 'pin-sha256:' */
+			goto out;
+		if (setenv("TNCC_HOSTNAME", vpninfo->localname, 1))
+			goto out;
+
 		execl(vpninfo->csd_wrapper, vpninfo->csd_wrapper, vpninfo->hostname, NULL);
+	out:
 		fprintf(stderr, _("Failed to exec TNCC script %s: %s\n"),
 			vpninfo->csd_wrapper, strerror(errno));
 		exit(1);
