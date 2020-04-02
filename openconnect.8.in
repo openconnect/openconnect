@@ -222,7 +222,9 @@ Use syslog for progress messages
 Prepend a timestamp to each progress message
 .TP
 .B \-\-passtos
-Copy TOS / TCLASS of payload packet into DTLS packets.
+Copy TOS / TCLASS of payload packet into DTLS and ESP packets. This is
+not set by default because it may leak information about the payload
+(for example, by differentiating voice/video traffic).
 .TP
 .B \-U,\-\-setuid=USER
 Drop privileges after connecting, to become user

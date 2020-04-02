@@ -844,7 +844,7 @@ static void usage(void)
 #endif
 	printf("      --reconnect-timeout         %s\n", _("Connection retry timeout in seconds"));
 	printf("      --resolve=HOST:IP           %s\n", _("Use IP when connecting to HOST"));
-	printf("      --passtos                   %s\n", _("copy TOS / TCLASS when using DTLS"));
+	printf("      --passtos                   %s\n", _("Copy TOS / TCLASS field into DTLS and ESP packets"));
 	printf("      --dtls-local-port=PORT      %s\n", _("Set local port for DTLS and ESP datagrams"));
 
 	printf("\n%s:\n", _("Authentication (two-phase)"));
