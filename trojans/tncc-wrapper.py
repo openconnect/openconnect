@@ -93,7 +93,8 @@ class Tncc:
         
 if __name__ == "__main__":
     if len(sys.argv) <= 1:
-        raise Exception("Usage: ...")
+        print("Usage: %s [vpn-host]" % sys.argv[0])
+        raise SystemExit(1)
         
     tncc = Tncc(sys.argv[1])
     tncc.tncc_init()
