@@ -1,4 +1,4 @@
-#!/usr/bin/python2
+#!/usr/bin/python3
 
 # Lifted from Russ Dill's juniper-vpn-wrap.py, thus:
 #
@@ -17,33 +17,13 @@
 #    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 import subprocess
-import mechanize
-import cookielib
-import getpass
 import sys
 import os
 import zipfile
-import urllib
-import socket
+import urllib.request
 import ssl
-import errno
-import argparse
-import atexit
-import signal
-import ConfigParser
-import time
-import binascii
-import hmac
-import hashlib
 
-def mkdir_p(path):
-    try:
-        os.mkdir(path)
-    except OSError, exc:
-        if exc.errno == errno.EEXIST and os.path.isdir(path):
-            pass
-        else:
-            raise
+ssl._create_default_https_context = ssl._create_unverified_context
 
 class Tncc:
     def __init__(self, vpn_host):
@@ -64,10 +44,10 @@ class Tncc:
             if zipfile.ZipFile(self.tncc_jar, 'r').testzip() is not None:
                 raise Exception()
         except:
-            print 'Downloading tncc.jar...'
-            mkdir_p(os.path.expanduser('~/.juniper_networks'))
-            urllib.urlretrieve('https://' + self.vpn_host
-                               + '/dana-cached/hc/tncc.jar', self.tncc_jar)
+            print('Downloading tncc.jar...')
+            os.makedirs(os.path.expanduser('~/.juniper_networks'), exist_ok=True)
+            urllib.request.urlretrieve('https://' + self.vpn_host
+                                       + '/dana-cached/hc/tncc.jar', self.tncc_jar)
 
         with zipfile.ZipFile(self.tncc_jar, 'r') as jar:
             for name in class_names:
@@ -97,8 +77,6 @@ class Tncc:
 
         if not self.tncc_jar:
             self.tncc_init()
-
-        null = open(os.devnull, 'w')
 
         self.tncc_process = subprocess.Popen(['java',
             '-classpath', self.tncc_jar + ':' + self.plugin_jar,
