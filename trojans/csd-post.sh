@@ -22,7 +22,8 @@ else
 fi
 
 export RESPONSE=$(mktemp /tmp/csdresponseXXXXXXX)
-trap 'rm $RESPONSE' EXIT
+export RESULT=$(mktemp /tmp/csdresultXXXXXXX)
+trap 'rm $RESPONSE $RESULT' EXIT
 
 
 cat >> $RESPONSE <<EOF
@@ -120,7 +121,7 @@ EOF
 		    ;;
 
 		Process)
-		    if pidof "$VALUE" 2> /dev/null; then
+		    if pidof "$VALUE" &> /dev/null; then
 			EXISTS=true
 		    else
 			EXISTS=false
@@ -150,4 +151,8 @@ fi
 COOKIE_HEADER="Cookie: sdesktop=$TOKEN"
 CONTENT_HEADER="Content-Type: text/xml"
 URL="https://$CSD_HOSTNAME/+CSCOE+/sdesktop/scan.xml?reusebrowser=1"
-curl $PINNEDPUBKEY -v -H "$CONTENT_HEADER" -H "$COOKIE_HEADER" --data @$RESPONSE "$URL"
+curl $PINNEDPUBKEY -H "$CONTENT_HEADER" -H "$COOKIE_HEADER" --data @$RESPONSE "$URL" > $RESULT
+
+cat $RESULT || :
+
+exit 0
