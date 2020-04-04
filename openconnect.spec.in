@@ -114,6 +114,7 @@ fi
 %if %{use_gnutls}
 %if 0%{?fedora} || 0%{?rhel} > 8
 		--with-default-gnutls-priority="@OPENCONNECT,SYSTEM" \
+		--without-gnutls-version-check \
 %endif
 %else
 		--with-openssl --without-openssl-version-check \
