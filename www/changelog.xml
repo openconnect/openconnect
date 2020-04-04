@@ -15,6 +15,12 @@
 <ul>
    <li><b>OpenConnect HEAD</b>
      <ul>
+       <li><i>No changelog entries yet</i></li>
+     </ul><br/>
+  </li>
+  <li><b><a href="ftp://ftp.infradead.org/pub/openconnect/openconnect-8.07.tar.gz">OpenConnect v8.07</a></b>
+     <i>(<a href="ftp://ftp.infradead.org/pub/openconnect/openconnect-8.07.tar.gz.asc">PGP signature</a>)</i> &#8212; 2020-04-04
+     <ul>
        <li>Don't abort Pulse connection when server-provided certificate MD5 doesn't match.</li>
        <li>Fix off-by-one in check for bad GnuTLS versions, and add build and run time checks.</li>
        <li>Don't abort connection if CSD wrapper script returns non-zero (for now).</li>
