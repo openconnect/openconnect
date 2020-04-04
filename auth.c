@@ -1135,12 +1135,18 @@ static int run_csd_script(struct openconnect_info *vpninfo, char *buf, int bufle
 			             _("CSD script '%s' exited abnormally\n"),
 			             vpninfo->csd_wrapper ?: fname);
 			ret = -EINVAL;
-		} else if (WEXITSTATUS(status) != 0) {
-			vpn_progress(vpninfo, PRG_ERR,
-                                     _("CSD script '%s' returned non-zero status: %d\n"),
-                                     vpninfo->csd_wrapper ?: fname, WEXITSTATUS(status));
-			ret = -EINVAL;
 		} else {
+			if (WEXITSTATUS(status) != 0) {
+				vpn_progress(vpninfo, PRG_ERR,
+					     _("CSD script '%s' returned non-zero status: %d\n"),
+					     vpninfo->csd_wrapper ?: fname, WEXITSTATUS(status));
+				/* Some scripts do exit non-zero, and it's never mattered.
+				 * Don't abort for now. */
+				vpn_progress(vpninfo, PRG_ERR,
+					     _("Authentication may fail. If your script is not returning zero, fix it.\n"
+					       "Future versions of openconnect will abort on this error.\n"));
+			}
+
 			free(vpninfo->urlpath);
 			vpninfo->urlpath = strdup(vpninfo->csd_waiturl +
 			                          (vpninfo->csd_waiturl[0] == '/' ? 1 : 0));
