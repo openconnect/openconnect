@@ -56,4 +56,20 @@ int oc_gnutls_encode_rs_value(gnutls_datum_t *sig_value, const gnutls_datum_t *r
 
 char *get_gnutls_cipher(gnutls_session_t session);
 
+/* Compile-time optimisable GnuTLS version check. We should never be
+ * run against a version of GnuTLS which is *older* than the one we
+ * were built again, but we might be run against a version which is
+ * newer. So some ancient compatibility code *can* be dropped at
+ * compile time. Likewise, if building against GnuTLS 2.x then we
+ * can never be running agsinst a 3.x library — the soname changed.
+ *
+ * This macro was added upstream, gnutls_check_version_numeric,
+ * in 3.5.0 (see https://gitlab.com/gnutls/gnutls/commit/c8b40aeb) */
+#define gtls_ver(a,b,c) ( GNUTLS_VERSION_MAJOR >= (a) &&		\
+	(GNUTLS_VERSION_NUMBER >= ( ((a) << 16) + ((b) << 8) + (c) ) || \
+	 gnutls_check_version(#a "." #b "." #c)))
+#ifndef gnutls_check_version_numeric
+#define gnutls_check_version_numeric gtls_ver
+#endif
+
 #endif /* __OPENCONNECT_GNUTLS_H__ */

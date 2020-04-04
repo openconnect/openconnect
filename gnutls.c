@@ -65,16 +65,6 @@ static int gnutls_pin_callback(void *priv, int attempt, const char *uri,
 #define GNUTLS_FORCE_CLIENT_CERT 0
 #endif
 
-/* Compile-time optimisable GnuTLS version check. We should never be
- * run against a version of GnuTLS which is *older* than the one we
- * were built again, but we might be run against a version which is
- * newer. So some ancient compatibility code *can* be dropped at
- * compile time. Likewise, if building against GnuTLS 2.x then we
- * can never be running agsinst a 3.x library — the soname changed. */
-#define gtls_ver(a,b,c) ( GNUTLS_VERSION_MAJOR >= (a) &&		\
-	(GNUTLS_VERSION_NUMBER >= ( ((a) << 16) + ((b) << 8) + (c) ) || \
-	 gnutls_check_version(#a "." #b "." #c)))
-
 static char tls_library_version[32] = "";
 
 const char *openconnect_get_tls_library_version()
