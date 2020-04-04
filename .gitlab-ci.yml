@@ -111,7 +111,7 @@ Fedora/Coverity:
   - ./configure --with-java --without-gnutls --with-openssl --disable-dsa-tests
   - cov-analysis-linux64-*/bin/cov-build --dir cov-int make -j4
   - make clean
-  - ./configure --with-java --disable-dsa-tests
+  - ./configure --with-java --disable-dsa-tests --without-gnutls-version-check
   - cov-analysis-linux64-*/bin/cov-build --dir cov-int make -j4
   - tar cfz cov-int.tar.gz cov-int
   - curl https://scan.coverity.com/builds?project=$COVERITY_SCAN_PROJECT_NAME
@@ -140,10 +140,10 @@ Fedora/GnuTLS:
     java-devel-openjdk glibc-langpack-cs iproute iputils nuttcp
     'pkgconfig(tss2-esys)' 'pkgconfig(krb5-gssapi)'
   - ./autogen.sh
-  - ./configure --with-java --disable-dsa-tests CFLAGS=-g
+  - ./configure --with-java --disable-dsa-tests --without-gnutls-version-check CFLAGS=-g
   - make tmp-distdir
   - cd openconnect-$(git describe --tags | sed s/^v//)
-  - ./configure --with-java --disable-dsa-tests CFLAGS=-g
+  - ./configure --with-java --disable-dsa-tests --without-gnutls-version-check CFLAGS=-g
   - make -j4
   - make VERBOSE=1 -j4 check
   tags:
@@ -168,10 +168,10 @@ Fedora/GnuTLS/clang:
     java-devel-openjdk clang glibc-langpack-cs iproute iputils nuttcp
     'pkgconfig(tss2-esys)' 'pkgconfig(krb5-gssapi)'
   - ./autogen.sh
-  - ./configure --with-java --disable-dsa-tests CC=clang CFLAGS=-g
+  - ./configure --with-java --disable-dsa-tests --without-gnutls-version-check CC=clang CFLAGS=-g
   - make tmp-distdir
   - cd openconnect-$(git describe --tags | sed s/^v//)
-  - ./configure --with-java --disable-dsa-tests CC=clang CFLAGS=-g
+  - ./configure --with-java --disable-dsa-tests --without-gnutls-version-check CC=clang CFLAGS=-g
   - make -j4
   - make VERBOSE=1 -j4 check
   tags:
@@ -253,7 +253,7 @@ MinGW32/GnuTLS:
   - mount -t binfmt_misc binfmt_misc /proc/sys/fs/binfmt_misc
   - echo ':DOSWin:M::MZ::/usr/bin/wine:' > /proc/sys/fs/binfmt_misc/register
   - ./autogen.sh
-  - mingw32-configure CFLAGS=-g
+  - mingw32-configure --without-gnutls-version-check CFLAGS=-g
   - make -j4
   - make VERBOSE=1 -j4 check
   tags:
@@ -297,7 +297,7 @@ MinGW64/GnuTLS:
   - mount -t binfmt_misc binfmt_misc /proc/sys/fs/binfmt_misc
   - echo ':DOSWin:M::MZ::/usr/bin/wine:' > /proc/sys/fs/binfmt_misc/register
   - ./autogen.sh
-  - mingw64-configure CFLAGS=-g
+  - mingw64-configure --without-gnutls-version-check CFLAGS=-g
   - make -j4
   - make VERBOSE=1 -j4 check
   tags:
