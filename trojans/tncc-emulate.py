@@ -16,6 +16,42 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
 # Lesser General Public License for more details.
 
+########################################
+#
+# Required modules:
+#   - Mechanize (https://pypi.org/project/mechanize). Tested with v0.4.5
+#   - For client certificate support and server certificate validation, asn1crypto
+#     is required (https://github.com/wbond/asn1crypto). Tested with v1.3.0
+#   - For autodetection of network interfaces' hardware/MAC addresses,
+#     netifaces is required (https://pypi.org/project/netifaces). Tested with v0.10.9
+#
+# OpenConnect will automatically set the TNCC_HOSTNAME variable when calling this
+# script, and will set TNCC_SHA256 to the pin-sha256 hash of the server certificates
+# public key (currently not verified).
+#
+# Environment variables that may need customization (excerpted from
+# https://github.com/russdill/juniper-vpn-py/blame/master/README.host_checker):
+#
+# TNCC_DEVICE_ID: May need to be overriden to match a known value from a computer
+#   running the official Windows client software (obtained from the registry key
+#   \HKEY_CURRENT_USER\Software\Juniper Networks\Device Id)
+#
+# TNCC_FUNK: Set TNCC_FUNK=1 to force the use of client machine identification
+#   (known as "funk" to Juniper). This identification will include host platform,
+#   a list of network hardware/MAC addresses, and client certificates requested
+#   by the server.
+#
+#   TNCC_PLATFORM: override system value (e.g. "Windows 7").
+#   TNCC_HOSTNAME: override system value (e.g. "laptop1234.bigcorp.com").
+#   TNCC_HWADDR: override with a comma-separated list of network hardware/MAC
+#     addresses to report to the server (e.g. "aa:bb:cc:dd:00:21,ee:ff:12:34:45:78").
+#     The default behavior is to include the all the MAC addresses returned by the
+#     netifaces module, or to leave blank if this module is not available.
+#   TNCC_CERTS: a comma-separated list of absolute paths to PEM-formatted client
+#     certificates to offer to the server
+#
+########################################
+
 import sys
 import os
 import logging
