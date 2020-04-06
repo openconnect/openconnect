@@ -1,0 +1,102 @@
+#!/bin/sh
+#
+# Copyright (C) 2016 Red Hat, Inc.
+#
+# This file is part of openconnect.
+#
+# This is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Lesser General Public License
+# as published by the Free Software Foundation; either version 2.1 of
+# the License, or (at your option) any later version.
+#
+# This library is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Lesser General Public License for more details.
+#
+# You should have received a copy of the GNU Lesser General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>
+
+SERV="${SERV:-../src/ocserv}"
+srcdir=${srcdir:-.}
+top_builddir=${top_builddir:-..}
+
+. `dirname $0`/common.sh
+
+echo "Testing certificate auth... "
+
+launch_simple_sr_server -d 1 -f -c configs/test-user-pass.config
+PID=$!
+wait_server $PID
+
+expect_cert_fail() {
+    SERVERCERT=$1
+    echo -n "Testing with cert fingerprint $SERVERCERT..."
+    ( echo "test" | LD_PRELOAD=libsocket_wrapper.so $OPENCONNECT -q $ADDRESS:443 -u test --servercert $SERVERCERT --cookieonly >/dev/null 2>&1) &&
+	fail $PID "Accepted wrong fingerprint $SERVERCERT"
+
+    echo "ok (rejected)"
+}
+
+expect_cert_success() {
+    SERVERCERT=$1
+    echo -n "Testing with cert fingerprint $SERVERCERT..."
+    ( echo "test" | LD_PRELOAD=libsocket_wrapper.so $OPENCONNECT -q $ADDRESS:443 -u test --servercert $SERVERCERT --cookieonly >/dev/null 2>&1) ||
+	fail $PID "Rejected good fingerprint $SERVERCERT"
+
+    echo "ok (accepted)"
+}
+
+expect_cert_success d66b507ae074d03b02eafca40d35f87dd81049d3
+expect_cert_success D66B507AE074D03B02EAFCA40D35F87DD81049D3
+expect_cert_fail    d66b507ae074d03b02eafca40d35f87dd81049d34
+expect_cert_fail    D66B507AE074D03B02EAFCA40D35F87DD81049D34
+expect_cert_fail    d66b507ae074d03b02eafca41d35f87dd81049d3
+expect_cert_fail    D66B507AE074D03B02EAFCA41D35F87DD81049D3
+expect_cert_success d66b507ae074d03b0
+expect_cert_success D66B507AE074D03B0
+expect_cert_fail    d66
+expect_cert_fail    D66
+expect_cert_success d66B
+expect_cert_success D66b
+
+expect_cert_success sha1:a82547f68f44d6351bef6cacd1d7b96e84f9dfa3
+expect_cert_success sha1:A82547F68F44D6351BEF6CACD1D7B96E84F9DFA3
+expect_cert_fail    sha1:a82547f68f44d6351bef6cacd1d7b96e84f9dfa34
+expect_cert_fail    sha1:A82547F68F44D6351BEF6CACD1D7B96E84F9DFA34
+expect_cert_fail    sha1:a82547f68f44d6352bef6cacd1d7b96e84f9dfa3
+expect_cert_fail    sha1:A82547F68F44D6352BEF6CACD1D7B96E84F9DFA3
+expect_cert_success sha1:a82547f68f44d635
+expect_cert_success sha1:A82547F68F44D635
+expect_cert_fail    sha1:a82
+expect_cert_fail    sha1:A82
+expect_cert_success sha1:a825
+expect_cert_success sha1:A825
+
+expect_cert_success sha256:c69dec71fcf2deb390b2ff4d70ebdeffc61556ffa91ebe2a3425c45eb365e6cf
+expect_cert_success sha256:C69DEC71FCF2DEB390B2FF4D70EBDEFFC61556FFA91EBE2A3425C45EB365E6CF
+expect_cert_fail    sha256:c69dec71fcf2deb390b2ff4d70ebdeffc61556ffa91ebe2a3425c45eb365e6cf3
+expect_cert_fail    sha256:C69DEC71FCF2DEB390B2FF4D70EBDEFFC61556FFA91EBE2A3425C45EB365E6CF3
+expect_cert_fail    sha256:c69dec71fcf2deb390b2fe4d70ebdeffc61556ffa91ebe2a3425c45eb365e6cf
+expect_cert_fail    sha256:C69DEC71FCF2DEB390B2FE4D70EBDEFFC61556FFA91EBE2A3425C45EB365E6CF
+expect_cert_success sha256:c69dec71fcf2deb390b2f
+expect_cert_success sha256:C69DEC71FCF2DEB390B2F
+expect_cert_fail    sha256:c69
+expect_cert_fail    sha256:C69
+expect_cert_success sha256:c69D
+expect_cert_success sha256:C69d
+
+# pin-sha256: is case sensitive.
+expect_cert_success pin-sha256:xp3scfzy3rOQsv9NcOve/8YVVv+pHr4qNCXEXrNl5s8=
+expect_cert_fail    pin-sha256:xp3scfzy3rOQsv9NcOvE/8YVVv+pHr4qNCXEXrNl5s8=
+expect_cert_fail    pin-sha256:XP3SCFZY3ROQSV9NCOVE/8YVVV+PHR4QNCXEXRNL5S8=
+expect_cert_success pin-sha256:xp3scfzy3rOQsv9NcO
+expect_cert_fail    pin-sha256:xp3scfzy3rOQsv9NCO
+expect_cert_fail    pin-sha256:xp3
+expect_cert_fail    pin-sha256:xp3
+expect_cert_success pin-sha256:xp3s
+expect_cert_fail    pin-sha256:xP3s
+
+cleanup
+
+exit 0

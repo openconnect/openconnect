@@ -52,7 +52,7 @@ dist_check_SCRIPTS += dtls-psk sigterm
 endif
 
 if HAVE_CWRAP
-dist_check_SCRIPTS += auth-username-pass auth-certificate auth-nonascii id-test
+dist_check_SCRIPTS += auth-username-pass auth-certificate auth-nonascii cert-fingerprint id-test
 
 if TEST_PKCS11
 dist_check_SCRIPTS += auth-pkcs11

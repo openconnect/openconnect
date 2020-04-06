@@ -19,7 +19,10 @@ max-clients = 16
 
 # Limit the number of client connections to one every X milliseconds 
 # (X is the provided value). Set to zero for no limit.
-#rate-limit-ms = 100
+rate-limit-ms = 0
+
+# Don't ban failing clients because cert-fingerprint does that on purpose
+max-ban-score = 0
 
 # Limit the number of identical clients (i.e., users connecting multiple times)
 # Unset or set to zero for unlimited.
