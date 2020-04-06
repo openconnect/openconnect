@@ -1185,8 +1185,10 @@ static int run_csd_script(struct openconnect_info *vpninfo, char *buf, int bufle
 		 */
 		if (ferror(stderr)) {
 			int nulfd = open("/dev/null", O_WRONLY);
-			dup2(nulfd, 2);
-			close(nulfd);
+			if (nulfd >= 0) {
+				dup2(nulfd, 2);
+				close(nulfd);
+			}
 		}
                 dup2(2, 1);
                 if (vpninfo->csd_wrapper)
