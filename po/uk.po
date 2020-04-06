@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: network-manager-openconnect\n"
 "Report-Msgid-Bugs-To: openconnect-devel@lists.infradead.org\n"
-"POT-Creation-Date: 2020-04-04 21:24+0100\n"
-"PO-Revision-Date: 2020-03-31 09:02+0300\n"
+"POT-Creation-Date: 2020-04-06 12:29+0100\n"
+"PO-Revision-Date: 2020-04-05 08:51+0300\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <kde-i18n-uk@kde.org>\n"
 "Language: uk\n"
@@ -409,18 +409,22 @@ msgstr "Не вдалося виконати запис до тимчасово�
 #: auth.c:1135
 #, c-format
 msgid "CSD script '%s' exited abnormally\n"
-msgstr ""
+msgstr "Роботу скрипту CSD «%s» завершено у нештатному режимі\n"
 
 #: auth.c:1141
 #, c-format
 msgid "CSD script '%s' returned non-zero status: %d\n"
-msgstr ""
+msgstr "Скриптом CSD «%s» повернуто ненульове значення стану: %d\n"
 
 #: auth.c:1146
 msgid ""
 "Authentication may fail. If your script is not returning zero, fix it.\n"
 "Future versions of openconnect will abort on this error.\n"
 msgstr ""
+"Спроба розпізнавання може завершитися помилкою. Якщо ваш скрипт не повертає "
+"нуля, виправте це.\n"
+"У майбутніх версіях openconnect припинятиме обробку, якщо буде виявлено таку "
+"помилку.\n"
 
 #: auth.c:1174
 #, c-format
@@ -432,38 +436,38 @@ msgstr ""
 "привілеями адміністратора системи (root)\n"
 "\t Скористайтеся параметром командного рядка «--csd-user»\n"
 
-#: auth.c:1222
+#: auth.c:1233
 #, c-format
 msgid "Failed to exec CSD script %s\n"
 msgstr "Не вдалося виконати скрипт CSD %s\n"
 
-#: auth.c:1242
+#: auth.c:1253
 msgid "Unknown response from server\n"
 msgstr "Невідома відповідь сервера\n"
 
-#: auth.c:1364
+#: auth.c:1375
 msgid "Server requested SSL client certificate after one was provided\n"
 msgstr ""
 "Сервером надіслано запит щодо сертифіката клієнта SSL після того, як такий "
 "сертифікат було надано\n"
 
-#: auth.c:1368
+#: auth.c:1379
 msgid "Server requested SSL client certificate; none was configured\n"
 msgstr ""
 "Сервером надіслано запит щодо сертифіката клієнта SSL; але такий сертифікат "
 "не налаштовано\n"
 
-#: auth.c:1384
+#: auth.c:1395
 msgid "XML POST enabled\n"
 msgstr "Увімкнено POST XML\n"
 
-#: auth.c:1408
+#: auth.c:1419
 msgid "Couldn't fetch CSD stub. Proceeding anyway with CSD wrapper script.\n"
 msgstr ""
 "Не вдалося отримати заглушку CSD. Продовжуємо обробку попри це, "
 "використовуючи скрипт-обгортку CSD.\n"
 
-#: auth.c:1433
+#: auth.c:1444
 #, c-format
 msgid "Refreshing %s after 1 second...\n"
 msgstr "Оновлюємо %s за 1 секунду…\n"
@@ -1127,10 +1131,14 @@ msgstr "Не вдалося встановити параметри сеансу
 #, c-format
 msgid "GnuTLS used %d ClientHello random bytes; this should never happen\n"
 msgstr ""
+"GnuTLS використано %d випадкових байтів ClientHello; цього не повинно було "
+"статися\n"
 
 #: gnutls-dtls.c:354
 msgid "GnuTLS sent insecure ClientHello random. Upgrade to 3.6.13 or newer.\n"
 msgstr ""
+"GnuTLS надіслано незахищене випадкове ClientHello. Оновіться до 3.6.13 або "
+"новішої версії.\n"
 
 #: gnutls-dtls.c:370
 #, c-format
@@ -2169,7 +2177,7 @@ msgstr "Роботу скрипту HIP «%s» завершено у нешта�
 #: gpst.c:968
 #, c-format
 msgid "HIP script '%s' returned non-zero status: %d\n"
-msgstr "Скриптом «%s» повернуто ненульове значення стану: %d\n"
+msgstr "Скриптом HIP «%s» повернуто ненульове значення стану: %d\n"
 
 #: gpst.c:974
 msgid "HIP report submission failed.\n"
@@ -2388,7 +2396,7 @@ msgstr "Спроба виконати базове розпізнавання з
 #: http-auth.c:213
 #, c-format
 msgid "Attempting HTTP Bearer authentication to server '%s'\n"
-msgstr ""
+msgstr "Спроба виконати розпізнавання Bearer HTTP на сервері «%s»\n"
 
 #: http-auth.c:227 http.c:1324
 msgid "This version of OpenConnect was built without GSSAPI support\n"
@@ -2736,12 +2744,12 @@ msgstr "Не вдалося обробити адресу сервера «%s»\
 msgid "Only https:// permitted for server URL\n"
 msgstr "Для адреси сервера можна використовувати лише https://\n"
 
-#: library.c:1104
+#: library.c:1106
 #, c-format
 msgid "Unknown certificate hash: %s.\n"
 msgstr "Невідомий хеш сертифіката: %s.\n"
 
-#: library.c:1133
+#: library.c:1137
 #, c-format
 msgid ""
 "The size of the provided fingerprint is less than the minimum required "
@@ -2923,11 +2931,11 @@ msgstr "Паролем до ключа є ідентифікатор файло�
 
 #: main.c:822
 msgid "Software token type: rsa, totp, hotp or oidc"
-msgstr ""
+msgstr "Типи програмного ключа: rsa, totp, hotp або oidc"
 
 #: main.c:823
 msgid "Software token secret or oidc token"
-msgstr ""
+msgstr "Реєстраційні дані програмного ключа або ключ oidc"
 
 #: main.c:825
 msgid "(NOTE: libstoken (RSA SecurID) disabled in this build)"
@@ -2992,7 +3000,7 @@ msgstr "Використовувати IP при з'єднанні із вузл
 
 #: main.c:847
 msgid "Copy TOS / TCLASS field into DTLS and ESP packets"
-msgstr ""
+msgstr "Копіювати поле TOS / TCLASS до пакетів DTLS і ESP"
 
 #: main.c:848
 msgid "Set local port for DTLS and ESP datagrams"
@@ -3571,12 +3579,12 @@ msgstr "Загальна помилка Yubikey: %s\n"
 #: main.c:2288
 #, c-format
 msgid "Can't open oidc file\n"
-msgstr ""
+msgstr "Не вдалося відкрити файл oidc\n"
 
 #: main.c:2291
 #, c-format
 msgid "General failure in oidc token\n"
-msgstr ""
+msgstr "Загальна помилка у ключі oidc\n"
 
 #: mainloop.c:127
 #, c-format
@@ -4649,6 +4657,8 @@ msgid ""
 "WARNING: Server provided certificate MD5 does not match its actual "
 "certificate.\n"
 msgstr ""
+"УВАГА: надана сервером контрольна сума MD5 сертифіката не відповідає "
+"контрольній сумі сертифіката.\n"
 
 #: pulse.c:1715
 msgid "Authentication failure: Account locked out\n"

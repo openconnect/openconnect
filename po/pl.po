@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: NetworkManager-openconnect\n"
 "Report-Msgid-Bugs-To: openconnect-devel@lists.infradead.org\n"
-"POT-Creation-Date: 2020-04-04 21:24+0100\n"
-"PO-Revision-Date: 2020-01-19 13:25+0100\n"
+"POT-Creation-Date: 2020-04-06 12:29+0100\n"
+"PO-Revision-Date: 2020-04-05 12:05+0200\n"
 "Last-Translator: Piotr Drąg <piotrdrag@gmail.com>\n"
 "Language-Team: Polish <community-poland@mozilla.org>\n"
 "Language: pl\n"
@@ -23,18 +23,20 @@ msgstr ""
 #: auth-globalprotect.c:117
 #, c-format
 msgid "SAML %s authentication is required via %s\n"
-msgstr ""
+msgstr "Uwierzytelnianie SAML %s jest wymagane przez %s\n"
 
 #: auth-globalprotect.c:121
 #, c-format
 msgid "SAML %s authentication is required via external script.\n"
-msgstr ""
+msgstr "Uwierzytelnianie SAML %s jest wymagane przez zewnętrzny skrypt.\n"
 
 #: auth-globalprotect.c:124
 msgid ""
 "When SAML authentication is complete, specify destination form field by "
 "appending :field_name to login URL.\n"
 msgstr ""
+"Kiedy uwierzytelnianie SAML zostanie ukończone, należy podać pole formularza "
+"celu dołączając :nazwa_pola do adresu URL logowania.\n"
 
 #: auth-globalprotect.c:128
 #, c-format
@@ -42,6 +44,8 @@ msgid ""
 "Destination form field %s was specified; assuming SAML %s authentication is "
 "complete.\n"
 msgstr ""
+"Podano pole formularza celu %s. Przyjmowanie, że uwierzytelnianie SAML %s "
+"zostało ukończone.\n"
 
 #: auth-globalprotect.c:141
 msgid "Please enter your username and password"
@@ -63,6 +67,7 @@ msgstr "Wyzwanie: "
 #, c-format
 msgid "GlobalProtect login returned unexpected argument value arg[%d]=%s\n"
 msgstr ""
+"Logowanie GlobalProtect zwróciło nieoczekiwaną wartość parametru arg[%d]=%s\n"
 
 #: auth-globalprotect.c:311
 #, c-format
@@ -85,6 +90,9 @@ msgid ""
 "Please report %d unexpected values above (of which %d fatal) to <openconnect-"
 "devel@lists.infradead.org>\n"
 msgstr ""
+"Prosimy zgłosić %d nieoczekiwanych wartości powyżej (z których %d jest "
+"krytycznych) na adres <openconnect-devel@lists.infradead.org> (w języku "
+"angielskim)\n"
 
 #: auth-globalprotect.c:375
 msgid "Please select GlobalProtect gateway."
@@ -100,6 +108,8 @@ msgid ""
 "Ignoring portal's HIP report interval (%d minutes), because no HIP report "
 "script provided.\n"
 msgstr ""
+"Ignorowanie czasu między zgłaszaniem HIP portalu (%d min), ponieważ nie "
+"podano żadnego skryptu zgłaszania HIP.\n"
 
 #: auth-globalprotect.c:411
 #, c-format
@@ -107,11 +117,13 @@ msgid ""
 "Ignoring portal's HIP report interval (%d minutes), because interval is "
 "already set to %d minutes.\n"
 msgstr ""
+"Ignorowanie czasu między zgłaszaniem HIP portalu (%d min), ponieważ czas "
+"jest już ustawiony na %d min.\n"
 
 #: auth-globalprotect.c:415
 #, c-format
 msgid "Portal set HIP report interval to %d minutes).\n"
-msgstr ""
+msgstr "Portal ustawił czas między zgłaszaniem HIP na %d min).\n"
 
 #. each entry looks like <entry name="host[:443]"><description>Label</description></entry>
 #: auth-globalprotect.c:455
@@ -126,7 +138,7 @@ msgstr "  %s (%s)\n"
 
 #: auth-globalprotect.c:482
 msgid "GlobalProtect portal configuration lists no gateway servers.\n"
-msgstr ""
+msgstr "Konfiguracja portalu GlobalProtect nie ma żadnych serwerów bram.\n"
 
 #: auth-globalprotect.c:559 auth-juniper.c:739 auth.c:675
 msgid "Failed to generate OTP tokencode; disabling token\n"
@@ -397,18 +409,21 @@ msgstr "Zapisanie pliku skryptu tymczasowego CSD się nie powiodło: %s\n"
 #: auth.c:1135
 #, c-format
 msgid "CSD script '%s' exited abnormally\n"
-msgstr ""
+msgstr "Skrypt CSD „%s” nieoczekiwanie zakończył działanie\n"
 
 #: auth.c:1141
 #, c-format
 msgid "CSD script '%s' returned non-zero status: %d\n"
-msgstr ""
+msgstr "Skrypt CSD „%s” zwrócił niezerowy stan: %d\n"
 
 #: auth.c:1146
 msgid ""
 "Authentication may fail. If your script is not returning zero, fix it.\n"
 "Future versions of openconnect will abort on this error.\n"
 msgstr ""
+"Uwierzytelnienie może się nie powieść. Jeśli skrypt nie zwraca zera, to "
+"należy go naprawić.\n"
+"Przyszłe wersje OpenConnect przerwą działanie po wystąpieniu tego błędu.\n"
 
 #: auth.c:1174
 #, c-format
@@ -420,33 +435,35 @@ msgstr ""
 "roota\n"
 "\t Należy użyć opcji wiersza poleceń „--csd-user”\n"
 
-#: auth.c:1222
+#: auth.c:1233
 #, c-format
 msgid "Failed to exec CSD script %s\n"
 msgstr "Wykonanie skryptu CSD %s się nie powiodło\n"
 
-#: auth.c:1242
+#: auth.c:1253
 msgid "Unknown response from server\n"
 msgstr "Nieznana odpowiedź serwera\n"
 
-#: auth.c:1364
+#: auth.c:1375
 msgid "Server requested SSL client certificate after one was provided\n"
 msgstr "Serwer zażądał certyfikatu klienta SSL po dostarczeniu jednego\n"
 
-#: auth.c:1368
+#: auth.c:1379
 msgid "Server requested SSL client certificate; none was configured\n"
 msgstr ""
 "Serwer zażądał certyfikatu klienta SSL. Żaden nie został skonfigurowany\n"
 
-#: auth.c:1384
+#: auth.c:1395
 msgid "XML POST enabled\n"
 msgstr "Włączono „POST” XML\n"
 
-#: auth.c:1408
+#: auth.c:1419
 msgid "Couldn't fetch CSD stub. Proceeding anyway with CSD wrapper script.\n"
 msgstr ""
+"Nie można pobrać odcinka CSD. Kontynuowanie mimo tego za pomocą skryptu "
+"wrappera CSD.\n"
 
-#: auth.c:1433
+#: auth.c:1444
 #, c-format
 msgid "Refreshing %s after 1 second...\n"
 msgstr "Odświeżanie %s za 1 sekundę…\n"
@@ -1102,10 +1119,14 @@ msgstr "Ustawienie parametrów sesji DTLS się nie powiodło: %s\n"
 #, c-format
 msgid "GnuTLS used %d ClientHello random bytes; this should never happen\n"
 msgstr ""
+"Biblioteka GnuTLS użyła %d losowych bajtów ClientHello. To nigdy nie powinno "
+"się zdarzyć\n"
 
 #: gnutls-dtls.c:354
 msgid "GnuTLS sent insecure ClientHello random. Upgrade to 3.6.13 or newer.\n"
 msgstr ""
+"Biblioteka GnuTLS wysłała niezabezpieczone dane losowe ClientHello. Należy "
+"ją zaktualizować do wersji 3.6.13 lub nowszej.\n"
 
 #: gnutls-dtls.c:370
 #, c-format
@@ -1633,7 +1654,7 @@ msgstr "Wczytanie certyfikatu się nie powiodło. Przerywanie.\n"
 #: gnutls.c:2214
 #, c-format
 msgid "Failed to set GnuTLS priority string (\"%s\"): %s\n"
-msgstr ""
+msgstr "Ustawienie ciągu priorytetu GnuTLS się nie powiodło („%s”): %s\n"
 
 #: gnutls.c:2226 openssl.c:1832
 #, c-format
@@ -1657,12 +1678,12 @@ msgstr "Niekrytyczny zwrot biblioteki GnuTLS podczas powitania: %s\n"
 #: gnutls.c:2299 openssl.c:1880
 #, c-format
 msgid "Connected to HTTPS on %s with ciphersuite %s\n"
-msgstr ""
+msgstr "Połączono z HTTPS na %s za pomocą zestawu szyfrów %s\n"
 
 #: gnutls.c:2302
 #, c-format
 msgid "Renegotiated SSL on %s with ciphersuite %s\n"
-msgstr ""
+msgstr "Ponownie negocjowano SSL na %s za pomocą zestawu szyfrów %s\n"
 
 #: gnutls.c:2456 openssl-pkcs11.c:203
 #, c-format
@@ -2107,18 +2128,26 @@ msgid ""
 "submission.\n"
 "    %s\n"
 msgstr ""
+"OSTRZEŻENIE: serwer poprosił nas o wysłanie zgłoszenia HIP z sumą kontrolną "
+"MD5 %s.\n"
+"    Łączność VPN może zostać wyłączona lub ograniczona bez wysłania "
+"zgłoszenia HIP.\n"
+"    %s\n"
 
 #: gpst.c:923
 msgid ""
 "However, running the HIP report submission script on this platform is not "
 "yet implemented."
 msgstr ""
+"Jednakże wykonywanie skryptu wysyłania zgłoszenia HIP na tej platformie nie "
+"zostało jeszcze zaimplementowane."
 
 #: gpst.c:925
 msgid ""
 "You need to provide a --csd-wrapper argument with the HIP report submission "
 "script."
 msgstr ""
+"Należy podać parametr --csd-wrapper ze skryptem wysyłania zgłoszenia HIP."
 
 #: gpst.c:934
 msgid ""
@@ -2211,11 +2240,11 @@ msgstr "Nieznany pakiet. Zrzut nagłówka:\n"
 
 #: gpst.c:1253
 msgid "GlobalProtect HIP check due\n"
-msgstr ""
+msgstr "Zaległe sprawdzenie HIP GlobalProtect\n"
 
 #: gpst.c:1265
 msgid "HIP check or report failed\n"
-msgstr ""
+msgstr "Sprawdzenie lub zgłoszenie HIP się nie powiodło\n"
 
 #: gpst.c:1277
 msgid "GlobalProtect rekey due\n"
@@ -2349,7 +2378,7 @@ msgstr "Próbowanie podstawowego uwierzytelnienia HTTP z serwerem „%s”\n"
 #: http-auth.c:213
 #, c-format
 msgid "Attempting HTTP Bearer authentication to server '%s'\n"
-msgstr ""
+msgstr "Próbowanie uwierzytelnienia „Bearer” HTTP z serwerem „%s”\n"
 
 #: http-auth.c:227 http.c:1324
 msgid "This version of OpenConnect was built without GSSAPI support\n"
@@ -2688,12 +2717,12 @@ msgstr "Przetworzenie adresu URL serwera „%s” się nie powiodło\n"
 msgid "Only https:// permitted for server URL\n"
 msgstr "W adresach URL serwera dozwolone jest tylko „https://”\n"
 
-#: library.c:1104
+#: library.c:1106
 #, c-format
 msgid "Unknown certificate hash: %s.\n"
 msgstr "Nieznana suma kontrolna certyfikatu: %s.\n"
 
-#: library.c:1133
+#: library.c:1137
 #, c-format
 msgid ""
 "The size of the provided fingerprint is less than the minimum required "
@@ -2746,7 +2775,7 @@ msgstr ""
 #: main.c:603
 #, c-format
 msgid "Using %s. Features present:"
-msgstr ""
+msgstr "Używanie biblioteki %s. Obecne funkcje:"
 
 #: main.c:615
 msgid "OpenSSL ENGINE not present"
@@ -2874,11 +2903,11 @@ msgstr "Hasło klucza jest fsid systemu plików"
 
 #: main.c:822
 msgid "Software token type: rsa, totp, hotp or oidc"
-msgstr ""
+msgstr "Typ tokena programowego: rsa, totp, hotp lub oidc"
 
 #: main.c:823
 msgid "Software token secret or oidc token"
-msgstr ""
+msgstr "Hasło tokena programowego lub token oidc"
 
 #: main.c:825
 msgid "(NOTE: libstoken (RSA SecurID) disabled in this build)"
@@ -2945,7 +2974,7 @@ msgstr "Używa IP podczas łączenie z KOMPUTEREM"
 
 #: main.c:847
 msgid "Copy TOS / TCLASS field into DTLS and ESP packets"
-msgstr ""
+msgstr "Kopiuje pole TOS/TCLASS do pakietów DTLS i ESP"
 
 #: main.c:848
 msgid "Set local port for DTLS and ESP datagrams"
@@ -3067,6 +3096,7 @@ msgstr "Wyłącza całą kompresję"
 #: main.c:888
 msgid "Set minimum Dead Peer Detection interval (in seconds)"
 msgstr ""
+"Ustawia minimalny czas między wykrywaniem martwych partnerów (w sekundach)"
 
 #: main.c:889
 msgid "Require perfect forward secrecy"
@@ -3123,6 +3153,8 @@ msgstr "Wykonuje SKRYPT zamiast pliku binarnego konia trojańskiego"
 #: main.c:905
 msgid "Set minimum interval for rerunning trojan (in seconds)"
 msgstr ""
+"Ustawia minimalny czas między ponownym wykonywaniem konia trojańskiego "
+"(w sekundach)"
 
 #: main.c:908
 msgid "Server bugs"
@@ -3280,6 +3312,11 @@ msgid ""
 "         override is necessary to connect to a server\n"
 "         to <openconnect-devel@lists.infradead.org>.\n"
 msgstr ""
+"OSTRZEŻENIE: podano %s. To nie powinno być potrzebne.\n"
+"             Prosimy zgłosić przypadki, w których zastąpienie\n"
+"             ciągu priorytetu jest niezbędne do połączenia\n"
+"             z serwerem na adres <openconnect-devel@lists.infradead.org>\n"
+"             (w języku angielskim).\n"
 
 #: main.c:1534
 #, c-format
@@ -3511,12 +3548,12 @@ msgstr "Ogólne niepowodzenie Yubikey: %s\n"
 #: main.c:2288
 #, c-format
 msgid "Can't open oidc file\n"
-msgstr ""
+msgstr "Nie można otworzyć pliku oidc\n"
 
 #: main.c:2291
 #, c-format
 msgid "General failure in oidc token\n"
-msgstr ""
+msgstr "Ogólne niepowodzenie w tokenie oidc\n"
 
 #: mainloop.c:127
 #, c-format
@@ -3771,6 +3808,10 @@ msgid ""
 "the newer Junos Pulse protocol. This version of OpenConnect has\n"
 "EXPERIMENTAL support for Pulse using --prot=pulse\n"
 msgstr ""
+"To wskazuje, że serwer ma wyłączoną obsługę starszego protokołu\n"
+"oNCP Juniper i zezwala tylko na połączenia używające nowszego\n"
+"protokołu Junos Pulse. Ta wersja OpenConnect ma EKSPERYMENTALNĄ\n"
+"obsługę Pulse za pomocą --prot=pulse\n"
 
 #: oncp.c:676
 msgid "Invalid packet waiting for KMP 301\n"
@@ -3963,6 +4004,8 @@ msgstr "SSL_set_session() się nie powiodło\n"
 #, c-format
 msgid "Established DTLS connection (using OpenSSL). Ciphersuite %s-%s.\n"
 msgstr ""
+"Nawiązano połączenie DTLS (za pomocą biblioteki OpenSSL). Zestaw szyfrów %s-"
+"%s.\n"
 
 #: openssl-dtls.c:643
 msgid "Your OpenSSL is older than the one you built against, so DTLS may fail!"
@@ -4341,7 +4384,7 @@ msgstr "Certyfikat SSL i klucz nie pasują\n"
 #: openssl.c:1727
 #, c-format
 msgid "Failed to set OpenSSL cipher list (\"%s\")\n"
-msgstr ""
+msgstr "Ustawienie listy szyfrów biblioteki OpenSSL się nie powiodło („%s”)\n"
 
 #: openssl.c:1755
 #, c-format
@@ -4579,6 +4622,8 @@ msgid ""
 "WARNING: Server provided certificate MD5 does not match its actual "
 "certificate.\n"
 msgstr ""
+"OSTRZEŻENIE: suma MD5 certyfikatu podana przez serwer nie zgadza się z jego "
+"prawdziwym certyfikatem.\n"
 
 #: pulse.c:1715
 msgid "Authentication failure: Account locked out\n"
