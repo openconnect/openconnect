@@ -29,27 +29,26 @@ int set_oidc_token(struct openconnect_info *vpninfo, const char *token_str)
 	int ret;
 	char *file_token = NULL;
 
-	if (token_str) {
-		switch(token_str[0]) {
-		case '@':
-			token_str++;
-			/* fall through */
-		case '/':
-			ret = openconnect_read_file(vpninfo, token_str, &file_token);
-			if (ret < 0)
-				return ret;
-		}
-	}
-	
-	if (!file_token) {
-		vpninfo->bearer_token = strdup(token_str);
-		if (!vpninfo->bearer_token) {
-			return 1;
-		}
-	}
-	else {
+	if (!token_str)
+		return -ENOENT;
+
+	switch(token_str[0]) {
+	case '@':
+		token_str++;
+		/* fall through */
+	case '/':
+		ret = openconnect_read_file(vpninfo, token_str, &file_token);
+		if (ret < 0)
+			return ret;
 		vpninfo->bearer_token = file_token;
+		break;
+
+	default:
+		vpninfo->bearer_token = strdup(token_str);
+		if (!vpninfo->bearer_token)
+			return -ENOMEM;
 	}
+
 	vpninfo->token_mode = OC_TOKEN_MODE_OIDC;
 	return 0;
 }
