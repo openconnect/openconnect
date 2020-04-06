@@ -1175,8 +1175,19 @@ static int run_csd_script(struct openconnect_info *vpninfo, char *buf, int bufle
                                           "CSD code with root privileges\n"
                                           "\t Use command line option \"--csd-user\"\n"));
                 }
-                /* Spurious stdout output from the CSD trojan will break both
-                   the NM tool and the various cookieonly modes. */
+                /*
+		 * Spurious stdout output from the CSD trojan will break both
+		 * the NM tool and the various cookieonly modes.
+		 * Also, gnome-shell *closes* stderr so attempt to cope with that
+		 * by opening /dev/null, because otherwise some CSD scripts fail.
+		 * Actually, perhaps we should set up our own pipes, and report
+		 * the trojan's output via vpn_progress().
+		 */
+		if (ferror(stderr)) {
+			int nulfd = open("/dev/null", O_WRONLY);
+			dup2(nulfd, 2);
+			close(nulfd);
+		}
                 dup2(2, 1);
                 if (vpninfo->csd_wrapper)
                         csd_argv[i++] = openconnect_utf8_to_legacy(vpninfo,
