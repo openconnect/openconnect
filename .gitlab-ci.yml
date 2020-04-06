@@ -139,6 +139,7 @@ Fedora/GnuTLS:
     vpnc-script 'pkgconfig(libpskc)' 'pkgconfig(libpcsclite)' tss2-devel
     java-devel-openjdk glibc-langpack-cs iproute iputils nuttcp
     'pkgconfig(tss2-esys)' 'pkgconfig(krb5-gssapi)'
+  - dnf upgrade -y --enablerepo=updates-testing --advisory=FEDORA-2020-02849aa88a --advisory=FEDORA-2020-445867e64b
   - ./autogen.sh
   - ./configure --with-java --disable-dsa-tests --without-gnutls-version-check CFLAGS=-g
   - make tmp-distdir
@@ -167,6 +168,7 @@ Fedora/GnuTLS/clang:
     vpnc-script 'pkgconfig(libpskc)' 'pkgconfig(libpcsclite)' tss2-devel
     java-devel-openjdk clang glibc-langpack-cs iproute iputils nuttcp
     'pkgconfig(tss2-esys)' 'pkgconfig(krb5-gssapi)'
+  - dnf upgrade -y --enablerepo=updates-testing --advisory=FEDORA-2020-02849aa88a --advisory=FEDORA-2020-445867e64b
   - ./autogen.sh
   - ./configure --with-java --disable-dsa-tests --without-gnutls-version-check CC=clang CFLAGS=-g
   - make tmp-distdir
@@ -195,6 +197,7 @@ Fedora/OpenSSL:
     vpnc-script 'pkgconfig(libpskc)' 'pkgconfig(libpcsclite)'
     java-devel-openjdk glibc-langpack-cs iproute iputils nuttcp
     'pkgconfig(krb5-gssapi)'
+  - dnf upgrade -y --enablerepo=updates-testing --advisory=FEDORA-2020-02849aa88a --advisory=FEDORA-2020-445867e64b
 # Re-enable DSA since we test it
   - update-crypto-policies --set LEGACY
   - ./autogen.sh
@@ -225,6 +228,7 @@ Fedora/OpenSSL/clang:
     vpnc-script 'pkgconfig(libpskc)' 'pkgconfig(libpcsclite)'
     java-devel-openjdk clang glibc-langpack-cs iproute iputils nuttcp
     'pkgconfig(krb5-gssapi)'
+  - dnf upgrade -y --enablerepo=updates-testing --advisory=FEDORA-2020-02849aa88a --advisory=FEDORA-2020-445867e64b
 # Re-enable DSA since we test it
   - update-crypto-policies --set LEGACY
   - ./autogen.sh
