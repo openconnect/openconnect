@@ -135,12 +135,15 @@ pkgconfig_DATA = openconnect.pc
 
 EXTRA_DIST = AUTHORS version.sh COPYING.LGPL $(lib_srcs_openssl) $(lib_srcs_gnutls)
 EXTRA_DIST += $(shell cd "$(top_srcdir)" && \
-		git ls-tree HEAD -r --name-only -- android/ java/ trojans/ 2>/dev/null)
+		git ls-tree HEAD -r --name-only -- android/ java/ trojans/ bash/ 2>/dev/null)
 
 DISTCLEANFILES = $(pkgconfig_DATA)
 
 pkglibexec_SCRIPTS = trojans/csd-post.sh trojans/csd-wrapper.sh trojans/tncc-wrapper.py \
 	trojans/hipreport.sh trojans/hipreport-android.sh
+
+bashcompletiondir = $(sysconfdir)/bash_completion.d
+bashcompletion_DATA = bash/openconnect.bash
 
 # main.c includes version.c
 openconnect-main.$(OBJEXT): version.c

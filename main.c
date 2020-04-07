@@ -1100,6 +1100,218 @@ static void get_uids(const char *config_arg, uid_t *uid, gid_t *gid)
 }
 #endif
 
+static int complete_words(char *partial, ...)
+{
+	int partlen = strlen(partial);
+	va_list vl;
+	char *check;
+
+	va_start(vl, partial);
+	while ( (check = va_arg(vl, char *)) ) {
+		if (!strncmp(partial, check, partlen))
+			printf("%s\n", check);
+	}
+	va_end(vl);
+	return 0;
+}
+
+static int autocomplete(int argc, char **argv)
+{
+	int opt;
+	const char *comp_cword = getenv("COMP_CWORD");
+	char *comp_opt;
+	int cword, longidx;
+
+	/* Skip over the --autocomplete */
+	argc--;
+	argv++;
+
+	if (!comp_cword)
+		return -EINVAL;
+
+	cword = atoi(comp_cword);
+	if (cword <= 0 || cword > argc)
+		return -EINVAL;
+
+	comp_opt = argv[cword];
+	if (!comp_opt)
+		return -EINVAL;
+
+	opterr = 0;
+
+	while (1) {
+		int match_opt = (argv[optind] == comp_opt);
+
+		/* Don't let getopt_long() assume it's a separator; instead
+		 * assume they want to tab-complete to a real long option. */
+		if (match_opt && !strcmp(comp_opt, "--"))
+			goto empty_opt;
+
+		opt = getopt_long(argc, argv,
+#ifdef _WIN32
+				  "C:c:Dde:F:g:hi:k:m:P:p:Q:qs:u:Vvx:",
+#else
+				  "bC:c:Dde:F:g:hi:k:lm:P:p:Q:qSs:U:u:Vvx:",
+#endif
+				  long_options, &longidx);
+
+		if (opt == -1)
+			break;
+
+		if (match_opt) {
+		empty_opt:
+			/* No autocompletion for short options */
+			if (!strncmp(comp_opt, "--", 2)) {
+				int complen = strlen(comp_opt + 2);
+				const struct option *p = long_options;
+
+				while (p->name) {
+					if (!strncmp(comp_opt + 2, p->name, complen))
+						printf("--%s\n", p->name);
+					p++;
+				}
+			}
+			return 0;
+		}
+
+
+		if (optarg == comp_opt) {
+			switch (opt) {
+			case 'k': /* --sslkey */
+			case 'c': /* --certificate */
+				if (!strncmp(comp_opt, "pkcs11:", 7)) {
+					/* We could do clever things here... */
+					return 0; /* .. but we don't. */
+				}
+				printf("FILENAME\n!*.@(pem|der|p12|crt)\n");
+				break;
+
+			case OPT_CAFILE: /* --cafile */
+				printf("FILENAME\n!*.@(pem|der|crt)\n");
+				break;
+
+			case 'x': /* --xmlconfig */
+				printf("FILENAME\n!*.xml\n");
+				break;
+
+			case OPT_CONFIGFILE: /* --config */
+			case OPT_PIDFILE: /* --pid-file */
+				printf("FILENAME\n");
+				break;
+
+			case 's': /* --script */
+			case OPT_CSD_WRAPPER: /* --csd-wrapper */
+				printf("EXECUTABLE\n");
+				break;
+
+			case OPT_LOCAL_HOSTNAME: /* --local-hostname */
+				printf("HOSTNAME\n");
+				break;
+
+			case OPT_CSD_USER: /* --csd-user */
+			case 'U': /* --setuid */
+				printf("USERNAME\n");
+				break;
+
+			case OPT_OS: /* --os */
+				complete_words(comp_opt, "mac-intel", "android",
+					       "linux-64", "linux", "apple-ios",
+					       "win", NULL);
+				break;
+
+			case OPT_COMPRESSION: /* --compression */
+				complete_words(comp_opt, "none", "off", "all",
+					       "stateless", NULL);
+				break;
+
+			case OPT_PROTOCOL: /* --protocol */
+			{
+				struct oc_vpn_proto *protos, *p;
+				int partlen = strlen(comp_opt);
+
+				if (openconnect_get_supported_protocols(&protos) >= 0) {
+					for (p = protos; p->name; p++) {
+						if(!strncmp(comp_opt, p->name, partlen))
+							printf("%s\n", p->name);
+					}
+					free(protos);
+				}
+				break;
+			}
+
+			case OPT_HTTP_AUTH: /* --http-auth */
+			case OPT_PROXY_AUTH: /* --proxy-auth */
+				/* FIXME: Expand latest list item */
+				break;
+
+			case OPT_TOKEN_MODE: /* --token-mode */
+				complete_words(comp_opt, "totp", "hotp", "oidc", NULL);
+				if (openconnect_has_stoken_support())
+					complete_words(comp_opt, "rsa", NULL);
+				if (openconnect_has_yubioath_support())
+					complete_words(comp_opt, "yubioath", NULL);
+				break;
+
+			case OPT_TOKEN_SECRET: /* --token-secret */
+				if (!comp_opt[0] || comp_opt[0] == '/')
+					printf("FILENAME\n");
+				else if (comp_opt[0] == '@')
+					printf("FILENAMEAT\n");
+				break;
+
+			case 'i': /* --interface */
+				/* FIXME: Enumerate available tun devices */
+				break;
+
+			case OPT_SERVERCERT: /* --servercert */
+				/* We could do something really evil here and actually
+				 * connect, then return the result? */
+				break;
+
+			/* No autocmplete for these but handle them explicitly so that
+			 * we can have automatic checking for *accidentally* unhandled
+			 * options. Right after we do automated checking of man page
+			 * entries and --help output for all supported options too. */
+
+			case 'e': /* --cert-expire-warning */
+			case 'C': /* --cookie */
+			case 'g': /* --usergroup */
+			case 'm': /* --mtu */
+			case OPT_BASEMTU: /* --base-mtu */
+			case 'p': /* --key-password */
+			case 'P': /* --proxy */
+			case 'u': /* --user */
+			case 'Q': /* --queue-len */
+			case OPT_RECONNECT_TIMEOUT: /* --reconnect-timeout */
+			case OPT_AUTHGROUP: /* --authgroup */
+			case OPT_RESOLVE: /* --resolve */
+			case OPT_USERAGENT: /* --useragent */
+			case OPT_VERSION: /* --version-string */
+			case OPT_FORCE_DPD: /* --force-dpd */
+			case OPT_FORCE_TROJAN: /* --force-trojan */
+			case OPT_DTLS_LOCAL_PORT: /* --dtls-local-port */
+			case 'F': /* --form-entry */
+			case OPT_GNUTLS_DEBUG: /* --gnutls-debug */
+			case OPT_CIPHERSUITES: /* --gnutls-priority */
+			case OPT_DTLS_CIPHERS: /* --dtls-ciphers */
+			case OPT_DTLS12_CIPHERS: /* --dtls12-ciphers */
+				break;
+
+			default:
+				fprintf(stderr, _("Unhandled autocomplete for option %d '--%s'. Please report.\n"),
+					opt, long_options[longidx].name);
+				return -ENOENT;
+			}
+
+			return 0;
+		}
+	}
+
+	/* Ths only non-option argument we accept as a hostname */
+	printf("HOSTNAME\n");
+	return 0;
+}
+
 int main(int argc, char **argv)
 {
 	struct openconnect_info *vpninfo;
@@ -1136,6 +1348,9 @@ int main(int argc, char **argv)
 	if (!setlocale(LC_ALL, ""))
 		fprintf(stderr,
 			_("WARNING: Cannot set locale: %s\n"), strerror(errno));
+
+	if (argc > 2 && !strcmp(argv[1], "--autocomplete"))
+		return autocomplete(argc, argv);
 
 #ifdef HAVE_NL_LANGINFO
 	charset = nl_langinfo(CODESET);
