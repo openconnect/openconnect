@@ -899,6 +899,12 @@ int oncp_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable)
 	int ret;
 	int work_done = 0;
 
+	/* Periodic TNCC */
+	if (trojan_check_deadline(vpninfo, timeout)) {
+		oncp_send_tncc_command(vpninfo, 0);
+		return 1;
+	}
+
 	if (vpninfo->ssl_fd == -1)
 		goto do_reconnect;
 
@@ -914,11 +920,6 @@ int oncp_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable)
 		   negitiated MTU. We reserve some estra space to
 		   handle that */
 		int receive_mtu = MAX(16384, vpninfo->ip_info.mtu);
-
-		if (trojan_check_deadline(vpninfo, timeout)) {
-			/* Periodic TNCC */
-			oncp_send_tncc_command(vpninfo, 0);
-		}
 
 		len = receive_mtu + vpninfo->pkt_trailer;
 		if (!vpninfo->cstp_pkt) {

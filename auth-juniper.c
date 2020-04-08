@@ -498,7 +498,7 @@ static int tncc_preauth(struct openconnect_info *vpninfo)
 		goto respfail;
 	if (len > 0) {
 		int interval = atoi(recvbuf);
-		if (interval != vpninfo->trojan_interval) {
+		if (interval != 0) {
 			vpninfo->trojan_interval = interval;
 			vpn_progress(vpninfo, PRG_DEBUG,
 				     _("Got reauth interval from TNCC: %d seconds\n"),
