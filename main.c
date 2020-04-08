@@ -1139,13 +1139,23 @@ static int autocomplete(int argc, char **argv)
 
 	opterr = 0;
 
-	while (1) {
-		int match_opt = (argv[optind] == comp_opt);
+	while (argv[optind]) {
+		int thisind = optind;
 
 		/* Don't let getopt_long() assume it's a separator; instead
 		 * assume they want to tab-complete to a real long option. */
-		if (match_opt && !strcmp(comp_opt, "--"))
+		if (argv[thisind] == comp_opt)
 			goto empty_opt;
+
+		/* Skip over non-option elements, in an attempt to prevent
+		 * getopt_long() from reordering the array as we go. The problem
+		 * is that we've seen it *delay* the reordering. So it processes
+		 * the argv element *after* the non-option, but argv[optind] is
+		 * still pointing to the non-option. */
+		if (argv[thisind][0] != '-') {
+			optind++;
+			continue;
+		}
 
 		opt = getopt_long(argc, argv,
 #ifdef _WIN32
@@ -1158,22 +1168,40 @@ static int autocomplete(int argc, char **argv)
 		if (opt == -1)
 			break;
 
-		if (match_opt) {
+		if (argv[thisind] == comp_opt) {
+			char *matcher = NULL;
 		empty_opt:
-			/* No autocompletion for short options */
-			if (!strncmp(comp_opt, "--", 2)) {
-				int complen = strlen(comp_opt + 2);
+			if (!strncmp(comp_opt, "--", 2))
+				matcher = comp_opt + 2;
+			else if (!strcmp(comp_opt, "-"))
+				matcher = comp_opt + 1;
+
+			if (matcher) {
+				int matchlen = strlen(matcher);
 				const struct option *p = long_options;
 
 				while (p->name) {
-					if (!strncmp(comp_opt + 2, p->name, complen))
+					if (!strncmp(matcher, p->name, matchlen))
 						printf("--%s\n", p->name);
 					p++;
 				}
-			}
+			} else if (comp_opt[0] == '-') {
+				if (comp_opt[1] && !comp_opt[2]) {
+					/* Single-char -X option. */
+					const struct option *longopt = long_options;
+					while (longopt->name) {
+						if (comp_opt[1] == longopt->val) {
+							printf("--%s\n", longopt->name);
+							break;
+						}
+						longopt++;
+					}
+				}
+			} else
+				printf("HOSTNAME\n");
+
 			return 0;
 		}
-
 
 		if (optarg == comp_opt) {
 			switch (opt) {

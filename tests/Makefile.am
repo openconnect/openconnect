@@ -45,7 +45,7 @@ EXTRA_DIST = certs/ca.pem certs/ca-key.pem certs/user-cert.pem $(USER_KEYS) $(US
 	configs/user-cert.prm softhsm2.conf.in softhsm ns.sh configs/test-dtls-psk.config \
 	scripts/vpnc-script scripts/vpnc-script-detect-disconnect
 
-dist_check_SCRIPTS =
+dist_check_SCRIPTS = autocompletion
 
 if HAVE_NETNS
 dist_check_SCRIPTS += dtls-psk sigterm

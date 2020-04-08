@@ -1,0 +1,68 @@
+#!/bin/sh
+#
+# Bash completion for OpenConnect
+#
+# Copyright © David Woodhouse <dwmw2@infradead.org>
+#
+# Author: David Woodhouse <dwmw2@infradead.org>
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Lesser General Public License
+# version 2.1, as published by the Free Software Foundation.
+#
+# This program is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Lesser General Public License for more details.
+
+
+# Consider a command line like the following:
+#
+# openconnect -c --authenticate\ -k -k "'"'"'.pem --authgroup 'foo
+# bar' --o\s linux-64 myserver
+
+
+OPENCONNECT="${OPENCONNECT:-${top_builddir}/openconnect}"
+
+do_test()
+{
+	if [ "$(COMP_CWORD=$WORD $OPENCONNECT --autocomplete "$@")" != "$RESULT" ]; then
+	   echo "Autocomplete failed (word $WORD) for '$@'"
+	   exit 1
+	fi
+	echo "Autocomplete OK (word $WORD) for '$@'"
+}
+
+WORD=1
+RESULT="HOSTNAME"
+do_test ""
+
+WORD=1
+RESULT="--certificate"
+do_test -c
+
+WORD=3
+RESULT="FILENAME
+!*.@(pem|der|p12|crt)"
+do_test foo -k ''
+
+WORD=2
+RESULT="--protocol"
+do_test somehost --proto
+
+WORD=1
+RESULT="HOSTNAME"
+do_test somehost --proto
+
+WORD=3
+RESULT="FILENAME
+!*.@(pem|der|crt)"
+do_test foo --cafile ''
+
+WORD=4
+RESULT="none
+off
+all
+stateless"
+do_test -k foo --compr ''
+

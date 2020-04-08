@@ -76,7 +76,7 @@ _complete_openconnect () {
     export COMP_LINE COMP_POINT COMP_CWORD COMP_KEY COMP_TYPE
     COMP_WORDS[0]="--autocomplete"
     local IFS=$'\n'
-    COMPREPLY=( $(/home/dwmw/git/openconnect/gtls-ibm/openconnect "${COMP_WORDS[@]}") )
+    COMPREPLY=( $(openconnect "${COMP_WORDS[@]}") )
     case "${COMPREPLY[0]}" in
 	FILENAME)
 	    if [ "${COMPREPLY[1]}" != "" ]; then
