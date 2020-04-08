@@ -21,7 +21,7 @@
 # Required modules:
 #   - Mechanize (https://pypi.org/project/mechanize). Tested with v0.4.5
 #   - For client certificate support and server certificate validation, asn1crypto
-#     is required (https://github.com/wbond/asn1crypto). Tested with v1.3.0
+#     is required (https://github.com/wbond/asn1crypto). Tested with v0.24.0 and v1.3.0
 #   - For autodetection of network interfaces' hardware/MAC addresses,
 #     netifaces is required (https://pypi.org/project/netifaces). Tested with v0.10.9
 #
