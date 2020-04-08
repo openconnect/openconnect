@@ -270,7 +270,7 @@ class x509cert(object):
         self.subject = self.decode_names(tbs['subject'])
 
 class tncc(object):
-    def __init__(self, vpn_host, device_id=None, funk=None, platform=None, hostname=None, mac_addrs=[], certs=[]):
+    def __init__(self, vpn_host, device_id=None, funk=None, platform=None, hostname=None, mac_addrs=[], certs=[], interval=None):
         self.vpn_host = vpn_host
         self.path = '/dana-na/'
 
@@ -279,6 +279,7 @@ class tncc(object):
         self.hostname = hostname
         self.mac_addrs = mac_addrs
         self.avail_certs = certs
+        self.interval = interval
 
         self.deviceid = device_id
 
@@ -508,6 +509,12 @@ class tncc(object):
         # Parse the data returned into a key/value dict
         response = self.parse_response()
 
+        if 'interval' in response:
+            m = int(response['interval'])
+            logging.debug('Got interval of %d minutes' % m)
+            if self.interval is None or self.interval > m*60:
+                self.interval = m*60
+
         # msg has the stuff we want, it's base64 encoded
         logging.debug('Receiving packet -')
         msg_raw = base64.b64decode(response['msg'])
@@ -597,11 +604,15 @@ class tncc_server(object):
                 args[key] = val
         if cmd == 'start':
             cookie = self.tncc.get_cookie(args['Cookie'], args['DSSIGNIN'])
-            resp = '200\n3\n%s\n\n' % cookie.value
-            sock.send(resp.encode('ascii'))
+            resp = ['200', '3', cookie.value]
+            if self.tncc.interval is not None:
+                resp.append(str(self.tncc.interval))
+            sock.send(('\n'.join(resp) + '\n\n').encode('ascii'))
         elif cmd == 'setcookie':
-            # FIXME: Support for periodic updates
-            dsid_value = args['Cookie']
+            cookie = self.tncc.get_cookie(args['Cookie'],
+                                          self.tncc.find_cookie('DSSIGNIN'))
+        else:
+            logging.warn('Unknown command %r' % cmd)
 
 def fingerprint_checking_SSLSocket(_fingerprint):
     class SSLSocket(ssl.SSLSocket):
@@ -620,6 +631,8 @@ if __name__ == "__main__":
     vpn_host = sys.argv[1]
 
     funk = 'TNCC_FUNK' in os.environ and os.environ['TNCC_FUNK'] != '0'
+
+    interval = int(os.environ.get('TNCC_INTERVAL', 0)) or None
 
     platform = os.environ.get('TNCC_PLATFORM', platform.system() + ' ' + platform.release())
 
@@ -668,7 +681,7 @@ if __name__ == "__main__":
     # \HKEY_CURRENT_USER\Software\Juniper Networks\Device Id
     device_id = os.environ.get('TNCC_DEVICE_ID')
 
-    t = tncc(vpn_host, device_id, funk, platform, hostname, mac_addrs, certs)
+    t = tncc(vpn_host, device_id, funk, platform, hostname, mac_addrs, certs, interval)
     sock = socket.fromfd(0, socket.AF_UNIX, socket.SOCK_SEQPACKET)
     server = tncc_server(sock, t)
     while True:

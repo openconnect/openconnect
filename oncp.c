@@ -915,6 +915,11 @@ int oncp_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable)
 		   handle that */
 		int receive_mtu = MAX(16384, vpninfo->ip_info.mtu);
 
+		if (trojan_check_deadline(vpninfo, timeout)) {
+			/* Periodic TNCC */
+			oncp_send_tncc_command(vpninfo, 0);
+		}
+
 		len = receive_mtu + vpninfo->pkt_trailer;
 		if (!vpninfo->cstp_pkt) {
 			vpninfo->cstp_pkt = malloc(sizeof(struct pkt) + len);

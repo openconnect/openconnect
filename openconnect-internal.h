@@ -901,6 +901,7 @@ int compress_packet(struct openconnect_info *vpninfo, int compr_type, struct pkt
 
 /* auth-juniper.c */
 int oncp_obtain_cookie(struct openconnect_info *vpninfo);
+int oncp_send_tncc_command(struct openconnect_info *vpninfo, int first);
 void oncp_common_headers(struct openconnect_info *vpninfo, struct oc_text_buf *buf);
 
 /* oncp.c */
