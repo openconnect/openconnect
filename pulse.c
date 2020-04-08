@@ -1814,6 +1814,12 @@ static int pulse_authenticate(struct openconnect_info *vpninfo, int connecting)
 					}
 					break;
 
+				case 3: /* TNCC */
+					vpn_progress(vpninfo, PRG_ERR,
+						     _("Pulse server requested Host Checker; not yet supported\n"
+						       "Try Juniper mode (--protocol=nc)\n"));
+					goto bad_eap;
+
 				default:
 					goto auth_unknown;
 				}
