@@ -669,14 +669,7 @@ if __name__ == "__main__":
     device_id = os.environ.get('TNCC_DEVICE_ID')
 
     t = tncc(vpn_host, device_id, funk, platform, hostname, mac_addrs, certs)
-
-    if len(sys.argv) == 4:
-        dspreauth_value = sys.argv[2]
-        dssignin_value = sys.argv[3]
-        'TNCC ', dspreauth_value, dssignin_value
-        print(t.get_cookie(dspreauth, dssignin).value)
-    else:
-        sock = socket.fromfd(0, socket.AF_UNIX, socket.SOCK_SEQPACKET)
-        server = tncc_server(sock, t)
-        while True:
-            server.process_cmd()
+    sock = socket.fromfd(0, socket.AF_UNIX, socket.SOCK_SEQPACKET)
+    server = tncc_server(sock, t)
+    while True:
+        server.process_cmd()
