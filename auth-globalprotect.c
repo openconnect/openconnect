@@ -168,8 +168,14 @@ static int parse_prelogin_xml(struct openconnect_info *vpninfo, xmlNode *xml_nod
 
 	/* XX: Some VPNs use a password in the first form, followed by a
 	 * a token in the second ("challenge") form. Others use only a
-	 * token. How can we distinguish these? */
-	if (!can_gen_tokencode(vpninfo, form, opt2))
+	 * token. How can we distinguish these?
+	 *
+	 * Currently using the heuristic that a non-default label for the
+	 * password in the first form means we should treat the first
+	 * form's password as a token field.
+	 */
+	if (!can_gen_tokencode(vpninfo, form, opt2) && !ctx->alt_secret
+	    && password_label && strcmp(password_label, "Password"))
 		opt2->type = OC_FORM_OPT_TOKEN;
 	else
 		opt2->type = OC_FORM_OPT_PASSWORD;
@@ -207,6 +213,19 @@ static int challenge_cb(struct openconnect_info *vpninfo, char *prompt, char *in
 	free(opt2->_value);
 	opt2->_value = NULL;
 	opt->type = OC_FORM_OPT_HIDDEN;
+
+	/* XX: Some VPNs use a password in the first form, followed by a
+	 * a token in the second ("challenge") form. Others use only a
+	 * token. How can we distinguish these?
+	 *
+	 * Currently using the heuristic that if the password field in
+	 * the preceding form wasn't treated as a token field, treat this
+	 * as a token field.
+        */
+	if (!can_gen_tokencode(vpninfo, form, opt2) && opt2->type == OC_FORM_OPT_PASSWORD)
+		opt2->type = OC_FORM_OPT_TOKEN;
+	else
+		opt2->type = OC_FORM_OPT_PASSWORD;
 
 	if (    !(form->message = strdup(prompt))
 		 || !(form->action = strdup(inputStr))
