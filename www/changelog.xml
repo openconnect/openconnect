@@ -27,6 +27,7 @@
        <li>Fix crash with uninitialised OIDC token.</li>
        <li>GlobalProtect: more resilient handling of periodic HIP check and login arguments, and predictable naming of challenge forms</li>
        <li>Disable <a href="https://en.wikipedia.org/wiki/Nagle's_algorithm">Nagle's algorithm</a> for TLS sockets, to improve interactivity when tunnel runs over TCP rather than UDP.</li>
+       <li>Work around PKCS#11 tokens which forget to set <tt>CKF_LOGIN_REQUIRED</tt> (<a href="https://gitlab.com/openconnect/openconnect/issues/123">#123</a>).</li>
      </ul><br/>
   </li>
   <li><b><a href="ftp://ftp.infradead.org/pub/openconnect/openconnect-8.07.tar.gz">OpenConnect v8.07</a></b>

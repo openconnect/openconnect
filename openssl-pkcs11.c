@@ -381,7 +381,7 @@ int load_pkcs11_certificate(struct openconnect_info *vpninfo)
 	}
 	/* If there was precisely one matching slot, and we still didn't find the cert,
 	   try logging in to it. */
-	if (matching_slots == 1 && login_slot->token->loginRequired) {
+	if (matching_slots == 1 && (login_slot->token->loginRequired || login_slot->token->userPinSet)) {
 		slot = login_slot;
 		vpn_progress(vpninfo, PRG_INFO,
 			     _("Logging in to PKCS#11 slot '%s'\n"),
@@ -615,7 +615,7 @@ int load_pkcs11_key(struct openconnect_info *vpninfo)
 		login_slot = vpninfo->pkcs11_cert_slot;
 		vpninfo->pkcs11_cert_slot = NULL;
 	}
-	if (matching_slots == 1 && login_slot->token->loginRequired) {
+	if (matching_slots == 1 && (login_slot->token->loginRequired || login_slot->token->userPinSet)) {
 		slot = login_slot;
 		vpn_progress(vpninfo, PRG_INFO,
 			     _("Logging in to PKCS#11 slot '%s'\n"),

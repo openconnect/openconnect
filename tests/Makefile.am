@@ -69,6 +69,10 @@ if OPENCONNECT_GNUTLS
 # the certs after we log in. Perhaps it's cached the results?
 PKCS11_TOKENS += openconnect-test2
 endif # OPENCONNECT_GNUTLS
+if OPENCONNECT_OPENSSL
+# GnuTLS build fails this one: https://gitlab.com/gnutls/gnutls/-/issues/977
+PKCS11_TOKENS += openconnect-test3
+endif # OPENCONNECT_OPENSSL
 endif # TEST_PKCS11
 endif # HAVE_CWRAP
 
@@ -258,3 +262,33 @@ softhsm-setup2:
 		   --load-privkey $(certsdir)/ec-key-pkcs8.pem \
 		   --label EC --id 03 --login \
 		   --write "pkcs11:token=openconnect-test2;pin-value=1234"
+
+# Fourth test: token lacks CKF_LOGIN_REQUIRED (#123)
+softhsm-setup3:
+	$(SHM2_UTIL) --show-slots
+	$(SHM2_UTIL) --init-token --free --label openconnect-test3 \
+		--so-pin 12345678 --pin 1234
+
+# Remove the CKF_LOGIN_REQUIRED flag
+	TOKOBJ=$$(grep -l openconnect-test3 $(srcdir)/softhsm/*/token.object); \
+	if [ -n "$$TOKOBJ" ] && od -t x1 $$TOKOBJ | grep -q '^0000160.* 04 2d$$'; then \
+		echo -en \\x29 | dd bs=1 count=1 conv=notrunc seek=127 of=$$TOKOBJ; \
+	else \
+		echo "Token file not understood"; \
+		exit 1; \
+	fi
+
+	$(P11TOOL) --load-certificate $(certsdir)/user-cert.pem \
+		   --load-privkey $(certsdir)/user-key-pkcs8.pem \
+		   --label RSA --id 01 --login \
+		   --write "pkcs11:token=openconnect-test3;pin-value=1234"
+
+	$(P11TOOL) --load-certificate $(certsdir)/dsa-cert.pem \
+		   --load-privkey $(certsdir)/dsa-key-pkcs8.pem \
+		   --label DSA --id 02 --login \
+		   --write "pkcs11:token=openconnect-test3;pin-value=1234"
+
+	$(P11TOOL) --load-certificate $(certsdir)/ec-cert.pem \
+		   --load-privkey $(certsdir)/ec-key-pkcs8.pem \
+		   --label EC --id 03 --login \
+		   --write "pkcs11:token=openconnect-test3;pin-value=1234"
