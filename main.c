@@ -1169,8 +1169,9 @@ static int autocomplete(int argc, char **argv)
 			break;
 
 		if (argv[thisind] == comp_opt) {
-			char *matcher = NULL;
+			char *matcher;
 		empty_opt:
+			matcher = NULL;
 			if (!strncmp(comp_opt, "--", 2))
 				matcher = comp_opt + 2;
 			else if (!strcmp(comp_opt, "-"))
