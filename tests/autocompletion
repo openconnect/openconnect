@@ -24,6 +24,11 @@
 
 OPENCONNECT="${OPENCONNECT:-${top_builddir}/openconnect}"
 
+if ! [ -x $OPENCONNECT ]; then
+    echo "$OPENCONNECT is not exeuctable. Are you cross-compiling for Windows?"
+    exit 77
+fi
+
 do_test()
 {
 	if [ "$(COMP_CWORD=$WORD $OPENCONNECT --autocomplete "$@")" != "$RESULT" ]; then
