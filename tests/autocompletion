@@ -71,3 +71,8 @@ all
 stateless"
 do_test -k foo --compr ''
 
+WORD=1
+RESULT="EXECUTABLE
+''
+-s"
+do_test -s/bin

@@ -73,35 +73,44 @@
 
 
 _complete_openconnect () {
-    export COMP_LINE COMP_POINT COMP_CWORD COMP_KEY COMP_TYPE
+    local cur
+    _get_comp_words_by_ref cur
+    # But if we do this, then our COMPREPLY isn't interpreted according to it.
+    #_get_comp_words_by_ref-n =: -w COMP_WORDS -i COMP_CWORD cur
     COMP_WORDS[0]="--autocomplete"
     local IFS=$'\n'
-    COMPREPLY=( $(openconnect "${COMP_WORDS[@]}") )
+    COMPREPLY=( $(COMP_CWORD=$COMP_CWORD /home/dwmw/git/openconnect/gtls-ibm/openconnect "${COMP_WORDS[@]}") )
+    local FILTERPAT="${COMPREPLY[1]}"
+    local PREFIX="${COMPREPLY[2]}"
+    local COMP_WORD=${cur#${PREFIX}}
     case "${COMPREPLY[0]}" in
 	FILENAME)
-	    if [ "${COMPREPLY[1]}" != "" ]; then
-		COMPREPLY=( $( compgen -f -o filenames -o plusdirs -X ${COMPREPLY[1]} ${COMP_WORDS[$COMP_CWORD]}) )
-	    else
-		COMPREPLY=( $( compgen -f -o filenames -o plusdirs ${COMP_WORDS[$COMP_CWORD]}) )
-	    fi
-	    ;;
-
-	FILENAMEAT)
-	    COMPREPLY=( $( compgen -P @ -f -o filenames -o plusdirs ${COMP_WORDS[$COMP_CWORD]#@}) )
+	    compopt -o filenames
+	    COMPREPLY=( $( compgen -A file -ofilenames -o plusdirs -X "${FILTERPAT}" -- "${COMP_WORD}") )
+	    COMPREPLY=( "${COMPREPLY[@]/#/${PREFIX}}" )
 	    ;;
 
 	EXECUTABLE)
-	    COMPREPLY=( $( compgen -c -o plusdirs ${COMP_WORDS[$COMP_CWORD]}) )
+	    compopt -o filenames
+	    COMPREPLY=( $( compgen -A command -ofilenames -o plusdirs -- "${COMP_WORD}") )
+	    COMPREPLY=( "${COMPREPLY[@]/#/${PREFIX}}" )
 	    ;;
 
 	HOSTNAME)
-	    COMPREPLY=( $( compgen -A hostname ${COMP_WORDS[$COMP_CWORD]}) )
+	    compopt +o filenames
+	    COMPREPLY=( $( compgen -A hostname -P "${PREFIX}" -- "${COMP_WORD}") )
 	    ;;
 
 	USERNAME)
-	    COMPREPLY=( $( compgen -A user ${COMP_WORDS[$COMP_CWORD]}) )
+	    compopt +o filenames
+	    COMPREPLY=( $( compgen -A user -P "${PREFIX}" -- "${COMP_WORD}") )
 	    ;;
+
+	*)
+	    compopt +o filenames
+	    ;;
+
     esac
 }
 
-complete -F _complete_openconnect -o filenames openconnect
+complete -F _complete_openconnect openconnect

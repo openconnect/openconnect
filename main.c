@@ -1100,18 +1100,29 @@ static void get_uids(const char *config_arg, uid_t *uid, gid_t *gid)
 }
 #endif
 
-static int complete_words(char *partial, ...)
+static int complete_words(const char *comp_opt, int prefixlen, ...)
 {
-	int partlen = strlen(partial);
+	int partlen = strlen(comp_opt + prefixlen);
 	va_list vl;
 	char *check;
 
-	va_start(vl, partial);
+	va_start(vl, prefixlen);
 	while ( (check = va_arg(vl, char *)) ) {
-		if (!strncmp(partial, check, partlen))
-			printf("%s\n", check);
+		if (!strncmp(comp_opt + prefixlen, check, partlen))
+			printf("%.*s%s\n", prefixlen, comp_opt, check);
 	}
 	va_end(vl);
+	return 0;
+}
+
+static int autocomplete_special(const char *verb, const char *prefix,
+				int prefixlen, const char *filterpat)
+{
+	printf("%s\n", verb);
+	printf("%s\n", filterpat ? : "''");
+
+	if (prefixlen)
+		printf("%.*s\n", prefixlen, prefix);
 	return 0;
 }
 
@@ -1120,7 +1131,7 @@ static int autocomplete(int argc, char **argv)
 	int opt;
 	const char *comp_cword = getenv("COMP_CWORD");
 	char *comp_opt;
-	int cword, longidx;
+	int cword, longidx, prefixlen = 0;
 
 	/* Skip over the --autocomplete */
 	argc--;
@@ -1140,19 +1151,68 @@ static int autocomplete(int argc, char **argv)
 	opterr = 0;
 
 	while (argv[optind]) {
-		int thisind = optind;
+		/* If optind is the one that is being autocompleted, don't
+		 * let getopt_long() see it; we process it directly. */
+		if (argv[optind] == comp_opt) {
+			if (!strncmp(comp_opt, "--", 2)) {
+				const char *arg = strchr(comp_opt, '=');
+				int matchlen;
 
-		/* Don't let getopt_long() assume it's a separator; instead
-		 * assume they want to tab-complete to a real long option. */
-		if (argv[thisind] == comp_opt)
-			goto empty_opt;
+				if (arg) {
+					/* We have --option=... so complete the arg */
+					matchlen = arg - comp_opt - 2;
+					for (longidx = 0; long_options[longidx].name; longidx++) {
+						if (!strncmp(comp_opt + 2, long_options[longidx].name, matchlen)) {
+							prefixlen = matchlen + 3;
+							opt = long_options[longidx].val;
+							goto got_opt;
+						}
+					}
+				} else {
+					/* Not --option= just --opt so complete the option name(s) */
+					comp_opt += 2;
+				autocomplete_optname:
+					matchlen = strlen(comp_opt);
+					for (longidx = 0; long_options[longidx].name; longidx++) {
+						if (!strncmp(comp_opt, long_options[longidx].name, matchlen)) {
+							printf("--%s\n", long_options[longidx].name);
+						}
+					}
+				}
+			} else if (comp_opt[0] == '-') {
+				if (!comp_opt[1]) {
+					/* Just a single dash. Autocomplete like '--' with all the (long) options */
+					comp_opt++;
+					goto autocomplete_optname;
+				}
+				/* Single-char -X option, with or without an argument. */
+				for (longidx = 0; long_options[longidx].name; longidx++) {
+					if (comp_opt[1] == long_options[longidx].val) {
+						if (comp_opt[2]) {
+							if (long_options[longidx].has_arg) {
+								prefixlen = 2;
+								opt = long_options[longidx].val;
+								goto got_opt;
+							}
+						} else {
+							/* Just the option; complete to the long name of same. */
+							printf("--%s\n", long_options[longidx].name);
+						}
+						break;
+					}
+				}
+			} else
+				printf("HOSTNAME\n");
+
+			return 0;
+		}
 
 		/* Skip over non-option elements, in an attempt to prevent
 		 * getopt_long() from reordering the array as we go. The problem
 		 * is that we've seen it *delay* the reordering. So it processes
 		 * the argv element *after* the non-option, but argv[optind] is
 		 * still pointing to the non-option. */
-		if (argv[thisind][0] != '-') {
+		if (argv[optind][0] != '-') {
 			optind++;
 			continue;
 		}
@@ -1168,100 +1228,66 @@ static int autocomplete(int argc, char **argv)
 		if (opt == -1)
 			break;
 
-		if (argv[thisind] == comp_opt) {
-			char *matcher;
-		empty_opt:
-			matcher = NULL;
-			if (!strncmp(comp_opt, "--", 2))
-				matcher = comp_opt + 2;
-			else if (!strcmp(comp_opt, "-"))
-				matcher = comp_opt + 1;
-
-			if (matcher) {
-				int matchlen = strlen(matcher);
-				const struct option *p = long_options;
-
-				while (p->name) {
-					if (!strncmp(matcher, p->name, matchlen))
-						printf("--%s\n", p->name);
-					p++;
-				}
-			} else if (comp_opt[0] == '-') {
-				if (comp_opt[1] && !comp_opt[2]) {
-					/* Single-char -X option. */
-					const struct option *longopt = long_options;
-					while (longopt->name) {
-						if (comp_opt[1] == longopt->val) {
-							printf("--%s\n", longopt->name);
-							break;
-						}
-						longopt++;
-					}
-				}
-			} else
-				printf("HOSTNAME\n");
-
-			return 0;
-		}
-
 		if (optarg == comp_opt) {
+			prefixlen = 0;
+		got_opt:
 			switch (opt) {
 			case 'k': /* --sslkey */
 			case 'c': /* --certificate */
-				if (!strncmp(comp_opt, "pkcs11:", 7)) {
+				if (!strncmp(comp_opt + prefixlen, "pkcs11:", 7)) {
 					/* We could do clever things here... */
 					return 0; /* .. but we don't. */
 				}
-				printf("FILENAME\n!*.@(pem|der|p12|crt)\n");
+				autocomplete_special("FILENAME", comp_opt, prefixlen, "!*.@(pem|der|p12|crt)");
 				break;
 
 			case OPT_CAFILE: /* --cafile */
-				printf("FILENAME\n!*.@(pem|der|crt)\n");
+				autocomplete_special("FILENAME", comp_opt, prefixlen, "!*.@(pem|der|crt)");
 				break;
 
 			case 'x': /* --xmlconfig */
-				printf("FILENAME\n!*.xml\n");
+				autocomplete_special("FILENAME", comp_opt, prefixlen, "!*.xml");
 				break;
 
 			case OPT_CONFIGFILE: /* --config */
 			case OPT_PIDFILE: /* --pid-file */
-				printf("FILENAME\n");
+				autocomplete_special("FILENAME", comp_opt, prefixlen, NULL);
 				break;
 
 			case 's': /* --script */
 			case OPT_CSD_WRAPPER: /* --csd-wrapper */
-				printf("EXECUTABLE\n");
+				autocomplete_special("EXECUTABLE", comp_opt, prefixlen, NULL);
 				break;
 
 			case OPT_LOCAL_HOSTNAME: /* --local-hostname */
-				printf("HOSTNAME\n");
+				autocomplete_special("HOSTNAME", comp_opt, prefixlen, NULL);
 				break;
 
 			case OPT_CSD_USER: /* --csd-user */
 			case 'U': /* --setuid */
-				printf("USERNAME\n");
+				autocomplete_special("USERNAME", comp_opt, prefixlen, NULL);
 				break;
 
 			case OPT_OS: /* --os */
-				complete_words(comp_opt, "mac-intel", "android",
+				complete_words(comp_opt, prefixlen, "mac-intel", "android",
 					       "linux-64", "linux", "apple-ios",
 					       "win", NULL);
 				break;
 
 			case OPT_COMPRESSION: /* --compression */
-				complete_words(comp_opt, "none", "off", "all",
+				complete_words(comp_opt, prefixlen, "none", "off", "all",
 					       "stateless", NULL);
 				break;
 
 			case OPT_PROTOCOL: /* --protocol */
 			{
 				struct oc_vpn_proto *protos, *p;
-				int partlen = strlen(comp_opt);
+				int partlen = strlen(comp_opt + prefixlen);
 
 				if (openconnect_get_supported_protocols(&protos) >= 0) {
 					for (p = protos; p->name; p++) {
-						if(!strncmp(comp_opt, p->name, partlen))
-							printf("%s\n", p->name);
+						if(!strncmp(comp_opt + prefixlen, p->name, partlen))
+							printf("%.*s%s\n", prefixlen, comp_opt, p->name);
 					}
 					free(protos);
 				}
@@ -1274,18 +1300,23 @@ static int autocomplete(int argc, char **argv)
 				break;
 
 			case OPT_TOKEN_MODE: /* --token-mode */
-				complete_words(comp_opt, "totp", "hotp", "oidc", NULL);
+				complete_words(comp_opt, prefixlen, "totp", "hotp", "oidc", NULL);
 				if (openconnect_has_stoken_support())
-					complete_words(comp_opt, "rsa", NULL);
+					complete_words(comp_opt, prefixlen, "rsa", NULL);
 				if (openconnect_has_yubioath_support())
-					complete_words(comp_opt, "yubioath", NULL);
+					complete_words(comp_opt, prefixlen, "yubioath", NULL);
 				break;
 
 			case OPT_TOKEN_SECRET: /* --token-secret */
-				if (!comp_opt[0] || comp_opt[0] == '/')
-					printf("FILENAME\n");
-				else if (comp_opt[0] == '@')
-					printf("FILENAMEAT\n");
+				switch (comp_opt[prefixlen]) {
+				case '@':
+					prefixlen++;
+					/* Fall through */
+				case 0:
+				case '/':
+					autocomplete_special("FILENAME", comp_opt, prefixlen, NULL);
+					break;
+				}
 				break;
 
 			case 'i': /* --interface */
