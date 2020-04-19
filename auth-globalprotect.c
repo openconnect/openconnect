@@ -17,6 +17,7 @@
 
 #include <config.h>
 
+#include <ctype.h>
 #include <errno.h>
 
 #include <libxml/parser.h>
@@ -221,6 +222,26 @@ static int challenge_cb(struct openconnect_info *vpninfo, char *prompt, char *in
 	return -EAGAIN;
 }
 
+static int urldecode_inplace(char *p)
+{
+	char *q;
+	if (!p)
+		return -EINVAL;
+
+	for (q = p; *p; p++, q++) {
+		if (*p == '+') {
+			*q = ' ';
+		} else if (*p == '%' && isxdigit((int)(unsigned char)p[1]) &&
+			   isxdigit((int)(unsigned char)p[2])) {
+			*q = unhex(p + 1);
+			p += 2;
+		} else
+			*q = *p;
+	}
+	*q = 0;
+	return 0;
+}
+
 /* Parse gateway login response (POST /ssl-vpn/login.esp)
  *
  * Extracts the relevant arguments from the XML (<jnlp><application-desc><argument>...</argument></application-desc></jnlp>)
@@ -291,6 +312,13 @@ static int parse_login_xml(struct openconnect_info *vpninfo, xmlNode *xml_node, 
 			if (value && (!value[0] || !strcmp(value, "(null)") || !strcmp(value, "-1"))) {
 				free(value);
 				value = NULL;
+			} else {
+				/* XX: The usage of URL encoding in the fields sent by GP servers here is
+				 * inconsistent, but in particular the value "%28empty_domain%29" keeps popping up
+				 * in places where the server expects "(empty_domain)" (like the stupidly redundant
+				 * logout operation). So we do this to be safe and to ensure logout succeeds.
+				 */
+				urldecode_inplace(value);
 			}
 			xml_node = xml_node->next;
 		} else
