@@ -659,10 +659,12 @@ static void print_supported_protocols(void)
 {
 	const char *comma = ", ", *sep = comma + 1;
 	struct oc_vpn_proto *protos, *p;
+	int n;
 
-	if (openconnect_get_supported_protocols(&protos)>=0) {
+	n = openconnect_get_supported_protocols(&protos);
+        if (n>=0) {
 		printf(_("Supported protocols:"));
-		for (p=protos; p->name; p++) {
+		for (p=protos; n; p++, n--) {
 			printf("%s%s%s", sep, p->name, p==protos ? _(" (default)") : "");
 			sep = comma;
 		}
@@ -674,10 +676,12 @@ static void print_supported_protocols(void)
 static void print_supported_protocols_usage(void)
 {
 	struct oc_vpn_proto *protos, *p;
+	int n;
 
-	if (openconnect_get_supported_protocols(&protos)>=0) {
+	n = openconnect_get_supported_protocols(&protos);
+        if (n>=0) {
 		printf("\n%s:\n", _("Set VPN protocol"));
-		for (p=protos; p->name; p++)
+		for (p=protos; n; p++, n--)
 			printf("      --protocol=%-16s %s%s\n",
 				   p->name, p->description, p==protos ? _(" (default)") : "");
 		openconnect_free_supported_protocols(protos);
