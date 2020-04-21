@@ -38,6 +38,12 @@
 #include <sys/statfs.h>
 #endif
 
+/* setsockopt and TCP_NODELAY */
+#ifndef _WIN32
+#include <netinet/tcp.h>
+#include <sys/socket.h>
+#endif
+
 #include "openconnect-internal.h"
 
 #ifdef ANDROID_KEYSTORE
@@ -180,6 +186,22 @@ static int match_sockaddr(struct sockaddr *a, struct sockaddr *b)
 		return 0;
 }
 
+static int set_tcp_nodelay(struct openconnect_info *vpninfo, int ssl_sock)
+{
+	int flag = 1;
+	if (setsockopt(ssl_sock, IPPROTO_TCP, TCP_NODELAY, (void *)(&flag), sizeof(flag)) < 0) {;
+		vpn_perror(vpninfo,
+			   _("Failed setsockopt(TCP_NODELAY) on TLS socket:"));
+#ifdef _WIN32
+		return WSAGetLastError();
+#else
+		return -errno;
+#endif
+	}
+	return 0;
+}
+
+
 int connect_https_socket(struct openconnect_info *vpninfo)
 {
 	int ssl_sock = -1;
@@ -210,6 +232,7 @@ int connect_https_socket(struct openconnect_info *vpninfo)
 			}
 			set_fd_cloexec(ssl_sock);
 		}
+		set_tcp_nodelay(vpninfo, ssl_sock);
 		err = cancellable_connect(vpninfo, ssl_sock, vpninfo->peer_addr, vpninfo->peer_addrlen);
 		if (err) {
 			char *errstr;
@@ -358,6 +381,7 @@ int connect_https_socket(struct openconnect_info *vpninfo)
 			if (ssl_sock < 0)
 				continue;
 			set_fd_cloexec(ssl_sock);
+			set_tcp_nodelay(vpninfo, ssl_sock);
 			err = cancellable_connect(vpninfo, ssl_sock, rp->ai_addr, rp->ai_addrlen);
 			if (!err) {
 				/* Store the peer address we actually used, so that DTLS can
