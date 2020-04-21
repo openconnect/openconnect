@@ -725,13 +725,13 @@ if (test "$libproxy_pkg" = "no"); then
    AC_LINK_IFELSE([AC_LANG_PROGRAM([#include <libproxy.h>],
 			   [(void)px_proxy_factory_new();])],
 	  [AC_MSG_RESULT(yes (with libproxy.h))
-	   AC_DEFINE([LIBPROXY_HDR], ["libproxy.h"])
+	   AC_DEFINE([LIBPROXY_HDR], ["libproxy.h"], [libproxy header file])
 	   AC_SUBST([LIBPROXY_LIBS], [-lproxy])
 	   libproxy_pkg=yes],
 	  [AC_LINK_IFELSE([AC_LANG_PROGRAM([#include <proxy.h>],
 				  [(void)px_proxy_factory_new();])],
 		  [AC_MSG_RESULT(yes (with proxy.h))
-		   AC_DEFINE([LIBPROXY_HDR], ["proxy.h"])
+		   AC_DEFINE([LIBPROXY_HDR], ["proxy.h"], [libproxy header file])
 		   AC_SUBST([LIBPROXY_LIBS], [-lproxy])
 		   libproxy_pkg=yes],
 		   [AC_MSG_RESULT(no)])])
