@@ -26,6 +26,7 @@
        <li>Don't give non-functioning <tt>stderr</tt> to CSD trojan scripts.</li>
        <li>Fix crash with uninitialised OIDC token.</li>
        <li>GlobalProtect: more resilient handling of periodic HIP check and login arguments, and predictable naming of challenge forms</li>
+       <li>Disable <a href="https://en.wikipedia.org/wiki/Nagle's_algorithm">Nagle's algorithm</a> for TLS sockets, to improve interactivity when tunnel runs over TCP rather than UDP.</li>
      </ul><br/>
   </li>
   <li><b><a href="ftp://ftp.infradead.org/pub/openconnect/openconnect-8.07.tar.gz">OpenConnect v8.07</a></b>
