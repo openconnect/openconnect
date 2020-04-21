@@ -408,7 +408,7 @@ static int parse_portal_xml(struct openconnect_info *vpninfo, xmlNode *xml_node,
 							vpn_progress(vpninfo, PRG_INFO, _("Ignoring portal's HIP report interval (%d minutes), because interval is already set to %d minutes.\n"),
 										 sec/60, vpninfo->trojan_interval/60);
 						else {
-							vpninfo->trojan_interval = sec;
+							vpninfo->trojan_interval = sec - 60;
 							vpn_progress(vpninfo, PRG_INFO, _("Portal set HIP report interval to %d minutes).\n"),
 										 sec/60);
 						}
