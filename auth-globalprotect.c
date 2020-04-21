@@ -404,10 +404,7 @@ static int parse_portal_xml(struct openconnect_info *vpninfo, xmlNode *xml_node,
 				for (x2 = x->children; x2; x2 = x2->next) {
 					if (!xmlnode_get_val(x2, "hip-report-interval", &hip_interval)) {
 						int sec = atoi(hip_interval);
-						if (!vpninfo->csd_wrapper)
-							vpn_progress(vpninfo, PRG_INFO, _("Ignoring portal's HIP report interval (%d minutes), because no HIP report script provided.\n"),
-										 sec/60);
-						else if (vpninfo->trojan_interval)
+						if (vpninfo->trojan_interval)
 							vpn_progress(vpninfo, PRG_INFO, _("Ignoring portal's HIP report interval (%d minutes), because interval is already set to %d minutes.\n"),
 										 sec/60, vpninfo->trojan_interval/60);
 						else {
