@@ -35,6 +35,7 @@
        <li>Fix off-by-one in check for bad GnuTLS versions, and add build and run time checks.</li>
        <li>Don't abort connection if CSD wrapper script returns non-zero (for now).</li>
        <li>Make <tt>--passtos</tt> work for protocols that use ESP, in addition to DTLS.</li>
+       <li>Convert <tt>tncc-wrapper.py</tt> to Python 3, and include modernized <tt>tncc-emulate.py</tt> as well.</li>
      </ul><br/>
   </li>
   <li><b><a href="ftp://ftp.infradead.org/pub/openconnect/openconnect-8.06.tar.gz">OpenConnect v8.06</a></b>

@@ -899,6 +899,12 @@ int oncp_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable)
 	int ret;
 	int work_done = 0;
 
+	/* Periodic TNCC */
+	if (trojan_check_deadline(vpninfo, timeout)) {
+		oncp_send_tncc_command(vpninfo, 0);
+		return 1;
+	}
+
 	if (vpninfo->ssl_fd == -1)
 		goto do_reconnect;
 
