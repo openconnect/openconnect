@@ -5,7 +5,7 @@
 	<VAR match="VAR_SEL_CHANGELOG" replace="selected" />
 	<PARSE file="menu1.xml" />
 	<PARSE file="menu2.xml" />
-	
+
 	<INCLUDE file="inc/content.tmpl" />
 
     	<h1>Changelog</h1>
@@ -25,6 +25,7 @@
        <li>Fix check of <tt>pin-sha256:</tt> public key hashes to be case sensitive (<a href="https://gitlab.com/openconnect/openconnect/issues/116">#116</a>).</li>
        <li>Don't give non-functioning <tt>stderr</tt> to CSD trojan scripts.</li>
        <li>Fix crash with uninitialised OIDC token.</li>
+       <li>GlobalProtect: more resilient handling of periodic HIP check and login arguments, and predictable naming of challenge forms</li>
      </ul><br/>
   </li>
   <li><b><a href="ftp://ftp.infradead.org/pub/openconnect/openconnect-8.07.tar.gz">OpenConnect v8.07</a></b>
@@ -580,7 +581,7 @@
        <li>Fix host selection in NetworkManager auth dialog.</li>
        <li>Use SSLv3 instead of TLSv1; some servers <i>(or their firewalls)</i>
 	   don't accept any <tt>ClientHello</tt> options.</li>
-       <li>Never include address family prefix on <tt>script-tun</tt> connections.</li> 
+       <li>Never include address family prefix on <tt>script-tun</tt> connections.</li>
      </ul><br/>
   </li>
   <li><b><a href="ftp://ftp.infradead.org/pub/openconnect/openconnect-2.25.tar.gz">OpenConnect v2.25</a></b> &#8212; 2010-05-15
