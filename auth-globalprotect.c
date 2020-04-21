@@ -60,13 +60,14 @@ const char *gpst_os_name(struct openconnect_info *vpninfo)
 /* Parse pre-login response ({POST,GET} /{global-protect,ssl-vpn}/pre-login.esp)
  *
  * Extracts the relevant arguments from the XML (username-label, password-label)
- * and uses them to build an auth form, which always has two visible fields:
+ * and uses them to build an auth form, which always has 2-3 fields:
  *
- *   1) username
+ *   1) username (hidden in challenge forms, since it's simply repeated)
  *   2) one secret value:
  *       - normal account password
- *       - "challenge" (2FA) password, along with form name in auth_id
+ *       - "challenge" (2FA) password
  *       - cookie from external authentication flow ("alternative secret" INSTEAD OF password)
+ *   3) inputStr for challenge form (shoehorned into form->action)
  *
  */
 static int parse_prelogin_xml(struct openconnect_info *vpninfo, xmlNode *xml_node, void *cb_data)
@@ -167,17 +168,22 @@ static int parse_prelogin_xml(struct openconnect_info *vpninfo, xmlNode *xml_nod
 
 	/* XX: Some VPNs use a password in the first form, followed by a
 	 * a token in the second ("challenge") form. Others use only a
-	 * token. How can we distinguish these? */
-	if (!can_gen_tokencode(vpninfo, form, opt2))
+	 * token. How can we distinguish these?
+	 *
+	 * Currently using the heuristic that a non-default label for the
+	 * password in the first form means we should treat the first
+	 * form's password as a token field.
+	 */
+	if (!can_gen_tokencode(vpninfo, form, opt2) && !ctx->alt_secret
+	    && password_label && strcmp(password_label, "Password"))
 		opt2->type = OC_FORM_OPT_TOKEN;
 	else
 		opt2->type = OC_FORM_OPT_PASSWORD;
 
-	vpn_progress(vpninfo, PRG_TRACE, "%s%s: \"%s\" %s(%s)=%s, \"%s\" %s(%s)\n",
-				 form->auth_id[0] == '_' ? "Login form" : "Challenge form ",
-				 form->auth_id[0] != '_' ? form->auth_id : "",
-				 opt->label, opt->name, opt->type == OC_FORM_OPT_TEXT ? "TEXT" : "HIDDEN", opt->_value,
-				 opt2->label, opt2->name, opt2->type == OC_FORM_OPT_PASSWORD ? "PASSWORD" : "TOKEN");
+	vpn_progress(vpninfo, PRG_TRACE, "Prelogin form %s: \"%s\" %s(%s)=%s, \"%s\" %s(%s)\n",
+	             form->auth_id,
+	             opt->label, opt->name, opt->type == OC_FORM_OPT_TEXT ? "TEXT" : "HIDDEN", opt->_value,
+	             opt2->label, opt2->name, opt2->type == OC_FORM_OPT_PASSWORD ? "PASSWORD" : "TOKEN");
 
 out:
 	free(prompt);
@@ -202,21 +208,36 @@ static int challenge_cb(struct openconnect_info *vpninfo, char *prompt, char *in
 	 */
 	free(form->message);
 	free(form->auth_id);
+	free(form->action);
 	free(opt2->label);
 	free(opt2->_value);
 	opt2->_value = NULL;
 	opt->type = OC_FORM_OPT_HIDDEN;
 
+	/* XX: Some VPNs use a password in the first form, followed by a
+	 * a token in the second ("challenge") form. Others use only a
+	 * token. How can we distinguish these?
+	 *
+	 * Currently using the heuristic that if the password field in
+	 * the preceding form wasn't treated as a token field, treat this
+	 * as a token field.
+        */
+	if (!can_gen_tokencode(vpninfo, form, opt2) && opt2->type == OC_FORM_OPT_PASSWORD)
+		opt2->type = OC_FORM_OPT_TOKEN;
+	else
+		opt2->type = OC_FORM_OPT_PASSWORD;
+
 	if (    !(form->message = strdup(prompt))
-		 || !(form->auth_id = strdup(inputStr))
+		 || !(form->action = strdup(inputStr))
+		 || !(form->auth_id = strdup("_challenge"))
 		 || !(opt2->label = strdup(_("Challenge: "))) )
 		return -ENOMEM;
 
-	vpn_progress(vpninfo, PRG_TRACE, "%s%s: \"%s\" %s(%s)=%s, \"%s\" %s(%s)\n",
-				 form->auth_id[0] == '_' ? "Login form" : "Challenge form ",
-				 form->auth_id[0] != '_' ? form->auth_id : "",
-				 opt->label, opt->name, opt->type == OC_FORM_OPT_TEXT ? "TEXT" : "HIDDEN", opt->_value,
-				 opt2->label, opt2->name, opt2->type == OC_FORM_OPT_PASSWORD ? "PASSWORD" : "TOKEN");
+	vpn_progress(vpninfo, PRG_TRACE, "Challenge form %s: \"%s\" %s(%s)=%s, \"%s\" %s(%s), inputStr=%s\n",
+	             form->auth_id,
+	             opt->label, opt->name, opt->type == OC_FORM_OPT_TEXT ? "TEXT" : "HIDDEN", opt->_value,
+	             opt2->label, opt2->name, opt2->type == OC_FORM_OPT_PASSWORD ? "PASSWORD" : "TOKEN",
+	             inputStr);
 
 	return -EAGAIN;
 }
@@ -568,8 +589,8 @@ static int gpst_login(struct openconnect_info *vpninfo, int portal, struct login
 		append_opt(request_body, "computer", vpninfo->localname);
 		if (vpninfo->ip_info.addr)
 			append_opt(request_body, "preferred-ip", vpninfo->ip_info.addr);
-		if (ctx->form->auth_id && ctx->form->auth_id[0]!='_')
-			append_opt(request_body, "inputStr", ctx->form->auth_id);
+		if (ctx->form->action)
+			append_opt(request_body, "inputStr", ctx->form->action);
 		append_form_opts(vpninfo, ctx->form, request_body);
 		if ((result = buf_error(request_body)))
 			goto out;
