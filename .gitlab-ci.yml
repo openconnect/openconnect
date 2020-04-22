@@ -54,6 +54,55 @@ CentOS7/OpenSSL:
     paths:
       - tests/*.log
 
+CentOS8/GnuTLS:
+  image: centos:8
+  script:
+  - yum update -y
+  - yum install -y epel-release
+  - yum install -y git autoconf automake libtool python36 gettext
+    'pkgconfig(openssl)' 'pkgconfig(libxml-2.0)' 'pkgconfig(liblz4)'
+    'pkgconfig(gnutls)' 'pkgconfig(liboath)' 'pkgconfig(stoken)' ocserv
+    vpnc-script 'pkgconfig(libpskc)' file make
+    java-devel-openjdk iproute iputils nuttcp
+  - ./autogen.sh
+  - ./configure --with-java --without-gnutls-version-check CFLAGS=-g
+  - make -j4
+# Until we get a GnuTLS with the client random bug fixed, DTLS fails
+  - make VERBOSE=1 XFAIL_TESTS="sigterm dtls-psk" -j4 check
+  tags:
+  - shared
+  except:
+  - tags
+  artifacts:
+    expire_in: 1 week
+    when: on_failure
+    paths:
+      - tests/*.log
+
+CentOS8/OpenSSL:
+  image: centos:8
+  script:
+  - yum update -y
+  - yum install -y epel-release
+  - yum install -y git autoconf automake libtool python36 gettext
+    'pkgconfig(openssl)' 'pkgconfig(libxml-2.0)' 'pkgconfig(liblz4)'
+    'pkgconfig(gnutls)' 'pkgconfig(liboath)' 'pkgconfig(stoken)' ocserv
+    vpnc-script 'pkgconfig(libpskc)' file make
+    java-devel-openjdk iproute iputils nuttcp
+  - ./autogen.sh
+  - ./configure --without-gnutls --with-openssl --with-java --without-openssl-version-check --disable-dsa-tests CFLAGS=-g
+  - make -j4
+  - make VERBOSE=1 -j4 check
+  tags:
+  - shared
+  except:
+  - tags
+  artifacts:
+    expire_in: 1 week
+    when: on_failure
+    paths:
+      - tests/*.log
+
 CentOS6/OpenSSL:
   image: centos:6
   script:
