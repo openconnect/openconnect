@@ -196,22 +196,22 @@ P11TOOL=SOFTHSM2_CONF=softhsm2.conf p11tool
 # Nice and simple: Certs visible without login, public keys present in token
 softhsm-setup0:
 	$(SHM2_UTIL) --show-slots
-	$(SHM2_UTIL) --init-token --slot 0 --label openconnect-test \
+	$(SHM2_UTIL) --init-token --free --label openconnect-test \
 		--so-pin 12345678 --pin 1234
 
-	$(SHM2_UTIL) --slot 0 --pin 1234 --import $(certsdir)/user-key-pkcs8.pem \
+	$(SHM2_UTIL) --token openconnect-test --pin 1234 --import $(certsdir)/user-key-pkcs8.pem \
 		--label RSA --id 01
 	$(P11TOOL) --load-certificate $(certsdir)/user-cert.pem --no-mark-private \
 		   --label RSA --id 01 --set-pin 1234 --login \
 		   --write "pkcs11:token=openconnect-test;pin-value=1234"
 
-	$(SHM2_UTIL) --slot 0 --pin 1234 --import $(certsdir)/dsa-key-pkcs8.pem \
+	$(SHM2_UTIL) --token openconnect-test --pin 1234 --import $(certsdir)/dsa-key-pkcs8.pem \
 		--label DSA --id 02
 	$(P11TOOL) --load-certificate $(certsdir)/dsa-cert.pem --no-mark-private \
 		   --label DSA --id 02 --set-pin 1234 --login \
 		   --write "pkcs11:token=openconnect-test;pin-value=1234"
 
-	$(SHM2_UTIL) --slot 0 --pin 1234 --import $(certsdir)/ec-key-pkcs8.pem \
+	$(SHM2_UTIL) --token openconnect-test --pin 1234 --import $(certsdir)/ec-key-pkcs8.pem \
 			--label EC --id 03
 	$(P11TOOL) --load-certificate $(certsdir)/ec-cert.pem --no-mark-private \
 		   --label EC --id 03 --set-pin 1234 --login \
@@ -220,7 +220,7 @@ softhsm-setup0:
 # Second test: Import keys with GnuTLS so public key is absent
 softhsm-setup1:
 	$(SHM2_UTIL) --show-slots
-	$(SHM2_UTIL) --init-token --slot 1 --label openconnect-test1 \
+	$(SHM2_UTIL) --init-token --free --label openconnect-test1 \
 		--so-pin 12345678 --pin 1234
 
 	$(P11TOOL) --load-certificate $(certsdir)/user-cert.pem --no-mark-private \
@@ -241,7 +241,7 @@ softhsm-setup1:
 # Third test: CKA_PRIVATE on certificates
 softhsm-setup2:
 	$(SHM2_UTIL) --show-slots
-	$(SHM2_UTIL) --init-token --slot 2 --label openconnect-test2 \
+	$(SHM2_UTIL) --init-token --free --label openconnect-test2 \
 		--so-pin 12345678 --pin 1234
 
 	$(P11TOOL) --load-certificate $(certsdir)/user-cert.pem \
