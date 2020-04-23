@@ -1383,7 +1383,7 @@ static int match_cert_hostname(struct openconnect_info *vpninfo, X509 *peer_cert
 {
 	char *matched = NULL;
 
-	if (ipaddrlen && X509_check_ip(peer_cert, ipaddr, ipaddrlen, 0)) {
+	if (ipaddrlen && X509_check_ip(peer_cert, ipaddr, ipaddrlen, 0) == 1) {
 		if (vpninfo->verbose >= PRG_DEBUG) {
 			char host[80];
 			int family;
@@ -1402,7 +1402,7 @@ static int match_cert_hostname(struct openconnect_info *vpninfo, X509 *peer_cert
 		}
 		return 0;
 	}
-	if (X509_check_host(peer_cert, vpninfo->hostname, 0, 0, &matched)) {
+	if (X509_check_host(peer_cert, vpninfo->hostname, 0, 0, &matched) == 1) {
 		vpn_progress(vpninfo, PRG_DEBUG,
 			     _("Matched peer certificate subject name '%s'\n"),
 			     matched);
