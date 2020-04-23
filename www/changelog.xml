@@ -17,6 +17,7 @@
      <ul>
        <li>Add bash completion support.</li>
        <li>Give more helpful error in case of Pulse servers asking for TNCC.</li>
+       <li>Sanitize non-canonical Legacy IP network addresses (<a href="https://gitlab.com/openconnect/openconnect/merge_requests/97">!97</a>)</li>
      </ul><br/>
   </li>
   <li><b><a href="ftp://ftp.infradead.org/pub/openconnect/openconnect-8.08.tar.gz">OpenConnect v8.08</a></b>

@@ -91,15 +91,15 @@ static int process_split_xxclude(struct openconnect_info *vpninfo,
 				 int include, const char *route, int *v4_incs,
 				 int *v6_incs)
 {
-	struct in_addr addr;
+	struct in_addr net_addr, mask_addr;
 	const char *in_ex = include ? "IN" : "EX";
-	char envname[80];
+	char envname[80], uptoslash[20];
 	const char *slash;
 	char *endp;
 	int masklen;
 
 	slash = strchr(route, '/');
-	envname[79] = 0;
+	envname[79] = uptoslash[19] = 0;
 
 	if (strchr(route, ':')) {
 		snprintf(envname, 79, "CISCO_IPV6_SPLIT_%sC_%d_ADDR", in_ex,
@@ -114,17 +114,17 @@ static int process_split_xxclude(struct openconnect_info *vpninfo,
 		return 0;
 	}
 
-	if (!slash) {
-		/* no mask (same as /32) */
-		masklen = 32;
-		addr.s_addr = netmaskbits(32);
-	} else if ((masklen = strtol(slash+1, &endp, 10))<=32 && *endp!='.') {
-		/* mask is /N */
-		addr.s_addr = netmaskbits(masklen);
-	} else if (inet_aton(slash+1, &addr)) {
-		/* mask is /A.B.C.D */
-		masklen = netmasklen(addr);
-	} else {
+	if (!slash)
+		strncpy(uptoslash, route, sizeof(uptoslash)-1);
+	else {
+		int l = MIN(slash - route, sizeof(uptoslash)-1);
+		strncpy(uptoslash, route, l);
+		uptoslash[l] = 0;
+	}
+
+	/* Network address must be parseable */
+	if (!inet_aton(uptoslash, &net_addr)) {
+	bad:
 		if (include)
 			vpn_progress(vpninfo, PRG_ERR,
 					 _("Discard bad split include: \"%s\"\n"),
@@ -136,11 +136,41 @@ static int process_split_xxclude(struct openconnect_info *vpninfo,
 		return -EINVAL;
 	}
 
+	/* Accept netmask in several forms */
+	if (!slash) {
+		/* no mask (same as /32) */
+		masklen = 32;
+		mask_addr.s_addr = netmaskbits(32);
+	} else if ((masklen = strtol(slash+1, &endp, 10))<=32 && *endp!='.') {
+		/* mask is /N */
+		mask_addr.s_addr = netmaskbits(masklen);
+	} else if (inet_aton(slash+1, &mask_addr)) {
+		/* mask is /A.B.C.D */
+		masklen = netmasklen(mask_addr);
+		/* something invalid like /255.0.0.1 */
+		if (netmaskbits(masklen) != mask_addr.s_addr)
+			goto bad;
+	} else
+		goto bad;
+
+	/* Fix incorrectly-set host bits */
+	if (net_addr.s_addr & ~mask_addr.s_addr) {
+		net_addr.s_addr &= mask_addr.s_addr;
+		if (include)
+			vpn_progress(vpninfo, PRG_ERR,
+				     _("WARNING: Split include \"%s\" has host bits set, replacing with \"%s/%d\".\n"),
+				     route, inet_ntoa(net_addr), masklen);
+		else
+			vpn_progress(vpninfo, PRG_ERR,
+				     _("WARNING: Split exclude \"%s\" has host bits set, replacing with \"%s/%d\".\n"),
+				     route, inet_ntoa(net_addr), masklen);
+	}
+
 	snprintf(envname, 79, "CISCO_SPLIT_%sC_%d_ADDR", in_ex, *v4_incs);
-	script_setenv(vpninfo, envname, route, slash ? slash - route : 0, 0);
+	script_setenv(vpninfo, envname, inet_ntoa(net_addr), 0, 0);
 
 	snprintf(envname, 79, "CISCO_SPLIT_%sC_%d_MASK", in_ex, *v4_incs);
-	script_setenv(vpninfo, envname, inet_ntoa(addr), 0, 0);
+	script_setenv(vpninfo, envname, inet_ntoa(mask_addr), 0, 0);
 
 	snprintf(envname, 79, "CISCO_SPLIT_%sC_%d_MASKLEN", in_ex, *v4_incs);
 	script_setenv_int(vpninfo, envname, masklen);
@@ -237,16 +267,27 @@ void prepare_script_env(struct openconnect_info *vpninfo)
 			struct in_addr addr;
 			struct in_addr mask;
 
-			if (inet_aton(vpninfo->ip_info.addr, &addr) &&
-			    inet_aton(vpninfo->ip_info.netmask, &mask)) {
+			if (!inet_aton(vpninfo->ip_info.addr, &addr))
+				vpn_progress(vpninfo, PRG_ERR,
+					     _("Ignoring legacy network because address \"%s\" is invalid.\n"),
+					     vpninfo->ip_info.netmask);
+			else if (!inet_aton(vpninfo->ip_info.netmask, &mask))
+			bad_netmask:
+				vpn_progress(vpninfo, PRG_ERR,
+					     _("Ignoring legacy network because netmask \"%s\" is invalid.\n"),
+					     vpninfo->ip_info.netmask);
+			else {
 				char *netaddr;
+				int masklen = netmasklen(mask);
 
+				if (netmaskbits(masklen) != mask.s_addr)
+					goto bad_netmask;
 				addr.s_addr &= mask.s_addr;
 				netaddr = inet_ntoa(addr);
 
 				script_setenv(vpninfo, "INTERNAL_IP4_NETADDR", netaddr, 0, 0);
 				script_setenv(vpninfo, "INTERNAL_IP4_NETMASK", vpninfo->ip_info.netmask, 0, 0);
-				script_setenv_int(vpninfo, "INTERNAL_IP4_NETMASKLEN", netmasklen(mask));
+				script_setenv_int(vpninfo, "INTERNAL_IP4_NETMASKLEN", masklen);
 			}
 		}
 	}
