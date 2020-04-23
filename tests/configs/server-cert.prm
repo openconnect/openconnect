@@ -1,0 +1,18 @@
+[ req ]
+prompt                          = no
+default_bits                    = 2432
+distinguished_name              = req_DN
+default_md                      = sha256
+string_mask                     = utf8only
+#req_extensions                  = req_EXT
+[ req_DN ]
+CN                      = "localhost"
+[ req_EXT ]
+basicConstraints = CA:false
+subjectAltName = @alt_names
+extendedKeyUsage = serverAuth
+keyUsage = digitalSignature, keyEncipherment
+subjectKeyIdentifier = hash
+authorityKeyIdentifier = keyid
+[alt_names]
+DNS.1 = localhost

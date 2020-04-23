@@ -111,7 +111,7 @@ serverhash_LDADD = ../libopenconnect.la $(SSL_LIBS)
 # and considered part of the sources, committed to the git tree. But for
 # reference, the commands used to generate them are here...
 
-keyfiles: $(USER_KEYS) $(USER_CERTS)
+keyfiles: $(USER_KEYS) $(USER_CERTS) $(certsdir)/server-cert.pem
 
 
 OPENSSL = openssl
@@ -186,6 +186,14 @@ $(certsdir)/ec-key-pkcs1-aes128.pem: certs/ec-key-pkcs1.pem
 
 %.der: %.pem
 	sed -e '0,/^-----BEGIN.*KEY-----/d' -e '/^-----END.*KEY-----/,$$d' $< | base64 -d > $@
+
+$(certsdir)/server-cert.csr: $(certsdir)/server-key.pem $(srcdir)/configs/server-cert.prm
+	$(OPENSSL) req -new -config $(srcdir)/configs/server-cert.prm -key $< -out $@
+
+$(certsdir)/server-cert.pem: $(certsdir)/server-cert.csr $(srcdir)/configs/server-cert.prm
+	$(OPENSSL) x509 -days 3650 -CA $(certsdir)/ca.pem -CAkey $(certsdir)/ca-key.pem \
+		-extfile $(srcdir)/configs/server-cert.prm -extensions req_EXT \
+		-set_serial $(shell date +%s) -req -out $@ -in $<
 
 %-cert.csr: %-key-pkcs8.pem
 	$(OPENSSL) req -new -config $(srcdir)/configs/user-cert.prm -key $< -out $@
