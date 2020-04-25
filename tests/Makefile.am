@@ -42,7 +42,8 @@ EXTRA_DIST = certs/ca.pem certs/ca-key.pem certs/user-cert.pem $(USER_KEYS) $(US
 	pass-UTF-8 pass-ISO8859-2 \
 	certs/server-cert.pem certs/server-key.pem configs/test1.passwd \
 	common.sh configs/test-user-cert.config configs/test-user-pass.config \
-	configs/user-cert.prm softhsm2.conf.in softhsm ns.sh configs/test-dtls-psk.config \
+	configs/user-cert.prm configs/server-cert.prm \
+	softhsm2.conf.in softhsm ns.sh configs/test-dtls-psk.config \
 	scripts/vpnc-script scripts/vpnc-script-detect-disconnect
 
 dist_check_SCRIPTS = autocompletion
@@ -187,13 +188,11 @@ $(certsdir)/ec-key-pkcs1-aes128.pem: certs/ec-key-pkcs1.pem
 %.der: %.pem
 	sed -e '0,/^-----BEGIN.*KEY-----/d' -e '/^-----END.*KEY-----/,$$d' $< | base64 -d > $@
 
-$(certsdir)/server-cert.csr: $(certsdir)/server-key.pem $(srcdir)/configs/server-cert.prm
-	$(OPENSSL) req -new -config $(srcdir)/configs/server-cert.prm -key $< -out $@
-
-$(certsdir)/server-cert.pem: $(certsdir)/server-cert.csr $(srcdir)/configs/server-cert.prm
+$(certsdir)/server-cert.pem:
+	$(OPENSSL) req -new -config $(srcdir)/configs/server-cert.prm -key $(certsdir)/server-key.pem -out $@.csr
 	$(OPENSSL) x509 -days 3650 -CA $(certsdir)/ca.pem -CAkey $(certsdir)/ca-key.pem \
 		-extfile $(srcdir)/configs/server-cert.prm -extensions req_EXT \
-		-set_serial $(shell date +%s) -req -out $@ -in $<
+		-set_serial $(shell date +%s) -req -out $@ -in $@.csr
 
 %-cert.csr: %-key-pkcs8.pem
 	$(OPENSSL) req -new -config $(srcdir)/configs/user-cert.prm -key $< -out $@
