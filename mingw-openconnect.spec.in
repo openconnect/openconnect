@@ -34,6 +34,8 @@ BuildRequires:  mingw32-gnutls
 BuildRequires:  mingw32-p11-kit
 BuildRequires:  mingw32-libxml2
 BuildRequires:  mingw32-zlib
+BuildRequires:  mingw32-lz4
+BuildRequires:  mingw32-stoken
 BuildRequires:  wine-core(x86-32)
 
 BuildRequires:  mingw64-filesystem >= 95
@@ -44,6 +46,8 @@ BuildRequires:  mingw64-gnutls
 BuildRequires:  mingw64-p11-kit
 BuildRequires:  mingw64-libxml2
 BuildRequires:  mingw64-zlib
+BuildRequires:  mingw64-lz4
+BuildRequires:  mingw64-stoken
 BuildRequires:  wine-core(x86-64)
 
 
