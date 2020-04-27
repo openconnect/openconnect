@@ -1,5 +1,7 @@
 #!/bin/bash
 
+TARGET="$1"
+
 GITCOMMIT="$(git rev-parse HEAD)"
 GITDESC="$(git describe --tags HEAD)"
 
@@ -18,4 +20,4 @@ sed -e "s/@ISSNAP@/${ISSNAP}/" \
     -e "s/@VERSION@/${GITTAG}/" \
     -e "s/@SNAPCOMMIT@/${GITCOMMIT}/" \
     -e "s/@SNAPCOUNT@/${GITCOUNT}/" \
-    openconnect.spec.in > openconnect.spec
+    ${TARGET}.spec.in > ${TARGET}.spec
