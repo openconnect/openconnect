@@ -48,7 +48,7 @@ BuildRequires:  wine-core(x86-64)
 
 
 BuildRequires:  pkgconfig automake autoconf libtool
-BuildRequires:  gettext-devel wine-common
+BuildRequires:  gettext-devel
 
 %description
 The OpenConnect multiprotocol VPN client library, cross-compiled for MinGW.
@@ -86,7 +86,8 @@ fi
 %endif
 
 %mingw_configure --with-vpnc-script=vpnc-script-win.js \
-	--without-gnutls-version-check --disable-dsa-tests
+		 --without-gnutls-version-check --disable-dsa-tests \
+		 --sbindir='${exec_prefix}/bin'
 %mingw_make %{?_smp_mflags} V=1
 
 
@@ -113,7 +114,7 @@ rm -rf $RPM_BUILD_ROOT/%{mingw64_sysconfdir}/bash_completion.d
 %files -n mingw32-openconnect -f mingw32-openconnect.lang
 %license COPYING.LGPL
 %{mingw32_bindir}/libopenconnect*.dll
-%{mingw32_sbindir}/openconnect.exe
+%{mingw32_bindir}/openconnect.exe
 %{mingw32_includedir}/openconnect.h
 %{mingw32_libdir}/libopenconnect*.dll.a
 %{mingw32_libdir}/pkgconfig/openconnect.pc
@@ -122,7 +123,7 @@ rm -rf $RPM_BUILD_ROOT/%{mingw64_sysconfdir}/bash_completion.d
 %files -n mingw64-openconnect -f mingw64-openconnect.lang
 %license COPYING.LGPL
 %{mingw64_bindir}/libopenconnect*.dll
-%{mingw64_sbindir}/openconnect.exe
+%{mingw64_bindir}/openconnect.exe
 %{mingw64_includedir}/openconnect.h
 %{mingw64_libdir}/libopenconnect*.dll.a
 %{mingw64_libdir}/pkgconfig/openconnect.pc
