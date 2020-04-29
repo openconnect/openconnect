@@ -63,14 +63,26 @@ The OpenConnect multiprotocol VPN client library, cross-compiled for MinGW.
 %package -n mingw32-openconnect
 Summary:        OpenConnect VPN client library
 Requires:       pkgconfig
+Requires:       mingw32-gnutls
+Requires:       mingw32-p11-kit
+Requires:       mingw32-libxml2
+Requires:       mingw32-zlib
+Requires:       mingw32-lz4
+Requires:       mingw32-stoken
 
 %description -n mingw32-openconnect
 The OpenConnect multiprotocol VPN client library, cross-compiled for MinGW.
 
-# Win32
+# Win64
 %package -n mingw64-openconnect
 Summary:        OpenConnect VPN client library
 Requires:       pkgconfig
+Requires:       mingw64-gnutls
+Requires:       mingw64-p11-kit
+Requires:       mingw64-libxml2
+Requires:       mingw64-zlib
+Requires:       mingw64-lz4
+Requires:       mingw64-stoken
 
 %description -n mingw64-openconnect
 The OpenConnect multiprotocol VPN client library, cross-compiled for MinGW.
