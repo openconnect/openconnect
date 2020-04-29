@@ -270,7 +270,7 @@ void prepare_script_env(struct openconnect_info *vpninfo)
 			if (!inet_aton(vpninfo->ip_info.addr, &addr))
 				vpn_progress(vpninfo, PRG_ERR,
 					     _("Ignoring legacy network because address \"%s\" is invalid.\n"),
-					     vpninfo->ip_info.netmask);
+					     vpninfo->ip_info.addr);
 			else if (!inet_aton(vpninfo->ip_info.netmask, &mask))
 			bad_netmask:
 				vpn_progress(vpninfo, PRG_ERR,
