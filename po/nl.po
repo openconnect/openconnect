@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openconnect\n"
 "Report-Msgid-Bugs-To: openconnect-devel@lists.infradead.org\n"
-"POT-Creation-Date: 2020-04-04 21:24+0100\n"
+"POT-Creation-Date: 2020-04-29 14:13+0100\n"
 "PO-Revision-Date: 2019-01-19 20:54+0100\n"
 "Last-Translator: Nathan Follens <nthn@unseen.is>\n"
 "Language-Team: Dutch (http://www.transifex.com/projects/p/meego/language/"
@@ -21,127 +21,120 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Poedit 2.2\n"
 
-#: auth-globalprotect.c:117
+#: auth-globalprotect.c:119
 #, c-format
 msgid "SAML %s authentication is required via %s\n"
 msgstr ""
 
-#: auth-globalprotect.c:121
+#: auth-globalprotect.c:123
 #, c-format
 msgid "SAML %s authentication is required via external script.\n"
 msgstr ""
 
-#: auth-globalprotect.c:124
+#: auth-globalprotect.c:126
 msgid ""
 "When SAML authentication is complete, specify destination form field by "
 "appending :field_name to login URL.\n"
 msgstr ""
 
-#: auth-globalprotect.c:128
+#: auth-globalprotect.c:130
 #, c-format
 msgid ""
 "Destination form field %s was specified; assuming SAML %s authentication is "
 "complete.\n"
 msgstr ""
 
-#: auth-globalprotect.c:141
+#: auth-globalprotect.c:143
 msgid "Please enter your username and password"
 msgstr "Voer uw gebruikersnaam en wachtwoord in"
 
-#: auth-globalprotect.c:150
+#: auth-globalprotect.c:152
 msgid "Username"
 msgstr "Gebruikersnaam"
 
-#: auth-globalprotect.c:165
+#: auth-globalprotect.c:167
 msgid "Password"
 msgstr "Wachtwoord"
 
-#: auth-globalprotect.c:212
+#: auth-globalprotect.c:234
 msgid "Challenge: "
 msgstr "Uitdaging: "
 
-#: auth-globalprotect.c:305
+#: auth-globalprotect.c:354
 #, c-format
 msgid "GlobalProtect login returned unexpected argument value arg[%d]=%s\n"
 msgstr ""
 
-#: auth-globalprotect.c:311
+#: auth-globalprotect.c:360
 #, c-format
 msgid "GlobalProtect login returned %s=%s (expected %s)\n"
 msgstr "GlobalProtect-aanmelding gaf %s=%s weer (%s verwacht)\n"
 
-#: auth-globalprotect.c:317
+#: auth-globalprotect.c:366
 #, c-format
 msgid "GlobalProtect login returned empty or missing %s\n"
 msgstr "GlobalProtect-aanmelding gaf lege of ontbrekende %s weer\n"
 
-#: auth-globalprotect.c:321
+#: auth-globalprotect.c:370
 #, c-format
 msgid "GlobalProtect login returned %s=%s\n"
 msgstr "GlobalProtect-aanmelding gaf %s=%s weer\n"
 
-#: auth-globalprotect.c:335
+#: auth-globalprotect.c:384
 #, c-format
 msgid ""
 "Please report %d unexpected values above (of which %d fatal) to <openconnect-"
 "devel@lists.infradead.org>\n"
 msgstr ""
 
-#: auth-globalprotect.c:375
+#: auth-globalprotect.c:424
 msgid "Please select GlobalProtect gateway."
 msgstr "Selecteer een GlobalProtect-gateway."
 
-#: auth-globalprotect.c:385
+#: auth-globalprotect.c:434
 msgid "GATEWAY:"
 msgstr "GATEWAY:"
 
-#: auth-globalprotect.c:408
-#, c-format
-msgid ""
-"Ignoring portal's HIP report interval (%d minutes), because no HIP report "
-"script provided.\n"
-msgstr ""
-
-#: auth-globalprotect.c:411
+#: auth-globalprotect.c:457
 #, c-format
 msgid ""
 "Ignoring portal's HIP report interval (%d minutes), because interval is "
 "already set to %d minutes.\n"
 msgstr ""
 
-#: auth-globalprotect.c:415
+#: auth-globalprotect.c:461
 #, c-format
 msgid "Portal set HIP report interval to %d minutes).\n"
 msgstr ""
 
 #. each entry looks like <entry name="host[:443]"><description>Label</description></entry>
-#: auth-globalprotect.c:455
+#: auth-globalprotect.c:501
 #, c-format
 msgid "%d gateway servers available:\n"
 msgstr "%d gatewayservers beschikbaar:\n"
 
-#: auth-globalprotect.c:476
+#: auth-globalprotect.c:522
 #, c-format
 msgid "  %s (%s)\n"
 msgstr "  %s (%s)\n"
 
-#: auth-globalprotect.c:482
+#: auth-globalprotect.c:528
 msgid "GlobalProtect portal configuration lists no gateway servers.\n"
 msgstr ""
 
-#: auth-globalprotect.c:559 auth-juniper.c:739 auth.c:675
+#: auth-globalprotect.c:605 auth-juniper.c:775 auth.c:675
 msgid "Failed to generate OTP tokencode; disabling token\n"
 msgstr "Genereren van OTP-tokencode mislukt; token wordt uitgeschakeld\n"
 
-#: auth-globalprotect.c:655
+#: auth-globalprotect.c:701
 msgid "Server is neither a GlobalProtect portal nor a gateway.\n"
 msgstr "Server is geen GlobalProtect-portaal, noch een gateway.\n"
 
-#: auth-globalprotect.c:707 oncp.c:1281
+#: auth-globalprotect.c:753 oncp.c:1287
 msgid "Logout failed.\n"
 msgstr "Afmelden mislukt.\n"
 
-#: auth-globalprotect.c:709 oncp.c:1283
+#: auth-globalprotect.c:755 oncp.c:1289
 msgid "Logout successful.\n"
 msgstr "Afgemeld.\n"
 
@@ -170,85 +163,86 @@ msgstr "Kan niet overweg met formulier method=‘%s’, action=‘%s’\n"
 msgid "Unknown textarea field: '%s'\n"
 msgstr "Onbekend tekstveld: ‘%s’\n"
 
-#: auth-juniper.c:318
-msgid "Failed to send cookie to TNCC\n"
+#: auth-juniper.c:307
+msgid "Failed to allocate memory for communication with TNCC\n"
+msgstr "Toewijzen van geheugen voor communicatie met TNCC mislukt\n"
+
+#: auth-juniper.c:312
+msgid "Failed to send command to TNCC\n"
 msgstr ""
 
-#: auth-juniper.c:344
+#: auth-juniper.c:374
 msgid "TNCC support not implemented yet on Windows\n"
 msgstr "TNCC-ondersteuning is nog niet geïmplementeerd op Windows\n"
 
-#: auth-juniper.c:366
+#: auth-juniper.c:388
 msgid "No DSPREAUTH cookie; not attempting TNCC\n"
 msgstr "Geen DSPREAUTH-cookie; TNCC wordt niet geprobeerd\n"
 
-#: auth-juniper.c:404
+#: auth-juniper.c:438
 #, c-format
 msgid "Failed to exec TNCC script %s: %s\n"
 msgstr "Uitvoeren van TNCC-script %s mislukt: %s\n"
 
-#: auth-juniper.c:418
-msgid "Failed to allocate memory for communication with TNCC\n"
-msgstr "Toewijzen van geheugen voor communicatie met TNCC mislukt\n"
-
-#: auth-juniper.c:425
-msgid "Failed to send start command to TNCC\n"
-msgstr "Verzenden van startopdracht aan TNCC mislukt\n"
-
-#: auth-juniper.c:432
+#: auth-juniper.c:455
 msgid "Sent start; waiting for response from TNCC\n"
 msgstr "Start verzonden; wachten op antwoord van TNCC\n"
 
-#: auth-juniper.c:439
+#: auth-juniper.c:462
 msgid "Failed to read response from TNCC\n"
 msgstr "Lezen van antwoord van TNCC mislukt\n"
 
-#: auth-juniper.c:446
+#: auth-juniper.c:469
 #, c-format
 msgid "Received unsuccessful %s response from TNCC\n"
 msgstr "Onsuccesvol %s-antwoord ontvangen van TNCC\n"
 
-#: auth-juniper.c:452
+#: auth-juniper.c:475
 msgid "TNCC response 200 OK\n"
 msgstr "TNCC-antwoord 200 oké\n"
 
-#: auth-juniper.c:459
+#: auth-juniper.c:482
 #, c-format
 msgid "Second line of TNCC response: '%s'\n"
 msgstr "Tweede regel van TNCC-reactie: '%s'\n"
 
-#: auth-juniper.c:468
+#: auth-juniper.c:491
 #, c-format
 msgid "Got new DSPREAUTH cookie from TNCC: %s\n"
 msgstr "Nieuwe DSPREAUTH-cookie gekregen van TNCC: %s\n"
 
-#: auth-juniper.c:481
+#: auth-juniper.c:504
+#, c-format
+msgid "Got reauth interval from TNCC: %d seconds\n"
+msgstr ""
+
+#: auth-juniper.c:517
 #, c-format
 msgid "Unexpected non-empty line from TNCC after DSPREAUTH cookie: '%s'\n"
 msgstr "Onverwachte niet-lege regel van TNCC na DSPREAUTH-cookie: '%s'\n"
 
-#: auth-juniper.c:488
+#: auth-juniper.c:524
 msgid "Too many non-empty lines from TNCC after DSPREAUTH cookie\n"
 msgstr ""
 
-#: auth-juniper.c:659
+#: auth-juniper.c:695
 msgid "Failed to parse HTML document\n"
 msgstr "Ontleden van HTML-document mislukt\n"
 
-#: auth-juniper.c:676
+#: auth-juniper.c:712
 msgid "Failed to find or parse web form in login page\n"
 msgstr "Vinden of ontleden van webformulier op aanmeldingspagina mislukt\n"
 
-#: auth-juniper.c:684
+#: auth-juniper.c:720
 msgid "Encountered form with no ID\n"
 msgstr "Formulier zonder ID tegengekomen\n"
 
-#: auth-juniper.c:722
+#: auth-juniper.c:758
 #, c-format
 msgid "Unknown form ID '%s'\n"
 msgstr "Onbekende formulier-ID ‘%s’\n"
 
-#: auth-juniper.c:725
+#: auth-juniper.c:761
 #, c-format
 msgid "Dumping unknown HTML form:\n"
 msgstr "Onbekend HTML-formulier wordt gedumpt:\n"
@@ -417,32 +411,32 @@ msgstr ""
 "Waarschuwing: u draait onveilige CSD-code met rootprivileges\n"
 "\t Gebruik de opdrachtregeloptie ‘--csd-user’\n"
 
-#: auth.c:1222
+#: auth.c:1235
 #, c-format
 msgid "Failed to exec CSD script %s\n"
 msgstr "Uitvoeren van CSD-script %s mislukt\n"
 
-#: auth.c:1242
+#: auth.c:1255
 msgid "Unknown response from server\n"
 msgstr "Onbekend antwoord van server\n"
 
-#: auth.c:1364
+#: auth.c:1377
 msgid "Server requested SSL client certificate after one was provided\n"
 msgstr "Server vroeg om SSL-cliëntcertificaat nadat er een werd gegeven\n"
 
-#: auth.c:1368
+#: auth.c:1381
 msgid "Server requested SSL client certificate; none was configured\n"
 msgstr "Server vroeg om SSL-cliëntcertificaat; geen ingesteld\n"
 
-#: auth.c:1384
+#: auth.c:1397
 msgid "XML POST enabled\n"
 msgstr "XML POST ingeschakeld\n"
 
-#: auth.c:1408
+#: auth.c:1421
 msgid "Couldn't fetch CSD stub. Proceeding anyway with CSD wrapper script.\n"
 msgstr ""
 
-#: auth.c:1433
+#: auth.c:1446
 #, c-format
 msgid "Refreshing %s after 1 second...\n"
 msgstr "%s vernieuwen na 1 seconde…\n"
@@ -603,12 +597,12 @@ msgstr "%s gecomprimeerd datapakket ontvangen van %d bytes (was %d)\n"
 msgid "deflate failed %d\n"
 msgstr "decompressie mislukt %d\n"
 
-#: cstp.c:920 dtls.c:313 dtls.c:695 esp.c:163 gpst.c:1137 mainloop.c:69
-#: oncp.c:922 pulse.c:2629
+#: cstp.c:920 dtls.c:313 dtls.c:695 esp.c:163 gpst.c:1141 mainloop.c:69
+#: oncp.c:928 pulse.c:2635
 msgid "Allocation failed\n"
 msgstr "Toewijzing mislukt\n"
 
-#: cstp.c:931 gpst.c:1150 pulse.c:2641
+#: cstp.c:931 gpst.c:1154 pulse.c:2647
 #, c-format
 msgid "Short packet received (%d bytes)\n"
 msgstr "Kort pakket ontvangen (%d bytes)\n"
@@ -630,7 +624,7 @@ msgstr "CSTP DPD-antwoord ontvangen\n"
 msgid "Got CSTP Keepalive\n"
 msgstr "CSTP Keepalive ontvangen\n"
 
-#: cstp.c:974 oncp.c:1011
+#: cstp.c:974 oncp.c:1017
 #, c-format
 msgid "Received uncompressed data packet of %d bytes\n"
 msgstr "Ongecomprimeerd datapakket van %d bytes ontvangen\n"
@@ -657,35 +651,35 @@ msgstr "beëindigingspakket ontvangen van server\n"
 msgid "Unknown packet %02x %02x %02x %02x %02x %02x %02x %02x\n"
 msgstr "Onbekend pakket %02x %02x %02x %02x %02x %02x %02x %02x\n"
 
-#: cstp.c:1061 gpst.c:1239 oncp.c:1135 pulse.c:2784
+#: cstp.c:1061 gpst.c:1243 oncp.c:1141 pulse.c:2790
 #, c-format
 msgid "SSL wrote too few bytes! Asked for %d, sent %d\n"
 msgstr "SSL schreef te weinig bytes! Gevraagd om %d, verstuurde %d\n"
 
 #. Not that this will ever happen; we don't even process
 #. the setting when we're asked for it.
-#: cstp.c:1089 oncp.c:1170 pulse.c:2811
+#: cstp.c:1089 oncp.c:1176 pulse.c:2817
 msgid "CSTP rekey due\n"
 msgstr "CSTP-rekey verwacht\n"
 
 #. if we failed rehandshake try establishing a new-tunnel instead of failing
-#: cstp.c:1096 oncp.c:1177 pulse.c:2818
+#: cstp.c:1096 oncp.c:1183 pulse.c:2824
 msgid "Rehandshake failed; attempting new-tunnel\n"
 msgstr "Rehandshake mislukt; new-tunnel proberen\n"
 
-#: cstp.c:1107 oncp.c:1188 pulse.c:2829
+#: cstp.c:1107 oncp.c:1194 pulse.c:2835
 msgid "CSTP Dead Peer Detection detected dead peer!\n"
 msgstr "CSTP Dead Peer Detection ontdekte dode peer!\n"
 
-#: cstp.c:1111 gpst.c:1286 oncp.c:1105 oncp.c:1192 pulse.c:2754 pulse.c:2834
+#: cstp.c:1111 gpst.c:1290 oncp.c:1111 oncp.c:1198 pulse.c:2760 pulse.c:2840
 msgid "Reconnect failed\n"
 msgstr "Herverbinden mislukt\n"
 
-#: cstp.c:1127 oncp.c:1208 pulse.c:2850
+#: cstp.c:1127 oncp.c:1214 pulse.c:2856
 msgid "Send CSTP DPD\n"
 msgstr "CSTP DPD verzenden\n"
 
-#: cstp.c:1139 oncp.c:1219 pulse.c:2862
+#: cstp.c:1139 oncp.c:1225 pulse.c:2868
 msgid "Send CSTP Keepalive\n"
 msgstr "CSTP Keepalive verzenden\n"
 
@@ -694,7 +688,7 @@ msgstr "CSTP Keepalive verzenden\n"
 msgid "Sending compressed data packet of %d bytes (was %d)\n"
 msgstr "Gecomprimeerd datapakket van %d bytes (was %d) verzenden\n"
 
-#: cstp.c:1175 oncp.c:1253
+#: cstp.c:1175 oncp.c:1259
 #, c-format
 msgid "Sending uncompressed data packet of %d bytes\n"
 msgstr "Gedecomprimeerd datapakket van %d bytes verzenden\n"
@@ -1550,7 +1544,7 @@ msgstr "Fout bij initialiseren van X509-certificaatsstructuur\n"
 msgid "Error importing server's cert\n"
 msgstr "Fout bij importeren van servercertificaat\n"
 
-#: gnutls.c:1955 main.c:1822
+#: gnutls.c:1955 main.c:2101
 msgid "Could not calculate hash of server's certificate\n"
 msgstr "Kon hash van servercertificaat niet berekenen\n"
 
@@ -2080,7 +2074,7 @@ msgstr "Gateway verbrak verbinding onmiddellijk na GET-tunnel-verzoek.\n"
 msgid "Got inappropriate HTTP GET-tunnel response: %.*s\n"
 msgstr "Verkeerde HTTP-GET-tunnelreactie gekregen: %.*s\n"
 
-#: gpst.c:919
+#: gpst.c:921
 #, c-format
 msgid ""
 "WARNING: Server asked us to submit HIP report with md5sum %s.\n"
@@ -2089,19 +2083,19 @@ msgid ""
 "    %s\n"
 msgstr ""
 
-#: gpst.c:923
+#: gpst.c:925
 msgid ""
 "However, running the HIP report submission script on this platform is not "
 "yet implemented."
 msgstr ""
 
-#: gpst.c:925
+#: gpst.c:927
 msgid ""
 "You need to provide a --csd-wrapper argument with the HIP report submission "
 "script."
 msgstr ""
 
-#: gpst.c:934
+#: gpst.c:937
 msgid ""
 "Error: Running the 'HIP Report' script on this platform is not yet "
 "implemented.\n"
@@ -2109,51 +2103,51 @@ msgstr ""
 "Four: uitvoeren van ‘HIP-rapportage’-script is op dit platform nog niet "
 "geïmplementeerd.\n"
 
-#: gpst.c:963
+#: gpst.c:966
 #, c-format
 msgid "HIP script '%s' exited abnormally\n"
 msgstr "HIP-script '%s' sloot onjuist af\n"
 
-#: gpst.c:968
+#: gpst.c:971
 #, c-format
 msgid "HIP script '%s' returned non-zero status: %d\n"
 msgstr "HIP-script '%s' gaf niet-nul-status weer: %d\n"
 
-#: gpst.c:974
+#: gpst.c:977
 msgid "HIP report submission failed.\n"
 msgstr "Indienen van HIP-rapportage mislukt.\n"
 
-#: gpst.c:976
+#: gpst.c:979
 msgid "HIP report submitted successfully.\n"
 msgstr "HIP-rapportage ingediend.\n"
 
-#: gpst.c:1011
+#: gpst.c:1014
 #, c-format
 msgid "Failed to exec HIP script %s\n"
 msgstr "Uitvoeren van HIP-script %s mislukt\n"
 
-#: gpst.c:1025
+#: gpst.c:1028
 msgid "Gateway says HIP report submission is needed.\n"
 msgstr "Gateway zegt dat indienen van HIP-rapportage vereist is.\n"
 
-#: gpst.c:1029
+#: gpst.c:1032
 msgid "Gateway says no HIP report submission is needed.\n"
 msgstr "Gateway zegt dat indienen van HIP-rapportage niet vereist is.\n"
 
-#: gpst.c:1084
+#: gpst.c:1088
 msgid "ESP tunnel connected; exiting HTTPS mainloop.\n"
 msgstr "ESP-tunnel verbonden; HTTPS-mainloop wordt afgesloten.\n"
 
-#: gpst.c:1109
+#: gpst.c:1113
 msgid "Failed to connect ESP tunnel; using HTTPS instead.\n"
 msgstr "Verbinden met ESP-tunnel mislukt; HTTPS wordt gebruikt.\n"
 
-#: gpst.c:1146
+#: gpst.c:1150
 #, c-format
 msgid "Packet receive error: %s\n"
 msgstr "Fout bij ontvangen van pakket: %s\n"
 
-#: gpst.c:1167
+#: gpst.c:1171
 #, c-format
 msgid ""
 "Unexpected packet length. SSL_read returned %d (includes 16 header bytes) "
@@ -2162,11 +2156,11 @@ msgstr ""
 "Onverwachte pakketlengte. SSL_read gaf %d weer (inclusief 16 headerbytes), "
 "maar payload_len van header is %d\n"
 
-#: gpst.c:1177
+#: gpst.c:1181
 msgid "Got GPST DPD/keepalive response\n"
 msgstr "GPST DPD-/keepalive-reactie gekregen\n"
 
-#: gpst.c:1181
+#: gpst.c:1185
 msgid ""
 "Expected 0000000000000000 as last 8 bytes of DPD/keepalive packet header, "
 "but got:\n"
@@ -2174,48 +2168,48 @@ msgstr ""
 "0000000000000000 verwacht als laatste 8 bytes van DPD-/keepalive-"
 "pakketheader, maar we kregen:\n"
 
-#: gpst.c:1188
+#: gpst.c:1192
 #, c-format
 msgid "Received IPv%d data packet of %d bytes\n"
 msgstr ""
 
-#: gpst.c:1193
+#: gpst.c:1197
 msgid ""
 "Expected 0100000000000000 as last 8 bytes of data packet header, but got:\n"
 msgstr ""
 "0100000000000000 verwacht als laatste 8 bytes van datapakketheader, maar we "
 "kregen:\n"
 
-#: gpst.c:1206
+#: gpst.c:1210
 msgid "Unknown packet. Header dump follows:\n"
 msgstr "Onbekend pakket. Headerdump volgt:\n"
 
-#: gpst.c:1253
+#: gpst.c:1257
 msgid "GlobalProtect HIP check due\n"
 msgstr ""
 
-#: gpst.c:1265
+#: gpst.c:1269
 msgid "HIP check or report failed\n"
 msgstr ""
 
-#: gpst.c:1277
+#: gpst.c:1281
 msgid "GlobalProtect rekey due\n"
 msgstr "GlobalProtect-rekey verwacht\n"
 
-#: gpst.c:1282
+#: gpst.c:1286
 msgid "GPST Dead Peer Detection detected dead peer!\n"
 msgstr "GPST Dead Peer Detection ontdekte dode peer!\n"
 
-#: gpst.c:1302
+#: gpst.c:1306
 msgid "Send GPST DPD/keepalive request\n"
 msgstr "GPST DPD-/keepalive-verzoek verzenden\n"
 
-#: gpst.c:1325
+#: gpst.c:1329
 #, c-format
 msgid "Sending IPv%d data packet of %d bytes\n"
 msgstr ""
 
-#: gpst.c:1416 oncp.c:1327
+#: gpst.c:1420 oncp.c:1333
 msgid "Failed to send ESP probe\n"
 msgstr ""
 
@@ -2641,30 +2635,30 @@ msgstr ""
 msgid "Compatible with Pulse Connect Secure SSL VPN"
 msgstr ""
 
-#: library.c:237
+#: library.c:243
 #, c-format
 msgid "Unknown VPN protocol '%s'\n"
 msgstr "Onbekend VPN-protocol '%s'\n"
 
-#: library.c:259
+#: library.c:265
 msgid "Built against SSL library with no Cisco DTLS support\n"
 msgstr "Gecompileerd met een SSL-bibliotheek zonder Cisco DTLS-ondersteuning\n"
 
-#: library.c:698
+#: library.c:704
 #, c-format
 msgid "Failed to parse server URL '%s'\n"
 msgstr "Fout bij ontleden van server-URL '%s'\n"
 
-#: library.c:704
+#: library.c:710
 msgid "Only https:// permitted for server URL\n"
 msgstr "Alleen https:// toegestaan ​​voor server-URL\n"
 
-#: library.c:1104
+#: library.c:1112
 #, c-format
 msgid "Unknown certificate hash: %s.\n"
 msgstr "Onbekende certificaathash: %s.\n"
 
-#: library.c:1133
+#: library.c:1143
 #, c-format
 msgid ""
 "The size of the provided fingerprint is less than the minimum required "
@@ -2673,7 +2667,7 @@ msgstr ""
 "De grootte van de gegeven vingerafdruk is kleiner dan het vereiste minimum "
 "(%u).\n"
 
-#: library.c:1194
+#: library.c:1200
 msgid "No form handler; cannot authenticate.\n"
 msgstr "Geen formulierafhandelaar; kan niet authenticeren.\n"
 
@@ -2702,7 +2696,7 @@ msgstr "fgetws() mislukt: %s\n"
 msgid "Error converting console input: %s\n"
 msgstr "Fout bij converteren van consoleinvoer: %s\n"
 
-#: main.c:434 main.c:696
+#: main.c:434 main.c:700
 #, c-format
 msgid "Allocation failure for string from stdin\n"
 msgstr "Toewijzen mislukt voor tekenreeks vanaf stdin\n"
@@ -2734,44 +2728,44 @@ msgstr ""
 "LET OP: dit binair bestand bevat DTLS- noch ESP-ondersteuning. Prestaties "
 "worden beïnvloed.\n"
 
-#: main.c:664
+#: main.c:666
 #, c-format
 msgid "Supported protocols:"
 msgstr "Ondersteunde protocollen:"
 
-#: main.c:666 main.c:682
+#: main.c:668 main.c:686
 msgid " (default)"
 msgstr "(standaard)"
 
-#: main.c:679
+#: main.c:683
 msgid "Set VPN protocol"
 msgstr "VPN-protocol instellen"
 
-#: main.c:720
+#: main.c:724
 msgid "fgets (stdin)"
 msgstr "fgets (stdin)"
 
-#: main.c:761
+#: main.c:765
 #, c-format
 msgid "Cannot process this executable path \"%s\""
 msgstr "Kan pad van dit uitvoerbaar bestand niet verwerken '%s'"
 
-#: main.c:767
+#: main.c:771
 #, c-format
 msgid "Allocation for vpnc-script path failed\n"
 msgstr "Toewijzing voor vpnc-scriptpad mislukt\n"
 
-#: main.c:787
+#: main.c:791
 #, c-format
 msgid "Override hostname '%s' to '%s'\n"
 msgstr "Hostnaam '%s' overschrijven naar '%s'\n"
 
-#: main.c:800
+#: main.c:804
 #, c-format
 msgid "Usage:  openconnect [options] <server>\n"
 msgstr "Gebruik: openconnect [opties] <server>\n"
 
-#: main.c:801
+#: main.c:805
 #, c-format
 msgid ""
 "Open client for multiple VPN protocols, version %s\n"
@@ -2780,371 +2774,376 @@ msgstr ""
 "Open cliënt voor meerdere VPN-protocollen, versie %s\n"
 "\n"
 
-#: main.c:803
+#: main.c:807
 msgid "Read options from config file"
 msgstr "Haal opties uit configuratiebestand"
 
-#: main.c:804
+#: main.c:808
 msgid "Report version number"
 msgstr "Rapporteer versienummer"
 
-#: main.c:805
+#: main.c:809
 msgid "Display help text"
 msgstr "Geef hulptekst weer"
 
-#: main.c:809
+#: main.c:813
 msgid "Authentication"
 msgstr "Aanmeldingscontrole"
 
-#: main.c:810
+#: main.c:814
 msgid "Set login username"
 msgstr "Stel gebruikersnaam voor aanmelden in"
 
-#: main.c:811
+#: main.c:815
 msgid "Disable password/SecurID authentication"
 msgstr "Schakel wachtwoord-/SecurID-authenticatie uit"
 
-#: main.c:812
+#: main.c:816
 msgid "Do not expect user input; exit if it is required"
 msgstr "Verwacht geen invoer van de gebruiker; sluit af indien nodig"
 
-#: main.c:813
+#: main.c:817
 msgid "Read password from standard input"
 msgstr "Lees wachtwoord van standaardinvoer"
 
-#: main.c:814
+#: main.c:818
 msgid "Choose authentication login selection"
 msgstr "Kies authenticatie-aanmeldingsselectie"
 
-#: main.c:815
+#: main.c:819
 msgid "Provide authentication form responses"
 msgstr "Aanmeldingsformulierreacties aanbieden"
 
-#: main.c:816
+#: main.c:820
 msgid "Use SSL client certificate CERT"
 msgstr "Gebruik SSL-cliëntcertificaat CERT"
 
-#: main.c:817
+#: main.c:821
 msgid "Use SSL private key file KEY"
 msgstr "Gebruik SSL-privésleutelbestand KEY"
 
-#: main.c:818
+#: main.c:822
 msgid "Warn when certificate lifetime < DAYS"
 msgstr "Waarschuwen wanneer certificaatlevensduur < DAGEN"
 
-#: main.c:819
+#: main.c:823
 msgid "Set login usergroup"
 msgstr "Stel gebruikersgroep-aanmelding in"
 
-#: main.c:820
+#: main.c:824
 msgid "Set key passphrase or TPM SRK PIN"
 msgstr "Stel wachtwoord of TPM SRK-pincode in"
 
-#: main.c:821
+#: main.c:825
 msgid "Key passphrase is fsid of file system"
 msgstr "Sleutelwachtwoord is fsid van bestandssysteem"
 
-#: main.c:822
+#: main.c:826
 msgid "Software token type: rsa, totp, hotp or oidc"
 msgstr ""
 
-#: main.c:823
+#: main.c:827
 msgid "Software token secret or oidc token"
 msgstr ""
 
-#: main.c:825
+#: main.c:829
 msgid "(NOTE: libstoken (RSA SecurID) disabled in this build)"
 msgstr "(LET OP: libstoken (RSA SecurID) uitgeschakeld in deze versie)"
 
-#: main.c:828
+#: main.c:832
 msgid "(NOTE: Yubikey OATH disabled in this build)"
 msgstr "(LET OP: Yubikey-OATH uitgeschakeld in deze versie)"
 
-#: main.c:831
+#: main.c:835
 msgid "Server validation"
 msgstr "Servervalidatie"
 
-#: main.c:832
+#: main.c:836
 msgid "Server's certificate SHA1 fingerprint"
 msgstr "SHA1-vingerafdruk van servercertificaat"
 
-#: main.c:833
+#: main.c:837
 msgid "Do not require server SSL cert to be valid"
 msgstr "Geen geldig server-SSL-certificaat vereisen"
 
-#: main.c:834
+#: main.c:838
 msgid "Disable default system certificate authorities"
 msgstr "Standaardsysteemcertificaatautoriteiten uitschakelen"
 
-#: main.c:835
+#: main.c:839
 msgid "Cert file for server verification"
 msgstr "Certificaatsbestand voor serververificatie"
 
-#: main.c:837
+#: main.c:841
 msgid "Internet connectivity"
 msgstr "Internetconnectiviteit"
 
-#: main.c:838
+#: main.c:842
 msgid "Set proxy server"
 msgstr "Proxyserver instellen"
 
-#: main.c:839
+#: main.c:843
 msgid "Set proxy authentication methods"
 msgstr "Stel proxyaanmeldingsmethodes in"
 
-#: main.c:840
+#: main.c:844
 msgid "Disable proxy"
 msgstr "Proxy uitschakelen"
 
-#: main.c:841
+#: main.c:845
 msgid "Use libproxy to automatically configure proxy"
 msgstr "Gebruik libproxy om de proxy automatisch te configureren"
 
-#: main.c:843
+#: main.c:847
 msgid "(NOTE: libproxy disabled in this build)"
 msgstr "(NB: libproxy uitgeschakeld in deze versie)"
 
-#: main.c:845
+#: main.c:849
 msgid "Connection retry timeout in seconds"
 msgstr "Opnieuw proberen verbindingstime-out in seconden"
 
-#: main.c:846
+#: main.c:850
 msgid "Use IP when connecting to HOST"
 msgstr "IP gebruiken bij verbinden met HOST"
 
-#: main.c:847
+#: main.c:851
 msgid "Copy TOS / TCLASS field into DTLS and ESP packets"
 msgstr ""
 
-#: main.c:848
+#: main.c:852
 msgid "Set local port for DTLS and ESP datagrams"
 msgstr "Lokale poort voor DTLS- en ESP-datagrammen instellen"
 
-#: main.c:850
+#: main.c:854
 msgid "Authentication (two-phase)"
 msgstr "Aanmeldingscontrole (tweestaps)"
 
-#: main.c:851
+#: main.c:855
 msgid "Use authentication cookie COOKIE"
 msgstr "Aanmeldingscontrolecookie COOKIE gebruiken"
 
-#: main.c:852
+#: main.c:856
 msgid "Read cookie from standard input"
 msgstr "Lees cookie van standaardinvoer"
 
-#: main.c:853
+#: main.c:857
 msgid "Authenticate only and print login info"
 msgstr "Alleen authenticeren en inloginformatie tonen"
 
-#: main.c:854
+#: main.c:858
 msgid "Fetch and print cookie only; don't connect"
 msgstr "Enkel cookie ophalen en afdrukken; niet verbinden"
 
-#: main.c:855
+#: main.c:859
 msgid "Print cookie before connecting"
 msgstr "Cookie afdrukken vóór verbindne"
 
-#: main.c:858
+#: main.c:862
 msgid "Process control"
 msgstr "Procescontrole"
 
-#: main.c:859
+#: main.c:863
 msgid "Continue in background after startup"
 msgstr "Ga na het opstarten verder op de achtergrond"
 
-#: main.c:860
+#: main.c:864
 msgid "Write the daemon's PID to this file"
 msgstr "Schrijf de PID van de daemon naar dit bestand"
 
-#: main.c:861
+#: main.c:865
 msgid "Drop privileges after connecting"
 msgstr "Laat privileges vallen na verbinden"
 
-#: main.c:864
+#: main.c:868
 msgid "Logging (two-phase)"
 msgstr "Loggen (tweestaps)"
 
-#: main.c:866
+#: main.c:870
 msgid "Use syslog for progress messages"
 msgstr "Gebruik syslog voor voortgangsberichten"
 
-#: main.c:868
+#: main.c:872
 msgid "More output"
 msgstr "Meer uitvoer"
 
-#: main.c:869
+#: main.c:873
 msgid "Less output"
 msgstr "Minder uitvoer"
 
-#: main.c:870
+#: main.c:874
 msgid "Dump HTTP authentication traffic (implies --verbose)"
 msgstr ""
 
-#: main.c:871
+#: main.c:875
 msgid "Prepend timestamp to progress messages"
 msgstr "Tijdstempel voorvoegen aan voortgangsberichten"
 
-#: main.c:873
+#: main.c:877
 msgid "VPN configuration script"
 msgstr "VPN-configuratiescript"
 
-#: main.c:874
+#: main.c:878
 msgid "Use IFNAME for tunnel interface"
 msgstr "Gebruik IFNAME voor tunnelinterface"
 
-#: main.c:875
+#: main.c:879
 msgid "Shell command line for using a vpnc-compatible config script"
 msgstr "Shellopdrachtregel voor gebruik van vpnc-compatibel configuratiescript"
 
-#: main.c:876
+#: main.c:880
 msgid "default"
 msgstr "standaard"
 
-#: main.c:878
+#: main.c:882
 msgid "Pass traffic to 'script' program, not tun"
 msgstr "Leidt het verkeer naar 'script'-programma, niet tun"
 
-#: main.c:881
+#: main.c:885
 msgid "Tunnel control"
 msgstr "Tunnelcontrole"
 
-#: main.c:882
+#: main.c:886
 msgid "Do not ask for IPv6 connectivity"
 msgstr "Vraag niet om IPv6-connectiviteit"
 
-#: main.c:883
+#: main.c:887
 msgid "XML config file"
 msgstr "XML-configuratiebestand"
 
-#: main.c:884
+#: main.c:888
 msgid "Request MTU from server (legacy servers only)"
 msgstr "MTU vereisen van server (enkel voor verouderde servers)"
 
-#: main.c:885
+#: main.c:889
 msgid "Indicate path MTU to/from server"
 msgstr "Pad-MTU van/naar server aangeven"
 
-#: main.c:886
+#: main.c:890
 msgid "Enable stateful compression (default is stateless only)"
 msgstr "Staatvolle compressie inschakelen (standaard is enkel staatloos)"
 
-#: main.c:887
+#: main.c:891
 msgid "Disable all compression"
 msgstr "Alle compressie uitschakelen"
 
-#: main.c:888
+#: main.c:892
 msgid "Set minimum Dead Peer Detection interval (in seconds)"
 msgstr ""
 
-#: main.c:889
+#: main.c:893
 msgid "Require perfect forward secrecy"
 msgstr "Perfect forward secrecy vereisen"
 
-#: main.c:890
+#: main.c:894
 msgid "Disable DTLS and ESP"
 msgstr "DTLS en ESP uitschakelen"
 
-#: main.c:891
+#: main.c:895
 msgid "OpenSSL ciphers to support for DTLS"
 msgstr "OpenSSL-ciphers voor ondersteuning van DTLS"
 
-#: main.c:892
+#: main.c:896
 msgid "Set packet queue limit to LEN pkts"
 msgstr "Maximale pakketlengte instellen op LEN pkts"
 
-#: main.c:894
+#: main.c:898
 msgid "Local system information"
 msgstr "Lokale systeeminformatie"
 
-#: main.c:895
+#: main.c:899
 msgid "HTTP header User-Agent: field"
 msgstr "HTTP-header-gebruikersagent: veld"
 
-#: main.c:896
+#: main.c:900
 msgid "Local hostname to advertise to server"
 msgstr "Lokale hostnaam die aan server wordt getoond"
 
-#: main.c:897
+#: main.c:901
 msgid "OS type (linux,linux-64,win,...) to report"
 msgstr "Te rapporteren besturingssysteemtype (linux, linux-64, win, …)"
 
-#: main.c:898
+#: main.c:902
 msgid "reported version string during authentication"
 msgstr "gemelde versietekenreeks bij aanmelding"
 
-#: main.c:899
+#: main.c:903
 msgid "default:"
 msgstr "standaard:"
 
-#: main.c:902
+#: main.c:906
 msgid "Trojan binary (CSD) execution"
 msgstr "Uitvoeren van Trojaans-paard-binair bestand (CSD)"
 
-#: main.c:903
+#: main.c:907
 msgid "Drop privileges during trojan execution"
 msgstr "Privileges laten vallen tijdens uitvoeren van Trojaans paard"
 
-#: main.c:904
+#: main.c:908
 msgid "Run SCRIPT instead of trojan binary"
 msgstr "SCRIPT uitvoeren in plaats van Trojaans paard-binair bestand"
 
-#: main.c:905
+#: main.c:909
 msgid "Set minimum interval for rerunning trojan (in seconds)"
 msgstr ""
 
-#: main.c:908
+#: main.c:912
 msgid "Server bugs"
 msgstr "Serverbugs"
 
-#: main.c:909
+#: main.c:913
 msgid "Disable HTTP connection re-use"
 msgstr "Hergebruiken van HTTP-verbinding uitschakelen"
 
-#: main.c:910
+#: main.c:914
 msgid "Do not attempt XML POST authentication"
 msgstr "XML-POST-aanmeldingscontrole niet proberen"
 
-#: main.c:932
+#: main.c:936
 #, c-format
 msgid "Failed to allocate string\n"
 msgstr "Toewijzen van tekenreeks mislukt\n"
 
-#: main.c:1005
+#: main.c:1009
 #, c-format
 msgid "Failed to get line from config file: %s\n"
 msgstr "Regel uit configuratiebestand halen mislukt: %s\n"
 
-#: main.c:1045
+#: main.c:1049
 #, c-format
 msgid "Unrecognised option at line %d: '%s'\n"
 msgstr "Niet-herkende optie in regel %d: '%s'\n"
 
-#: main.c:1055
+#: main.c:1059
 #, c-format
 msgid "Option '%s' does not take an argument at line %d\n"
 msgstr "Optie '%s' heeft geen parameter in regel %d\n"
 
-#: main.c:1059
+#: main.c:1063
 #, c-format
 msgid "Option '%s' requires an argument at line %d\n"
 msgstr "Optie '%s' heeft een parameter nodig in regel %d\n"
 
-#: main.c:1084
+#: main.c:1088
 #, c-format
 msgid "Invalid user \"%s\": %s\n"
 msgstr "Ongeldige gebruiker '%s': %s\n"
 
-#: main.c:1094
+#: main.c:1098
 #, c-format
 msgid "Invalid user ID \"%d\": %s\n"
 msgstr "Ongeldige gebruikers-ID '%d': %s\n"
 
-#: main.c:1138
+#: main.c:1365
+#, c-format
+msgid "Unhandled autocomplete for option %d '--%s'. Please report.\n"
+msgstr ""
+
+#: main.c:1414
 #, c-format
 msgid "WARNING: Cannot set locale: %s\n"
 msgstr "WAARSCHUWING: kan locale niet instellen: %s\n"
 
-#: main.c:1148
+#: main.c:1427
 #, c-format
 msgid ""
 "WARNING: This version of openconnect was built without iconv\n"
@@ -3156,7 +3155,7 @@ msgstr ""
 "         voor iconv, maar u blijkt de verouderde tekenset '%s'\n"
 "         te gebruiken. Verwacht vreemde dingen.\n"
 
-#: main.c:1155
+#: main.c:1434
 #, c-format
 msgid ""
 "WARNING: This version of openconnect is %s but\n"
@@ -3165,42 +3164,42 @@ msgstr ""
 "WAARSCHUWING: deze versie van openconnect is %s, maar de\n"
 "              versie van de libopenconnect-bibliotheek is %s\n"
 
-#: main.c:1165
+#: main.c:1444
 #, c-format
 msgid "Failed to allocate vpninfo structure\n"
 msgstr "Toewijzigen van vpninfo-structuur mislukt\n"
 
-#: main.c:1223
+#: main.c:1502
 #, c-format
 msgid "Cannot use 'config' option inside config file\n"
 msgstr "Kan 'config'-optie in configuratiebestand niet gebruiken\n"
 
-#: main.c:1231
+#: main.c:1510
 #, c-format
 msgid "Cannot open config file '%s': %s\n"
 msgstr "Kan configuratiebestand '%s' niet openen: %s\n"
 
-#: main.c:1247
+#: main.c:1526
 #, c-format
 msgid "Invalid compression mode '%s'\n"
 msgstr "Ongeldige compressiemodus '%s'\n"
 
-#: main.c:1268
+#: main.c:1547
 #, c-format
 msgid "Missing colon in resolve option\n"
 msgstr "Ontbrekende dubbelpunt in resolve-optie\n"
 
-#: main.c:1273
+#: main.c:1552
 #, c-format
 msgid "Failed to allocate memory\n"
 msgstr "Toewijzen van geheugen mislukt\n"
 
-#: main.c:1357 main.c:1366
+#: main.c:1636 main.c:1645
 #, c-format
 msgid "MTU %d too small\n"
 msgstr "MTU %d te klein\n"
 
-#: main.c:1396
+#: main.c:1675
 #, c-format
 msgid ""
 "Disabling all HTTP connection re-use due to --no-http-keepalive option.\n"
@@ -3210,7 +3209,7 @@ msgstr ""
 "optie --no-http-keepalive.\n"
 "Als dit helpt, meld dit dan op <openconnect-devel@lists.infradead.org>.\n"
 
-#: main.c:1402
+#: main.c:1681
 #, c-format
 msgid ""
 "The --no-cert-check option was insecure and has been removed.\n"
@@ -3220,27 +3219,27 @@ msgstr ""
 "Herstel het certificaat van uw server of gebruik --servercert om het te "
 "vertrouwen.\n"
 
-#: main.c:1419
+#: main.c:1698
 #, c-format
 msgid "Queue length zero not permitted; using 1\n"
 msgstr "0-lengte van wachtrij niet toegestaan; gebruik 1\n"
 
-#: main.c:1433
+#: main.c:1712
 #, c-format
 msgid "OpenConnect version %s\n"
 msgstr "OpenConnect-versie %s\n"
 
-#: main.c:1476
+#: main.c:1755
 #, c-format
 msgid "Invalid software token mode \"%s\"\n"
 msgstr "Ongeldige softwaretokenmodus '%s'\n"
 
-#: main.c:1486
+#: main.c:1765
 #, c-format
 msgid "Invalid OS identity \"%s\"\n"
 msgstr "Ongeldige OS-identiteit '%s'\n"
 
-#: main.c:1512
+#: main.c:1791
 #, c-format
 msgid ""
 "WARNING: You specified %s. This should not be\n"
@@ -3249,115 +3248,115 @@ msgid ""
 "         to <openconnect-devel@lists.infradead.org>.\n"
 msgstr ""
 
-#: main.c:1534
+#: main.c:1813
 #, c-format
 msgid "Too many arguments on command line\n"
 msgstr "Te veel parameters op opdrachtregel\n"
 
-#: main.c:1537
+#: main.c:1816
 #, c-format
 msgid "No server specified\n"
 msgstr "Geen server opgegeven\n"
 
-#: main.c:1553
+#: main.c:1832
 #, c-format
 msgid "This version of openconnect was built without libproxy support\n"
 msgstr ""
 "Deze versie van openconnect werd gecompileerd zonder libproxy-ondersteuning\n"
 
-#: main.c:1583
+#: main.c:1862
 #, c-format
 msgid "Error opening cmd pipe\n"
 msgstr "Fout bij openen van cmd-pipe\n"
 
-#: main.c:1616
+#: main.c:1895
 #, c-format
 msgid "Failed to obtain WebVPN cookie\n"
 msgstr "Verkrijgen van WebVPN-cookie mislukt\n"
 
-#: main.c:1637
+#: main.c:1916
 #, c-format
 msgid "Creating SSL connection failed\n"
 msgstr "Aanmaken van SSL-verbinding mislukt\n"
 
-#: main.c:1653
+#: main.c:1932
 #, c-format
 msgid "Set up UDP failed; using SSL instead\n"
 msgstr "Instellen van UDP mislukt; gebruik SSL in plaats daarvan\n"
 
-#: main.c:1661
+#: main.c:1940
 #, c-format
 msgid "Connected as %s%s%s, using SSL%s%s, with %s%s%s %s\n"
 msgstr "Verbonden als %s%s%s, met SSL%s%s, met %s%s%s %s\n"
 
-#: main.c:1667
+#: main.c:1946
 msgid "disabled"
 msgstr "uitgeschakeld"
 
-#: main.c:1667
+#: main.c:1946
 msgid "in progress"
 msgstr "bezig"
 
-#: main.c:1671
+#: main.c:1950
 msgid "No --script argument provided; DNS and routing are not configured\n"
 msgstr ""
 "Geen parameter --script opgegeven; DNS en routering zijn niet "
 "geconfigureerd\n"
 
-#: main.c:1673
+#: main.c:1952
 msgid "See http://www.infradead.org/openconnect/vpnc-script.html\n"
 msgstr "Bekijk http://www.infradead.org/openconnect/vpnc-script.html\n"
 
-#: main.c:1686
+#: main.c:1965
 #, c-format
 msgid "Failed to open '%s' for write: %s\n"
 msgstr "Openen van '%s' voor schrijven mislukt: %s\n"
 
-#: main.c:1698
+#: main.c:1977
 #, c-format
 msgid "Continuing in background; pid %d\n"
 msgstr "Voortgezet in achtergrond; pid %d\n"
 
-#: main.c:1715
+#: main.c:1994
 msgid "User requested reconnect\n"
 msgstr "Gebruiker vroeg om herverbinding\n"
 
-#: main.c:1723
+#: main.c:2002
 msgid "Cookie was rejected on reconnection; exiting.\n"
 msgstr "Cookie geweigerd bij herverbinding; wordt afgesloten.\n"
 
-#: main.c:1727
+#: main.c:2006
 msgid "Session terminated by server; exiting.\n"
 msgstr "Sessie beëindigd door server; wordt afgesloten.\n"
 
-#: main.c:1731
+#: main.c:2010
 msgid "User cancelled (SIGINT/SIGTERM); exiting.\n"
 msgstr "Gebruiker heeft geannuleerd (SIGINT/SIGTERM); wordt afgesloten.\n"
 
-#: main.c:1735
+#: main.c:2014
 msgid "User detached from session (SIGHUP); exiting.\n"
 msgstr "Gebruiker losgekoppeld van sessie (SIGHUP); wordt afgesloten.\n"
 
-#: main.c:1739
+#: main.c:2018
 msgid "Unknown error; exiting.\n"
 msgstr "Onbekende fout; wordt afgesloten.\n"
 
-#: main.c:1758
+#: main.c:2037
 #, c-format
 msgid "Failed to open %s for write: %s\n"
 msgstr "Openen van %s voor schrijven mislukt: %s\n"
 
-#: main.c:1766
+#: main.c:2045
 #, c-format
 msgid "Failed to write config to %s: %s\n"
 msgstr "Schrijven van configuratie naar %s mislukt: %s\n"
 
-#: main.c:1825
+#: main.c:2104
 #, c-format
 msgid "Server SSL certificate didn't match: %s\n"
 msgstr "Server-SSL-certificaat komt niet overeen: %s\n"
 
-#: main.c:1844
+#: main.c:2123
 #, c-format
 msgid ""
 "\n"
@@ -3368,7 +3367,7 @@ msgstr ""
 "Verificatie van certificaat van VPN-server '%s' mislukt.\n"
 "Reden: %s\n"
 
-#: main.c:1847
+#: main.c:2126
 #, c-format
 msgid ""
 "To trust this server in future, perhaps add this to your command line:\n"
@@ -3376,111 +3375,111 @@ msgstr ""
 "Om deze server in de toekomst te vertrouwen, kunt u dit toevoegen aan uw "
 "opdrachtregel:\n"
 
-#: main.c:1848
+#: main.c:2127
 #, c-format
 msgid "    --servercert %s\n"
 msgstr "    --servercert %s\n"
 
-#: main.c:1853
+#: main.c:2132
 #, c-format
 msgid "Enter '%s' to accept, '%s' to abort; anything else to view: "
 msgstr ""
 "Voer '%s' in om te aanvaarden, '%s' om af te breken; iets anders om te "
 "bekijken: "
 
-#: main.c:1854 main.c:1872
+#: main.c:2133 main.c:2151
 msgid "no"
 msgstr "nee"
 
-#: main.c:1854 main.c:1860
+#: main.c:2133 main.c:2139
 msgid "yes"
 msgstr "ja"
 
-#: main.c:1881
+#: main.c:2160
 #, c-format
 msgid "Server key hash: %s\n"
 msgstr "Serversleutelhash: %s\n"
 
-#: main.c:1915
+#: main.c:2194
 #, c-format
 msgid "Auth choice \"%s\" matches multiple options\n"
 msgstr "Auth-keuze '%s' komt overeen met meerdere opties\n"
 
-#: main.c:1918
+#: main.c:2197
 #, c-format
 msgid "Auth choice \"%s\" not available\n"
 msgstr "Auth-keuze '%s' niet beschikbaar\n"
 
-#: main.c:1939
+#: main.c:2218
 msgid "User input required in non-interactive mode\n"
 msgstr "Gebruikersinvoer vereist in niet-interactieve modus\n"
 
-#: main.c:2177
+#: main.c:2456
 #, c-format
 msgid "Failed to open token file for write: %s\n"
 msgstr "Openen van tokenbestand voor schrijven mislukt: %s\n"
 
-#: main.c:2185
+#: main.c:2464
 #, c-format
 msgid "Failed to write token: %s\n"
 msgstr "Schrijven van token mislukt: %s\n"
 
-#: main.c:2232 main.c:2256
+#: main.c:2511 main.c:2535
 #, c-format
 msgid "Soft token string is invalid\n"
 msgstr "Soft-token-tekenreeks is ongeldig\n"
 
-#: main.c:2236
+#: main.c:2515
 #, c-format
 msgid "Can't open stoken file\n"
 msgstr ""
 
-#: main.c:2238
+#: main.c:2517
 #, c-format
 msgid "Can't open ~/.stokenrc file\n"
 msgstr "Kan ~/.stokenrc-bestand niet openen\n"
 
-#: main.c:2241
+#: main.c:2520
 #, c-format
 msgid "OpenConnect was not built with libstoken support\n"
 msgstr "OpenConnect is niet gecompileerd met libstoken-ondersteuning\n"
 
-#: main.c:2244
+#: main.c:2523
 #, c-format
 msgid "General failure in libstoken\n"
 msgstr "Algemene fout in libstoken\n"
 
-#: main.c:2259
+#: main.c:2538
 #, c-format
 msgid "OpenConnect was not built with liboath support\n"
 msgstr "OpenConnect is niet gecompileerd met liboath-ondersteuning\n"
 
-#: main.c:2262
+#: main.c:2541
 #, c-format
 msgid "General failure in liboath\n"
 msgstr "Algemene fout in liboath\n"
 
-#: main.c:2273
+#: main.c:2552
 #, c-format
 msgid "Yubikey token not found\n"
 msgstr "Yubikey-token niet gevonden\n"
 
-#: main.c:2276
+#: main.c:2555
 #, c-format
 msgid "OpenConnect was not built with Yubikey support\n"
 msgstr "OpenConnect niet gecompileerd met Yubikey-ondersteuning\n"
 
-#: main.c:2279
+#: main.c:2558
 #, c-format
 msgid "General Yubikey failure: %s\n"
 msgstr "Algemene Yubikey-fout: %s\n"
 
-#: main.c:2288
+#: main.c:2567
 #, c-format
 msgid "Can't open oidc file\n"
 msgstr ""
 
-#: main.c:2291
+#: main.c:2570
 #, c-format
 msgid "General failure in oidc token\n"
 msgstr ""
@@ -3620,12 +3619,12 @@ msgstr "Netmask %s ontvangen\n"
 msgid "Received internal gateway address %s\n"
 msgstr "Intern gatewayadres %s ontvangen\n"
 
-#: oncp.c:232 pulse.c:2333
+#: oncp.c:232 pulse.c:2339
 #, c-format
 msgid "Received split include route %s\n"
 msgstr "Split-include-route %s ontvangen\n"
 
-#: oncp.c:254 pulse.c:2346
+#: oncp.c:254 pulse.c:2352
 #, c-format
 msgid "Received split exclude route %s\n"
 msgstr "Split-exclude-route %s ontvangen\n"
@@ -3675,12 +3674,12 @@ msgstr "ESP-naar-SSL-fallback: %u seconden\n"
 msgid "ESP replay protection: %d\n"
 msgstr "ESP-replaybescherming: %d\n"
 
-#: oncp.c:374 pulse.c:545 pulse.c:2447
+#: oncp.c:374 pulse.c:545 pulse.c:2453
 #, c-format
 msgid "ESP SPI (outbound): %x\n"
 msgstr "ESP SPI (uitgaand): %x\n"
 
-#: oncp.c:383 pulse.c:554 pulse.c:2435
+#: oncp.c:383 pulse.c:554 pulse.c:2441
 #, c-format
 msgid "%d bytes of ESP secrets\n"
 msgstr "%d bytes aan ESP-geheimen\n"
@@ -3786,11 +3785,11 @@ msgstr "Fout bij onderhandelen over ESP-sleutels\n"
 msgid "oNCP negotiation request outgoing:\n"
 msgstr "Uitgaand oNCP-onderhandelingsverzoek:\n"
 
-#: oncp.c:837 pulse.c:2704
+#: oncp.c:837 pulse.c:2710
 msgid "new incoming"
 msgstr "nieuw inkomend"
 
-#: oncp.c:838 pulse.c:2705
+#: oncp.c:838 pulse.c:2711
 msgid "new outgoing"
 msgstr "nieuw uitgaand"
 
@@ -3811,46 +3810,46 @@ msgstr "Verbinding beëindigd door server (reden: %d)\n"
 msgid "Server sent zero-length oNCP record\n"
 msgstr "Server stuurde oNCP-record met nul-lengte\n"
 
-#: oncp.c:977
+#: oncp.c:983
 #, c-format
 msgid "Incoming KMP message %d of size %d (got %d)\n"
 msgstr "Inkomend KMP-bericht %d met grootte %d (%d ontvangen)\n"
 
-#: oncp.c:980
+#: oncp.c:986
 #, c-format
 msgid "Continuing to process KMP message %d now size %d (got %d)\n"
 msgstr ""
 "Verdergaan met verwerken van KMP-bericht %d, nu met grootte %d (%d "
 "gekregen)\n"
 
-#: oncp.c:999
+#: oncp.c:1005
 msgid "Unrecognised data packet\n"
 msgstr "Niet-herkend datapakket\n"
 
-#: oncp.c:1057
+#: oncp.c:1063
 #, c-format
 msgid "Failed to set up ESP: %s\n"
 msgstr ""
 
-#: oncp.c:1067
+#: oncp.c:1073
 #, c-format
 msgid "Unknown KMP message %d of size %d:\n"
 msgstr "Onbekend KMP-bericht %d met grootte %d:\n"
 
-#: oncp.c:1072
+#: oncp.c:1078
 #, c-format
 msgid ".... + %d more bytes unreceived\n"
 msgstr ".... + nog %d bytes niet ontvangen\n"
 
-#: oncp.c:1087 pulse.c:2736
+#: oncp.c:1093 pulse.c:2742
 msgid "Packet outgoing:\n"
 msgstr "Pakket uitgaand:\n"
 
-#: oncp.c:1149
+#: oncp.c:1155
 msgid "Sent ESP enable control packet\n"
 msgstr "ESP-pakket voor inschakelen controle verzonden\n"
 
-#: openconnect-internal.h:1185 openconnect-internal.h:1193
+#: openconnect-internal.h:1186 openconnect-internal.h:1194
 #, c-format
 msgid "ERROR: %s() called with invalid UTF-8 for '%s' argument\n"
 msgstr "FOUT: %s() gevraagd met ongeldige UTF-8 voor parameter '%s'\n"
@@ -4564,115 +4563,121 @@ msgstr ""
 msgid "Authentication failure: %.*s\n"
 msgstr ""
 
-#: pulse.c:1833
+#: pulse.c:1819
+msgid ""
+"Pulse server requested Host Checker; not yet supported\n"
+"Try Juniper mode (--protocol=nc)\n"
+msgstr ""
+
+#: pulse.c:1839
 msgid "Unhandled Pulse authentication packet, or authentication failure\n"
 msgstr ""
 
-#: pulse.c:1849
+#: pulse.c:1855
 msgid "Pulse authentication cookie not accepted\n"
 msgstr ""
 
-#: pulse.c:1855
+#: pulse.c:1861
 msgid "Pulse realm entry\n"
 msgstr ""
 
-#: pulse.c:1861
+#: pulse.c:1867
 msgid "Pulse realm choice\n"
 msgstr ""
 
-#: pulse.c:1868
+#: pulse.c:1874
 #, c-format
 msgid "Pulse password auth request, code 0x%02x\n"
 msgstr ""
 
-#: pulse.c:1881
+#: pulse.c:1887
 #, c-format
 msgid "Pulse password request with unknown code 0x%02x. Please report.\n"
 msgstr ""
 
-#: pulse.c:1890
+#: pulse.c:1896
 msgid "Pulse password general token code request\n"
 msgstr ""
 
-#: pulse.c:1901
+#: pulse.c:1907
 #, c-format
 msgid "Pulse session limit, %d sessions\n"
 msgstr ""
 
-#: pulse.c:1910
+#: pulse.c:1916
 msgid "Unhandled Pulse auth request\n"
 msgstr ""
 
-#: pulse.c:1947
+#: pulse.c:1953
 msgid "Unexpected response instead of IF-T/TLS auth success:\n"
 msgstr ""
 
-#: pulse.c:2010
+#: pulse.c:2016
 msgid "EAP-TTLS failure: Flushing output with pending input bytes\n"
 msgstr ""
 
-#: pulse.c:2033
+#: pulse.c:2039
 msgid "Error creating EAP-TTLS buffer\n"
 msgstr ""
 
-#: pulse.c:2082
+#: pulse.c:2088
 #, c-format
 msgid "Failed to read EAP-TTLS Acknowledge: %s\n"
 msgstr ""
 
-#: pulse.c:2090 pulse.c:2132
+#: pulse.c:2096 pulse.c:2138
 #, c-format
 msgid "Read %d bytes of IF-T/TLS EAP-TTLS record\n"
 msgstr ""
 
-#: pulse.c:2101
+#: pulse.c:2107
 msgid "Bad EAP-TTLS Acknowledge packet\n"
 msgstr ""
 
-#: pulse.c:2143
+#: pulse.c:2149
 #, c-format
 msgid "Bad EAP-TTLS packet (len %d, left %d)\n"
 msgstr ""
 
-#: pulse.c:2300
+#: pulse.c:2306
 msgid "Unexpected Pulse config packet:\n"
 msgstr ""
 
-#: pulse.c:2357
+#: pulse.c:2363
 #, c-format
 msgid "Receive route of unknown type 0x%08x\n"
 msgstr ""
 
-#: pulse.c:2428
+#: pulse.c:2434
 msgid "Invalid ESP config packet:\n"
 msgstr ""
 
-#: pulse.c:2440
+#: pulse.c:2446
 msgid "Invalid ESP setup\n"
 msgstr ""
 
-#: pulse.c:2515
+#: pulse.c:2521
 msgid "Bad IF-T/TLS packet when expecting configuration:\n"
 msgstr ""
 
-#: pulse.c:2523
+#: pulse.c:2529
 msgid "Unexpected IF-T/TLS packet when expecting configuration.\n"
 msgstr ""
 
-#: pulse.c:2674
+#: pulse.c:2680
 #, c-format
 msgid "Received data packet of %d bytes\n"
 msgstr "Datapakket van %d bytes ontvangen\n"
 
-#: pulse.c:2696
+#: pulse.c:2702
 msgid "ESP rekey failed\n"
 msgstr ""
 
-#: pulse.c:2720
+#: pulse.c:2726
 msgid "Unknown Pulse packet\n"
 msgstr ""
 
-#: pulse.c:2898
+#: pulse.c:2904
 #, c-format
 msgid "Sending IF-T/TLS data packet of %d bytes\n"
 msgstr ""
@@ -4687,234 +4692,260 @@ msgstr "Slechte split-include negeren: '%s'\n"
 msgid "Discard bad split exclude: \"%s\"\n"
 msgstr "Slechte split-exclude negeren: '%s'\n"
 
-#: script.c:512 script.c:560
+#: script.c:161
+#, c-format
+msgid ""
+"WARNING: Split include \"%s\" has host bits set, replacing with \"%s/%d\".\n"
+msgstr ""
+
+#: script.c:165
+#, c-format
+msgid ""
+"WARNING: Split exclude \"%s\" has host bits set, replacing with \"%s/%d\".\n"
+msgstr ""
+
+#: script.c:272
+#, c-format
+msgid "Ignoring legacy network because address \"%s\" is invalid.\n"
+msgstr ""
+
+#: script.c:277
+#, c-format
+msgid "Ignoring legacy network because netmask \"%s\" is invalid.\n"
+msgstr ""
+
+#: script.c:553 script.c:601
 #, c-format
 msgid "Failed to spawn script '%s' for %s: %s\n"
 msgstr "Starten van script '%s' voor %s mislukt: %s\n"
 
-#: script.c:567
+#: script.c:608
 #, c-format
 msgid "Script '%s' exited abnormally (%x)\n"
 msgstr "Script '%s' eindigde abnormaal (%x)\n"
 
-#: script.c:575
+#: script.c:616
 #, c-format
 msgid "Script '%s' returned error %d\n"
 msgstr "Script '%s' gaf fout %d weer\n"
 
-#: ssl.c:111
+#: ssl.c:117
 msgid "Failed select() for socket connect"
 msgstr ""
 
-#: ssl.c:116
+#: ssl.c:122
 msgid "Socket connect cancelled\n"
 msgstr "Socketverbinding geannuleerd\n"
 
-#: ssl.c:225
+#: ssl.c:194
+msgid "Failed setsockopt(TCP_NODELAY) on TLS socket:"
+msgstr ""
+
+#: ssl.c:248
 #, c-format
 msgid "Failed to reconnect to proxy %s: %s\n"
 msgstr "Opnieuw verbinden met proxy %s mislukt: %s\n"
 
-#: ssl.c:229
+#: ssl.c:252
 #, c-format
 msgid "Failed to reconnect to host %s: %s\n"
 msgstr "Opnieuw verbinden met host %s mislukt: %s\n"
 
-#: ssl.c:297
+#: ssl.c:320
 #, c-format
 msgid "Proxy from libproxy: %s://%s:%d/\n"
 msgstr "Proxy van libproxy: %s://%s:%d/\n"
 
-#: ssl.c:325
+#: ssl.c:348
 #, c-format
 msgid "getaddrinfo failed for host '%s': %s\n"
 msgstr "getaddrinfo mislukt voor host '%s': %s\n"
 
-#: ssl.c:334 ssl.c:460
+#: ssl.c:357 ssl.c:484
 msgid "Reconnecting to DynDNS server using previously cached IP address\n"
 msgstr ""
 "Opnieuw verbinden met DynDNS-server met IP-adressen uit cachegeheugen\n"
 
-#: ssl.c:349
+#: ssl.c:372
 #, c-format
 msgid "Attempting to connect to proxy %s%s%s:%s\n"
 msgstr "Poging te verbinden met proxy %s%s%s:%s\n"
 
-#: ssl.c:350
+#: ssl.c:373
 #, c-format
 msgid "Attempting to connect to server %s%s%s:%s\n"
 msgstr "Poging te verbinden met server %s%s%s:%s\n"
 
-#: ssl.c:370
+#: ssl.c:394
 #, c-format
 msgid "Connected to %s%s%s:%s\n"
 msgstr "Verbonden met %s%s%s:%s\n"
 
-#: ssl.c:382
+#: ssl.c:406
 msgid "Failed to allocate sockaddr storage\n"
 msgstr "Toewijzen van sockaddr-opslag mislukt\n"
 
-#: ssl.c:425
+#: ssl.c:449
 #, c-format
 msgid "Failed to connect to %s%s%s:%s: %s\n"
 msgstr "Verbinding maken met %s%s%s:%s mislukt: %s\n"
 
-#: ssl.c:443
+#: ssl.c:467
 msgid "Forgetting non-functional previous peer address\n"
 msgstr "Niet-functionele vorige peeradressen vergeten\n"
 
-#: ssl.c:455
+#: ssl.c:479
 #, c-format
 msgid "Failed to connect to host %s\n"
 msgstr "Verbinding maken met host %s mislukt\n"
 
-#: ssl.c:474
+#: ssl.c:498
 #, c-format
 msgid "Reconnecting to proxy %s\n"
 msgstr "Herverbinden met proxy %s\n"
 
-#: ssl.c:545
+#: ssl.c:569
 #, c-format
 msgid "statvfs: %s\n"
 msgstr "statvfs: %s\n"
 
-#: ssl.c:573
+#: ssl.c:597
 msgid "Could not obtain file system ID for passphrase\n"
 msgstr "Kon bestandssysteem-ID niet verkrijgen voor wachtwoord\n"
 
-#: ssl.c:584
+#: ssl.c:608
 #, c-format
 msgid "Failed to open private key file '%s': %s\n"
 msgstr "Openen van privésleutelbestand '%s' mislukt: %s\n"
 
-#: ssl.c:612
+#: ssl.c:636
 #, c-format
 msgid "statfs: %s\n"
 msgstr "statfs: %s\n"
 
-#: ssl.c:703
+#: ssl.c:727
 msgid "No error"
 msgstr "Geen fout"
 
-#: ssl.c:704
+#: ssl.c:728
 msgid "Keystore locked"
 msgstr "Sleutelopslag vergrendeld"
 
-#: ssl.c:705
+#: ssl.c:729
 msgid "Keystore uninitialized"
 msgstr "Sleutelopslag niet geïnitialiseerd"
 
-#: ssl.c:706
+#: ssl.c:730
 msgid "System error"
 msgstr "Systeemfout"
 
-#: ssl.c:707
+#: ssl.c:731
 msgid "Protocol error"
 msgstr "Protocolfout"
 
-#: ssl.c:708
+#: ssl.c:732
 msgid "Permission denied"
 msgstr "Toegang geweigerd"
 
-#: ssl.c:709
+#: ssl.c:733
 msgid "Key not found"
 msgstr "Sleutel niet gevonden"
 
-#: ssl.c:710
+#: ssl.c:734
 msgid "Value corrupted"
 msgstr "Waarde beschadigd"
 
-#: ssl.c:711
+#: ssl.c:735
 msgid "Undefined action"
 msgstr "Ongedefinieerde actie"
 
-#: ssl.c:715
+#: ssl.c:739
 msgid "Wrong password"
 msgstr "Verkeerd wachtwoord"
 
-#: ssl.c:716
+#: ssl.c:740
 msgid "Unknown error"
 msgstr "Onbekende fout"
 
-#: ssl.c:845
+#: ssl.c:869
 msgid "Failed select() for command socket"
 msgstr ""
 
-#: ssl.c:909
+#: ssl.c:933
 #, c-format
 msgid "openconnect_fopen_utf8() used with unsupported mode '%s'\n"
 msgstr "openconnect_fopen_utf8() gebruikt met niet-ondersteunde modus '%s'\n"
 
-#: ssl.c:931
+#: ssl.c:955
 #, c-format
 msgid "Failed to open %s: %s\n"
 msgstr "Openen van %s mislukt: %s\n"
 
-#: ssl.c:938
+#: ssl.c:962
 #, c-format
 msgid "Failed to fstat() %s: %s\n"
 msgstr "fstat() %s mislukt: %s\n"
 
-#: ssl.c:945
+#: ssl.c:969
 #, c-format
 msgid "File %s is empty\n"
 msgstr ""
 
-#: ssl.c:951
+#: ssl.c:975
 #, c-format
 msgid "File %s has suspicious size %zd\n"
 msgstr ""
 
-#: ssl.c:960
+#: ssl.c:984
 #, c-format
 msgid "Failed to allocate %d bytes for %s\n"
 msgstr "Toewijzen van %d bytes voor %s mislukt\n"
 
-#: ssl.c:968
+#: ssl.c:992
 #, c-format
 msgid "Failed to read %s: %s\n"
 msgstr "Lezen van %s mislukt: %s\n"
 
-#: ssl.c:1004
+#: ssl.c:1028
 #, c-format
 msgid "Unknown protocol family %d. Cannot create UDP server address\n"
 msgstr "Onbekende protocolfamilie %d. Kan UDP-serveradres niet aanmaken\n"
 
-#: ssl.c:1023
+#: ssl.c:1047
 msgid "Open UDP socket"
 msgstr "UDP-socket openen"
 
-#: ssl.c:1056
+#: ssl.c:1080
 #, c-format
 msgid "Unknown protocol family %d. Cannot use UDP transport\n"
 msgstr "Onbekende protocolfamilie %d. Kan UDP-transport niet gebruiken\n"
 
-#: ssl.c:1064
+#: ssl.c:1088
 msgid "Bind UDP socket"
 msgstr "UDP-socket binden"
 
-#: ssl.c:1071
+#: ssl.c:1095
 msgid "Connect UDP socket\n"
 msgstr "UDP-socket verbinden\n"
 
-#: ssl.c:1078
+#: ssl.c:1102
 msgid "Make UDP socket non-blocking"
 msgstr ""
 
-#: ssl.c:1113
+#: ssl.c:1137
 msgid "Cookie is no longer valid, ending session\n"
 msgstr "Cookie is niet meer geldig, sessie wordt beëindigd\n"
 
-#: ssl.c:1117
+#: ssl.c:1141
 #, c-format
 msgid "sleep %ds, remaining timeout %ds\n"
 msgstr "slaap %ds, resterende time-out %ds\n"
 
-#: ssl.c:1186
+#: ssl.c:1210
 msgid "Failed select() for socket send"
 msgstr ""
 
-#: ssl.c:1226
+#: ssl.c:1250
 msgid "Failed select() for socket recv"
 msgstr ""
 
