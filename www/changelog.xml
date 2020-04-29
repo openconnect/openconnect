@@ -15,6 +15,12 @@
 <ul>
    <li><b>OpenConnect HEAD</b>
      <ul>
+       <li><i>No changelog entries yet</i></li>
+     </ul><br/>
+  </li>
+  <li><b><a href="ftp://ftp.infradead.org/pub/openconnect/openconnect-8.09.tar.gz">OpenConnect v8.09</a></b>
+     <i>(<a href="ftp://ftp.infradead.org/pub/openconnect/openconnect-8.09.tar.gz.asc">PGP signature</a>)</i> &#8212; 2020-04-29
+     <ul>
        <li>Add bash completion support.</li>
        <li>Give more helpful error in case of Pulse servers asking for TNCC.</li>
        <li>Sanitize non-canonical Legacy IP network addresses (<a href="https://gitlab.com/openconnect/openconnect/merge_requests/97">!97</a>)</li>

@@ -17,13 +17,14 @@
 
 <p>
 <!-- latest-release-start -->
-The latest release is <a href="ftp://ftp.infradead.org/pub/openconnect/openconnect-8.08.tar.gz">OpenConnect v8.08</a>
-<i>(<a href="ftp://ftp.infradead.org/pub/openconnect/openconnect-8.08.tar.gz.asc">PGP signature</a>)</i>,
-released on 2020-04-06 with the following changelog:</p>
+The latest release is <a href="ftp://ftp.infradead.org/pub/openconnect/openconnect-8.09.tar.gz">OpenConnect v8.09</a>
+<i>(<a href="ftp://ftp.infradead.org/pub/openconnect/openconnect-8.09.tar.gz.asc">PGP signature</a>)</i>,
+released on 2020-04-29 with the following changelog:</p>
      <ul>
-       <li>Fix check of <tt>pin-sha256:</tt> public key hashes to be case sensitive (<a href="https://gitlab.com/openconnect/openconnect/issues/116">#116</a>).</li>
-       <li>Don't give non-functioning <tt>stderr</tt> to CSD trojan scripts.</li>
-       <li>Fix crash with uninitialised OIDC token.</li>
+       <li>Add bash completion support.</li>
+       <li>Give more helpful error in case of Pulse servers asking for TNCC.</li>
+       <li>Sanitize non-canonical Legacy IP network addresses (<a href="https://gitlab.com/openconnect/openconnect/merge_requests/97">!97</a>)</li>
+       <li>Fix OpenSSL validation for trusted but invalid certificates (CVE-2020-12105).</li>
      </ul>
 <!-- latest-release-end -->
 
