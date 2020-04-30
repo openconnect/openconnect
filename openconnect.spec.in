@@ -116,7 +116,7 @@ fi
 %configure	--with-vpnc-script=/etc/vpnc/vpnc-script \
 		--disable-dsa-tests \
 %if %{use_gnutls}
-%if 0%{?fedora} || 0%{?rhel} > 8
+%if 0%{?fedora} || 0%{?rhel} > 7
 		--with-default-gnutls-priority="@OPENCONNECT,SYSTEM" \
 		--without-gnutls-version-check \
 %endif
