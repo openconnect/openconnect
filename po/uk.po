@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: network-manager-openconnect\n"
 "Report-Msgid-Bugs-To: openconnect-devel@lists.infradead.org\n"
-"POT-Creation-Date: 2020-04-29 14:13+0100\n"
-"PO-Revision-Date: 2020-04-05 08:51+0300\n"
+"POT-Creation-Date: 2020-04-30 09:17+0100\n"
+"PO-Revision-Date: 2020-04-30 09:08+0300\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <kde-i18n-uk@kde.org>\n"
 "Language: uk\n"
@@ -181,7 +181,7 @@ msgstr "Не вдалося отримати пам'ять для обміну �
 
 #: auth-juniper.c:312
 msgid "Failed to send command to TNCC\n"
-msgstr ""
+msgstr "Не вдалося надіслати команду до TNCC\n"
 
 #: auth-juniper.c:374
 msgid "TNCC support not implemented yet on Windows\n"
@@ -226,7 +226,7 @@ msgstr "Отримано нову куку DSPREAUTH від TNCC: %s\n"
 #: auth-juniper.c:504
 #, c-format
 msgid "Got reauth interval from TNCC: %d seconds\n"
-msgstr ""
+msgstr "Отримано інтервал reauth від TNCC: %d секунд\n"
 
 #: auth-juniper.c:517
 #, c-format
@@ -3232,6 +3232,8 @@ msgstr "Некоректний ідентифікатор користувача
 #, c-format
 msgid "Unhandled autocomplete for option %d '--%s'. Please report.\n"
 msgstr ""
+"Непридатне до обробки автодоповнення для параметра %d «--%s». Будь ласка, "
+"повідомте про ваду розробникам.\n"
 
 #: main.c:1414
 #, c-format
@@ -4690,6 +4692,9 @@ msgid ""
 "Pulse server requested Host Checker; not yet supported\n"
 "Try Juniper mode (--protocol=nc)\n"
 msgstr ""
+"Сервером Pulse надіслано запит щодо засобу перевірки вузла (Host Checker); "
+"це ще не реалізовано\n"
+"Спробуйте режим Juniper (--protocol=nc)\n"
 
 #: pulse.c:1839
 msgid "Unhandled Pulse authentication packet, or authentication failure\n"
@@ -4827,22 +4832,27 @@ msgstr "Відкидаємо помилкове виключення поділ�
 msgid ""
 "WARNING: Split include \"%s\" has host bits set, replacing with \"%s/%d\".\n"
 msgstr ""
+"УВАГА: для включення поділу «%s» встановлено біти вузла, замінюємо їх на «%s/"
+"%d».\n"
 
 #: script.c:165
 #, c-format
 msgid ""
 "WARNING: Split exclude \"%s\" has host bits set, replacing with \"%s/%d\".\n"
 msgstr ""
+"УВАГА: для виключення поділу «%s» встановлено біти вузла, замінюємо їх на "
+"«%s/%d».\n"
 
 #: script.c:272
 #, c-format
 msgid "Ignoring legacy network because address \"%s\" is invalid.\n"
-msgstr ""
+msgstr "Ігноруємо застарілу мережу, оскільки адреса «%s» є некоректною.\n"
 
 #: script.c:277
 #, c-format
 msgid "Ignoring legacy network because netmask \"%s\" is invalid.\n"
 msgstr ""
+"Ігноруємо застарілу мережу, оскільки маска мережі «%s» є некоректною.\n"
 
 #: script.c:553 script.c:601
 #, c-format
@@ -4869,7 +4879,7 @@ msgstr "З'єднання сокетів скасовано\n"
 
 #: ssl.c:194
 msgid "Failed setsockopt(TCP_NODELAY) on TLS socket:"
-msgstr ""
+msgstr "Помилка setsockopt(TCP_NODELAY) на сокеті TLS:"
 
 #: ssl.c:248
 #, c-format
