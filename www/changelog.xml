@@ -26,9 +26,10 @@
        <li>Sanitize non-canonical Legacy IP network addresses (<a href="https://gitlab.com/openconnect/openconnect/merge_requests/97">!97</a>)</li>
        <li>Fix OpenSSL validation for trusted but invalid certificates (CVE-2020-12105).</li>
        <li>Convert <tt>tncc-wrapper.py</tt> to Python 3, and include modernized <tt>tncc-emulate.py</tt> as well. (<a href="https://gitlab.com/openconnect/openconnect/-/issues/91">!91</a>)</li>
-       <li>Disable <a href="https://en.wikipedia.org/wiki/Nagle's_algorithm">Nagle's algorithm</a> for TLS sockets, to improve interactivity when tunnel runs over TCP rather than UDP. (<a href="https://gitlab.com/openconnect/openconnect/-/merge_requests/89>!89</a></li>
+       <li>Disable <a href="https://en.wikipedia.org/wiki/Nagle's_algorithm">Nagle's algorithm</a> for TLS sockets, to improve interactivity when tunnel runs over TCP rather than UDP. (<a href="https://gitlab.com/openconnect/openconnect/-/merge_requests/89">!89</a></li>
        <li>GlobalProtect: more resilient handling of periodic HIP check and login arguments, and predictable naming of challenge forms
            (<a href="https://gitlab.com/openconnect/openconnect/-/merge_requests/95">!95</a>, <a href="https://gitlab.com/openconnect/openconnect/-/merge_requests/93/">!93</a>, <a href="https://gitlab.com/openconnect/openconnect/-/merge_requests/90">!90</a>)</li>
+       <li>Work around PKCS#11 tokens which forget to set <tt>CKF_LOGIN_REQUIRED</tt> (<a href="https://gitlab.com/openconnect/openconnect/issues/123">#123</a>).</li>
      </ul><br/>
   </li>
   <li><b><a href="ftp://ftp.infradead.org/pub/openconnect/openconnect-8.08.tar.gz">OpenConnect v8.08</a></b>
@@ -37,7 +38,6 @@
        <li>Fix check of <tt>pin-sha256:</tt> public key hashes to be case sensitive (<a href="https://gitlab.com/openconnect/openconnect/issues/116">#116</a>).</li>
        <li>Don't give non-functioning <tt>stderr</tt> to CSD trojan scripts.</li>
        <li>Fix crash with uninitialised OIDC token.</li>
-       <li>Work around PKCS#11 tokens which forget to set <tt>CKF_LOGIN_REQUIRED</tt> (<a href="https://gitlab.com/openconnect/openconnect/issues/123">#123</a>).</li>
      </ul><br/>
   </li>
   <li><b><a href="ftp://ftp.infradead.org/pub/openconnect/openconnect-8.07.tar.gz">OpenConnect v8.07</a></b>
