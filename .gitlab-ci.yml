@@ -325,6 +325,7 @@ MinGW32/OpenSSL:
   - dnf install -y git autoconf automake libtool python gettext make
     mingw32-gnutls mingw32-openssl mingw32-libxml2 mingw32-zlib
     mingw32-gcc wine.i686 make iproute iputils nuttcp
+  - dnf upgrade -y --enablerepo=updates-testing --advisory=FEDORA-2020-1ab58b829d
   - mount -t binfmt_misc binfmt_misc /proc/sys/fs/binfmt_misc
   - echo ':DOSWin:M::MZ::/usr/bin/wine:' > /proc/sys/fs/binfmt_misc/register
   - ./autogen.sh
@@ -369,6 +370,7 @@ MinGW64/OpenSSL:
   - dnf install -y git autoconf automake libtool python gettext make
     mingw64-gnutls mingw64-openssl mingw64-libxml2 mingw64-zlib
     mingw64-gcc wine.x86_64 make iproute iputils nuttcp
+  - dnf upgrade -y --enablerepo=updates-testing --advisory=FEDORA-2020-1ab58b829d
   - mount -t binfmt_misc binfmt_misc /proc/sys/fs/binfmt_misc
   - echo ':DOSWin:M::MZ::/usr/bin/wine:' > /proc/sys/fs/binfmt_misc/register
   - ./autogen.sh
