@@ -33,8 +33,6 @@ export DISCONNECT_FILE=disconnected-ok.$$.tmp
 
 . `dirname $0`/common.sh
 
-set -x
-
 rm -f ${DISCONNECT_FILE}
 
 if test -z "${IP}";then
@@ -104,7 +102,7 @@ set -e
 echo " * wait for ${TUNDEV}"
 
 TIMEOUT=10
-while ! ${CMDNS1} ip addr list dev ${TUNDEV} &>/dev/null; do
+while ! ${CMDNS1} ip link show dev ${TUNDEV} 2>/dev/null | grep -q UP; do
     TIMEOUT=$(($TIMEOUT - 1))
     if [ $TIMEOUT -eq 0 ]; then
 	echo "Timed out waiting for ${TUNDEV}"

@@ -4,9 +4,7 @@
 # For a real one, see http://www.infradead.org/openconnect/vpnc-script.html
 
 if [ "$reason" = "connect" ]; then
-    ip link show "$TUNDEV"
-    ip link set dev "$TUNDEV" up
-    ip link set dev "$TUNDEV" mtu "$INTERNAL_IP4_MTU"
+    ip link set dev "$TUNDEV" up mtu "$INTERNAL_IP4_MTU"
     ip addr add "$INTERNAL_IP4_ADDRESS/32" peer "$INTERNAL_IP4_ADDRESS" dev "$TUNDEV"
     ip -6 addr add $INTERNAL_IP6_NETMASK dev $TUNDEV
     rm -f ${DISCONNECT_FILE}
