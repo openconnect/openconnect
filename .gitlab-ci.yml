@@ -68,7 +68,7 @@ CentOS8/GnuTLS:
   - ./configure --with-java --without-gnutls-version-check CFLAGS=-g
   - make -j4
 # Until we get a GnuTLS with the client random bug fixed, DTLS fails
-  - make VERBOSE=1 XFAIL_TESTS="sigterm dtls-psk" -j4 check
+  - make VERBOSE=1 XFAIL_TESTS="dtls-psk" -j4 check
   tags:
   - shared
   except:
