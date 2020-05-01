@@ -300,6 +300,7 @@ static const struct gp_login_arg gp_login_args[] = {
 	{ .opt="portal-prelogonuserauthcookie", .show=1},
 	{ .unknown=1 },
 	{ .opt="usually-equals-4", .show=1 },           /* newer servers send "4" here, meaning unknown */
+	{ .opt="usually-equals-unknown", .show=1 },     /* newer servers send "unknown" here */
 };
 static const int gp_login_nargs = (sizeof(gp_login_args)/sizeof(*gp_login_args));
 
