@@ -123,6 +123,8 @@ ${CMDNS1} ping -c 3 ${VPNADDR}
 test -f "${CLIPID}" && kill $(cat ${CLIPID}) >/dev/null 2>&1
 rm -f "${CLIPID}"
 
+set -x
+
 sleep 5
 
 if ! test -f ${DISCONNECT_FILE};then
