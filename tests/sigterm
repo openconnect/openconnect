@@ -33,6 +33,8 @@ export DISCONNECT_FILE=disconnected-ok.$$.tmp
 
 . `dirname $0`/common.sh
 
+set -x
+
 rm -f ${DISCONNECT_FILE}
 
 if test -z "${IP}";then
@@ -122,8 +124,6 @@ ${CMDNS1} ping -c 3 ${VPNADDR}
 
 test -f "${CLIPID}" && kill $(cat ${CLIPID}) >/dev/null 2>&1
 rm -f "${CLIPID}"
-
-set -x
 
 sleep 5
 
