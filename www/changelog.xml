@@ -15,7 +15,7 @@
 <ul>
    <li><b>OpenConnect HEAD</b>
      <ul>
-       <li><i>No changelog entries yet</i></li>
+       <li>Install bash completion script as /usr/share/bash-completion/completions/openconnect.</li>
      </ul><br/>
   </li>
   <li><b><a href="ftp://ftp.infradead.org/pub/openconnect/openconnect-8.09.tar.gz">OpenConnect v8.09</a></b>
