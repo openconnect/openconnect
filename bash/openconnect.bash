@@ -79,7 +79,7 @@ _complete_openconnect () {
     #_get_comp_words_by_ref-n =: -w COMP_WORDS -i COMP_CWORD cur
     COMP_WORDS[0]="--autocomplete"
     local IFS=$'\n'
-    COMPREPLY=( $(COMP_CWORD=$COMP_CWORD /home/dwmw/git/openconnect/gtls-ibm/openconnect "${COMP_WORDS[@]}") )
+    COMPREPLY=( $(COMP_CWORD=$COMP_CWORD openconnect "${COMP_WORDS[@]}") )
     local FILTERPAT="${COMPREPLY[1]}"
     local PREFIX="${COMPREPLY[2]}"
     local COMP_WORD=${cur#${PREFIX}}
