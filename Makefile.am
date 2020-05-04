@@ -140,10 +140,10 @@ EXTRA_DIST += $(shell cd "$(top_srcdir)" && \
 DISTCLEANFILES = $(pkgconfig_DATA)
 
 pkglibexec_SCRIPTS = trojans/csd-post.sh trojans/csd-wrapper.sh trojans/tncc-wrapper.py \
-	trojans/hipreport.sh trojans/hipreport-android.sh
+	trojans/hipreport.sh trojans/hipreport-android.sh trojans/tncc-emulate.py
 
-bashcompletiondir = $(sysconfdir)/bash_completion.d
-bashcompletion_DATA = bash/openconnect.bash
+bashcompletiondir = $(datadir)/bash-completion/completions
+bashcompletion_DATA = bash/openconnect
 
 # main.c includes version.c
 openconnect-main.$(OBJEXT): version.c

@@ -25,7 +25,7 @@
 OPENCONNECT="${OPENCONNECT:-${top_builddir}/openconnect}"
 
 if ! [ -x $OPENCONNECT ]; then
-    echo "$OPENCONNECT is not exeuctable. Are you cross-compiling for Windows?"
+    echo "$OPENCONNECT is not executable. Are you cross-compiling for Windows?"
     exit 77
 fi
 
