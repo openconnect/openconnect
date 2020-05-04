@@ -393,8 +393,6 @@ struct openconnect_info {
 	uint32_t esp_magic;  /* GlobalProtect magic ping address (network-endian) */
 
 	int tncc_fd; /* For Juniper TNCC */
-	const char *csd_xmltag;
-	int csd_nostub;
 	char *platname;
 	char *mobile_platform_version;
 	char *mobile_device_type;
@@ -1065,7 +1063,7 @@ int do_gen_hotp_code(struct openconnect_info *vpninfo,
 		     struct oc_auth_form *form,
 		     struct oc_form_opt *opt);
 
-int set_oidc_token(struct openconnect_info *vpninfo, 
+int set_oidc_token(struct openconnect_info *vpninfo,
 		     const char *token_str);
 
 /* stoken.c */
