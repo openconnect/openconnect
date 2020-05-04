@@ -149,7 +149,7 @@ make VERBOSE=1 XFAIL_TESTS="auth-nonascii bad_dtls_test" check
 %{_sbindir}/openconnect
 %{_libexecdir}/openconnect/
 %{_mandir}/man8/*
-%{_sysconfdir}/bash_completion.d
+%{_datadir}/bash-completion/completions/openconnect
 %doc TODO COPYING.LGPL
 %doc %{_pkgdocdir}
 

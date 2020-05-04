@@ -102,13 +102,13 @@ rm -f $RPM_BUILD_ROOT/%{mingw32_libdir}/libopenconnect.la
 rm -rf $RPM_BUILD_ROOT/%{mingw32_libexecdir}/openconnect
 rm -rf $RPM_BUILD_ROOT/%{mingw32_mandir}/man8/openconnect.8*
 rm -rf $RPM_BUILD_ROOT/%{mingw32_docdir}/openconnect
-rm -rf $RPM_BUILD_ROOT/%{mingw32_sysconfdir}/bash_completion.d
+rm -rf $RPM_BUILD_ROOT/%{mingw32_datadir}/bash-completion
 
 rm -f $RPM_BUILD_ROOT/%{mingw64_libdir}/libopenconnect.la
 rm -rf $RPM_BUILD_ROOT/%{mingw64_libexecdir}/openconnect
 rm -rf $RPM_BUILD_ROOT/%{mingw64_mandir}/man8/openconnect.8*
 rm -rf $RPM_BUILD_ROOT/%{mingw64_docdir}/openconnect
-rm -rf $RPM_BUILD_ROOT/%{mingw64_sysconfdir}/bash_completion.d
+rm -rf $RPM_BUILD_ROOT/%{mingw64_datadir}/bash-completion
 
 %mingw_find_lang openconnect
 # Surely this is supposed to happen automatically... but it doesn't seem to.
