@@ -79,7 +79,7 @@ The OpenConnect multiprotocol VPN client library, cross-compiled for MinGW.
 
 %prep
 %if 0%{?gitsnapshot}
-%setup -q -n openconnect-%{snapcommit}
+%setup -q -n openconnect-%{shortcommit}
 NOCONFIGURE=x ./autogen.sh
 %else
 %gpg_verify

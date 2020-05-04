@@ -18,7 +18,7 @@ srpm: /usr/bin/git
 		tarprefix=$$(sed -n '/^%global tagver /s/.* //p' $(TARGET).spec); \
 		tarname=$${tarprefix}; \
 	fi; \
-	git archive --prefix=openconnect-$${tarprefix}/ HEAD -o .copr/openconnect-$${tarname}.tar.gz
+	git archive --prefix=openconnect-$${tarname}/ HEAD -o .copr/openconnect-$${tarname}.tar.gz
 	rpmbuild -bs $(TARGET).spec --define "_sourcedir .copr" --define "_srcrpmdir $(outdir)"
 
 /usr/bin/git:

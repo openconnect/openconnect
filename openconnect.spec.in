@@ -102,7 +102,7 @@ for NetworkManager etc.
 %include %SOURCE3
 %prep
 %if 0%{?gitsnapshot}
-%setup -q -n %{name}-%{snapcommit}
+%setup -q -n %{name}-%{shortcommit}
 NOCONFIGURE=x ./autogen.sh
 %else
 %gpg_verify
