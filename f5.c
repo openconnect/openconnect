@@ -314,7 +314,7 @@ int f5_connect(struct openconnect_info *vpninfo)
 	buf_append(reqbuf, "GET /myvpn?sess=%s&hdlc_framing=%s&ipv4=%s&ipv6=%s&Z=%s&hostname=",
 		   sid, hdlc?"yes":"no", ipv4?"yes":"no", ipv6?"yes":"no", ur_z);
 	buf_append_base64(reqbuf, vpninfo->localname, strlen(vpninfo->localname));
-	buf_append(reqbuf, " HTTP/1/1\r\n");
+	buf_append(reqbuf, " HTTP/1.1\r\n");
 	http_common_headers(vpninfo, reqbuf);
 	buf_append(reqbuf, "\r\n");
 
@@ -341,7 +341,7 @@ int f5_connect(struct openconnect_info *vpninfo)
 		ret = -EINVAL;
 		goto out;
 	}
-	
+
 	ret = -EIO; /* success */
  out:
 	free(profile_params);
@@ -571,4 +571,3 @@ int f5_bye(struct openconnect_info *vpninfo, const char *reason)
 	free(res_buf);
 	return ret;
 }
-
