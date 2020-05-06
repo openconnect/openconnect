@@ -928,6 +928,11 @@ int f5_connect(struct openconnect_info *vpninfo);
 int f5_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable);
 int f5_bye(struct openconnect_info *vpninfo, const char *reason);
 
+/* ppp.c */
+struct oc_ppp;
+void buf_append_ppphdlc(struct oc_text_buf *buf, const unsigned char *bytes, int len, uint32_t asyncmap);
+void buf_append_ppp_hdr(struct oc_text_buf *buf, struct oc_ppp *ppp, uint16_t proto, uint8_t code, uint8_t id);
+
 /* auth-globalprotect.c */
 int gpst_obtain_cookie(struct openconnect_info *vpninfo);
 void gpst_common_headers(struct openconnect_info *vpninfo, struct oc_text_buf *buf);
