@@ -46,7 +46,7 @@ There are two ENGINE implementations for TPM v2 with OpenSSL,
 based on different TSS libraries.</p>
 
 <p><a href="https://git.kernel.org/pub/scm/linux/kernel/git/jejb/openssl_tpm2_engine.git/"><tt>openssl_tpm2_engine</tt></a> is based on <a href="http://sourceforge.net/projects/ibmtpm20tss/">IBM's TPM 2.0 TSS</a>, while
-<a href="https://github.com/tpm2-software/tpm2-tss-engine"><tt>tss2-tss-engine</tt></a> uses the
+<a href="https://github.com/tpm2-software/tpm2-tss-engine"><tt>tpm2-tss-engine</tt></a> uses the
 <a href="https://github.com/tpm2-software/tpm2-tss">Intel/TCG stack</a>. OpenConnect can use
 either ENGINE.</p>
 
