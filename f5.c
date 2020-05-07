@@ -121,7 +121,7 @@ static int parse_profile(struct openconnect_info *vpninfo, struct oc_text_buf *b
 	return ret;
 }
 
-static int xmlnode_bool_value(struct openconnect_info *vpninfo, xmlNode *node)
+static int xmlnode_bool_or_int_value(struct openconnect_info *vpninfo, xmlNode *node)
 {
 	int ret = -1;
 	char *content = (char *)xmlNodeGetContent(node);
@@ -139,12 +139,39 @@ static int xmlnode_bool_value(struct openconnect_info *vpninfo, xmlNode *node)
 	return ret;
 }
 
+/* We behave like CSTP — create a linked list in vpninfo->cstp_options
+ * with the strings containing the information we got from the server,
+ * and oc_ip_info contains const copies of those pointers.
+ *
+ * (unlike version in oncp.c, val is stolen rather than strdup'ed) */
+
+static const char *add_option(struct openconnect_info *vpninfo, const char *opt, char **val)
+{
+	struct oc_vpn_option *new = malloc(sizeof(*new));
+	if (!new)
+		return NULL;
+
+	new->option = strdup(opt);
+	if (!new->option) {
+		free(new);
+		return NULL;
+	}
+	new->value = *val;
+	*val = NULL;
+	new->next = vpninfo->cstp_options;
+	vpninfo->cstp_options = new;
+
+	return new->value;
+}
+
 static int parse_options(struct openconnect_info *vpninfo, struct oc_text_buf *buf,
 			 char **session_id, char **ur_z, int *ipv4, int *ipv6, int *hdlc)
 {
 	xmlNode *fav_node, *obj_node, *xml_node;
 	xmlDocPtr xml_doc;
-	int ret = 0;
+	int ret = 0, ii, n_dns = 0, n_nbns = 0, default_route = 0;
+	char *s = NULL;
+	struct oc_text_buf *domains = NULL;
 
 	if (buf_error(buf))
 		return buf_error(buf);
@@ -166,6 +193,17 @@ static int parse_options(struct openconnect_info *vpninfo, struct oc_text_buf *b
 	if (!xmlnode_is_named(obj_node, "object"))
 		goto err;
 
+	/* Clear old options which will be overwritten */
+	vpninfo->ip_info.addr = vpninfo->ip_info.netmask = NULL;
+	vpninfo->ip_info.addr6 = vpninfo->ip_info.netmask6 = NULL;
+	vpninfo->ip_info.domain = NULL;
+	vpninfo->cstp_options = NULL;
+	for (ii = 0; ii < 3; ii++)
+		vpninfo->ip_info.dns[ii] = vpninfo->ip_info.nbns[ii] = NULL;
+	free_split_routes(vpninfo);
+
+	domains = buf_alloc();
+
 	for (xml_node = xmlFirstElementChild(obj_node);
 	     xml_node;
 	     xml_node = xmlNextElementSibling(xml_node)) {
@@ -174,12 +212,82 @@ static int parse_options(struct openconnect_info *vpninfo, struct oc_text_buf *b
 		else if (xmlnode_is_named(xml_node, "Session_ID"))
 			*session_id = (char *)xmlNodeGetContent(xml_node);
 		else if (xmlnode_is_named(xml_node, "IPV4_0"))
-			*ipv4 = xmlnode_bool_value(vpninfo, xml_node);
-		else if (xmlnode_is_named(xml_node, "IPV6_0"))
-			*ipv6 = xmlnode_bool_value(vpninfo, xml_node);
-		else if (xmlnode_is_named(xml_node, "hdlc_framing"))
-			*hdlc = xmlnode_bool_value(vpninfo, xml_node);
+			*ipv4 = xmlnode_bool_or_int_value(vpninfo, xml_node);
+		else if (xmlnode_is_named(xml_node, "IPV6_0")) {
+			if (!vpninfo->disable_ipv6)
+				*ipv6 = xmlnode_bool_or_int_value(vpninfo, xml_node);
+		} else if (xmlnode_is_named(xml_node, "hdlc_framing"))
+			*hdlc = xmlnode_bool_or_int_value(vpninfo, xml_node);
+		else if (xmlnode_is_named(xml_node, "idle_session_timeout")) {
+			int sec = vpninfo->idle_timeout = xmlnode_bool_or_int_value(vpninfo, xml_node);
+			vpn_progress(vpninfo, PRG_INFO, _("Idle timeout is %d minutes.\n"), sec/60);
+		} else if (xmlnode_is_named(xml_node, "tunnel_port_dtls")) {
+			int port = xmlnode_bool_or_int_value(vpninfo, xml_node);
+			udp_sockaddr(vpninfo, port);
+			vpn_progress(vpninfo, PRG_INFO, _("DTLS port is %d.\n"), port);
+		} else if (xmlnode_is_named(xml_node, "UseDefaultGateway0")) {
+			default_route = xmlnode_bool_or_int_value(vpninfo, xml_node);
+			vpn_progress(vpninfo, PRG_INFO, _("Got UseDefaultGateway0 value of %d.\n"), default_route);
+		} else if (xmlnode_is_named(xml_node, "SplitTunneling0")) {
+			int st = xmlnode_bool_or_int_value(vpninfo, xml_node);
+			vpn_progress(vpninfo, PRG_INFO, _("Got SplitTunneling0 value of %d.\n"), st);
+                }
+		/* XX: This is an objectively stupid way to use XML, a hierarchical data format. */
+		else if (   (!strncmp((char *)xml_node->name, "DNS", 3) && isdigit(xml_node->name[3]))
+			 || (!strncmp((char *)xml_node->name, "DNS6_", 5) && isdigit(xml_node->name[5])) ) {
+			s = (char *)xmlNodeGetContent(xml_node);
+			if (s && *s) {
+				vpn_progress(vpninfo, PRG_INFO, _("Got IPv%d DNS server %s.\n"),
+					     xml_node->name[4]=='_' ? 6 : 4, s);
+				if (n_dns < 3) vpninfo->ip_info.dns[n_dns++] = add_option(vpninfo, "DNS", &s);
+			}
+		} else if (!strncmp((char *)xml_node->name, "WINS", 4) && isdigit(xml_node->name[4])) {
+			s = (char *)xmlNodeGetContent(xml_node);
+			if (s && *s) {
+				vpn_progress(vpninfo, PRG_INFO, _("Got WINS/NBNS server %s.\n"), s);
+				if (n_nbns < 3) vpninfo->ip_info.dns[n_nbns++] = add_option(vpninfo, "WINS", &s);
+			}
+		} else if (!strncmp((char *)xml_node->name, "DNSSuffix", 9) && isdigit(xml_node->name[9])) {
+			s = (char *)xmlNodeGetContent(xml_node);
+			if (s && *s) {
+				vpn_progress(vpninfo, PRG_INFO, _("Got search domain %s.\n"), s);
+				buf_append(domains, "%s ", s);
+			}
+		} else if (   (!strncmp((char *)xml_node->name, "LAN", 3) && isdigit((char)xml_node->name[3]))
+			   || (!strncmp((char *)xml_node->name, "LAN6_", 5) && isdigit((char)xml_node->name[5]))) {
+			s = (char *)xmlNodeGetContent(xml_node);
+			if (s && *s) {
+				char *word, *next;
+				struct oc_split_include *inc;
+
+				for (word = (char *)add_option(vpninfo, "route-list", &s);
+				     *word; word = next) {
+					for (next = word; *next && !isspace(*next); next++);
+					if (*next)
+						*next++ = 0;
+					if (next == word + 1)
+						continue;
+
+					inc = malloc(sizeof(*inc));
+					inc->route = word;
+					inc->next = vpninfo->ip_info.split_includes;
+					vpninfo->ip_info.split_includes = inc;
+					vpn_progress(vpninfo, PRG_INFO, _("Got IPv%d route %s.\n"),
+						     xml_node->name[4]=='_' ? 6 : 4, word);
+				}
+			}
+		}
 	}
+
+	if (default_route && ipv4)
+		vpninfo->ip_info.netmask = strdup("0.0.0.0");
+	if (default_route && ipv6)
+		vpninfo->ip_info.netmask6 = strdup("::");
+	if (buf_error(domains) == 0 && domains->pos > 0) {
+		domains->data[domains->pos-1] = '\0';
+		vpninfo->ip_info.domain = add_option(vpninfo, "search", &domains->data);
+	}
+	buf_free(domains);
 
 	if ( (*ipv4 < 1 && *ipv6 < 1) || !*ur_z || !*session_id) {
 	err:
@@ -190,9 +298,27 @@ static int parse_options(struct openconnect_info *vpninfo, struct oc_text_buf *b
 		ret = -EINVAL;
 	}
  	xmlFreeDoc(xml_doc);
+	free(s);
 	return ret;
 }
 
+static int get_ip_address(struct openconnect_info *vpninfo, char *header, char *val) {
+	char *s;
+	if (!strcasecmp(header, "X-VPN-client-IP")) {
+		vpn_progress(vpninfo, PRG_INFO,
+			     _("Got legacy IP address %s\n"), val);
+		vpninfo->ip_info.addr = s = strdup(val);
+		if (!s) return -ENOMEM;
+	} else if (!strcasecmp(header, "X-VPN-client-IPv6")) {
+		vpn_progress(vpninfo, PRG_INFO,
+			     _("Got IPv6 address %s\n"), val);
+		vpninfo->ip_info.addr6 = s = strdup(val);
+		if (!s) return -ENOMEM;
+	}
+        /* XX: The server's IP address(es) X-VPN-server-{IP,IPv6} are also
+         * sent, but the utility of these is unclear. */
+	return 0;
+}
 
 int f5_connect(struct openconnect_info *vpninfo)
 {
@@ -330,7 +456,7 @@ int f5_connect(struct openconnect_info *vpninfo)
 	if (ret < 0)
 		goto out;
 
-	ret = process_http_response(vpninfo, 1, NULL, reqbuf);
+	ret = process_http_response(vpninfo, 1, get_ip_address, reqbuf);
 	if (ret < 0)
 		goto out;
 
