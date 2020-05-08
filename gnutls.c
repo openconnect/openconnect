@@ -546,12 +546,19 @@ static int count_x509_certificates(gnutls_datum_t *datum)
 
 static int get_cert_name(gnutls_x509_crt_t cert, char *name, size_t namelen)
 {
+	/* When the name buffer is not big enough, gnutls_x509_crt_get_dn*() will
+	 * update the length argument to the required size, and return
+	 * GNUTLS_E_SHORT_MEMORY_BUFFER. We need to avoid clobbering the original
+	 * length variable. */
+	size_t nl = namelen;
 	if (gnutls_x509_crt_get_dn_by_oid(cert, GNUTLS_OID_X520_COMMON_NAME,
-					  0, 0, name, &namelen) &&
-	    gnutls_x509_crt_get_dn(cert, name, &namelen)) {
-		name[namelen-1] = 0;
-		snprintf(name, namelen-1, "<unknown>");
-		return -EINVAL;
+					  0, 0, name, &nl)) {
+		nl = namelen;
+		if (gnutls_x509_crt_get_dn(cert, name, &nl)) {
+			name[namelen-1] = 0;
+			snprintf(name, namelen-1, "<unknown>");
+			return -EINVAL;
+		}
 	}
 	return 0;
 }
