@@ -174,11 +174,16 @@ void buf_append_ppp_hdr(struct oc_text_buf *buf, struct oc_ppp *ppp, uint16_t pr
 static int handle_config_request(struct openconnect_info *vpninfo, struct oc_ppp *ppp,
 				 int proto, int id, unsigned char *payload, int len)
 {
-	unsigned char ipv6a[16] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
-	const uint16_t vjc = htons(0x002d);
 	struct oc_text_buf *buf;
-	int ret, payload_len, pl_pos;
+	int ret, *ncp_state;
 	unsigned char *p;
+
+	switch (proto) {
+	case PPP_LCP: ncp_state = &ppp->lcp_state; break;
+	case PPP_IPCP: ncp_state = &ppp->ipcp_state; break;
+	case PPP_IP6CP: ncp_state = &ppp->ip6cp_state; break;
+	default: return -EINVAL;
+	}
 
 	for (p = payload ; p+1 < payload+len && p+p[1] <= payload+len; p += p[1]) {
 		unsigned char t = p[0], l = p[1];
@@ -242,6 +247,8 @@ static int handle_config_request(struct openconnect_info *vpninfo, struct oc_ppp
 			goto out;
 		}
 	}
+	*ncp_state |= NCP_REQ_RECEIVED;
+
 	if (p != payload+len) {
 		vpn_progress(vpninfo, PRG_DEBUG,
 			     _("Received %ld extra bytes at end of config request:\n"), payload + len - p);
@@ -261,12 +268,26 @@ static int handle_config_request(struct openconnect_info *vpninfo, struct oc_ppp
 	vpn_progress(vpninfo, PRG_DEBUG, _("Ack proto 0x%04x/id %d config from server\n"), proto, id);
 	if (vpninfo->dump_http_traffic)
 		dump_buf_hex(vpninfo, PRG_DEBUG, '>', (void *)buf->data, buf->pos);
-	if ((ret = vpninfo->ssl_write(vpninfo, buf->data, buf->pos)) < 0)
-		goto buf_out;
-	buf_truncate(buf);
+	if ((ret = vpninfo->ssl_write(vpninfo, buf->data, buf->pos)) >= 0) {
+		*ncp_state |= NCP_ACK_SENT;
+		ret = 0;
+	}
 
-	/* Now send our own request */
-	id++;
+buf_out:
+        buf_free(buf);
+out:
+	return ret;
+}
+
+static int send_config_request(struct openconnect_info *vpninfo, struct oc_ppp *ppp,
+			       int proto, int id)
+{
+	unsigned char ipv6a[16] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+	const uint16_t vjc = htons(0x002d);
+	struct oc_text_buf *buf;
+	int ret, payload_len, pl_pos, *ncp_state;
+
+	buf = buf_alloc();
 	buf_append_be32(buf, 0xf5000000);           /* F5 00, length placeholder  */
 	buf_append_ppp_hdr(buf, ppp, proto, 1 /* Configure-Request */, id);
 	payload_len = 4;			   /* XX: includes code, id, own bytes */
@@ -275,7 +296,7 @@ static int handle_config_request(struct openconnect_info *vpninfo, struct oc_ppp
 
 	switch (proto) {
 	case PPP_LCP:
-		ppp->lcp_state |= NCP_REQ_RECEIVED | NCP_REQ_SENT | NCP_ACK_SENT;
+		ncp_state = &ppp->lcp_state;
 		ppp->out_asyncmap = 0;
 		ppp->out_lcp_magic = ~ppp->in_lcp_magic;
 		ppp->out_lcp_opts = ACCOMP | PFCOMP;
@@ -290,7 +311,7 @@ static int handle_config_request(struct openconnect_info *vpninfo, struct oc_ppp
 		break;
 
 	case PPP_IPCP:
-		ppp->ipcp_state |= NCP_REQ_RECEIVED | NCP_REQ_SENT | NCP_ACK_SENT;
+		ncp_state = &ppp->ipcp_state;
 		if (vpninfo->ip_info.addr)
 			ppp->out_peer_addr.s_addr = inet_addr(vpninfo->ip_info.addr);
 
@@ -299,29 +320,34 @@ static int handle_config_request(struct openconnect_info *vpninfo, struct oc_ppp
 		break;
 
 	case PPP_IP6CP:
-		ppp->ip6cp_state |= NCP_REQ_RECEIVED | NCP_REQ_SENT | NCP_ACK_SENT;
+		ncp_state = &ppp->ip6cp_state;
 		if (vpninfo->ip_info.addr6)
 			inet_pton(AF_INET6, vpninfo->ip_info.addr6, &ipv6a);
 		memcpy(&ppp->out_ipv6_int_ident, ipv6a+8, 8); /* last 8 bytes of addr6 */
 
 		payload_len += buf_append_ppp_tlv(buf, 1, 8, &ppp->out_ipv6_int_ident);
 		break;
+
+	default:
+		ret = -EINVAL;
+		goto out;
 	}
 
 	if ((ret = buf_error(buf)) != 0)
-		goto buf_out;
+		goto out;
 	store_be16(buf->data + 2, buf->pos - 4);
 	store_be16(buf->data + pl_pos, payload_len);
 
 	vpn_progress(vpninfo, PRG_DEBUG, _("Sending our proto 0x%04x/id %d config request to server\n"), proto, id);
 	if (vpninfo->dump_http_traffic)
 		dump_buf_hex(vpninfo, PRG_DEBUG, '>', (void *)buf->data, buf->pos);
-	if ((ret = vpninfo->ssl_write(vpninfo, buf->data, buf->pos)) >= 0)
+	if ((ret = vpninfo->ssl_write(vpninfo, buf->data, buf->pos)) >= 0) {
+		*ncp_state |= NCP_REQ_SENT;
 		ret = 0;
+	}
 
-buf_out:
-        buf_free(buf);
 out:
+        buf_free(buf);
 	return ret;
 }
 
@@ -375,22 +401,28 @@ out:
 static int handle_config_packet(struct openconnect_info *vpninfo, struct oc_ppp *ppp,
 				uint16_t proto, unsigned char *p, int len)
 {
-	int code = p[0], id = p[1];
+	int code = p[0], id = p[1], ret;
 
 	switch (code) {
 	case 1: /* Configure-Request */
 		vpn_progress(vpninfo, PRG_DEBUG, _("Received proto 0x%04x/id %d config request from server\n"), proto, id);
-		return handle_config_request(vpninfo, ppp, proto, id, p + 4, len - 4);
+		ret = handle_config_request(vpninfo, ppp, proto, id, p + 4, len - 4);
+		if (ret >= 0) {
+			/* Send our own config request */
+			ret = send_config_request(vpninfo, ppp, proto, id+1);
+		}
+		return ret;
 
-	/* XX: we could verify that the ack/reply bytes match the request bytes,
-	 * and the ID is the expected one, but it isn't 1992, so let's not.
-	 */
 	case 2: /* Configure-Ack */
+		/* XX: we could verify that the ack/reply bytes match the request bytes,
+		 * and the ID is the expected one, but it isn't 1992, so let's not.
+		 */
 		vpn_progress(vpninfo, PRG_DEBUG, _("Received ack of our proto 0x%04x/id %d config request from server\n"), proto, id);
 		switch (proto) {
-		case PPP_LCP:   ppp->lcp_state |= NCP_ACK_RECEIVED; break;
-		case PPP_IPCP:  ppp->ipcp_state |= NCP_ACK_RECEIVED; break;
+		case PPP_LCP: ppp->lcp_state |= NCP_ACK_RECEIVED; break;
+		case PPP_IPCP: ppp->ipcp_state |= NCP_ACK_RECEIVED; break;
 		case PPP_IP6CP: ppp->ip6cp_state |= NCP_ACK_RECEIVED; break;
+		default: return -EINVAL;
 		}
 		return 0;
 
