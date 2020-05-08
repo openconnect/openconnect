@@ -327,7 +327,6 @@ int f5_connect(struct openconnect_info *vpninfo)
 	char *profile_params = NULL;
 	char *sid = NULL, *ur_z = NULL;
 	int ipv4 = -1, ipv6 = -1, hdlc = -1;
-	unsigned char bytes[65536];
 
 	/* XXX: We should do what cstp_connect() does to check that configuration
 	   hasn't changed on a reconnect. */
@@ -468,6 +467,9 @@ int f5_connect(struct openconnect_info *vpninfo)
 		goto out;
 	}
 
+	struct oc_ppp *ppp = calloc(1, 1024);
+	ppp_negotiate_config(vpninfo, ppp, hdlc, ipv4, ipv6);
+	ppp_print_state(vpninfo, ppp);
 	ret = -EIO; /* success */
  out:
 	free(profile_params);
