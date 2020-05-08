@@ -72,24 +72,6 @@ static int parse_cookie(struct openconnect_info *vpninfo)
 	return 0;
 }
 
-static void buf_append_be16(struct oc_text_buf *buf, uint16_t val)
-{
-	unsigned char b[2];
-
-	store_be16(b, val);
-
-	buf_append_bytes(buf, b, 2);
-}
-
-static void buf_append_le16(struct oc_text_buf *buf, uint16_t val)
-{
-	unsigned char b[2];
-
-	store_le16(b, val);
-
-	buf_append_bytes(buf, b, 2);
-}
-
 static void buf_append_tlv(struct oc_text_buf *buf, uint16_t val, uint32_t len, void *data)
 {
 	unsigned char b[6];

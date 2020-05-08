@@ -68,6 +68,33 @@ void buf_append_xmlescaped(struct oc_text_buf *buf, const char *str)
 	}
 }
 
+void buf_append_be16(struct oc_text_buf *buf, uint16_t val)
+{
+	unsigned char b[2];
+
+	store_be16(b, val);
+
+	buf_append_bytes(buf, b, 2);
+}
+
+void buf_append_be32(struct oc_text_buf *buf, uint32_t val)
+{
+	unsigned char b[4];
+
+	store_be32(b, val);
+
+	buf_append_bytes(buf, b, 4);
+}
+
+void buf_append_le16(struct oc_text_buf *buf, uint16_t val)
+{
+	unsigned char b[2];
+
+	store_le16(b, val);
+
+	buf_append_bytes(buf, b, 2);
+}
+
 void buf_append_hex(struct oc_text_buf *buf, const void *str, unsigned len)
 {
 	const unsigned char *data = str;

@@ -95,24 +95,6 @@
 #define TTLS_MOREFRAGS	(1<<6)
 #define TTLS_START	(1<<5)
 
-static void buf_append_be16(struct oc_text_buf *buf, uint16_t val)
-{
-	unsigned char b[2];
-
-	store_be16(b, val);
-
-	buf_append_bytes(buf, b, 2);
-}
-
-static void buf_append_be32(struct oc_text_buf *buf, uint32_t val)
-{
-	unsigned char b[4];
-
-	store_be32(b, val);
-
-	buf_append_bytes(buf, b, 4);
-}
-
 static void buf_append_ift_hdr(struct oc_text_buf *buf, uint32_t vendor, uint32_t type)
 {
 	uint32_t b[4];
