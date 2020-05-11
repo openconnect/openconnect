@@ -167,9 +167,6 @@ void ppp_print_state(struct openconnect_info *vpninfo)
 			buf_append_bytes(buf, bytes, len);		\
 	} while (0)
 
-/* XX: length of -2, -4 means to treat as host-endian which must be converted
- * to BE on the wire.
- */
 static int buf_append_ppp_tlv(struct oc_text_buf *buf, int tag, int len, const void *data,
 			      int hdlc, uint32_t asyncmap)
 {
@@ -201,67 +198,6 @@ static int buf_append_ppp_tlv_be32(struct oc_text_buf *buf, int tag, uint32_t va
 
 	store_be32(&val_be, value);
 	return buf_append_ppp_tlv(buf, tag, 4, &val_be, hdlc, asyncmap);
-}
-
-static int buf_finalise_ppp_encap(struct oc_text_buf *buf, struct oc_ppp *ppp)
-{
-	if (buf_error(buf))
-		return buf_error(buf);
-
-	switch (ppp->encap) {
-	case PPP_ENCAP_F5:
-		store_be16(buf->data + 2, buf->pos - 4);    /* excludes F5 header */
-		break;
-
-	case PPP_ENCAP_F5_HDLC:
-		/* FCS */
-		break;
-
-	default:
-		return -EINVAL;
-	}
-
-	return 0;
-}
-
-void buf_append_ppp_hdr(struct oc_text_buf *buf, struct oc_ppp *ppp, uint16_t proto,
-				uint8_t code, uint8_t id)
-{
-	uint32_t asyncmap = ASYNCMAP_LCP;
-	unsigned char bytes[6];
-	int lcp_opts = 0, n = 0;
-
-	switch (ppp->encap) {
-	case PPP_ENCAP_F5:
-		buf_append_be32(buf, 0xf5000000);
-		break;
-
-	case PPP_ENCAP_F5_HDLC:
-		buf_append_bytes(buf, "\x7e", 1);
-	}
-
-	/* No ACCOMP or PFCOMP for LCP frames */
-	if (proto != PPP_LCP) {
-		asyncmap = ppp->out_asyncmap;
-		lcp_opts = ppp->out_lcp_opts;
-	}
-
-	if (!(lcp_opts & ACCOMP)) {
-		bytes[n++] = 0xff; /* Address */
-		bytes[n++] = 0x03; /* Control */
-	}
-
-	if (proto > 0xff || !(lcp_opts & PFCOMP))
-		bytes[n++] = proto >> 8;
-	bytes[n++] = proto & 0xff;
-
-	bytes[n++] = code;
-	bytes[n++] = id;
-
-	if (ppp->hdlc)
-		buf_append_ppphdlc(buf, bytes, n, asyncmap);
-	else
-		buf_append_bytes(buf, bytes, n);
 }
 
 static int queue_util_packet(struct openconnect_info *vpninfo,
@@ -381,20 +317,17 @@ out:
 	return ret;
 }
 
-static int send_config_request(struct openconnect_info *vpninfo,
+static int queue_config_request(struct openconnect_info *vpninfo,
 			       int proto, int id)
 {
 	struct oc_ppp *ppp = vpninfo->ppp;
 	unsigned char ipv6a[16] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
-	struct oc_text_buf *buf;
-	int ret, payload_len, pl_pos;
+	int ret;
 	struct oc_ncp *ncp;
+	struct oc_text_buf *buf;
 
 	buf = buf_alloc();
-	buf_append_ppp_hdr(buf, ppp, proto, CONFREQ, id);
-	payload_len = 4;			   /* XX: includes code, id, own bytes */
-	pl_pos = buf->pos;
-	buf_append_be16(buf, 0);	           /* payload length placeholder  */
+	buf_ensure_space(buf, 64);
 
 	switch (proto) {
 	case PPP_LCP:
@@ -405,13 +338,13 @@ static int send_config_request(struct openconnect_info *vpninfo,
 		if (!vpninfo->ip_info.mtu)
 			vpninfo->ip_info.mtu = 1300; /* FIXME */
 
-		payload_len += buf_append_ppp_tlv_be16(buf, 1, vpninfo->ip_info.mtu, ppp->hdlc, ASYNCMAP_LCP);
-		payload_len += buf_append_ppp_tlv_be32(buf, 2, ppp->out_asyncmap, ppp->hdlc, ASYNCMAP_LCP);
-		payload_len += buf_append_ppp_tlv(buf, 5, 4, &ppp->out_lcp_magic, ppp->hdlc, ASYNCMAP_LCP);
+		buf_append_ppp_tlv_be16(buf, 1, vpninfo->ip_info.mtu, ppp->hdlc, ASYNCMAP_LCP);
+		buf_append_ppp_tlv_be32(buf, 2, ppp->out_asyncmap, ppp->hdlc, ASYNCMAP_LCP);
+		buf_append_ppp_tlv(buf, 5, 4, &ppp->out_lcp_magic, ppp->hdlc, ASYNCMAP_LCP);
 		if (ppp->out_lcp_opts & PFCOMP)
-			payload_len += buf_append_ppp_tlv(buf, 7, 0, NULL, ppp->hdlc, ASYNCMAP_LCP);
+			buf_append_ppp_tlv(buf, 7, 0, NULL, ppp->hdlc, ASYNCMAP_LCP);
 		if (ppp->out_lcp_opts & ACCOMP)
-			payload_len += buf_append_ppp_tlv(buf, 8, 0, NULL, ppp->hdlc, ASYNCMAP_LCP);
+			buf_append_ppp_tlv(buf, 8, 0, NULL, ppp->hdlc, ASYNCMAP_LCP);
 		break;
 
 	case PPP_IPCP:
@@ -419,7 +352,7 @@ static int send_config_request(struct openconnect_info *vpninfo,
 		if (vpninfo->ip_info.addr)
 			ppp->out_peer_addr.s_addr = inet_addr(vpninfo->ip_info.addr);
 
-		payload_len += buf_append_ppp_tlv(buf, 3, 4, &ppp->out_peer_addr, ppp->hdlc, ppp->out_asyncmap);
+		buf_append_ppp_tlv(buf, 3, 4, &ppp->out_peer_addr, ppp->hdlc, ppp->out_asyncmap);
 		break;
 
 	case PPP_IP6CP:
@@ -428,7 +361,7 @@ static int send_config_request(struct openconnect_info *vpninfo,
 			inet_pton(AF_INET6, vpninfo->ip_info.addr6, &ipv6a);
 		memcpy(&ppp->out_ipv6_int_ident, ipv6a+8, 8); /* last 8 bytes of addr6 */
 
-		payload_len += buf_append_ppp_tlv(buf, 1, 8, &ppp->out_ipv6_int_ident, ppp->hdlc, ppp->out_asyncmap);
+		buf_append_ppp_tlv(buf, 1, 8, &ppp->out_ipv6_int_ident, ppp->hdlc, ppp->out_asyncmap);
 		break;
 
 	default:
@@ -438,13 +371,9 @@ static int send_config_request(struct openconnect_info *vpninfo,
 
 	if ((ret = buf_error(buf)) != 0)
 		goto out;
-	store_be16(buf->data + pl_pos, payload_len);
-	buf_finalise_ppp_encap(buf, ppp);
 
 	vpn_progress(vpninfo, PRG_DEBUG, _("Sending our proto 0x%04x/id %d config request to server\n"), proto, id);
-	if (vpninfo->dump_http_traffic)
-		dump_buf_hex(vpninfo, PRG_DEBUG, '>', (void *)buf->data, buf->pos);
-	if ((ret = vpninfo->ssl_write(vpninfo, buf->data, buf->pos)) >= 0) {
+	if ((ret = queue_util_packet(vpninfo, proto, id, CONFREQ, buf->pos, buf->data)) >= 0) {
 		ncp->state |= NCP_CONF_REQ_SENT;
 		ret = 0;
 	}
@@ -536,7 +465,7 @@ int ppp_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable)
 		/* fall through */
 	case PPPS_ESTABLISH:
 		if (!(ppp->lcp.state & NCP_CONF_REQ_SENT))
-			send_config_request(vpninfo, PPP_LCP, 1);
+			queue_config_request(vpninfo, PPP_LCP, 1);
 
 		if ((ppp->lcp.state & NCP_CONF_ACK_SENT) && (ppp->lcp.state & NCP_CONF_ACK_RECEIVED))
 			ppp->ppp_state = PPPS_OPENED;
@@ -545,9 +474,9 @@ int ppp_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable)
 	case PPPS_OPENED:
 		/* Have we configured all the protocols we want? */
 		if (ppp->want_ipv4 && !(ppp->ipcp.state & NCP_CONF_REQ_SENT))
-			send_config_request(vpninfo, PPP_IPCP, 1);
+			queue_config_request(vpninfo, PPP_IPCP, 1);
 		if (ppp->want_ipv6 && !(ppp->ip6cp.state & NCP_CONF_REQ_SENT))
-			send_config_request(vpninfo, PPP_IP6CP, 1);
+			queue_config_request(vpninfo, PPP_IP6CP, 1);
 
 		if ( (!ppp->want_ipv4 || ((ppp->ipcp.state & NCP_CONF_ACK_SENT) && (ppp->ipcp.state & NCP_CONF_ACK_RECEIVED))) &&
 		     (!ppp->want_ipv6 || ((ppp->ip6cp.state & NCP_CONF_ACK_SENT) && (ppp->ip6cp.state & NCP_CONF_ACK_RECEIVED))) )
