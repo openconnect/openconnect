@@ -472,9 +472,7 @@ int f5_connect(struct openconnect_info *vpninfo)
 		goto out;
 	}
 
-	ppp_negotiate_config(vpninfo);
-	ppp_print_state(vpninfo);
-	ret = -EIO; /* success */
+	ret = 0; /* success */
  out:
 	free(profile_params);
 	free(sid);
@@ -496,193 +494,14 @@ int f5_connect(struct openconnect_info *vpninfo)
 	return ret;
 }
 
-int f5_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable)
-{
-	int ret;
-	int work_done = 0;
-
-	if (vpninfo->ssl_fd == -1)
-		goto do_reconnect;
-
-	/* FIXME: The poll() handling here is fairly simplistic. Actually,
-	   if the SSL connection stalls it could return a WANT_WRITE error
-	   on _either_ of the SSL_read() or SSL_write() calls. In that case,
-	   we should probably remove POLLIN from the events we're looking for,
-	   and add POLLOUT. As it is, though, it'll just chew CPU time in that
-	   fairly unlikely situation, until the write backlog clears. */
-	while (readable) {
-		/* Some servers send us packets that are larger than
-		   negotiated MTU. We reserve some extra space to
-		   handle that */
-		int receive_mtu = MAX(16384, vpninfo->deflate_pkt_size ? : vpninfo->ip_info.mtu);
-		int len;
-
-		if (!vpninfo->cstp_pkt) {
-			vpninfo->cstp_pkt = malloc(sizeof(struct pkt) + receive_mtu);
-			if (!vpninfo->cstp_pkt) {
-				vpn_progress(vpninfo, PRG_ERR, _("Allocation failed\n"));
-				break;
-			}
-		}
-
-		len = ssl_nonblock_read(vpninfo, vpninfo->cstp_pkt->data, receive_mtu);
-		if (!len)
-			break;
-		if (len < 0)
-			goto do_reconnect;
-		if (len < 8) {
-			vpn_progress(vpninfo, PRG_ERR, _("Short packet received (%d bytes)\n"), len);
-			vpninfo->quit_reason = "Short packet received";
-			return 1;
-		}
-
-		/* Check it looks like a valid IP packet, and then check for the special
-		 * IP protocol 255 that is used for control stuff. Maybe also look at length
-		 * and be prepared to *split* IP packets received in the same read() call. */
-
-		vpninfo->ssl_times.last_rx = time(NULL);
-
-		vpn_progress(vpninfo, PRG_TRACE,
-			     _("Received uncompressed data packet of %d bytes\n"),
-			     len);
-		vpninfo->cstp_pkt->len = len;
-		queue_packet(&vpninfo->incoming_queue, vpninfo->cstp_pkt);
-		vpninfo->cstp_pkt = NULL;
-		work_done = 1;
-		continue;
-	}
-
-
-	/* If SSL_write() fails we are expected to try again. With exactly
-	   the same data, at exactly the same location. So we keep the
-	   packet we had before.... */
-	if (vpninfo->current_ssl_pkt) {
-	handle_outgoing:
-		vpninfo->ssl_times.last_tx = time(NULL);
-		unmonitor_write_fd(vpninfo, ssl);
-
-		ret = ssl_nonblock_write(vpninfo,
-					 vpninfo->current_ssl_pkt->data,
-					 vpninfo->current_ssl_pkt->len);
-		if (ret < 0)
-			goto do_reconnect;
-		else if (!ret) {
-			/* -EAGAIN: ssl_nonblock_write() will have added the SSL
-			   fd to ->select_wfds if appropriate, so we can just
-			   return and wait. Unless it's been stalled for so long
-			   that DPD kicks in and we kill the connection. */
-			switch (ka_stalled_action(&vpninfo->ssl_times, timeout)) {
-			case KA_DPD_DEAD:
-				goto peer_dead;
-			case KA_REKEY:
-				goto do_rekey;
-			case KA_NONE:
-				return work_done;
-			default:
-				/* This should never happen */
-				;
-			}
-		}
-
-		if (ret != vpninfo->current_ssl_pkt->len) {
-			vpn_progress(vpninfo, PRG_ERR,
-				     _("SSL wrote too few bytes! Asked for %d, sent %d\n"),
-				     vpninfo->current_ssl_pkt->len + 8, ret);
-			vpninfo->quit_reason = "Internal error";
-			return 1;
-		}
-
-		vpninfo->current_ssl_pkt = NULL;
-	}
-
-	switch (keepalive_action(&vpninfo->ssl_times, timeout)) {
-	case KA_REKEY:
-	do_rekey:
-		/* Not that this will ever happen; we don't even process
-		   the setting when we're asked for it. */
-		vpn_progress(vpninfo, PRG_INFO, _("CSTP rekey due\n"));
-		if (vpninfo->ssl_times.rekey_method == REKEY_TUNNEL)
-			goto do_reconnect;
-		else if (vpninfo->ssl_times.rekey_method == REKEY_SSL) {
-			ret = cstp_handshake(vpninfo, 0);
-			if (ret) {
-				/* if we failed rehandshake try establishing a new-tunnel instead of failing */
-				vpn_progress(vpninfo, PRG_ERR, _("Rehandshake failed; attempting new-tunnel\n"));
-				goto do_reconnect;
-			}
-
-			goto do_dtls_reconnect;
-		}
-		break;
-
-	case KA_DPD_DEAD:
-	peer_dead:
-		vpn_progress(vpninfo, PRG_ERR,
-			     _("CSTP Dead Peer Detection detected dead peer!\n"));
-	do_reconnect:
-		ret = -EINVAL; // Not implemented yet f5_reconnect(vpninfo);
-		if (ret) {
-			vpn_progress(vpninfo, PRG_ERR, _("Reconnect failed\n"));
-			vpninfo->quit_reason = "CSTP reconnect failed";
-			return ret;
-		}
-
-	do_dtls_reconnect:
-		/* succeeded, let's rekey DTLS, if it is not rekeying
-		 * itself. */
-		if (vpninfo->dtls_state > DTLS_SLEEPING &&
-		    vpninfo->dtls_times.rekey_method == REKEY_NONE) {
-			vpninfo->dtls_need_reconnect = 1;
-		}
-
-		return 1;
-
-	case KA_DPD:
-		vpn_progress(vpninfo, PRG_DEBUG, _("Send CSTP DPD\n"));
-
-		//vpninfo->current_ssl_pkt = (struct pkt *)&dpd_pkt;
-		//goto handle_outgoing;
-		break;
-
-	case KA_KEEPALIVE:
-		/* No need to send an explicit keepalive
-		   if we have real data to send */
-		if (vpninfo->dtls_state != DTLS_CONNECTED &&
-		    vpninfo->outgoing_queue.head)
-			break;
-
-		vpn_progress(vpninfo, PRG_DEBUG, _("Send CSTP Keepalive\n"));
-
-		//vpninfo->current_ssl_pkt = (struct pkt *)&keepalive_pkt;
-		//goto handle_outgoing;
-		break;
-
-	case KA_NONE:
-		;
-	}
-
-	/* Service outgoing packet queue, if no DTLS */
-	while (vpninfo->dtls_state != DTLS_CONNECTED &&
-	       (vpninfo->current_ssl_pkt = dequeue_packet(&vpninfo->outgoing_queue))) {
-		struct pkt *this = vpninfo->current_ssl_pkt;
-
-		vpn_progress(vpninfo, PRG_TRACE,
-			     _("Sending uncompressed data packet of %d bytes\n"),
-			     this->len);
-
-		vpninfo->current_ssl_pkt = this;
-		goto handle_outgoing;
-	}
-
-	/* Work is not done if we just got rid of packets off the queue */
-	return work_done;
-}
-
 int f5_bye(struct openconnect_info *vpninfo, const char *reason)
 {
 	char *orig_path;
 	char *res_buf=NULL;
 	int ret;
+
+	/* XX: handle clean PPP termination?
+	   ppp_bye(vpninfo); */
 
 	/* We need to close and reopen the HTTPS connection (to kill
 	 * the f5 tunnel) and submit a new HTTPS request to logout.

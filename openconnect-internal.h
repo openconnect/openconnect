@@ -150,6 +150,9 @@ struct pkt {
 			uint32_t len;
 			uint32_t ident;
 		} pulse;
+		struct {
+			unsigned char pad[24]; /* variable-length */
+		} ppp;
 	};
 	unsigned char data[];
 };
@@ -929,7 +932,6 @@ int pulse_eap_ttls_recv(struct openconnect_info *vpninfo, void *data, int len);
 /* f5.c */
 int f5_obtain_cookie(struct openconnect_info *vpninfo);
 int f5_connect(struct openconnect_info *vpninfo);
-int f5_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable);
 int f5_bye(struct openconnect_info *vpninfo, const char *reason);
 
 /* ppp.c */
@@ -938,6 +940,7 @@ void buf_append_ppphdlc(struct oc_text_buf *buf, const unsigned char *bytes, int
 void buf_append_ppp_hdr(struct oc_text_buf *buf, struct oc_ppp *ppp, uint16_t proto, uint8_t code, uint8_t id);
 void ppp_print_state(struct openconnect_info *vpninfo);
 int ppp_negotiate_config(struct openconnect_info *vpninfo);
+int ppp_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable);
 struct oc_ppp *openconnect_ppp_new(int encap, int hdlc, int want_ipv4, int want_ipv6, int we_go_first);
 
 /* auth-globalprotect.c */
