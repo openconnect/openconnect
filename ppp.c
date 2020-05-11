@@ -123,6 +123,8 @@ struct oc_ppp {
 	uint64_t in_ipv6_int_ident;
 };
 
+const char *encap_names[] = {"F5", "F5 HDLC"};
+
 struct oc_ppp *openconnect_ppp_new(int encap, int want_ipv4, int want_ipv6)
 {
 	struct oc_ppp *ppp = calloc(sizeof(*ppp), 1);
@@ -138,6 +140,8 @@ struct oc_ppp *openconnect_ppp_new(int encap, int want_ipv4, int want_ipv6)
 
 	case PPP_ENCAP_F5_HDLC:
 		ppp->hdlc = 1;
+		break;
+
 	default:
 		/* XX: fail */
 		break;
@@ -149,14 +153,14 @@ struct oc_ppp *openconnect_ppp_new(int encap, int want_ipv4, int want_ipv6)
 	return ppp;
 }
 
-void ppp_print_state(struct openconnect_info *vpninfo)
+static void print_ppp_state(struct openconnect_info *vpninfo, int level)
 {
 	struct oc_ppp *ppp = vpninfo->ppp;
 
-	vpn_progress(vpninfo, PRG_INFO, _("PPP state: %s (%d)\n  hdlc: %d\n"), ppps_names[ppp->ppp_state], ppp->ppp_state, ppp->hdlc);
-	vpn_progress(vpninfo, PRG_INFO, _("    in: asyncmap=0x%08x, lcp_opts=%d, lcp_magic=0x%08x, peer=%s\n"),
+	vpn_progress(vpninfo, level, _("Current PPP state: %s (encap %s):\n"), ppps_names[ppp->ppp_state], encap_names[ppp->encap-1]);
+	vpn_progress(vpninfo, level, _("    in: asyncmap=0x%08x, lcp_opts=%d, lcp_magic=0x%08x, peer=%s\n"),
 		     ppp->in_asyncmap, ppp->in_lcp_opts, ppp->in_lcp_magic, inet_ntoa(ppp->in_peer_addr));
-	vpn_progress(vpninfo, PRG_INFO, _("   out: asyncmap=0x%08x, lcp_opts=%d, lcp_magic=0x%08x, peer=%s\n"),
+	vpn_progress(vpninfo, level, _("   out: asyncmap=0x%08x, lcp_opts=%d, lcp_magic=0x%08x, peer=%s\n"),
 		     ppp->out_asyncmap, ppp->out_lcp_opts, ppp->out_lcp_magic, inet_ntoa(ppp->out_peer_addr));
 }
 
@@ -506,10 +510,12 @@ int ppp_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable)
 		vpninfo->quit_reason = "Unexpected state";
 		return 1;
 	}
-	if (last_state != ppp->ppp_state)
+	if (last_state != ppp->ppp_state) {
 		vpn_progress(vpninfo, PRG_DEBUG,
-			     _("PPP state transition from %s (%d) to %s (%d)\n"),
-			     ppps_names[last_state], last_state, ppps_names[ppp->ppp_state], ppp->ppp_state);
+			     _("PPP state transition from %s to %s\n"),
+			     ppps_names[last_state], ppps_names[ppp->ppp_state]);
+		print_ppp_state(vpninfo, PRG_TRACE);
+	}
 
 	/* FIXME: The poll() handling here is fairly simplistic. Actually,
 	   if the SSL connection stalls it could return a WANT_WRITE error
@@ -634,8 +640,8 @@ int ppp_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable)
 		case PPP_IP6:
 			if (ppp->ppp_state != PPPS_NETWORK) {
 				vpn_progress(vpninfo, PRG_ERR,
-					     _("Unexpected IPv%d packet in PPP state %s (%d)."),
-					     (proto == PPP_IP6 ? 6 : 4), ppps_names[ppp->ppp_state], ppp->ppp_state);
+					     _("Unexpected IPv%d packet in PPP state %s."),
+					     (proto == PPP_IP6 ? 6 : 4), ppps_names[ppp->ppp_state]);
 				dump_buf_hex(vpninfo, PRG_ERR, '<', pp, payload_len);
 			} else {
 				vpn_progress(vpninfo, PRG_TRACE,

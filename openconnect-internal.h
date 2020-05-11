@@ -941,7 +941,6 @@ int f5_bye(struct openconnect_info *vpninfo, const char *reason);
 struct oc_ppp;
 void buf_append_ppphdlc(struct oc_text_buf *buf, const unsigned char *bytes, int len, uint32_t asyncmap);
 void buf_append_ppp_hdr(struct oc_text_buf *buf, struct oc_ppp *ppp, uint16_t proto, uint8_t code, uint8_t id);
-void ppp_print_state(struct openconnect_info *vpninfo);
 int ppp_negotiate_config(struct openconnect_info *vpninfo);
 int ppp_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable);
 struct oc_ppp *openconnect_ppp_new(int encap, int want_ipv4, int want_ipv6);
