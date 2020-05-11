@@ -351,6 +351,8 @@ static int send_config_request(struct openconnect_info *vpninfo,
 		ppp->out_asyncmap = 0;
 		ppp->out_lcp_magic = ~ppp->in_lcp_magic;
 		ppp->out_lcp_opts = ACCOMP | PFCOMP;
+		if (!vpninfo->ip_info.mtu)
+			vpninfo->ip_info.mtu = 1300; /* FIXME */
 
 		payload_len += buf_append_ppp_tlv(buf, 1, -2, &vpninfo->ip_info.mtu); /* store as BE */
 		payload_len += buf_append_ppp_tlv(buf, 2, -4, &ppp->out_asyncmap);    /* store as BE */
@@ -414,10 +416,6 @@ static int handle_config_packet(struct openconnect_info *vpninfo,
 	switch (code) {
 	case CONFREQ:
 		ret = handle_config_request(vpninfo, proto, id, p + 4, len - 4);
-		if (ret >= 0) {
-			/* Send our own config request */
-			ret = send_config_request(vpninfo, proto, id+1);
-		}
 		break;
 
 	case CONFACK:
@@ -485,13 +483,25 @@ int ppp_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable)
 	switch (ppp->ppp_state) {
 	case PPPS_DEAD:
 		ppp->ppp_state = PPPS_ESTABLISH;
-		break;
+		/* fall through */
 	case PPPS_ESTABLISH:
+		if (!(ppp->lcp_state & NCP_CONF_REQ_SENT))
+			if ((ppp->lcp_state & NCP_CONF_REQ_RECEIVED) || ppp->we_go_first)
+				send_config_request(vpninfo, PPP_LCP, 1);
+
 		if ((ppp->lcp_state & NCP_CONF_ACK_SENT) && (ppp->lcp_state & NCP_CONF_ACK_RECEIVED))
 			ppp->ppp_state = PPPS_OPENED;
 		break;
+
 	case PPPS_OPENED:
 		/* Have we configured all the protocols we want? */
+		if (ppp->want_ipv4 && !(ppp->ipcp_state & NCP_CONF_REQ_SENT))
+			if ((ppp->ipcp_state & NCP_CONF_REQ_RECEIVED) || ppp->we_go_first)
+				send_config_request(vpninfo, PPP_IPCP, 1);
+		if (ppp->want_ipv6 && !(ppp->ip6cp_state & NCP_CONF_REQ_SENT))
+			if ((ppp->ip6cp_state & NCP_CONF_REQ_RECEIVED) || ppp->we_go_first)
+				send_config_request(vpninfo, PPP_IP6CP, 1);
+
 		if ( (!ppp->want_ipv4 || ((ppp->ipcp_state & NCP_CONF_ACK_SENT) && (ppp->ipcp_state & NCP_CONF_ACK_RECEIVED))) &&
 		     (!ppp->want_ipv6 || ((ppp->ip6cp_state & NCP_CONF_ACK_SENT) && (ppp->ip6cp_state & NCP_CONF_ACK_RECEIVED))) )
 			ppp->ppp_state = PPPS_NETWORK;

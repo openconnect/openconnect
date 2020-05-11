@@ -467,7 +467,7 @@ int f5_connect(struct openconnect_info *vpninfo)
 		goto out;
 	}
 
-	if (!(vpninfo->ppp = openconnect_ppp_new(PPP_ENCAP_F5, hdlc, ipv4, ipv6, 0 /* we_go_first */))) {
+	if (!(vpninfo->ppp = openconnect_ppp_new(PPP_ENCAP_F5, hdlc, ipv4, ipv6, 1 /* we_go_first */))) {
 		ret = -ENOMEM;
 		goto out;
 	}
