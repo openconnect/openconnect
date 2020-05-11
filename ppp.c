@@ -53,7 +53,6 @@ void buf_append_ppphdlc(struct oc_text_buf *buf, const unsigned char *bytes, int
 	int s = 0, i;
 
 	buf_ensure_space(buf, len);
-	buf_append_bytes(buf, "\x7e", 1);
 
 	for (i = 0; i < len; i++) {
 		if (NEED_ESCAPE(data[i], asyncmap)) {
@@ -171,20 +170,58 @@ void ppp_print_state(struct openconnect_info *vpninfo)
 /* XX: length of -2, -4 means to treat as host-endian which must be converted
  * to BE on the wire.
  */
-static int buf_append_ppp_tlv(struct oc_text_buf *buf, int tag, int len, const void *data)
+static int buf_append_ppp_tlv(struct oc_text_buf *buf, int tag, int len, const void *data,
+			      int hdlc, uint32_t asyncmap)
 {
 	unsigned char b[2];
 
 	b[0] = tag;
-	b[1] = (len>=0 ? len : -len) + 2;
-	buf_append_bytes(buf, b, 2);
-	switch (len) {
-	case -2: buf_append_be16(buf, *(uint16_t *)(data)); break;
-	case -4: buf_append_be32(buf, *(uint32_t *)(data)); break;
-	case 0: break;
-	default: buf_append_bytes(buf, data, len);
-	}
+	b[1] = len + 2;
+
+	buf_append_ppp(buf, hdlc, b, 2, asyncmap);
+	if (len)
+		buf_append_ppp(buf, hdlc, data, len, asyncmap);
+
 	return b[1];
+}
+
+static int buf_append_ppp_tlv_be16(struct oc_text_buf *buf, int tag, uint16_t value,
+				   int hdlc, uint32_t asyncmap)
+{
+	uint16_t val_be;
+
+	store_be16(&val_be, value);
+	return buf_append_ppp_tlv(buf, tag, 2, &val_be, hdlc, asyncmap);
+}
+
+static int buf_append_ppp_tlv_be32(struct oc_text_buf *buf, int tag, uint32_t value,
+				   int hdlc, uint32_t asyncmap)
+{
+	uint32_t val_be;
+
+	store_be32(&val_be, value);
+	return buf_append_ppp_tlv(buf, tag, 4, &val_be, hdlc, asyncmap);
+}
+
+static int buf_finalise_ppp_encap(struct oc_text_buf *buf, struct oc_ppp *ppp)
+{
+	if (buf_error(buf))
+		return buf_error(buf);
+
+	switch (ppp->encap) {
+	case PPP_ENCAP_F5:
+		store_be16(buf->data + 2, buf->pos - 4);    /* excludes F5 header */
+		break;
+
+	case PPP_ENCAP_F5_HDLC:
+		/* FCS */
+		break;
+
+	default:
+		return -EINVAL;
+	}
+
+	return 0;
 }
 
 void buf_append_ppp_hdr(struct oc_text_buf *buf, struct oc_ppp *ppp, uint16_t proto,
@@ -193,6 +230,15 @@ void buf_append_ppp_hdr(struct oc_text_buf *buf, struct oc_ppp *ppp, uint16_t pr
 	uint32_t asyncmap = ASYNCMAP_LCP;
 	unsigned char bytes[6];
 	int lcp_opts = 0, n = 0;
+
+	switch (ppp->encap) {
+	case PPP_ENCAP_F5:
+		buf_append_be32(buf, 0xf5000000);
+		break;
+
+	case PPP_ENCAP_F5_HDLC:
+		buf_append_bytes(buf, "\x7e", 1);
+	}
 
 	/* No ACCOMP or PFCOMP for LCP frames */
 	if (proto != PPP_LCP) {
@@ -345,7 +391,6 @@ static int send_config_request(struct openconnect_info *vpninfo,
 	struct oc_ncp *ncp;
 
 	buf = buf_alloc();
-	buf_append_be32(buf, 0xf5000000);           /* F5 00, length placeholder  */
 	buf_append_ppp_hdr(buf, ppp, proto, CONFREQ, id);
 	payload_len = 4;			   /* XX: includes code, id, own bytes */
 	pl_pos = buf->pos;
@@ -360,13 +405,13 @@ static int send_config_request(struct openconnect_info *vpninfo,
 		if (!vpninfo->ip_info.mtu)
 			vpninfo->ip_info.mtu = 1300; /* FIXME */
 
-		payload_len += buf_append_ppp_tlv(buf, 1, -2, &vpninfo->ip_info.mtu); /* store as BE */
-		payload_len += buf_append_ppp_tlv(buf, 2, -4, &ppp->out_asyncmap);    /* store as BE */
-		payload_len += buf_append_ppp_tlv(buf, 5, +4, &ppp->out_lcp_magic);   /* store as-is */
+		payload_len += buf_append_ppp_tlv_be16(buf, 1, vpninfo->ip_info.mtu, ppp->hdlc, ASYNCMAP_LCP);
+		payload_len += buf_append_ppp_tlv_be32(buf, 2, ppp->out_asyncmap, ppp->hdlc, ASYNCMAP_LCP);
+		payload_len += buf_append_ppp_tlv(buf, 5, 4, &ppp->out_lcp_magic, ppp->hdlc, ASYNCMAP_LCP);
 		if (ppp->out_lcp_opts & PFCOMP)
-			payload_len += buf_append_ppp_tlv(buf, 7, 0, NULL);
+			payload_len += buf_append_ppp_tlv(buf, 7, 0, NULL, ppp->hdlc, ASYNCMAP_LCP);
 		if (ppp->out_lcp_opts & ACCOMP)
-			payload_len += buf_append_ppp_tlv(buf, 8, 0, NULL);
+			payload_len += buf_append_ppp_tlv(buf, 8, 0, NULL, ppp->hdlc, ASYNCMAP_LCP);
 		break;
 
 	case PPP_IPCP:
@@ -374,7 +419,7 @@ static int send_config_request(struct openconnect_info *vpninfo,
 		if (vpninfo->ip_info.addr)
 			ppp->out_peer_addr.s_addr = inet_addr(vpninfo->ip_info.addr);
 
-		payload_len += buf_append_ppp_tlv(buf, 3, 4, &ppp->out_peer_addr);
+		payload_len += buf_append_ppp_tlv(buf, 3, 4, &ppp->out_peer_addr, ppp->hdlc, ppp->out_asyncmap);
 		break;
 
 	case PPP_IP6CP:
@@ -383,7 +428,7 @@ static int send_config_request(struct openconnect_info *vpninfo,
 			inet_pton(AF_INET6, vpninfo->ip_info.addr6, &ipv6a);
 		memcpy(&ppp->out_ipv6_int_ident, ipv6a+8, 8); /* last 8 bytes of addr6 */
 
-		payload_len += buf_append_ppp_tlv(buf, 1, 8, &ppp->out_ipv6_int_ident);
+		payload_len += buf_append_ppp_tlv(buf, 1, 8, &ppp->out_ipv6_int_ident, ppp->hdlc, ppp->out_asyncmap);
 		break;
 
 	default:
@@ -393,8 +438,8 @@ static int send_config_request(struct openconnect_info *vpninfo,
 
 	if ((ret = buf_error(buf)) != 0)
 		goto out;
-	store_be16(buf->data + 2, buf->pos - 4);
 	store_be16(buf->data + pl_pos, payload_len);
+	buf_finalise_ppp_encap(buf, ppp);
 
 	vpn_progress(vpninfo, PRG_DEBUG, _("Sending our proto 0x%04x/id %d config request to server\n"), proto, id);
 	if (vpninfo->dump_http_traffic)
@@ -561,6 +606,9 @@ int ppp_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable)
 			return 1;
 		}
 
+		if (vpninfo->dump_http_traffic)
+			dump_buf_hex(vpninfo, PRG_DEBUG, '<', ph, len);
+
 		/* check pre-PPP header */
 		switch (ppp->encap) {
 		case PPP_ENCAP_F5:
@@ -583,10 +631,13 @@ int ppp_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable)
 				continue;
 			}
 			break;
-		default:
 			payload_len = len;
-			/* XX: fail */
 			break;
+
+		default:
+			vpn_progress(vpninfo, PRG_ERR, _("Invalid PPP encapsulation\n"));
+			vpninfo->quit_reason = "Invalid encapsulation";
+			return -EINVAL;
 		}
 
 		/* check PPP header and extract protocol */
