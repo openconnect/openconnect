@@ -592,14 +592,15 @@ int ppp_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable)
 				dump_buf_hex(vpninfo, PRG_ERR, '<', ph, len);
 				continue;
 			}
+			break;
 		default:
 			payload_len = len;
 			/* XX: fail */
 			break;
 		}
 
-		/* Extract protocol from PPP header, skip boilerplate */
-		pp = ph + ppp->encap_len;
+		/* check PPP header and extract protocol */
+		pp = ph += ppp->encap_len;
 		if (pp[0] == 0xff && pp[0] == 0x03 && load_be16(pp + 6) == PPP_LCP) {
 			/* No ACCOMP or PFCOMP for LCP frames */
 			proto = PPP_LCP;
@@ -613,7 +614,7 @@ int ppp_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable)
 				bad_ppp_pkt:
 					vpn_progress(vpninfo, PRG_ERR,
 						     _("Bad incoming PPP packet:\n"));
-					dump_buf_hex(vpninfo, PRG_ERR, '<', pp, len);
+					dump_buf_hex(vpninfo, PRG_ERR, '<', ph, len);
 					return 1;
 				}
 				pp += 2;
@@ -637,8 +638,10 @@ int ppp_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable)
 		case PPP_LCP:
 		case PPP_IPCP:
 		case PPP_IP6CP:
-			if (payload_len < 4 || load_be16(pp + 2) != payload_len)
+			if (payload_len < 4 || load_be16(pp + 2) != payload_len) {
+				vpn_progress(vpninfo, PRG_ERR, "payload_len %d, PPP header len %d\n", payload_len, load_be16(pp+2));
 				goto bad_ppp_pkt;
+			}
 			ret = handle_config_packet(vpninfo, proto, pp, payload_len);
 			break;
 
