@@ -67,19 +67,23 @@ void buf_append_ppphdlc(struct oc_text_buf *buf, const unsigned char *bytes, int
 #define PFCOMP 2
 #define VJCOMP 4
 
-const char *ppps_names[] = {"DEAD", "ESTABLISH", "OPENED/AUTHENTICATE", "NETWORK", "TERMINATE"};
+const char *ppps_names[] = {"DEAD", "ESTABLISH", "OPENED", "AUTHENTICATE", "NETWORK", "TERMINATE"};
 
-#define PPPS_DEAD 0
-#define PPPS_ESTABLISH 1
-#define PPPS_OPENED 2
-#define PPPS_AUTHENTICATE 2
-#define PPPS_NETWORK 3
-#define PPPS_TERMINATE 4
+#define PPPS_DEAD		0
+#define PPPS_ESTABLISH		1
+#define PPPS_OPENED		2
+#define PPPS_AUTHENTICATE	3
+#define PPPS_NETWORK		4
+#define PPPS_TERMINATE		5
 
-#define NCP_REQ_RECEIVED 1
-#define NCP_REQ_SENT 2
-#define NCP_ACK_RECEIVED 4
-#define NCP_ACK_SENT 8
+#define NCP_CONF_REQ_RECEIVED	1
+#define NCP_CONF_REQ_SENT	2
+#define NCP_CONF_ACK_RECEIVED	4
+#define NCP_CONF_ACK_SENT	8
+#define NCP_TERM_REQ_SENT	16
+#define NCP_TERM_REQ_RECEIVED	32
+#define NCP_TERM_ACK_SENT	16
+#define NCP_TERM_ACK_RECEIVED	32
 
 struct oc_ppp {
 	/* We need to know these before we start */
@@ -282,11 +286,11 @@ static int handle_config_request(struct openconnect_info *vpninfo,
 			goto out;
 		}
 	}
-	*ncp_state |= NCP_REQ_RECEIVED;
+	*ncp_state |= NCP_CONF_REQ_RECEIVED;
 
 	if (p != payload+len) {
 		vpn_progress(vpninfo, PRG_DEBUG,
-			     _("Received %ld extra bytes at end of config request:\n"), payload + len - p);
+			     _("Received %ld extra bytes at end of Config-Request:\n"), payload + len - p);
 		dump_buf_hex(vpninfo, PRG_DEBUG, '<', p, payload + len - p);
 	}
 
@@ -304,7 +308,7 @@ static int handle_config_request(struct openconnect_info *vpninfo,
 	if (vpninfo->dump_http_traffic)
 		dump_buf_hex(vpninfo, PRG_DEBUG, '>', (void *)buf->data, buf->pos);
 	if ((ret = vpninfo->ssl_write(vpninfo, buf->data, buf->pos)) >= 0) {
-		*ncp_state |= NCP_ACK_SENT;
+		*ncp_state |= NCP_CONF_ACK_SENT;
 		ret = 0;
 	}
 
@@ -378,7 +382,7 @@ static int send_config_request(struct openconnect_info *vpninfo,
 	if (vpninfo->dump_http_traffic)
 		dump_buf_hex(vpninfo, PRG_DEBUG, '>', (void *)buf->data, buf->pos);
 	if ((ret = vpninfo->ssl_write(vpninfo, buf->data, buf->pos)) >= 0) {
-		*ncp_state |= NCP_REQ_SENT;
+		*ncp_state |= NCP_CONF_REQ_SENT;
 		ret = 0;
 	}
 
@@ -412,20 +416,21 @@ out:
 	return ret;
 }
 
-static int send_terminate_ack(struct openconnect_info *vpninfo,
-			      uint16_t proto, int id)
+static int send_terminate(struct openconnect_info *vpninfo,
+			   uint16_t proto, int id, int ack)
 {
 	struct oc_text_buf *buf = buf_alloc();
 	struct oc_ppp *ppp = vpninfo->ppp;
 	int ret;
 
 	buf_append_be32(buf, 0xf5000000);
-	buf_append_ppp_hdr(buf, ppp, proto, 6 /* Terminate-Ack */, id);
+	buf_append_ppp_hdr(buf, ppp, proto, ack ? 6 /* Terminate-Ack */ : 5 /* Terminate-Request */, id);
 	buf_append_be16(buf, 4);	       /* payload length includes code, id, own 2 bytes */
 	if ((ret = buf_error(buf)) != 0)
 		goto out;
 	store_be16(buf->data + 2, buf->pos - 4);
-	vpn_progress(vpninfo, PRG_DEBUG, _("Sending proto 0x%04x/id %d terminate ack to server\n"), proto, id);
+	vpn_progress(vpninfo, PRG_DEBUG, _("Sending proto 0x%04x/id %d Terminate-%s to server\n"),
+		     proto, id, ack ? "Ack" : "Request");
 	if (vpninfo->dump_http_traffic)
 		dump_buf_hex(vpninfo, PRG_DEBUG, '>', (void *)buf->data, buf->pos);
 	if ((ret = vpninfo->ssl_write(vpninfo, buf->data, buf->pos)) >= 0)
@@ -440,57 +445,68 @@ static int handle_config_packet(struct openconnect_info *vpninfo,
 				uint16_t proto, unsigned char *p, int len)
 {
 	struct oc_ppp *ppp = vpninfo->ppp;
-	int code = p[0], id = p[1], ret;
+	int code = p[0], id = p[1];
+	int ret = 0, add_state = 0;
 
 	switch (code) {
 	case 1: /* Configure-Request */
-		vpn_progress(vpninfo, PRG_DEBUG, _("Received proto 0x%04x/id %d config request from server\n"), proto, id);
+		vpn_progress(vpninfo, PRG_DEBUG, _("Received proto 0x%04x/id %d Config-Request from server\n"), proto, id);
 		ret = handle_config_request(vpninfo, proto, id, p + 4, len - 4);
 		if (ret >= 0) {
 			/* Send our own config request */
 			ret = send_config_request(vpninfo, proto, id+1);
 		}
-		return ret;
+		break;
 
 	case 2: /* Configure-Ack */
 		/* XX: we could verify that the ack/reply bytes match the request bytes,
 		 * and the ID is the expected one, but it isn't 1992, so let's not.
 		 */
-		vpn_progress(vpninfo, PRG_DEBUG, _("Received ack of our proto 0x%04x/id %d config request from server\n"), proto, id);
-		switch (proto) {
-		case PPP_LCP: ppp->lcp_state |= NCP_ACK_RECEIVED; break;
-		case PPP_IPCP: ppp->ipcp_state |= NCP_ACK_RECEIVED; break;
-		case PPP_IP6CP: ppp->ip6cp_state |= NCP_ACK_RECEIVED; break;
-		default: return -EINVAL;
-		}
-		return 0;
+		vpn_progress(vpninfo, PRG_DEBUG, _("Received ack of our proto 0x%04x/id %d Config-Request from server\n"), proto, id);
+		add_state = NCP_CONF_ACK_RECEIVED;
+		break;
 
 	case 9: /* Echo-Request */
-		vpn_progress(vpninfo, PRG_DEBUG, _("Received proto 0x%04x/id %d echo request from server\n"), proto, id);
+		vpn_progress(vpninfo, PRG_DEBUG, _("Received proto 0x%04x/id %d Echo-Request from server\n"), proto, id);
 		if (ppp->ppp_state >= PPPS_OPENED)
 			return send_echo_reply(vpninfo, proto, id);
-		return 0;
+		break;
 
 	case 5:	/* Terminate-Request */
-		vpninfo->quit_reason = strndup((char *)(p + 4), len - 4);
 		ppp->ppp_state = PPPS_TERMINATE;
-		return send_terminate_ack(vpninfo, proto, id);
+		add_state = NCP_TERM_REQ_RECEIVED;
+		ret = send_terminate(vpninfo, proto, id, 1);
+		if (ret >= 0)
+			add_state = NCP_TERM_ACK_SENT;
+		goto set_quit_reason;
 
 	case 6: /* Terminate-Ack */
 		ppp->ppp_state = PPPS_TERMINATE;
-		return 0;
+		add_state = NCP_TERM_ACK_RECEIVED;
+	set_quit_reason:
+		if (!vpninfo->quit_reason && len > 4)
+			vpninfo->quit_reason = strndup((char *)(p + 4), len - 4);
+		break;
 
 	case 10: /* Echo-Reply */
 	case 11: /* Discard-Request */
-		return 0;
+		break;
 
 	case 3: /* Configure-Nak */
 	case 4: /* Configure-Reject */
 	case 7: /* Code-Reject */
 	case 8: /* Protocol-Reject */
 	default:
-		return -EINVAL;
+		ret = -EINVAL;
 	}
+
+	switch (proto) {
+	case PPP_LCP: ppp->lcp_state |= add_state; break;
+	case PPP_IPCP: ppp->ipcp_state |= add_state; break;
+	case PPP_IP6CP: ppp->ip6cp_state |= add_state; break;
+	default: return -EINVAL;
+	}
+	return ret;
 }
 
 int ppp_negotiate_config(struct openconnect_info *vpninfo)
@@ -591,13 +607,13 @@ int ppp_negotiate_config(struct openconnect_info *vpninfo)
 
 		switch (ppp->ppp_state) {
 		case PPPS_ESTABLISH:
-			if ((ppp->lcp_state & NCP_ACK_SENT) && (ppp->lcp_state & NCP_ACK_RECEIVED))
+			if ((ppp->lcp_state & NCP_CONF_ACK_SENT) && (ppp->lcp_state & NCP_CONF_ACK_RECEIVED))
 				ppp->ppp_state = PPPS_OPENED;
 			break;
 		case PPPS_OPENED:
 			/* Have we configured all the protocols we want? */
-			if ( (!ppp->want_ipv4 || ((ppp->ipcp_state & NCP_ACK_SENT) && (ppp->ipcp_state & NCP_ACK_RECEIVED))) &&
-			     (!ppp->want_ipv6 || ((ppp->ip6cp_state & NCP_ACK_SENT) && (ppp->ip6cp_state & NCP_ACK_RECEIVED))) )
+			if ( (!ppp->want_ipv4 || ((ppp->ipcp_state & NCP_CONF_ACK_SENT) && (ppp->ipcp_state & NCP_CONF_ACK_RECEIVED))) &&
+			     (!ppp->want_ipv6 || ((ppp->ip6cp_state & NCP_CONF_ACK_SENT) && (ppp->ip6cp_state & NCP_CONF_ACK_RECEIVED))) )
 				ppp->ppp_state = PPPS_NETWORK;
 			break;
 		}
