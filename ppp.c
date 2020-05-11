@@ -393,21 +393,22 @@ out:
 	return ret;
 }
 
-static int send_echo_reply(struct openconnect_info *vpninfo,
-			   uint16_t proto, int id)
+static int send_echo(struct openconnect_info *vpninfo,
+			   uint16_t proto, int id, int reply)
 {
 	struct oc_text_buf *buf = buf_alloc();
 	struct oc_ppp *ppp = vpninfo->ppp;
 	int ret;
 
 	buf_append_be32(buf, 0xf5000000);
-	buf_append_ppp_hdr(buf, ppp, proto, 10 /* Echo-Reply */, id);
+	buf_append_ppp_hdr(buf, ppp, proto, reply == -1 ? 11 /* Discard-Request */ : reply ? 10 /* Echo-Reply */ : 9 /* Echo-Request */, id);
 	buf_append_be16(buf, 8);	       /* payload length includes code, id, own 2 bytes, magic */
 	buf_append_be32(buf, ppp->out_lcp_magic);
 	if ((ret = buf_error(buf)) != 0)
 		goto out;
 	store_be16(buf->data + 2, buf->pos - 4);
-	vpn_progress(vpninfo, PRG_DEBUG, _("Sending proto 0x%04x/id %d echo reply to server\n"), proto, id);
+	vpn_progress(vpninfo, PRG_DEBUG, _("Sending proto 0x%04x/id %d %s to server\n"),
+		     proto, id, reply == -1 ? "Discard-Request" : reply ? "Echo-Reply" : "Echo-Request");
 	if (vpninfo->dump_http_traffic)
 		dump_buf_hex(vpninfo, PRG_DEBUG, '>', (void *)buf->data, buf->pos);
 	if ((ret = vpninfo->ssl_write(vpninfo, buf->data, buf->pos)) >= 0)
@@ -471,7 +472,7 @@ static int handle_config_packet(struct openconnect_info *vpninfo,
 	case 9: /* Echo-Request */
 		vpn_progress(vpninfo, PRG_DEBUG, _("Received proto 0x%04x/id %d Echo-Request from server\n"), proto, id);
 		if (ppp->ppp_state >= PPPS_OPENED)
-			return send_echo_reply(vpninfo, proto, id);
+			return send_echo(vpninfo, proto, id, 1);
 		break;
 
 	case 5:	/* Terminate-Request */
@@ -491,7 +492,13 @@ static int handle_config_packet(struct openconnect_info *vpninfo,
 		break;
 
 	case 10: /* Echo-Reply */
+		vpn_progress(vpninfo, PRG_DEBUG, _("Received proto 0x%04x/id %d Echo-Reply from server\n"),
+			     proto, id);
+		break;
+
 	case 11: /* Discard-Request */
+		vpn_progress(vpninfo, PRG_DEBUG, _("Received proto 0x%04x/id %d Discard-Request from server\n"),
+			     proto, id);
 		break;
 
 	case 3: /* Configure-Nak */
@@ -684,9 +691,11 @@ int ppp_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable)
 						     _("Moving packet payload (%d bytes) by %ld bytes. Expected %d header bytes (%d encap + %d PPP) but got %ld:\n"),
 						     payload_len, pp - vpninfo->cstp_pkt->data, hdr_size, ppp->encap_len, hdr_size - ppp->encap_len, pp - ph);
 					dump_buf_hex(vpninfo, PRG_TRACE, '>', ph, len);
-					memmove(vpninfo->cstp_pkt->data, pp, payload_len);
 					/* Save it for next time */
 					ppp->exp_ppp_hdr_size = pp - ph - ppp->encap_len;
+					/* XX: if PPP header was SMALLER than expected, we could conceivably be moving a huge packet
+					 * past the allocated buffer. */
+					memmove(vpninfo->cstp_pkt->data, pp, payload_len);
 				}
 
 				vpninfo->cstp_pkt->len = payload_len;
@@ -756,7 +765,29 @@ int ppp_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable)
 			return 1;
 		}
 
+		if (1 /*vpninfo->current_ssl_pkt != &dpd_pkt*/)
+			free(vpninfo->current_ssl_pkt);
+
 		vpninfo->current_ssl_pkt = NULL;
+	}
+
+	switch (keepalive_action(&vpninfo->ssl_times, timeout)) {
+	case KA_REKEY:
+		goto do_reconnect;
+	case KA_DPD_DEAD:
+		goto do_reconnect;
+	case KA_KEEPALIVE:
+		/* No need to send an explicit keepalive
+		   if we have real data to send */
+		if (vpninfo->dtls_state != DTLS_CONNECTED &&
+		    vpninfo->outgoing_queue.head)
+			break;
+		vpn_progress(vpninfo, PRG_DEBUG, _("Send PPP discard request as keepalive\n"));
+		send_echo(vpninfo, PPP_LCP, 123, -1);
+		break;
+	case KA_DPD:
+		vpn_progress(vpninfo, PRG_DEBUG, _("Send PPP echo request as DPD\n"));
+		send_echo(vpninfo, PPP_LCP, 123, 0); /* XX: increment id (1,2,3) with successive failure to detect peer? */
 	}
 
 	/* Service outgoing packet queue, if no DTLS */
