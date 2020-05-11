@@ -179,7 +179,7 @@ static int buf_append_ppp_tlv(struct oc_text_buf *buf, int tag, int len, const v
 	case 0: break;
 	default: buf_append_bytes(buf, data, len);
 	}
-	return len + 2;
+	return b[1];
 }
 
 void buf_append_ppp_hdr(struct oc_text_buf *buf, struct oc_ppp *ppp, uint16_t proto,
@@ -408,7 +408,8 @@ static int queue_util_packet(struct openconnect_info *vpninfo,
 	p->ppp.proto = proto;
 	p->data[0] = code;
 	p->data[1] = id;
-	store_be16(p->data + 2, code == ECHOREQ ? 8 : 4); /* payload length includes code, id, own 2 bytes, magic for Echo-Request */
+	p->len = (code == ECHOREQ || code == ECHOREP) ? 8 : 4;
+	store_be16(p->data + 2, p->len); /* payload length includes code, id, own 2 bytes, magic for Echo-Request */
 	if (code == ECHOREQ)
 		store_be32(p->data + 4, vpninfo->ppp->out_lcp_magic);
 
