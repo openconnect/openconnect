@@ -407,7 +407,7 @@ static int send_config_request(struct openconnect_info *vpninfo,
 
 		payload_len += buf_append_ppp_tlv_be16(buf, 1, vpninfo->ip_info.mtu, ppp->hdlc, ASYNCMAP_LCP);
 		payload_len += buf_append_ppp_tlv_be32(buf, 2, ppp->out_asyncmap, ppp->hdlc, ASYNCMAP_LCP);
-		payload_len += buf_append_ppp_tlv(buf, 5, 4, &ppp->out_lcp_magic, ppp->hdlc, ASYNCMAP_LCP);
+		payload_len += buf_append_ppp_tlv_be32(buf, 5, ppp->out_lcp_magic, ppp->hdlc, ASYNCMAP_LCP);
 		if (ppp->out_lcp_opts & PFCOMP)
 			payload_len += buf_append_ppp_tlv(buf, 7, 0, NULL, ppp->hdlc, ASYNCMAP_LCP);
 		if (ppp->out_lcp_opts & ACCOMP)
@@ -700,10 +700,10 @@ int ppp_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable)
 
 				if (pp != vpninfo->cstp_pkt->data) {
 					vpn_progress(vpninfo, PRG_TRACE,
-						     _("Expected %d header bytes (%d encap + %d PPP) but got %ld, shifting payload.\n"),
-						     rsv_hdr_size, ppp->encap_len, ppp->exp_ppp_hdr_size, pp - ph);
+						     _("Expected %d PPP header bytes but got %ld, shifting payload.\n"),
+						     ppp->exp_ppp_hdr_size, pp - ph);
 					/* Save it for next time */
-					ppp->exp_ppp_hdr_size = pp - ph - ppp->encap_len;
+					ppp->exp_ppp_hdr_size = pp - ph;
 					/* XX: if PPP header was SMALLER than expected, we could conceivably be moving a huge packet
 					 * past the allocated buffer. */
 					memmove(vpninfo->cstp_pkt->data, pp, payload_len);
