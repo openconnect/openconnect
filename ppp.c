@@ -95,12 +95,14 @@ struct oc_ppp {
 	int hdlc;
 	int want_ipv4;
 	int want_ipv6;
-	int we_go_first;
 
 	int ppp_state;
 	int lcp_state;
+	int lcp_id;
 	int ipcp_state;
+	int ipcp_id;
 	int ip6cp_state;
+	int ip6cp_id;
 
 	/* Outgoing options */
 	uint32_t out_asyncmap;
@@ -119,7 +121,7 @@ struct oc_ppp {
 	uint64_t in_ipv6_int_ident;
 };
 
-struct oc_ppp *openconnect_ppp_new(int encap, int hdlc, int want_ipv4, int want_ipv6, int we_go_first)
+struct oc_ppp *openconnect_ppp_new(int encap, int want_ipv4, int want_ipv6)
 {
 	struct oc_ppp *ppp = calloc(sizeof(*ppp), 1);
 
@@ -131,15 +133,16 @@ struct oc_ppp *openconnect_ppp_new(int encap, int hdlc, int want_ipv4, int want_
 	case PPP_ENCAP_F5:
 		ppp->encap_len = 4;
 		break;
+
+	case PPP_ENCAP_F5_HDLC:
+		ppp->hdlc = 1;
 	default:
 		/* XX: fail */
 		break;
 	}
 
-	ppp->hdlc = hdlc;
 	ppp->want_ipv4 = want_ipv4;
 	ppp->want_ipv6 = want_ipv6;
-	ppp->we_go_first = we_go_first;
 	ppp->exp_ppp_hdr_size = 4; /* Address(1), Control(1), Proto(2) */
 	return ppp;
 }
@@ -484,8 +487,7 @@ int ppp_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable)
 		/* fall through */
 	case PPPS_ESTABLISH:
 		if (!(ppp->lcp_state & NCP_CONF_REQ_SENT))
-			if ((ppp->lcp_state & NCP_CONF_REQ_RECEIVED) || ppp->we_go_first)
-				send_config_request(vpninfo, PPP_LCP, 1);
+			send_config_request(vpninfo, PPP_LCP, 1);
 
 		if ((ppp->lcp_state & NCP_CONF_ACK_SENT) && (ppp->lcp_state & NCP_CONF_ACK_RECEIVED))
 			ppp->ppp_state = PPPS_OPENED;
@@ -494,11 +496,9 @@ int ppp_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable)
 	case PPPS_OPENED:
 		/* Have we configured all the protocols we want? */
 		if (ppp->want_ipv4 && !(ppp->ipcp_state & NCP_CONF_REQ_SENT))
-			if ((ppp->ipcp_state & NCP_CONF_REQ_RECEIVED) || ppp->we_go_first)
-				send_config_request(vpninfo, PPP_IPCP, 1);
+			send_config_request(vpninfo, PPP_IPCP, 1);
 		if (ppp->want_ipv6 && !(ppp->ip6cp_state & NCP_CONF_REQ_SENT))
-			if ((ppp->ip6cp_state & NCP_CONF_REQ_RECEIVED) || ppp->we_go_first)
-				send_config_request(vpninfo, PPP_IP6CP, 1);
+			send_config_request(vpninfo, PPP_IP6CP, 1);
 
 		if ( (!ppp->want_ipv4 || ((ppp->ipcp_state & NCP_CONF_ACK_SENT) && (ppp->ipcp_state & NCP_CONF_ACK_RECEIVED))) &&
 		     (!ppp->want_ipv6 || ((ppp->ip6cp_state & NCP_CONF_ACK_SENT) && (ppp->ip6cp_state & NCP_CONF_ACK_RECEIVED))) )

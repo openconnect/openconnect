@@ -432,6 +432,7 @@ int f5_connect(struct openconnect_info *vpninfo)
 		ret = -EINVAL;
 		goto out;
 	}
+
 	/* Now fetch the connection options */
 	ret = openconnect_open_https(vpninfo);
 	if (ret)
@@ -467,7 +468,9 @@ int f5_connect(struct openconnect_info *vpninfo)
 		goto out;
 	}
 
-	if (!(vpninfo->ppp = openconnect_ppp_new(PPP_ENCAP_F5, hdlc, ipv4, ipv6, 1 /* we_go_first */))) {
+	vpninfo->ppp = openconnect_ppp_new(hdlc ? PPP_ENCAP_F5_HDLC : PPP_ENCAP_F5,
+					   ipv4, ipv6);
+	if (!vpninfo->ppp) {
 		ret = -ENOMEM;
 		goto out;
 	}
