@@ -273,6 +273,12 @@ static int handle_config_request(struct openconnect_info *vpninfo,
 				     _("Received address and control field compression from server\n"));
 			ppp->in_lcp_opts |= ACCOMP;
 			break;
+		case PROTO_TAG_LEN(PPP_IPCP, 1, 8):
+			/* XX: Ancient and deprecated. We're supposed to ignore it if we receive it, unless
+			 * we've been Nak'ed. https://tools.ietf.org/html/rfc1332#section-3.1 */
+			vpn_progress(vpninfo, PRG_DEBUG,
+				     _("Received deprecated IP-Addresses from server, ignoring\n"));
+			break;
 		case PROTO_TAG_LEN(PPP_IPCP, 2, 2):
 			if (load_be16(p+2) == 0x002d) {
 				/* Van Jacobson TCP/IP compression */
