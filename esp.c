@@ -320,7 +320,7 @@ int esp_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable)
 					store_be32(&this->pulse.vendor, 0xa4c);
 					store_be32(&this->pulse.type, 4);
 					store_be32(&this->pulse.len, this->len + 16);
-					queue_packet(&vpninfo->oncp_control_queue, this);
+					queue_packet(&vpninfo->tcp_control_queue, this);
 					work_done = 1;
 					continue;
 				}

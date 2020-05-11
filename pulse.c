@@ -2687,7 +2687,7 @@ int pulse_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable)
 			}
 			vpninfo->cstp_pkt = NULL;
 			pkt->len = load_be32(&pkt->pulse.len) - 16;
-			queue_packet(&vpninfo->oncp_control_queue, pkt);
+			queue_packet(&vpninfo->tcp_control_queue, pkt);
 
 			print_esp_keys(vpninfo, _("new incoming"), &vpninfo->esp_in[vpninfo->current_esp_in]);
 			print_esp_keys(vpninfo, _("new outgoing"), &vpninfo->esp_out);
@@ -2864,7 +2864,7 @@ int pulse_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable)
 		work_done = 1;
 	}
 
-	vpninfo->current_ssl_pkt = dequeue_packet(&vpninfo->oncp_control_queue);
+	vpninfo->current_ssl_pkt = dequeue_packet(&vpninfo->tcp_control_queue);
 	if (vpninfo->current_ssl_pkt) {
 		/* Anything on the control queue will have the rest of its
 		   header filled in already. */

@@ -71,7 +71,7 @@ struct openconnect_info *openconnect_vpninfo_new(const char *useragent,
 #endif
 	init_pkt_queue(&vpninfo->incoming_queue);
 	init_pkt_queue(&vpninfo->outgoing_queue);
-	init_pkt_queue(&vpninfo->oncp_control_queue);
+	init_pkt_queue(&vpninfo->tcp_control_queue);
 	vpninfo->dtls_tos_current = 0;
 	vpninfo->dtls_pass_tos = 0;
 	vpninfo->ssl_fd = vpninfo->dtls_fd = -1;

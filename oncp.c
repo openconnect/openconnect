@@ -443,7 +443,7 @@ static int queue_esp_control(struct openconnect_info *vpninfo, int enable)
 
 	memcpy(new, &esp_enable_pkt, sizeof(*new) + 13);
 	new->data[12] = enable;
-	queue_packet(&vpninfo->oncp_control_queue, new);
+	queue_packet(&vpninfo->tcp_control_queue, new);
 	return 0;
 }
 
@@ -813,7 +813,7 @@ static int oncp_receive_espkeys(struct openconnect_info *vpninfo, int len)
 		store_le16(vpninfo->cstp_pkt->oncp.rec,
 			   (p - vpninfo->cstp_pkt->oncp.kmp));
 
-		queue_packet(&vpninfo->oncp_control_queue, vpninfo->cstp_pkt);
+		queue_packet(&vpninfo->tcp_control_queue, vpninfo->cstp_pkt);
 		vpninfo->cstp_pkt = NULL;
 
 		print_esp_keys(vpninfo, _("new incoming"), esp);
@@ -1222,7 +1222,7 @@ int oncp_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable)
 		goto handle_outgoing;
 	}
 
-	vpninfo->current_ssl_pkt = dequeue_packet(&vpninfo->oncp_control_queue);
+	vpninfo->current_ssl_pkt = dequeue_packet(&vpninfo->tcp_control_queue);
 	if (vpninfo->current_ssl_pkt)
 		goto handle_outgoing;
 

@@ -558,7 +558,6 @@ struct openconnect_info {
 	struct pkt *deflate_pkt;		/* For compressing outbound packets into */
 	struct pkt *pending_deflated_pkt;	/* The original packet associated with above */
 	struct pkt *current_ssl_pkt;		/* Partially sent SSL packet */
-	struct pkt_q oncp_control_queue;		/* Control packets to be sent on oNCP next */
 	int oncp_rec_size;			/* For packetising incoming oNCP stream */
 	/* Packet buffers for receiving into */
 	struct pkt *cstp_pkt;
@@ -658,6 +657,7 @@ struct openconnect_info {
 
 	struct pkt_q incoming_queue;
 	struct pkt_q outgoing_queue;
+	struct pkt_q tcp_control_queue;		/* Control packets to be sent via TCP */
 	int max_qlen;
 	struct oc_stats stats;
 	openconnect_stats_vfn stats_handler;
