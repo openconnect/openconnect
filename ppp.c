@@ -42,29 +42,6 @@
 const char *lcp_names[] = {NULL, "Configure-Request", "Configure-Ack", "Configure-Nak", "Configure-Reject", "Terminate-Request",
 			   "Terminate-Ack", "Code-Reject", "Protocol-Reject", "Echo-Request", "Echo-Reply", "Discard-Request"};
 
-#define ASYNCMAP_LCP 0xffffffffUL
-
-#define NEED_ESCAPE(c, map) ( ((c < 0x20) && (map && (1UL << (c)))) || (c == 0x7d) || (c == 0x7e) )
-
-void buf_append_ppphdlc(struct oc_text_buf *buf, const unsigned char *bytes, int len, uint32_t asyncmap)
-{
-	const unsigned char *data = bytes;
-	unsigned char esc[2] = { 0x7d, };
-	int s = 0, i;
-
-	buf_ensure_space(buf, len);
-
-	for (i = 0; i < len; i++) {
-		if (NEED_ESCAPE(data[i], asyncmap)) {
-			if (i > s)
-				buf_append_bytes(buf, data + s, i - s - 1);
-			esc[1] = data[i] ^ 0x20;
-			buf_append_bytes(buf, esc, 2);
-			s = i + 1;
-		}
-	}
-}
-
 #define ACCOMP 1
 #define PFCOMP 2
 #define VJCOMP 4
@@ -159,50 +136,39 @@ static void print_ppp_state(struct openconnect_info *vpninfo, int level)
 
 	vpn_progress(vpninfo, level, _("Current PPP state: %s (encap %s):\n"), ppps_names[ppp->ppp_state], encap_names[ppp->encap]);
 	vpn_progress(vpninfo, level, _("    in: asyncmap=0x%08x, lcp_opts=%d, lcp_magic=0x%08x, peer=%s\n"),
-		     ppp->in_asyncmap, ppp->in_lcp_opts, ppp->in_lcp_magic, inet_ntoa(ppp->in_peer_addr));
+		     ppp->in_asyncmap, ppp->in_lcp_opts, ntohl(ppp->in_lcp_magic), inet_ntoa(ppp->in_peer_addr));
 	vpn_progress(vpninfo, level, _("   out: asyncmap=0x%08x, lcp_opts=%d, lcp_magic=0x%08x, peer=%s\n"),
-		     ppp->out_asyncmap, ppp->out_lcp_opts, ppp->out_lcp_magic, inet_ntoa(ppp->out_peer_addr));
+		     ppp->out_asyncmap, ppp->out_lcp_opts, ntohl(ppp->out_lcp_magic), inet_ntoa(ppp->out_peer_addr));
 }
 
-#define buf_append_ppp(buf, hdlc, bytes, len, asyncmap)			\
-	do {								\
-		if (hdlc)						\
-			buf_append_ppphdlc(buf, bytes, len, asyncmap);	\
-		else							\
-			buf_append_bytes(buf, bytes, len);		\
-	} while (0)
-
-static int buf_append_ppp_tlv(struct oc_text_buf *buf, int tag, int len, const void *data,
-			      int hdlc, uint32_t asyncmap)
+static int buf_append_ppp_tlv(struct oc_text_buf *buf, int tag, int len, const void *data)
 {
 	unsigned char b[2];
 
 	b[0] = tag;
 	b[1] = len + 2;
 
-	buf_append_ppp(buf, hdlc, b, 2, asyncmap);
+	buf_append_bytes(buf, b, 2);
 	if (len)
-		buf_append_ppp(buf, hdlc, data, len, asyncmap);
+		buf_append_bytes(buf, data, len);
 
 	return b[1];
 }
 
-static int buf_append_ppp_tlv_be16(struct oc_text_buf *buf, int tag, uint16_t value,
-				   int hdlc, uint32_t asyncmap)
+static int buf_append_ppp_tlv_be16(struct oc_text_buf *buf, int tag, uint16_t value)
 {
 	uint16_t val_be;
 
 	store_be16(&val_be, value);
-	return buf_append_ppp_tlv(buf, tag, 2, &val_be, hdlc, asyncmap);
+	return buf_append_ppp_tlv(buf, tag, 2, &val_be);
 }
 
-static int buf_append_ppp_tlv_be32(struct oc_text_buf *buf, int tag, uint32_t value,
-				   int hdlc, uint32_t asyncmap)
+static int buf_append_ppp_tlv_be32(struct oc_text_buf *buf, int tag, uint32_t value)
 {
 	uint32_t val_be;
 
 	store_be32(&val_be, value);
-	return buf_append_ppp_tlv(buf, tag, 4, &val_be, hdlc, asyncmap);
+	return buf_append_ppp_tlv(buf, tag, 4, &val_be);
 }
 
 static int queue_config_packet(struct openconnect_info *vpninfo,
@@ -261,7 +227,7 @@ static int handle_config_request(struct openconnect_info *vpninfo,
 			memcpy(&ppp->in_lcp_magic, p+2, 4);
 			vpn_progress(vpninfo, PRG_DEBUG,
 				     _("Received magic number of 0x%08x from server\n"),
-				     ppp->in_lcp_magic);
+				     ntohl(ppp->in_lcp_magic));
 			break;
 		case PROTO_TAG_LEN(PPP_LCP, 7, 0):
 			vpn_progress(vpninfo, PRG_DEBUG,
@@ -349,13 +315,13 @@ static int queue_config_request(struct openconnect_info *vpninfo,
 		if (!vpninfo->ip_info.mtu)
 			vpninfo->ip_info.mtu = 1300; /* FIXME */
 
-		buf_append_ppp_tlv_be16(buf, 1, vpninfo->ip_info.mtu, ppp->hdlc, ASYNCMAP_LCP);
-		buf_append_ppp_tlv_be32(buf, 2, ppp->out_asyncmap, ppp->hdlc, ASYNCMAP_LCP);
-		buf_append_ppp_tlv(buf, 5, 4, &ppp->out_lcp_magic, ppp->hdlc, ASYNCMAP_LCP);
+		buf_append_ppp_tlv_be16(buf, 1, vpninfo->ip_info.mtu);
+		buf_append_ppp_tlv_be32(buf, 2, ppp->out_asyncmap);
+		buf_append_ppp_tlv(buf, 5, 4, &ppp->out_lcp_magic);
 		if (ppp->out_lcp_opts & PFCOMP)
-			buf_append_ppp_tlv(buf, 7, 0, NULL, ppp->hdlc, ASYNCMAP_LCP);
+			buf_append_ppp_tlv(buf, 7, 0, NULL);
 		if (ppp->out_lcp_opts & ACCOMP)
-			buf_append_ppp_tlv(buf, 8, 0, NULL, ppp->hdlc, ASYNCMAP_LCP);
+			buf_append_ppp_tlv(buf, 8, 0, NULL);
 		break;
 
 	case PPP_IPCP:
@@ -363,7 +329,7 @@ static int queue_config_request(struct openconnect_info *vpninfo,
 		if (vpninfo->ip_info.addr)
 			ppp->out_peer_addr.s_addr = inet_addr(vpninfo->ip_info.addr);
 
-		buf_append_ppp_tlv(buf, 3, 4, &ppp->out_peer_addr, ppp->hdlc, ppp->out_asyncmap);
+		buf_append_ppp_tlv(buf, 3, 4, &ppp->out_peer_addr);
 		break;
 
 	case PPP_IP6CP:
@@ -372,7 +338,7 @@ static int queue_config_request(struct openconnect_info *vpninfo,
 			inet_pton(AF_INET6, vpninfo->ip_info.addr6, &ipv6a);
 		memcpy(&ppp->out_ipv6_int_ident, ipv6a+8, 8); /* last 8 bytes of addr6 */
 
-		buf_append_ppp_tlv(buf, 1, 8, &ppp->out_ipv6_int_ident, ppp->hdlc, ppp->out_asyncmap);
+		buf_append_ppp_tlv(buf, 1, 8, &ppp->out_ipv6_int_ident);
 		break;
 
 	default:
