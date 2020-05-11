@@ -346,7 +346,7 @@ static int send_config_request(struct openconnect_info *vpninfo,
 
 	buf = buf_alloc();
 	buf_append_be32(buf, 0xf5000000);           /* F5 00, length placeholder  */
-	buf_append_ppp_hdr(buf, ppp, proto, 1 /* Configure-Request */, id);
+	buf_append_ppp_hdr(buf, ppp, proto, CONFREQ, id);
 	payload_len = 4;			   /* XX: includes code, id, own bytes */
 	pl_pos = buf->pos;
 	buf_append_be16(buf, 0);	           /* payload length placeholder  */
