@@ -205,8 +205,8 @@ static int buf_append_ppp_tlv_be32(struct oc_text_buf *buf, int tag, uint32_t va
 	return buf_append_ppp_tlv(buf, tag, 4, &val_be, hdlc, asyncmap);
 }
 
-static int queue_util_packet(struct openconnect_info *vpninfo,
-			     uint16_t proto, int id, int code, int len, const void *payload)
+static int queue_config_packet(struct openconnect_info *vpninfo,
+				uint16_t proto, int id, int code, int len, const void *payload)
 {
 	struct pkt *p = malloc(sizeof(struct pkt) + 64);
 
@@ -221,7 +221,7 @@ static int queue_util_packet(struct openconnect_info *vpninfo,
 	if (len)
 		memcpy(p->data + 4, payload, len);
 
-	queue_packet(&vpninfo->outgoing_queue, p);
+	queue_packet(&vpninfo->tcp_control_queue, p);
 	return 0;
 }
 
@@ -313,7 +313,7 @@ static int handle_config_request(struct openconnect_info *vpninfo,
 	}
 
 	vpn_progress(vpninfo, PRG_DEBUG, _("Ack proto 0x%04x/id %d config from server\n"), proto, id);
-	if ((ret = queue_util_packet(vpninfo, proto, id, CONFACK, len, payload)) >= 0) {
+	if ((ret = queue_config_packet(vpninfo, proto, id, CONFACK, len, payload)) >= 0) {
 		ncp->state |= NCP_CONF_ACK_SENT;
 		ret = 0;
 	}
@@ -378,7 +378,7 @@ static int queue_config_request(struct openconnect_info *vpninfo,
 		goto out;
 
 	vpn_progress(vpninfo, PRG_DEBUG, _("Sending our proto 0x%04x/id %d config request to server\n"), proto, id);
-	if ((ret = queue_util_packet(vpninfo, proto, id, CONFREQ, buf->pos, buf->data)) >= 0) {
+	if ((ret = queue_config_packet(vpninfo, proto, id, CONFREQ, buf->pos, buf->data)) >= 0) {
 		ncp->state |= NCP_CONF_REQ_SENT;
 		ret = 0;
 	}
@@ -411,12 +411,12 @@ static int handle_config_packet(struct openconnect_info *vpninfo,
 
 	case ECHOREQ:
 		if (ppp->ppp_state >= PPPS_OPENED)
-			ret = queue_util_packet(vpninfo, proto, id, ECHOREP, 4, &ppp->out_lcp_magic);
+			ret = queue_config_packet(vpninfo, proto, id, ECHOREP, 4, &ppp->out_lcp_magic);
 		break;
 
 	case TERMREQ:
 		add_state = NCP_TERM_REQ_RECEIVED;
-		ret = queue_util_packet(vpninfo, proto, id, TERMACK, 0, NULL);
+		ret = queue_config_packet(vpninfo, proto, id, TERMACK, 0, NULL);
 		if (ret >= 0)
 			add_state = NCP_TERM_ACK_SENT;
 		goto set_quit_reason;
@@ -456,7 +456,7 @@ int ppp_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable)
 	int work_done = 0;
 	unsigned char *ph, *pp;
 	time_t now = time(NULL);
-
+	struct pkt *this;
 	struct oc_ppp *ppp = vpninfo->ppp;
 	int proto;
 
@@ -740,32 +740,30 @@ int ppp_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable)
 	case KA_KEEPALIVE:
 		/* No need to send an explicit keepalive
 		   if we have real data to send */
-		if (vpninfo->dtls_state != DTLS_CONNECTED &&
-		    vpninfo->outgoing_queue.head)
+		if (vpninfo->tcp_control_queue.head ||
+		    (vpninfo->dtls_state != DTLS_CONNECTED && ppp->ppp_state == PPPS_NETWORK && vpninfo->outgoing_queue.head))
 			break;
 		vpn_progress(vpninfo, PRG_DEBUG, _("Send PPP discard request as keepalive\n"));
-		queue_util_packet(vpninfo, PPP_LCP, ppp->util_id++, DISCREQ, 0, NULL);
+		queue_config_packet(vpninfo, PPP_LCP, ppp->util_id++, DISCREQ, 0, NULL);
 		break;
 	case KA_DPD:
 		vpn_progress(vpninfo, PRG_DEBUG, _("Send PPP echo request as DPD\n"));
-		queue_util_packet(vpninfo, PPP_LCP, ppp->util_id++, ECHOREQ, 4, &ppp->out_lcp_magic);
+		queue_config_packet(vpninfo, PPP_LCP, ppp->util_id++, ECHOREQ, 4, &ppp->out_lcp_magic);
 	}
 
-	/* Service outgoing packet queue, if no DTLS */
-	while (vpninfo->dtls_state != DTLS_CONNECTED &&
-	       (vpninfo->current_ssl_pkt = dequeue_packet(&vpninfo->outgoing_queue))) {
-		struct pkt *this = vpninfo->current_ssl_pkt;
-		int n = 0;
+	/* Service control queue; also, outgoing packet queue, if no DTLS  */
+	if ((this = vpninfo->current_ssl_pkt = dequeue_packet(&vpninfo->tcp_control_queue))) {
+		/* XX: We pre-stash the PPP protocol field in the header for control packets */
+		proto = this->ppp.proto;
+	} else if (vpninfo->dtls_state != DTLS_CONNECTED &&
+		   ppp->ppp_state == PPPS_NETWORK &&
+		   (this = vpninfo->current_ssl_pkt = dequeue_packet(&vpninfo->outgoing_queue))) {
+		/* XX: Set protocol for IP packets */
+		proto = (this->len && (this->data[0] & 0xf0) == 0x60) ? PPP_IP6 : PPP_IP;
+	}
 
-		/* XX: Set protocol for IP, or grab it where we pre-stashed it
-		 * in the header for config packets. Takes advantage of the fact
-		 * that first byte of LCP/IPCP/IP6CP packets is always <0x10, while
-		 * first byte of IP packets is always >0x10.
-		 */
-		if (this->len && (this->data[0] & 0xf0))
-			proto = ((this->data[0] & 0xf0) == 0x60) ? PPP_IP6 : PPP_IP;
-		else
-			proto = this->ppp.proto;
+	if (this) {
+		int n = 0;
 
 		/* XX: store PPP header, in reverse (FIXME: HDLC, asyncmap, etc.) */
 		this->data[--n] = proto & 0xff;
