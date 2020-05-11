@@ -151,7 +151,8 @@ struct pkt {
 			uint32_t ident;
 		} pulse;
 		struct {
-			unsigned char pad[24]; /* variable-length */
+			uint32_t hlen;
+			unsigned char pad[20]; /* variable-length */
 		} ppp;
 	};
 	unsigned char data[];

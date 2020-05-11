@@ -39,6 +39,9 @@
 #define ECHOREP 10
 #define DISCREQ 11
 
+const char *lcp_names[] = {"Configure-Request", "Configure-Ack", "Configure-Nak", "Configure-Reject", "Terminate-Request",
+			   "Terminate-Ack", "Code-Reject", "Protocol-Reject", "Echo-Request", "Echo-Reply", "Discard-Request"};
+
 #define ASYNCMAP_LCP 0xffffffffUL
 
 #define NEED_ESCAPE(c, map) ( ((c < 0x20) && (map && (1UL << (c)))) || (c == 0x7d) || (c == 0x7e) )
@@ -105,6 +108,7 @@ struct oc_ppp {
 	int32_t out_lcp_magic;
 	struct in_addr out_peer_addr;
 	uint64_t out_ipv6_int_ident;
+	uint8_t util_id;
 
 	/* Incoming options */
 	int exp_ppp_hdr_size;
@@ -393,47 +397,23 @@ out:
 	return ret;
 }
 
-static int send_echo(struct openconnect_info *vpninfo,
-			   uint16_t proto, int id, int reply)
+static int send_util(struct openconnect_info *vpninfo,
+		     uint16_t proto, int id, int code)
 {
 	struct oc_text_buf *buf = buf_alloc();
 	struct oc_ppp *ppp = vpninfo->ppp;
 	int ret;
 
 	buf_append_be32(buf, 0xf5000000);
-	buf_append_ppp_hdr(buf, ppp, proto, reply == -1 ? 11 /* Discard-Request */ : reply ? 10 /* Echo-Reply */ : 9 /* Echo-Request */, id);
-	buf_append_be16(buf, 8);	       /* payload length includes code, id, own 2 bytes, magic */
-	buf_append_be32(buf, ppp->out_lcp_magic);
+	buf_append_ppp_hdr(buf, ppp, proto, code, id);
+	buf_append_be16(buf, code == ECHOREQ ? 8 : 4); /* payload length includes code, id, own 2 bytes, magic for Echo-Request */
+	if (code == ECHOREQ)
+		buf_append_be32(buf, ppp->out_lcp_magic);
 	if ((ret = buf_error(buf)) != 0)
 		goto out;
 	store_be16(buf->data + 2, buf->pos - 4);
 	vpn_progress(vpninfo, PRG_DEBUG, _("Sending proto 0x%04x/id %d %s to server\n"),
-		     proto, id, reply == -1 ? "Discard-Request" : reply ? "Echo-Reply" : "Echo-Request");
-	if (vpninfo->dump_http_traffic)
-		dump_buf_hex(vpninfo, PRG_DEBUG, '>', (void *)buf->data, buf->pos);
-	if ((ret = vpninfo->ssl_write(vpninfo, buf->data, buf->pos)) >= 0)
-		ret = 0;
-
-out:
-	buf_free(buf);
-	return ret;
-}
-
-static int send_terminate(struct openconnect_info *vpninfo,
-			   uint16_t proto, int id, int ack)
-{
-	struct oc_text_buf *buf = buf_alloc();
-	struct oc_ppp *ppp = vpninfo->ppp;
-	int ret;
-
-	buf_append_be32(buf, 0xf5000000);
-	buf_append_ppp_hdr(buf, ppp, proto, ack ? 6 /* Terminate-Ack */ : 5 /* Terminate-Request */, id);
-	buf_append_be16(buf, 4);	       /* payload length includes code, id, own 2 bytes */
-	if ((ret = buf_error(buf)) != 0)
-		goto out;
-	store_be16(buf->data + 2, buf->pos - 4);
-	vpn_progress(vpninfo, PRG_DEBUG, _("Sending proto 0x%04x/id %d Terminate-%s to server\n"),
-		     proto, id, ack ? "Ack" : "Request");
+		     proto, id, lcp_names[code-1]);
 	if (vpninfo->dump_http_traffic)
 		dump_buf_hex(vpninfo, PRG_DEBUG, '>', (void *)buf->data, buf->pos);
 	if ((ret = vpninfo->ssl_write(vpninfo, buf->data, buf->pos)) >= 0)
@@ -451,9 +431,10 @@ static int handle_config_packet(struct openconnect_info *vpninfo,
 	int code = p[0], id = p[1];
 	int ret = 0, add_state = 0;
 
+        if (code > 0 && code <= 11)
+		vpn_progress(vpninfo, PRG_TRACE, _("Received proto 0x%04x/id %d %s from server\n"), proto, id, lcp_names[code-1]);
 	switch (code) {
-	case 1: /* Configure-Request */
-		vpn_progress(vpninfo, PRG_DEBUG, _("Received proto 0x%04x/id %d Config-Request from server\n"), proto, id);
+	case CONFREQ:
 		ret = handle_config_request(vpninfo, proto, id, p + 4, len - 4);
 		if (ret >= 0) {
 			/* Send our own config request */
@@ -461,50 +442,41 @@ static int handle_config_packet(struct openconnect_info *vpninfo,
 		}
 		break;
 
-	case 2: /* Configure-Ack */
+	case CONFACK:
 		/* XX: we could verify that the ack/reply bytes match the request bytes,
 		 * and the ID is the expected one, but it isn't 1992, so let's not.
 		 */
-		vpn_progress(vpninfo, PRG_DEBUG, _("Received ack of our proto 0x%04x/id %d Config-Request from server\n"), proto, id);
 		add_state = NCP_CONF_ACK_RECEIVED;
 		break;
 
-	case 9: /* Echo-Request */
-		vpn_progress(vpninfo, PRG_DEBUG, _("Received proto 0x%04x/id %d Echo-Request from server\n"), proto, id);
+	case ECHOREQ:
 		if (ppp->ppp_state >= PPPS_OPENED)
-			return send_echo(vpninfo, proto, id, 1);
+			return send_util(vpninfo, proto, id, ECHOREP);
 		break;
 
-	case 5:	/* Terminate-Request */
-		ppp->ppp_state = PPPS_TERMINATE;
+	case TERMREQ:
 		add_state = NCP_TERM_REQ_RECEIVED;
-		ret = send_terminate(vpninfo, proto, id, 1);
+		ret = send_util(vpninfo, proto, id, TERMACK);
 		if (ret >= 0)
 			add_state = NCP_TERM_ACK_SENT;
 		goto set_quit_reason;
 
-	case 6: /* Terminate-Ack */
-		ppp->ppp_state = PPPS_TERMINATE;
+	case TERMACK:
 		add_state = NCP_TERM_ACK_RECEIVED;
 	set_quit_reason:
 		if (!vpninfo->quit_reason && len > 4)
 			vpninfo->quit_reason = strndup((char *)(p + 4), len - 4);
+		ppp->ppp_state = PPPS_TERMINATE;
 		break;
 
-	case 10: /* Echo-Reply */
-		vpn_progress(vpninfo, PRG_DEBUG, _("Received proto 0x%04x/id %d Echo-Reply from server\n"),
-			     proto, id);
+	case ECHOREP:
+	case DISCREQ:
 		break;
 
-	case 11: /* Discard-Request */
-		vpn_progress(vpninfo, PRG_DEBUG, _("Received proto 0x%04x/id %d Discard-Request from server\n"),
-			     proto, id);
-		break;
-
-	case 3: /* Configure-Nak */
-	case 4: /* Configure-Reject */
-	case 7: /* Code-Reject */
-	case 8: /* Protocol-Reject */
+	case CONFNAK:
+	case CONFREJ:
+	case CODEREJ:
+	case PROTREJ:
 	default:
 		ret = -EINVAL;
 	}
@@ -520,7 +492,7 @@ static int handle_config_packet(struct openconnect_info *vpninfo,
 
 int ppp_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable)
 {
-	int ret, last_state, magic, hdr_size;
+	int ret, last_state, magic, rsv_hdr_size;
 	int work_done = 0;
 	unsigned char *ph, *pp;
 
@@ -535,7 +507,6 @@ int ppp_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable)
 	switch (ppp->ppp_state) {
 	case PPPS_DEAD:
 		ppp->ppp_state = PPPS_ESTABLISH;
-		*timeout = 0;
 		break;
 	case PPPS_ESTABLISH:
 		if ((ppp->lcp_state & NCP_CONF_ACK_SENT) && (ppp->lcp_state & NCP_CONF_ACK_RECEIVED))
@@ -560,6 +531,7 @@ int ppp_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable)
 		vpn_progress(vpninfo, PRG_DEBUG,
 			     _("PPP state transition from %s (%d) to %s (%d)\n"),
 			     ppps_names[last_state], last_state, ppps_names[ppp->ppp_state], ppp->ppp_state);
+
 	/* FIXME: The poll() handling here is fairly simplistic. Actually,
 	   if the SSL connection stalls it could return a WANT_WRITE error
 	   on _either_ of the SSL_read() or SSL_write() calls. In that case,
@@ -584,11 +556,11 @@ int ppp_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable)
 		/* XX: PPP header is of variable length. We attempt to
 		 * anticipate the actual length received, so we don't have to memmove
 		 * the payload later. */
-		hdr_size = ppp->encap_len + ppp->exp_ppp_hdr_size;
+		rsv_hdr_size = ppp->encap_len + ppp->exp_ppp_hdr_size;
 
 		/* Load the header to end up with the payload where we expect it */
-		ph = vpninfo->cstp_pkt->data - hdr_size;
-		len = ssl_nonblock_read(vpninfo, ph, receive_mtu + hdr_size);
+		ph = vpninfo->cstp_pkt->data - rsv_hdr_size;
+		len = ssl_nonblock_read(vpninfo, ph, receive_mtu + rsv_hdr_size);
 		if (!len)
 			break;
 		if (len < 0)
@@ -615,7 +587,7 @@ int ppp_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable)
 
 			if (len != 4 + payload_len) {
 				vpn_progress(vpninfo, PRG_ERR,
-					     _("Unexpected packet length. SSL_read returned %d (includes %d header bytes) but header payload_len is %d\n"),
+					     _("Unexpected packet length. SSL_read returned %d (includes %d encap) but header payload_len is %d\n"),
 					     len, ppp->encap_len, payload_len);
 				dump_buf_hex(vpninfo, PRG_ERR, '<', ph, len);
 				continue;
@@ -659,10 +631,6 @@ int ppp_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable)
 		}
 		payload_len -= pp - ph;
 
-		/* Check it looks like a valid IP packet, and then check for the special
-		 * IP protocol 255 that is used for control stuff. Maybe also look at length
-		 * and be prepared to *split* IP packets received in the same read() call. */
-
 		vpninfo->ssl_times.last_rx = time(NULL);
 
 		switch (proto) {
@@ -679,7 +647,7 @@ int ppp_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable)
 			if (ppp->ppp_state != PPPS_NETWORK) {
 				vpn_progress(vpninfo, PRG_ERR,
 					     _("Unexpected IPv%d packet in PPP state %s (%d)."),
-					     (proto == PPP_IP ? 4 : 6), ppps_names[ppp->ppp_state], ppp->ppp_state);
+					     (proto == PPP_IP6 ? 6 : 4), ppps_names[ppp->ppp_state], ppp->ppp_state);
 				dump_buf_hex(vpninfo, PRG_ERR, '<', pp, payload_len);
 			} else {
 				vpn_progress(vpninfo, PRG_TRACE,
@@ -688,9 +656,8 @@ int ppp_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable)
 
 				if (pp != vpninfo->cstp_pkt->data) {
 					vpn_progress(vpninfo, PRG_TRACE,
-						     _("Moving packet payload (%d bytes) by %ld bytes. Expected %d header bytes (%d encap + %d PPP) but got %ld:\n"),
-						     payload_len, pp - vpninfo->cstp_pkt->data, hdr_size, ppp->encap_len, hdr_size - ppp->encap_len, pp - ph);
-					dump_buf_hex(vpninfo, PRG_TRACE, '>', ph, len);
+						     _("Expected %d header bytes (%d encap + %d PPP) but got %ld, shifting payload.\n"),
+						     rsv_hdr_size, ppp->encap_len, ppp->exp_ppp_hdr_size, pp - ph);
 					/* Save it for next time */
 					ppp->exp_ppp_hdr_size = pp - ph - ppp->encap_len;
 					/* XX: if PPP header was SMALLER than expected, we could conceivably be moving a huge packet
@@ -719,26 +686,15 @@ int ppp_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable)
 	   the same data, at exactly the same location. So we keep the
 	   packet we had before.... */
 	if (vpninfo->current_ssl_pkt) {
-		/* XX: guessing based on current options for resent packet, bad idea */
-		hdr_size = ppp->encap_len + 1 + ((ppp->out_lcp_opts & ACCOMP) ? 0 : 2) + ((ppp->out_lcp_opts & PFCOMP) ? 0 : 1);
-
 	handle_outgoing:
 		vpninfo->ssl_times.last_tx = time(NULL);
 		unmonitor_write_fd(vpninfo, ssl);
 
 		ret = ssl_nonblock_write(vpninfo,
-					 vpninfo->current_ssl_pkt->data - hdr_size,
-					 vpninfo->current_ssl_pkt->len + hdr_size);
-		if (ret < 0) {
-		do_reconnect:
-			ret = ssl_reconnect(vpninfo);
-			if (ret) {
-				vpn_progress(vpninfo, PRG_ERR, _("Reconnect failed\n"));
-				vpninfo->quit_reason = "PPP reconnect failed";
-				return ret;
-			}
-			return 1;
-		}
+					 vpninfo->current_ssl_pkt->data - vpninfo->current_ssl_pkt->ppp.hlen,
+					 vpninfo->current_ssl_pkt->len + vpninfo->current_ssl_pkt->ppp.hlen);
+		if (ret < 0)
+			goto do_reconnect;
 		else if (!ret) {
 			/* -EAGAIN: ssl_nonblock_write() will have added the SSL
 			   fd to ->select_wfds if appropriate, so we can just
@@ -746,7 +702,7 @@ int ppp_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable)
 			   that DPD kicks in and we kill the connection. */
 			switch (ka_stalled_action(&vpninfo->ssl_times, timeout)) {
 			case KA_DPD_DEAD:
-//				goto peer_dead;
+				goto peer_dead;
 			case KA_REKEY:
 //				goto do_rekey;
 			case KA_NONE:
@@ -757,10 +713,10 @@ int ppp_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable)
 			}
 		}
 
-		if (ret != vpninfo->current_ssl_pkt->len + hdr_size) {
+		if (ret != vpninfo->current_ssl_pkt->len + vpninfo->current_ssl_pkt->ppp.hlen) {
 			vpn_progress(vpninfo, PRG_ERR,
 				     _("SSL wrote too few bytes! Asked for %d, sent %d\n"),
-				     vpninfo->current_ssl_pkt->len + 8, ret);
+				     vpninfo->current_ssl_pkt->len + vpninfo->current_ssl_pkt->ppp.hlen, ret);
 			vpninfo->quit_reason = "Internal error";
 			return 1;
 		}
@@ -772,10 +728,21 @@ int ppp_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable)
 	}
 
 	switch (keepalive_action(&vpninfo->ssl_times, timeout)) {
-	case KA_REKEY:
-		goto do_reconnect;
 	case KA_DPD_DEAD:
-		goto do_reconnect;
+	peer_dead:
+		vpn_progress(vpninfo, PRG_ERR,
+			     _("Detected dead peer!\n"));
+		/* fall through */
+	case KA_REKEY:
+	do_reconnect:
+		ret = ssl_reconnect(vpninfo);
+		if (ret) {
+			vpn_progress(vpninfo, PRG_ERR, _("Reconnect failed\n"));
+			vpninfo->quit_reason = "PPP reconnect failed";
+			return ret;
+		}
+		return 1;
+
 	case KA_KEEPALIVE:
 		/* No need to send an explicit keepalive
 		   if we have real data to send */
@@ -783,11 +750,11 @@ int ppp_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable)
 		    vpninfo->outgoing_queue.head)
 			break;
 		vpn_progress(vpninfo, PRG_DEBUG, _("Send PPP discard request as keepalive\n"));
-		send_echo(vpninfo, PPP_LCP, 123, -1);
+		send_util(vpninfo, PPP_LCP, ppp->util_id++, DISCREQ);
 		break;
 	case KA_DPD:
 		vpn_progress(vpninfo, PRG_DEBUG, _("Send PPP echo request as DPD\n"));
-		send_echo(vpninfo, PPP_LCP, 123, 0); /* XX: increment id (1,2,3) with successive failure to detect peer? */
+		send_util(vpninfo, PPP_LCP, ppp->util_id++, ECHOREQ);
 	}
 
 	/* Service outgoing packet queue, if no DTLS */
@@ -799,8 +766,7 @@ int ppp_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable)
 		/* IPv4 or IPv6 */
 		proto = this->len && (this->data[0] & 0xF0) == 0x60 ? PPP_IP6 : PPP_IP;
 
-		/* XX: store header, in reverse
-		   FIXME: HDLC, asyncmap, etc. */
+		/* XX: store PPP header, in reverse (FIXME: HDLC, asyncmap, etc.) */
 		this->data[--n] = proto & 0xff;
 		if (proto > 0xff || !(ppp->out_lcp_opts & PFCOMP))
 			this->data[--n] = proto >> 8;
@@ -818,12 +784,12 @@ int ppp_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable)
 			break;
 		}
 
-		hdr_size = -n;
+		this->ppp.hlen = -n;
 		vpn_progress(vpninfo, PRG_TRACE,
 			     _("Sending IPv%d data packet of %d bytes\n"),
 			     (proto == PPP_IP6 ? 6 : 4), this->len);
 		if (vpninfo->dump_http_traffic)
-			dump_buf_hex(vpninfo, PRG_TRACE, '>', this->data - hdr_size, this->len + hdr_size);
+			dump_buf_hex(vpninfo, PRG_TRACE, '>', this->data + n, this->len - n);
 
 		vpninfo->current_ssl_pkt = this;
 		goto handle_outgoing;
@@ -831,123 +797,4 @@ int ppp_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable)
 
 	/* Work is not done if we just got rid of packets off the queue */
 	return work_done;
-}
-
-int ppp_negotiate_config(struct openconnect_info *vpninfo)
-{
-	struct oc_ppp *ppp = vpninfo->ppp;
-	unsigned char bytes[16384], *p;
-	uint16_t proto;
-	int ret = 0, payload_len, last_state;
-
-	ppp->ppp_state = PPPS_ESTABLISH;
-
-	while (ppp->ppp_state >= PPPS_ESTABLISH && ppp->ppp_state < PPPS_NETWORK) {
-		last_state = ppp->ppp_state;
-
-		ret = vpninfo->ssl_read(vpninfo, (char *)bytes, 65536);
-		if (ret < 0) {
-			vpn_progress(vpninfo, PRG_ERR,
-				     _("Failed to read incoming PPP config packet."));
-			ret = -EINVAL;
-			goto out;
-		}
-		if (vpninfo->dump_http_traffic) {
-			vpn_progress(vpninfo, PRG_DEBUG, _("Received PPP config packet:\n"));
-			dump_buf_hex(vpninfo, PRG_DEBUG, '<', bytes, ret);
-		}
-
-		if (ret < 8 || load_be16(bytes) != 0xf500 || load_be16(bytes + 2) != ret - 4) {
-		bad_config_pkt:
-			vpn_progress(vpninfo, PRG_ERR,
-				     _("Bad incoming PPP config packet:\n"));
-			dump_buf_hex(vpninfo, PRG_ERR, '<', bytes, ret);
-			ret = -EINVAL;
-			goto out;
-		}
-
-		if (bytes[4] == 0xff && bytes[5] == 0x03 && load_be16(bytes + 6) == PPP_LCP) {
-			/* No ACCOMP or PFCOMP for LCP frames */
-			proto = PPP_LCP;
-			p = bytes + 8;
-		} else {
-			if (ppp->in_lcp_opts & ACCOMP) {
-				if (bytes[4] == 0xff && bytes [5] == 0x03)
-					p = bytes + 6; /* ACCOMP is still optional */
-				else
-					p = bytes + 4;
-			} else {
-				if (bytes[4] != 0xff || bytes [5] != 0x03)
-					goto bad_config_pkt;
-				p = bytes + 6;
-			}
-
-			if (ppp->in_lcp_opts & PFCOMP) {
-				proto = *p++;
-				if (!(proto & 1)) {
-					proto <<= 8;
-					proto += *p++;
-				}
-			} else {
-				proto = load_be16(p);
-				p += 2;
-			}
-		}
-
-		payload_len = ret - (p - bytes);
-
-		vpn_progress(vpninfo, PRG_TRACE,
-			     _("Received %d bytes PPP packet with protocol 0x%04x (%d bytes payload)\n"),
-			     ret, proto, payload_len);
-		if (vpninfo->dump_http_traffic)
-			dump_buf_hex(vpninfo, PRG_TRACE, '<', bytes, ret);
-
-		switch (proto) {
-		case PPP_LCP:
-		case PPP_IPCP:
-		case PPP_IP6CP:
-			if (payload_len < 4 || load_be16(p + 2) != payload_len)
-				goto bad_config_pkt;
-			if ((ret = handle_config_packet(vpninfo, proto, p, payload_len)) < 0)
-				goto out;
-			break;
-
-		case PPP_IP:
-		case PPP_IP6:
-			vpn_progress(vpninfo, PRG_ERR,
-				     _("Unexpected IPv%d packet in PPP config phase."),
-				     proto == PPP_IP ? 4 : 6);
-			dump_buf_hex(vpninfo, PRG_ERR, '<', p, payload_len);
-			break;
-
-		default:
-			vpn_progress(vpninfo, PRG_ERR,
-				     _("PPP packet with unknown protocol 0x%04x. Payload:\n"),
-				     proto);
-			dump_buf_hex(vpninfo, PRG_ERR, '<', p, payload_len);
-			ret = -EINVAL;
-			goto out;
-		}
-
-		switch (ppp->ppp_state) {
-		case PPPS_ESTABLISH:
-			if ((ppp->lcp_state & NCP_CONF_ACK_SENT) && (ppp->lcp_state & NCP_CONF_ACK_RECEIVED))
-				ppp->ppp_state = PPPS_OPENED;
-			break;
-		case PPPS_OPENED:
-			/* Have we configured all the protocols we want? */
-			if ( (!ppp->want_ipv4 || ((ppp->ipcp_state & NCP_CONF_ACK_SENT) && (ppp->ipcp_state & NCP_CONF_ACK_RECEIVED))) &&
-			     (!ppp->want_ipv6 || ((ppp->ip6cp_state & NCP_CONF_ACK_SENT) && (ppp->ip6cp_state & NCP_CONF_ACK_RECEIVED))) )
-				ppp->ppp_state = PPPS_NETWORK;
-			break;
-		}
-		if (last_state != ppp->ppp_state)
-			vpn_progress(vpninfo, PRG_DEBUG,
-				     _("PPP state transition from %s (%d) to %s (%d)\n"),
-				     ppps_names[last_state], last_state, ppps_names[ppp->ppp_state], ppp->ppp_state);
-
-	}
-
-out:
-	return (ppp->ppp_state == PPPS_NETWORK);
 }
