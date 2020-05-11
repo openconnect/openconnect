@@ -179,7 +179,8 @@ struct pkt {
 #define PPP_ENCAP_F5		1	/* F5 BigIP no HDLC */
 #define PPP_ENCAP_F5_HDLC	2	/* F5 BigIP HDLC */
 #define PPP_ENCAP_FORTINET_HDLC	3	/* Fortinet HDLC */
-#define PPP_ENCAP_MAX		PPP_ENCAP_FORTINET_HDLC
+#define PPP_ENCAP_NX_HDLC	4	/* SonicWall NetExtender HDLC */
+#define PPP_ENCAP_MAX		PPP_ENCAP_NX_HDLC
 
 #define COMPR_DEFLATE	(1<<0)
 #define COMPR_LZS	(1<<1)
@@ -924,6 +925,12 @@ int oncp_bye(struct openconnect_info *vpninfo, const char *reason);
 void oncp_esp_close(struct openconnect_info *vpninfo);
 int oncp_esp_send_probes(struct openconnect_info *vpninfo);
 int oncp_esp_catch_probe(struct openconnect_info *vpninfo, struct pkt *pkt);
+
+/* nx.c */
+int nx_obtain_cookie(struct openconnect_info *vpninfo);
+void nx_common_headers(struct openconnect_info *vpninfo, struct oc_text_buf *buf);
+int nx_connect(struct openconnect_info *vpninfo);
+int nx_bye(struct openconnect_info *vpninfo, const char *reason);
 
 /* pulse.c */
 int pulse_obtain_cookie(struct openconnect_info *vpninfo);
