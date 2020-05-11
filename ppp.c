@@ -83,6 +83,8 @@ const char *ppps_names[] = {"DEAD", "ESTABLISH", "OPENED/AUTHENTICATE", "NETWORK
 
 struct oc_ppp {
 	/* We need to know these before we start */
+	int encap;
+	int encap_len;
 	int hdlc;
 	int want_ipv4;
 	int want_ipv6;
@@ -108,12 +110,22 @@ struct oc_ppp {
 	uint64_t in_ipv6_int_ident;
 };
 
-struct oc_ppp *openconnect_ppp_new(int hdlc, int want_ipv4, int want_ipv6, int we_go_first)
+struct oc_ppp *openconnect_ppp_new(int encap, int hdlc, int want_ipv4, int want_ipv6, int we_go_first)
 {
 	struct oc_ppp *ppp = calloc(sizeof(*ppp), 1);
 
 	if (!ppp)
 		return NULL;
+
+	ppp->encap = encap;
+	switch (encap) {
+	case PPP_ENCAP_F5:
+		ppp->encap_len = 4;
+		break;
+	default:
+		/* XX: fail */
+		break;
+	}
 
 	ppp->hdlc = hdlc;
 	ppp->want_ipv4 = want_ipv4;
