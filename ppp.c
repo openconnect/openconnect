@@ -108,7 +108,7 @@ struct oc_ppp {
 	/* Outgoing options */
 	uint32_t out_asyncmap;
 	int out_lcp_opts;
-	int32_t out_lcp_magic;
+	int32_t out_lcp_magic; /* stored in on-the-wire order */
 	struct in_addr out_peer_addr;
 	uint64_t out_ipv6_int_ident;
 	uint8_t util_id;
@@ -117,7 +117,7 @@ struct oc_ppp {
 	int exp_ppp_hdr_size;
 	uint32_t in_asyncmap;
 	int in_lcp_opts;
-	int32_t in_lcp_magic;
+	int32_t in_lcp_magic; /* stored in on-the-wire order */
 	struct in_addr in_peer_addr;
 	uint64_t in_ipv6_int_ident;
 };
@@ -407,7 +407,7 @@ static int send_config_request(struct openconnect_info *vpninfo,
 
 		payload_len += buf_append_ppp_tlv_be16(buf, 1, vpninfo->ip_info.mtu, ppp->hdlc, ASYNCMAP_LCP);
 		payload_len += buf_append_ppp_tlv_be32(buf, 2, ppp->out_asyncmap, ppp->hdlc, ASYNCMAP_LCP);
-		payload_len += buf_append_ppp_tlv_be32(buf, 5, ppp->out_lcp_magic, ppp->hdlc, ASYNCMAP_LCP);
+		payload_len += buf_append_ppp_tlv(buf, 5, 4, &ppp->out_lcp_magic, ppp->hdlc, ASYNCMAP_LCP);
 		if (ppp->out_lcp_opts & PFCOMP)
 			payload_len += buf_append_ppp_tlv(buf, 7, 0, NULL, ppp->hdlc, ASYNCMAP_LCP);
 		if (ppp->out_lcp_opts & ACCOMP)
