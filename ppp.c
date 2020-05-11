@@ -397,31 +397,23 @@ out:
 	return ret;
 }
 
-static int send_util(struct openconnect_info *vpninfo,
-		     uint16_t proto, int id, int code)
+static int queue_util_packet(struct openconnect_info *vpninfo,
+			     uint16_t proto, int id, int code)
 {
-	struct oc_text_buf *buf = buf_alloc();
-	struct oc_ppp *ppp = vpninfo->ppp;
-	int ret;
+	struct pkt *p = malloc(sizeof(struct pkt) + 64);
 
-	buf_append_be32(buf, 0xf5000000);
-	buf_append_ppp_hdr(buf, ppp, proto, code, id);
-	buf_append_be16(buf, code == ECHOREQ ? 8 : 4); /* payload length includes code, id, own 2 bytes, magic for Echo-Request */
+	if (!p)
+		return -ENOMEM;
+
+	p->ppp.proto = proto;
+	p->data[0] = code;
+	p->data[1] = id;
+	store_be16(p->data + 2, code == ECHOREQ ? 8 : 4); /* payload length includes code, id, own 2 bytes, magic for Echo-Request */
 	if (code == ECHOREQ)
-		buf_append_be32(buf, ppp->out_lcp_magic);
-	if ((ret = buf_error(buf)) != 0)
-		goto out;
-	store_be16(buf->data + 2, buf->pos - 4);
-	vpn_progress(vpninfo, PRG_DEBUG, _("Sending proto 0x%04x/id %d %s to server\n"),
-		     proto, id, lcp_names[code-1]);
-	if (vpninfo->dump_http_traffic)
-		dump_buf_hex(vpninfo, PRG_DEBUG, '>', (void *)buf->data, buf->pos);
-	if ((ret = vpninfo->ssl_write(vpninfo, buf->data, buf->pos)) >= 0)
-		ret = 0;
+		store_be32(p->data + 4, vpninfo->ppp->out_lcp_magic);
 
-out:
-	buf_free(buf);
-	return ret;
+	queue_packet(&vpninfo->outgoing_queue, p);
+	return 0;
 }
 
 static int handle_config_packet(struct openconnect_info *vpninfo,
@@ -451,12 +443,12 @@ static int handle_config_packet(struct openconnect_info *vpninfo,
 
 	case ECHOREQ:
 		if (ppp->ppp_state >= PPPS_OPENED)
-			return send_util(vpninfo, proto, id, ECHOREP);
+			ret = queue_util_packet(vpninfo, proto, id, ECHOREP);
 		break;
 
 	case TERMREQ:
 		add_state = NCP_TERM_REQ_RECEIVED;
-		ret = send_util(vpninfo, proto, id, TERMACK);
+		ret = queue_util_packet(vpninfo, proto, id, TERMACK);
 		if (ret >= 0)
 			add_state = NCP_TERM_ACK_SENT;
 		goto set_quit_reason;
@@ -753,11 +745,11 @@ int ppp_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable)
 		    vpninfo->outgoing_queue.head)
 			break;
 		vpn_progress(vpninfo, PRG_DEBUG, _("Send PPP discard request as keepalive\n"));
-		send_util(vpninfo, PPP_LCP, ppp->util_id++, DISCREQ);
+		queue_util_packet(vpninfo, PPP_LCP, ppp->util_id++, DISCREQ);
 		break;
 	case KA_DPD:
 		vpn_progress(vpninfo, PRG_DEBUG, _("Send PPP echo request as DPD\n"));
-		send_util(vpninfo, PPP_LCP, ppp->util_id++, ECHOREQ);
+		queue_util_packet(vpninfo, PPP_LCP, ppp->util_id++, ECHOREQ);
 	}
 
 	/* Service outgoing packet queue, if no DTLS */
@@ -766,8 +758,15 @@ int ppp_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable)
 		struct pkt *this = vpninfo->current_ssl_pkt;
 		int n = 0;
 
-		/* IPv4 or IPv6 */
-		proto = this->len && (this->data[0] & 0xF0) == 0x60 ? PPP_IP6 : PPP_IP;
+		/* XX: Set protocol for IP, or grab it where we pre-stashed it
+		 * in the header for config packets. Takes advantage of the fact
+		 * that first byte of LCP/IPCP/IP6CP packets is always <0x10, while
+		 * first byte of IP packets is always >0x10.
+		 */
+		if (this->len && (this->data[0] & 0xf0))
+			proto = ((this->data[0] & 0xf0) == 0x60) ? PPP_IP6 : PPP_IP;
+		else
+			proto = this->ppp.proto;
 
 		/* XX: store PPP header, in reverse (FIXME: HDLC, asyncmap, etc.) */
 		this->data[--n] = proto & 0xff;
@@ -789,8 +788,8 @@ int ppp_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable)
 
 		this->ppp.hlen = -n;
 		vpn_progress(vpninfo, PRG_TRACE,
-			     _("Sending IPv%d data packet of %d bytes\n"),
-			     (proto == PPP_IP6 ? 6 : 4), this->len);
+			     _("Sending proto 0x%04x packet (%d bytes total)\n"),
+			     proto, this->len - n);
 		if (vpninfo->dump_http_traffic)
 			dump_buf_hex(vpninfo, PRG_TRACE, '>', this->data + n, this->len - n);
 
