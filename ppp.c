@@ -82,19 +82,25 @@ const char *ppps_names[] = {"DEAD", "ESTABLISH", "OPENED/AUTHENTICATE", "NETWORK
 #define NCP_ACK_SENT 8
 
 struct oc_ppp {
+	/* We need to know these before we start */
 	int hdlc;
+	int want_ipv4;
+	int want_ipv6;
+	int we_go_first;
 
 	int ppp_state;
 	int lcp_state;
 	int ipcp_state;
 	int ip6cp_state;
 
+	/* Outgoing options */
 	uint32_t out_asyncmap;
 	int out_lcp_opts;
 	int32_t out_lcp_magic;
 	struct in_addr out_peer_addr;
 	uint64_t out_ipv6_int_ident;
 
+	/* Incoming options */
 	uint32_t in_asyncmap;
 	int in_lcp_opts;
 	int32_t in_lcp_magic;
@@ -102,8 +108,24 @@ struct oc_ppp {
 	uint64_t in_ipv6_int_ident;
 };
 
-void ppp_print_state(struct openconnect_info *vpninfo, struct oc_ppp *ppp)
+struct oc_ppp *openconnect_ppp_new(int hdlc, int want_ipv4, int want_ipv6, int we_go_first)
 {
+	struct oc_ppp *ppp = calloc(sizeof(*ppp), 1);
+
+	if (!ppp)
+		return NULL;
+
+	ppp->hdlc = hdlc;
+	ppp->want_ipv4 = want_ipv4;
+	ppp->want_ipv6 = want_ipv6;
+	ppp->we_go_first = we_go_first;
+	return ppp;
+}
+
+void ppp_print_state(struct openconnect_info *vpninfo)
+{
+	struct oc_ppp *ppp = vpninfo->ppp;
+
 	vpn_progress(vpninfo, PRG_INFO, _("PPP state: %s (%d)\n  hdlc: %d\n"), ppps_names[ppp->ppp_state], ppp->ppp_state, ppp->hdlc);
 	vpn_progress(vpninfo, PRG_INFO, _("    in: asyncmap=0x%08x, lcp_opts=%d, lcp_magic=0x%08x, peer=%s\n"),
 		     ppp->in_asyncmap, ppp->in_lcp_opts, ppp->in_lcp_magic, inet_ntoa(ppp->in_peer_addr));
@@ -171,10 +193,11 @@ void buf_append_ppp_hdr(struct oc_text_buf *buf, struct oc_ppp *ppp, uint16_t pr
 
 #define PROTO_TAG_LEN(p, t, l) (((p) << 16) | ((t) << 8) | (l))
 
-static int handle_config_request(struct openconnect_info *vpninfo, struct oc_ppp *ppp,
+static int handle_config_request(struct openconnect_info *vpninfo,
 				 int proto, int id, unsigned char *payload, int len)
 {
 	struct oc_text_buf *buf;
+	struct oc_ppp *ppp = vpninfo->ppp;
 	int ret, *ncp_state;
 	unsigned char *p;
 
@@ -279,9 +302,10 @@ out:
 	return ret;
 }
 
-static int send_config_request(struct openconnect_info *vpninfo, struct oc_ppp *ppp,
+static int send_config_request(struct openconnect_info *vpninfo,
 			       int proto, int id)
 {
+	struct oc_ppp *ppp = vpninfo->ppp;
 	unsigned char ipv6a[16] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
 	const uint16_t vjc = htons(0x002d);
 	struct oc_text_buf *buf;
@@ -351,10 +375,11 @@ out:
 	return ret;
 }
 
-static int send_echo_reply(struct openconnect_info *vpninfo, struct oc_ppp *ppp,
+static int send_echo_reply(struct openconnect_info *vpninfo,
 			   uint16_t proto, int id)
 {
 	struct oc_text_buf *buf = buf_alloc();
+	struct oc_ppp *ppp = vpninfo->ppp;
 	int ret;
 
 	buf_append_be32(buf, 0xf5000000);
@@ -375,10 +400,11 @@ out:
 	return ret;
 }
 
-static int send_terminate_ack(struct openconnect_info *vpninfo, struct oc_ppp *ppp,
+static int send_terminate_ack(struct openconnect_info *vpninfo,
 			      uint16_t proto, int id)
 {
 	struct oc_text_buf *buf = buf_alloc();
+	struct oc_ppp *ppp = vpninfo->ppp;
 	int ret;
 
 	buf_append_be32(buf, 0xf5000000);
@@ -398,18 +424,19 @@ out:
 	return ret;
 }
 
-static int handle_config_packet(struct openconnect_info *vpninfo, struct oc_ppp *ppp,
+static int handle_config_packet(struct openconnect_info *vpninfo,
 				uint16_t proto, unsigned char *p, int len)
 {
+	struct oc_ppp *ppp = vpninfo->ppp;
 	int code = p[0], id = p[1], ret;
 
 	switch (code) {
 	case 1: /* Configure-Request */
 		vpn_progress(vpninfo, PRG_DEBUG, _("Received proto 0x%04x/id %d config request from server\n"), proto, id);
-		ret = handle_config_request(vpninfo, ppp, proto, id, p + 4, len - 4);
+		ret = handle_config_request(vpninfo, proto, id, p + 4, len - 4);
 		if (ret >= 0) {
 			/* Send our own config request */
-			ret = send_config_request(vpninfo, ppp, proto, id+1);
+			ret = send_config_request(vpninfo, proto, id+1);
 		}
 		return ret;
 
@@ -429,13 +456,13 @@ static int handle_config_packet(struct openconnect_info *vpninfo, struct oc_ppp 
 	case 9: /* Echo-Request */
 		vpn_progress(vpninfo, PRG_DEBUG, _("Received proto 0x%04x/id %d echo request from server\n"), proto, id);
 		if (ppp->ppp_state >= PPPS_OPENED)
-			return send_echo_reply(vpninfo, ppp, proto, id);
+			return send_echo_reply(vpninfo, proto, id);
 		return 0;
 
 	case 5:	/* Terminate-Request */
 		vpninfo->quit_reason = strndup((char *)(p + 4), len - 4);
 		ppp->ppp_state = PPPS_TERMINATE;
-		return send_terminate_ack(vpninfo, ppp, proto, id);
+		return send_terminate_ack(vpninfo, proto, id);
 
 	case 6: /* Terminate-Ack */
 		ppp->ppp_state = PPPS_TERMINATE;
@@ -454,14 +481,14 @@ static int handle_config_packet(struct openconnect_info *vpninfo, struct oc_ppp 
 	}
 }
 
-int ppp_negotiate_config(struct openconnect_info *vpninfo, struct oc_ppp *ppp, int hdlc, int ipv4, int ipv6)
+int ppp_negotiate_config(struct openconnect_info *vpninfo)
 {
+	struct oc_ppp *ppp = vpninfo->ppp;
 	unsigned char bytes[16384], *p;
 	uint16_t proto;
 	int ret = 0, payload_len, last_state;
 
 	ppp->ppp_state = PPPS_ESTABLISH;
-	ppp->hdlc = hdlc;
 
 	while (ppp->ppp_state >= PPPS_ESTABLISH && ppp->ppp_state < PPPS_NETWORK) {
 		last_state = ppp->ppp_state;
@@ -529,7 +556,7 @@ int ppp_negotiate_config(struct openconnect_info *vpninfo, struct oc_ppp *ppp, i
 		case PPP_IP6CP:
 			if (payload_len < 4 || load_be16(p + 2) != payload_len)
 				goto bad_config_pkt;
-			if ((ret = handle_config_packet(vpninfo, ppp, proto, p, payload_len)) < 0)
+			if ((ret = handle_config_packet(vpninfo, proto, p, payload_len)) < 0)
 				goto out;
 			break;
 
@@ -557,8 +584,8 @@ int ppp_negotiate_config(struct openconnect_info *vpninfo, struct oc_ppp *ppp, i
 			break;
 		case PPPS_OPENED:
 			/* Have we configured all the protocols we want? */
-			if ( (!ipv4 || ((ppp->ipcp_state & NCP_ACK_SENT) && (ppp->ipcp_state & NCP_ACK_RECEIVED))) &&
-			     (!ipv6 || ((ppp->ip6cp_state & NCP_ACK_SENT) && (ppp->ip6cp_state & NCP_ACK_RECEIVED))) )
+			if ( (!ppp->want_ipv4 || ((ppp->ipcp_state & NCP_ACK_SENT) && (ppp->ipcp_state & NCP_ACK_RECEIVED))) &&
+			     (!ppp->want_ipv6 || ((ppp->ip6cp_state & NCP_ACK_SENT) && (ppp->ip6cp_state & NCP_ACK_RECEIVED))) )
 				ppp->ppp_state = PPPS_NETWORK;
 			break;
 		}

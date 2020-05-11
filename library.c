@@ -376,6 +376,8 @@ void openconnect_vpninfo_free(struct openconnect_info *vpninfo)
 		closesocket(vpninfo->cmd_fd_write);
 	}
 
+	free(vpninfo->ppp);
+
 #ifdef HAVE_ICONV
 	if (vpninfo->ic_utf8_to_legacy != (iconv_t)-1)
 		iconv_close(vpninfo->ic_utf8_to_legacy);

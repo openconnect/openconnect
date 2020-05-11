@@ -467,9 +467,13 @@ int f5_connect(struct openconnect_info *vpninfo)
 		goto out;
 	}
 
-	struct oc_ppp *ppp = calloc(1, 1024);
-	ppp_negotiate_config(vpninfo, ppp, hdlc, ipv4, ipv6);
-	ppp_print_state(vpninfo, ppp);
+	if (!(vpninfo->ppp = openconnect_ppp_new(hdlc, ipv4, ipv6, 0 /* we_go_first */))) {
+		ret = -ENOMEM;
+		goto out;
+	}
+
+	ppp_negotiate_config(vpninfo);
+	ppp_print_state(vpninfo);
 	ret = -EIO; /* success */
  out:
 	free(profile_params);
