@@ -334,7 +334,6 @@ static int send_config_request(struct openconnect_info *vpninfo,
 {
 	struct oc_ppp *ppp = vpninfo->ppp;
 	unsigned char ipv6a[16] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
-	const uint16_t vjc = htons(0x002d);
 	struct oc_text_buf *buf;
 	int ret, payload_len, pl_pos, *ncp_state;
 
@@ -368,7 +367,6 @@ static int send_config_request(struct openconnect_info *vpninfo,
 		if (vpninfo->ip_info.addr)
 			ppp->out_peer_addr.s_addr = inet_addr(vpninfo->ip_info.addr);
 
-		if (ppp->out_lcp_opts & VJCOMP) payload_len += buf_append_ppp_tlv(buf, 2, -2, &vjc);
 		payload_len += buf_append_ppp_tlv(buf, 3, 4, &ppp->out_peer_addr);
 		break;
 
