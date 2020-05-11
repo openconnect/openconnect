@@ -90,6 +90,7 @@ const char *ppps_names[] = {"DEAD", "ESTABLISH", "OPENED", "AUTHENTICATE", "NETW
 struct oc_ncp {
 	int state;
 	int id;
+	time_t last_req;
 };
 
 struct oc_ppp {
@@ -450,6 +451,7 @@ int ppp_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable)
 	int ret, last_state, magic, rsv_hdr_size;
 	int work_done = 0;
 	unsigned char *ph, *pp;
+	time_t now = time(NULL);
 
 	struct oc_ppp *ppp = vpninfo->ppp;
 	int proto;
@@ -464,20 +466,33 @@ int ppp_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable)
 		ppp->ppp_state = PPPS_ESTABLISH;
 		/* fall through */
 	case PPPS_ESTABLISH:
-		if (!(ppp->lcp.state & NCP_CONF_REQ_SENT))
-			queue_config_request(vpninfo, PPP_LCP, 1);
-
-		if ((ppp->lcp.state & NCP_CONF_ACK_SENT) && (ppp->lcp.state & NCP_CONF_ACK_RECEIVED))
+		if ((ppp->lcp.state & NCP_CONF_ACK_RECEIVED) && (ppp->lcp.state & NCP_CONF_ACK_SENT))
 			ppp->ppp_state = PPPS_OPENED;
-		break;
+		else if (ka_check_deadline(timeout, now, ppp->lcp.last_req + 3)) {
+			ppp->lcp.last_req = now;
+			queue_config_request(vpninfo, PPP_LCP, 1);
+			break;
+		}
 
+		/* fall through */
 	case PPPS_OPENED:
-		/* Have we configured all the protocols we want? */
-		if (ppp->want_ipv4 && !(ppp->ipcp.state & NCP_CONF_REQ_SENT))
-			queue_config_request(vpninfo, PPP_IPCP, 1);
-		if (ppp->want_ipv6 && !(ppp->ip6cp.state & NCP_CONF_REQ_SENT))
-			queue_config_request(vpninfo, PPP_IP6CP, 1);
+		if (ppp->want_ipv4) {
+			if (!(ppp->ipcp.state & NCP_CONF_ACK_RECEIVED)
+			    && ka_check_deadline(timeout, now, ppp->ipcp.last_req + 3)) {
+				ppp->ipcp.last_req = now;
+				queue_config_request(vpninfo, PPP_IPCP, 1);
+			}
+		}
 
+		if (ppp->want_ipv6) {
+			if (!(ppp->ip6cp.state & NCP_CONF_ACK_RECEIVED)
+			    && ka_check_deadline(timeout, now, ppp->ip6cp.last_req + 3)) {
+				ppp->ip6cp.last_req = now;
+				queue_config_request(vpninfo, PPP_IP6CP, 1);
+			}
+		}
+
+		/* Have we configured all the protocols we want? */
 		if ( (!ppp->want_ipv4 || ((ppp->ipcp.state & NCP_CONF_ACK_SENT) && (ppp->ipcp.state & NCP_CONF_ACK_RECEIVED))) &&
 		     (!ppp->want_ipv6 || ((ppp->ip6cp.state & NCP_CONF_ACK_SENT) && (ppp->ip6cp.state & NCP_CONF_ACK_RECEIVED))) )
 			ppp->ppp_state = PPPS_NETWORK;
