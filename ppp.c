@@ -343,6 +343,7 @@ static int handle_config_request(struct openconnect_info *vpninfo,
 				 int proto, int id, unsigned char *payload, int len)
 {
 	struct oc_ppp *ppp = vpninfo->ppp;
+	struct oc_text_buf *rejbuf = NULL;
 	int ret;
 	struct oc_ncp *ncp;
 	unsigned char *p;
@@ -396,8 +397,8 @@ static int handle_config_request(struct openconnect_info *vpninfo,
 				/* Van Jacobson TCP/IP compression */
 				vpn_progress(vpninfo, PRG_DEBUG,
 					     _("Received Van Jacobson TCP/IP compression from server\n"));
-				ppp->in_lcp_opts |= VJCOMP;
-				break;
+				/* No. Just no. */
+				goto reject;
 			}
 			goto unknown;
 		case PROTO_TAG_LEN(PPP_IPCP, 3, 4):
@@ -418,8 +419,13 @@ static int handle_config_request(struct openconnect_info *vpninfo,
 				     _("Received unknown proto 0x%04x TLV (tag %d, len %d+2) from server:\n"),
 				     proto, t, l);
 			dump_buf_hex(vpninfo, PRG_DEBUG, '<', p, (int)p[1]);
-			ret = -EINVAL;
-			goto out;
+		reject:
+			if (!rejbuf)
+				rejbuf = buf_alloc();
+			if (!rejbuf)
+				return -ENOMEM;
+			buf_append_bytes(rejbuf, p, l);
+			break;
 		}
 	}
 	ncp->state |= NCP_CONF_REQ_RECEIVED;
@@ -430,13 +436,26 @@ static int handle_config_request(struct openconnect_info *vpninfo,
 		dump_buf_hex(vpninfo, PRG_DEBUG, '<', p, payload + len - p);
 	}
 
-	vpn_progress(vpninfo, PRG_DEBUG, _("Ack proto 0x%04x/id %d config from server\n"), proto, id);
-	if ((ret = queue_config_packet(vpninfo, proto, id, CONFACK, len, payload)) >= 0) {
-		ncp->state |= NCP_CONF_ACK_SENT;
-		ret = 0;
+	if (rejbuf) {
+		if (buf_error(rejbuf)) {
+			vpn_progress(vpninfo, PRG_ERR,
+				     _("Error composing ConfRej packet\n"));
+			return buf_free(rejbuf);
+		}
+		vpn_progress(vpninfo, PRG_DEBUG, _("Nak proto 0x%04x/id %d config from server\n"), proto, id);
+		if ((ret = queue_config_packet(vpninfo, proto, id, CONFREJ, rejbuf->pos, rejbuf->data)) >= 0) {
+			ret = 0;
+		}
+	} else {
+		vpn_progress(vpninfo, PRG_DEBUG, _("Ack proto 0x%04x/id %d config from server\n"), proto, id);
+		if ((ret = queue_config_packet(vpninfo, proto, id, CONFACK, len, payload)) >= 0) {
+			ncp->state |= NCP_CONF_ACK_SENT;
+			ret = 0;
+		}
 	}
 
 out:
+	buf_free(rejbuf);
 	return ret;
 }
 
