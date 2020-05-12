@@ -102,10 +102,8 @@ static unsigned char *unhdlc_in_place(struct openconnect_info *vpninfo, unsigned
 		} else
 			*outp++ = *inp;
 	}
-	if (escape) {
-		vpn_progress(vpninfo, PRG_ERR, _("HDLC packet ended with dangling escape.\n"));
-		return NULL;
-	}
+	if (escape)
+		vpn_progress(vpninfo, PRG_DEBUG, _("HDLC packet ended with dangling escape.\n"));
 
 	/* XX: check FCS */
 	vpn_progress(vpninfo, PRG_TRACE,
@@ -605,6 +603,7 @@ int ppp_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable)
 		if (len < 0)
 			goto do_reconnect;
 		if (len < 8) {
+		short_pkt:
 			vpn_progress(vpninfo, PRG_ERR, _("Short packet received (%d bytes)\n"), len);
 			vpninfo->quit_reason = "Short packet received";
 			return 1;
@@ -690,9 +689,14 @@ int ppp_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable)
 		case PPP_LCP:
 		case PPP_IPCP:
 		case PPP_IP6CP:
-			if (payload_len < 4 || load_be16(pp + 2) != payload_len) {
-				vpn_progress(vpninfo, PRG_ERR, "payload_len %d, PPP header len %d\n", payload_len, load_be16(pp+2));
+			if (payload_len < 4) {
+				goto short_pkt;
+			} else if (load_be16(pp + 2) > payload_len) {
+				vpn_progress(vpninfo, PRG_ERR, "PPP config packet too short (header says %d bytes, received %d)\n", load_be16(pp+2), payload_len);
 				goto bad_ppp_pkt;
+			} else if (load_be16(pp + 2) < payload_len) {
+				vpn_progress(vpninfo, PRG_DEBUG, "PPP config packet has junk at end (header says %d bytes, received %d)\n", load_be16(pp+2), payload_len);
+				payload_len = load_be16(pp + 2);
 			}
 			ret = handle_config_packet(vpninfo, proto, pp, payload_len);
 			break;
