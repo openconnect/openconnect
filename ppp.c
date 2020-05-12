@@ -42,6 +42,79 @@
 const char *lcp_names[] = {NULL, "Configure-Request", "Configure-Ack", "Configure-Nak", "Configure-Reject", "Terminate-Request",
 			   "Terminate-Ack", "Code-Reject", "Protocol-Reject", "Echo-Request", "Echo-Reply", "Discard-Request"};
 
+#define ASYNCMAP_LCP 0xffffffffUL
+
+#define NEED_ESCAPE(c, map) ( ((c < 0x20) && (map && (1UL << (c)))) || (c == 0x7d) || (c == 0x7e) )
+
+static struct pkt *hdlc_into_new_pkt(struct openconnect_info *vpninfo, unsigned char *bytes, int len, int asyncmap)
+{
+        const unsigned char *inp = bytes, *endp = bytes + len;
+	unsigned char *outp;
+	struct pkt *p = malloc(sizeof(struct pkt) + len*2 + 4);
+	if (!p)
+		return NULL;
+	outp = p->data;
+
+	*outp++ = 0x7e;
+	for (; inp < endp; inp++) {
+		if (NEED_ESCAPE(*inp, asyncmap)) {
+			*outp++ = 0x7d;
+			*outp++ = *inp ^ 0x20;
+		} else
+			*outp++ = *inp;
+	}
+
+	/* XX: need real FCS */
+	*outp++ = 0;
+	*outp++ = 0;
+
+	*outp++ = 0x7e;
+	p->ppp.hlen = 0;
+	p->len = outp - p->data;
+	return p;
+}
+
+static unsigned char *unhdlc_in_place(struct openconnect_info *vpninfo, unsigned char *bytes, int len)
+{
+	const unsigned char *inp = bytes, *endp = bytes + len;
+	unsigned char *outp = bytes;
+	int escape = 0;
+	uint16_t fcs;
+
+	if (inp[0] != 0x7e || inp[len-1] != 0x7e) {
+		vpn_progress(vpninfo, PRG_ERR,
+			     _("HDLC initial/final bytes are 0x%02x/0x%02x (expected 0x7e, 0x7e)\n"),
+			       inp[0], inp[len-1]);
+		return NULL;
+	}
+
+	fcs = load_be16(inp + len - 3);
+
+	inp++;			/* Skip initial 0x7e */
+	endp -= 3;		/* Stop before FCS + final 0x7e */
+
+	for (; inp < endp; inp++) {
+		if (*inp == 0x7d)
+			escape = 1;
+		else if (escape) {
+			*outp++ = *inp ^ 0x20;
+			escape = 0;
+		} else
+			*outp++ = *inp;
+	}
+	if (escape) {
+		vpn_progress(vpninfo, PRG_ERR, _("HDLC packet ended with dangling escape.\n"));
+		return NULL;
+	}
+
+	/* XX: check FCS */
+	vpn_progress(vpninfo, PRG_TRACE,
+		     _("Un-HDLC'ed packet (%d bytes -> %ld), FCS=0x%04x\n"),
+		     len, outp - bytes, fcs);
+
+	return outp;
+}
+
 #define ACCOMP 1
 #define PFCOMP 2
 #define VJCOMP 4
@@ -116,6 +189,7 @@ struct oc_ppp *openconnect_ppp_new(int encap, int want_ipv4, int want_ipv6)
 		break;
 
 	case PPP_ENCAP_F5_HDLC:
+		ppp->encap_len = 0;
 		ppp->hdlc = 1;
 		break;
 
@@ -561,7 +635,14 @@ int ppp_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable)
 				continue;
 			}
 			break;
-			payload_len = len;
+
+		case PPP_ENCAP_F5_HDLC:
+			pp = unhdlc_in_place(vpninfo, ph, len);
+			if (!pp)
+				continue; /* unhdlc_in_place already logged */
+			len = payload_len = pp - ph;
+			//if (vpninfo->dump_http_traffic)
+			//	dump_buf_hex(vpninfo, PRG_TRACE, '<', pp, payload_len);
 			break;
 
 		default:
@@ -745,7 +826,7 @@ int ppp_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable)
 	if (this) {
 		int n = 0;
 
-		/* XX: store PPP header, in reverse (FIXME: HDLC, asyncmap, etc.) */
+		/* XX: store PPP header, in reverse */
 		this->data[--n] = proto & 0xff;
 		if (proto > 0xff || !(ppp->out_lcp_opts & PFCOMP))
 			this->data[--n] = proto >> 8;
@@ -753,22 +834,33 @@ int ppp_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable)
 			this->data[--n] = 0x03; /* Control */
 			this->data[--n] = 0xff; /* Address */
 		}
+
+		/* Add pre-PPP encapsulation header */
 		switch (ppp->encap) {
 		case PPP_ENCAP_F5:
 			store_be16(this->data + n - 2, this->len - n);
 			store_be16(this->data + n - 4, 0xf500);
-			n -= 4;
+			this->ppp.hlen = -n + 4;
+			break;
+		case PPP_ENCAP_F5_HDLC:
+			/* XX: use worst-case escaping for LCP */
+			this = hdlc_into_new_pkt(vpninfo, this->data + n, this->len - n,
+						 proto == PPP_LCP ? ASYNCMAP_LCP : ppp->out_asyncmap);
+			if (!this)
+				return 1; /* XX */
+			free(vpninfo->current_ssl_pkt);
+			vpninfo->current_ssl_pkt = this;
+			break;
 		default:
 			/* XX: fail */
 			break;
 		}
 
-		this->ppp.hlen = -n;
 		vpn_progress(vpninfo, PRG_TRACE,
 			     _("Sending proto 0x%04x packet (%d bytes total)\n"),
-			     proto, this->len - n);
+			     proto, this->len + this->ppp.hlen);
 		if (vpninfo->dump_http_traffic)
-			dump_buf_hex(vpninfo, PRG_TRACE, '>', this->data + n, this->len - n);
+			dump_buf_hex(vpninfo, PRG_TRACE, '>', this->data - this->ppp.hlen, this->len + this->ppp.hlen);
 
 		vpninfo->current_ssl_pkt = this;
 		goto handle_outgoing;

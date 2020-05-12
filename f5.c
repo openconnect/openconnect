@@ -426,12 +426,6 @@ int f5_connect(struct openconnect_info *vpninfo)
 		ipv4 = 0;
 	if (ipv6 == -1)
 		ipv6 = 0;
-	if (hdlc != 0) {
-		vpn_progress(vpninfo, PRG_ERR,
-			     _("PPP with HDLC framing is not supported yet\n"));
-		ret = -EINVAL;
-		goto out;
-	}
 
 	/* Now fetch the connection options */
 	ret = openconnect_open_https(vpninfo);
