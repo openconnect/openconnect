@@ -430,8 +430,12 @@ static int handle_config_packet(struct openconnect_info *vpninfo,
 	case TERMACK:
 		add_state = NCP_TERM_ACK_RECEIVED;
 	set_quit_reason:
-		if (!vpninfo->quit_reason && len > 4)
+		if (!vpninfo->quit_reason && len > 4) {
 			vpninfo->quit_reason = strndup((char *)(p + 4), len - 4);
+			vpn_progress(vpninfo, PRG_ERR,
+				     _("Server terminates with reason: %s\n"),
+				     vpninfo->quit_reason);
+		}
 		ppp->ppp_state = PPPS_TERMINATE;
 		break;
 
@@ -474,53 +478,57 @@ int ppp_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable)
 	switch (ppp->ppp_state) {
 	case PPPS_DEAD:
 		ppp->ppp_state = PPPS_ESTABLISH;
-		/* fall through */
+		break;
 	case PPPS_ESTABLISH:
 		if ((ppp->lcp.state & NCP_CONF_ACK_RECEIVED) && (ppp->lcp.state & NCP_CONF_ACK_SENT))
 			ppp->ppp_state = PPPS_OPENED;
 		else if (ka_check_deadline(timeout, now, ppp->lcp.last_req + 3)) {
 			ppp->lcp.last_req = now;
 			queue_config_request(vpninfo, PPP_LCP, 1);
-			break;
 		}
-
-		/* fall through */
+		break;
 	case PPPS_OPENED:
+		ret = 1;
 		if (ppp->want_ipv4) {
-			if (!(ppp->ipcp.state & NCP_CONF_ACK_RECEIVED)
-			    && ka_check_deadline(timeout, now, ppp->ipcp.last_req + 3)) {
-				ppp->ipcp.last_req = now;
-				queue_config_request(vpninfo, PPP_IPCP, 1);
+			if (!(ppp->ipcp.state & NCP_CONF_ACK_SENT) || !(ppp->ipcp.state & NCP_CONF_ACK_RECEIVED)) {
+				ret = 0;
+				if (ka_check_deadline(timeout, now, ppp->ipcp.last_req + 3)) {
+					ppp->ipcp.last_req = now;
+					queue_config_request(vpninfo, PPP_IPCP, 1);
+				}
 			}
 		}
 
 		if (ppp->want_ipv6) {
-			if (!(ppp->ip6cp.state & NCP_CONF_ACK_RECEIVED)
-			    && ka_check_deadline(timeout, now, ppp->ip6cp.last_req + 3)) {
-				ppp->ip6cp.last_req = now;
-				queue_config_request(vpninfo, PPP_IP6CP, 1);
+			if (!(ppp->ip6cp.state & NCP_CONF_ACK_SENT) || !(ppp->ip6cp.state & NCP_CONF_ACK_RECEIVED)) {
+				ret = 0;
+				if (ka_check_deadline(timeout, now, ppp->ip6cp.last_req + 3)) {
+					ppp->ip6cp.last_req = now;
+					queue_config_request(vpninfo, PPP_IP6CP, 1);
+				}
 			}
 		}
 
-		/* Have we configured all the protocols we want? */
-		if ( (!ppp->want_ipv4 || ((ppp->ipcp.state & NCP_CONF_ACK_SENT) && (ppp->ipcp.state & NCP_CONF_ACK_RECEIVED))) &&
-		     (!ppp->want_ipv6 || ((ppp->ip6cp.state & NCP_CONF_ACK_SENT) && (ppp->ip6cp.state & NCP_CONF_ACK_RECEIVED))) )
+		if (ret)
 			ppp->ppp_state = PPPS_NETWORK;
-		/* fall through */
+		break;
 	case PPPS_NETWORK:
 		break;
 	case PPPS_TERMINATE:
-		return 1;
+		if (!vpninfo->quit_reason)
+			vpninfo->quit_reason = "Unknown";
+		return -EPIPE;
 	case PPPS_AUTHENTICATE: /* XX: should never */
 	default:
 		vpninfo->quit_reason = "Unexpected state";
-		return 1;
+		return -EINVAL;
 	}
 	if (last_state != ppp->ppp_state) {
 		vpn_progress(vpninfo, PRG_DEBUG,
 			     _("PPP state transition from %s to %s\n"),
 			     ppps_names[last_state], ppps_names[ppp->ppp_state]);
 		print_ppp_state(vpninfo, PRG_TRACE);
+		return 1;
 	}
 
 	/* FIXME: The poll() handling here is fairly simplistic. Actually,
