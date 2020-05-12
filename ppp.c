@@ -20,25 +20,7 @@
 #include <errno.h>
 
 #include "openconnect-internal.h"
-
-#define PPP_LCP		0xc021
-#define PPP_IPCP	0x8021
-#define PPP_IP6CP	0x8057
-#define PPP_IP		0x21
-#define PPP_IP6		0x57
-
-#define CONFREQ 1
-#define CONFACK 2
-#define CONFNAK 3
-#define CONFREJ 4
-#define TERMREQ 5
-#define TERMACK 6
-#define CODEREJ 7
-#define PROTREJ 8
-#define ECHOREQ 9
-#define ECHOREP 10
-#define DISCREQ 11
-
+#include "ppp.h"
 
 static const uint16_t fcstab[256] = {
 	0x0000, 0x1189, 0x2312, 0x329b, 0x4624, 0x57ad, 0x6536, 0x74bf,
@@ -75,16 +57,7 @@ static const uint16_t fcstab[256] = {
 	0x7bc7, 0x6a4e, 0x58d5, 0x495c, 0x3de3, 0x2c6a, 0x1ef1, 0x0f78
 };
 
-#define PPPINITFCS16    0xffff  /* Initial FCS value */
-#define PPPGOODFCS16    0xf0b8  /* Good final FCS value */
-
 #define foldfcs(fcs, c) (  ( (fcs) >> 8 ) ^ fcstab[(fcs ^ (c)) & 0xff] )
-
-const char *lcp_names[] = {NULL, "Configure-Request", "Configure-Ack", "Configure-Nak", "Configure-Reject", "Terminate-Request",
-			   "Terminate-Ack", "Code-Reject", "Protocol-Reject", "Echo-Request", "Echo-Reply", "Discard-Request"};
-
-#define ASYNCMAP_LCP 0xffffffffUL
-
 #define NEED_ESCAPE(c, map) ( (((c) < 0x20) && (map && (1UL << (c)))) || ((c) == 0x7d) || ((c) == 0x7e) )
 
 static struct pkt *hdlc_into_new_pkt(struct openconnect_info *vpninfo, unsigned char *bytes, int len, int asyncmap)
@@ -187,65 +160,10 @@ static int unhdlc_in_place(struct openconnect_info *vpninfo, unsigned char *byte
 	}
 }
 
-#define ACCOMP 1
-#define PFCOMP 2
-#define VJCOMP 4
-
 const char *ppps_names[] = {"DEAD", "ESTABLISH", "OPENED", "AUTHENTICATE", "NETWORK", "TERMINATE"};
-
-#define PPPS_DEAD		0
-#define PPPS_ESTABLISH		1
-#define PPPS_OPENED		2
-#define PPPS_AUTHENTICATE	3
-#define PPPS_NETWORK		4
-#define PPPS_TERMINATE		5
-
-#define NCP_CONF_REQ_RECEIVED	1
-#define NCP_CONF_REQ_SENT	2
-#define NCP_CONF_ACK_RECEIVED	4
-#define NCP_CONF_ACK_SENT	8
-#define NCP_TERM_REQ_SENT	16
-#define NCP_TERM_REQ_RECEIVED	32
-#define NCP_TERM_ACK_SENT	16
-#define NCP_TERM_ACK_RECEIVED	32
-
-struct oc_ncp {
-	int state;
-	int id;
-	time_t last_req;
-};
-
-struct oc_ppp {
-	/* We need to know these before we start */
-	int encap;
-	int encap_len;
-	int hdlc;
-	int want_ipv4;
-	int want_ipv6;
-
-	int ppp_state;
-	struct oc_ncp lcp;
-	struct oc_ncp ipcp;
-	struct oc_ncp ip6cp;
-
-	/* Outgoing options */
-	uint32_t out_asyncmap;
-	int out_lcp_opts;
-	int32_t out_lcp_magic; /* stored in on-the-wire order */
-	struct in_addr out_peer_addr;
-	uint64_t out_ipv6_int_ident;
-	uint8_t util_id;
-
-	/* Incoming options */
-	int exp_ppp_hdr_size;
-	uint32_t in_asyncmap;
-	int in_lcp_opts;
-	int32_t in_lcp_magic; /* stored in on-the-wire order */
-	struct in_addr in_peer_addr;
-	uint64_t in_ipv6_int_ident;
-};
-
 const char *encap_names[] = {NULL, "F5", "F5 HDLC"};
+const char *lcp_names[] = {NULL, "Configure-Request", "Configure-Ack", "Configure-Nak", "Configure-Reject", "Terminate-Request",
+			   "Terminate-Ack", "Code-Reject", "Protocol-Reject", "Echo-Request", "Echo-Reply", "Discard-Request"};
 
 struct oc_ppp *openconnect_ppp_new(int encap, int want_ipv4, int want_ipv6)
 {
