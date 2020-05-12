@@ -39,7 +39,7 @@
 #define ECHOREP 10
 #define DISCREQ 11
 
-const char *lcp_names[] = {"Configure-Request", "Configure-Ack", "Configure-Nak", "Configure-Reject", "Terminate-Request",
+const char *lcp_names[] = {NULL, "Configure-Request", "Configure-Ack", "Configure-Nak", "Configure-Reject", "Terminate-Request",
 			   "Terminate-Ack", "Code-Reject", "Protocol-Reject", "Echo-Request", "Echo-Reply", "Discard-Request"};
 
 #define ASYNCMAP_LCP 0xffffffffUL
@@ -123,7 +123,7 @@ struct oc_ppp {
 	uint64_t in_ipv6_int_ident;
 };
 
-const char *encap_names[] = {"F5", "F5 HDLC"};
+const char *encap_names[] = {NULL, "F5", "F5 HDLC"};
 
 struct oc_ppp *openconnect_ppp_new(int encap, int want_ipv4, int want_ipv6)
 {
@@ -157,7 +157,7 @@ static void print_ppp_state(struct openconnect_info *vpninfo, int level)
 {
 	struct oc_ppp *ppp = vpninfo->ppp;
 
-	vpn_progress(vpninfo, level, _("Current PPP state: %s (encap %s):\n"), ppps_names[ppp->ppp_state], encap_names[ppp->encap-1]);
+	vpn_progress(vpninfo, level, _("Current PPP state: %s (encap %s):\n"), ppps_names[ppp->ppp_state], encap_names[ppp->encap]);
 	vpn_progress(vpninfo, level, _("    in: asyncmap=0x%08x, lcp_opts=%d, lcp_magic=0x%08x, peer=%s\n"),
 		     ppp->in_asyncmap, ppp->in_lcp_opts, ppp->in_lcp_magic, inet_ntoa(ppp->in_peer_addr));
 	vpn_progress(vpninfo, level, _("   out: asyncmap=0x%08x, lcp_opts=%d, lcp_magic=0x%08x, peer=%s\n"),
@@ -402,7 +402,7 @@ static int handle_config_packet(struct openconnect_info *vpninfo,
 	int ret = 0, add_state = 0;
 
         if (code > 0 && code <= 11)
-		vpn_progress(vpninfo, PRG_TRACE, _("Received proto 0x%04x/id %d %s from server\n"), proto, id, lcp_names[code-1]);
+		vpn_progress(vpninfo, PRG_TRACE, _("Received proto 0x%04x/id %d %s from server\n"), proto, id, lcp_names[code]);
 	switch (code) {
 	case CONFREQ:
 		ret = handle_config_request(vpninfo, proto, id, p + 4, len - 4);
