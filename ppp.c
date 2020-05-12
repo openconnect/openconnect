@@ -87,9 +87,6 @@ const char *lcp_names[] = {NULL, "Configure-Request", "Configure-Ack", "Configur
 
 #define NEED_ESCAPE(c, map) ( (((c) < 0x20) && (map && (1UL << (c)))) || ((c) == 0x7d) || ((c) == 0x7e) )
 
-#define HDLC_ZERO_FCS 1
-#define HDLC_REAL_FCS 2
-
 static struct pkt *hdlc_into_new_pkt(struct openconnect_info *vpninfo, unsigned char *bytes, int len, int asyncmap)
 {
         const unsigned char *inp = bytes, *endp = bytes + len;
@@ -136,6 +133,7 @@ static int unhdlc_in_place(struct openconnect_info *vpninfo, unsigned char *byte
 {
 	unsigned char *inp = bytes, *endp = bytes + len;
 	unsigned char *outp = bytes;
+	int escape = 0;
 	uint16_t fcs = PPPINITFCS16;
 
 	if (*inp == 0x7e)
@@ -148,15 +146,14 @@ static int unhdlc_in_place(struct openconnect_info *vpninfo, unsigned char *byte
 		unsigned char c = *inp;
 		if (c == 0x7e)
 			goto done;
-		else if (c == 0x7d) {
-			if (++inp == endp) {
-				vpn_progress(vpninfo, PRG_DEBUG,
-                                            _("HDLC packet ended with dangling escape.\n"));
-				return -EINVAL;
-
-			}
-			c = *inp ^ 0x20;
+		else if (escape) {
+			c ^= 0x20;
+			escape = 0;
+		} else if (c == 0x7d) {
+			escape = 1;
+			continue;
 		}
+
 		fcs = foldfcs(fcs, c);
 		*outp++ = c;
 	}
@@ -175,7 +172,7 @@ static int unhdlc_in_place(struct openconnect_info *vpninfo, unsigned char *byte
 	outp -= 2; /* FCS */
 
 	if (next)
-		*next = inp; /* Pointing at the 0x7e which marks the start of next frame */
+		*next = inp+1; /* Pointing at the byte AFTER final 0x7e */
 
 	if (fcs != PPPGOODFCS16) {
 		vpn_progress(vpninfo, PRG_INFO,
@@ -265,7 +262,7 @@ struct oc_ppp *openconnect_ppp_new(int encap, int want_ipv4, int want_ipv6)
 
 	case PPP_ENCAP_F5_HDLC:
 		ppp->encap_len = 0;
-		ppp->hdlc = HDLC_ZERO_FCS;
+		ppp->hdlc = 1;
 		break;
 
 	default:
