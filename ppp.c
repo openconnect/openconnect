@@ -1,9 +1,9 @@
 /*
  * OpenConnect (SSL + DTLS) VPN client
  *
- * Copyright © 2020 David Woodhouse
+ * Copyright © 2020 David Woodhouse, Daniel Lenski
  *
- * Author: David Woodhouse <dwmw2@infradead.org>
+ * Authors: David Woodhouse <dwmw2@infradead.org>, Daniel Lenski <dlenski@gmail.com>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -21,11 +21,11 @@
 
 #include "openconnect-internal.h"
 
-#define PPP_LCP 0xc021
-#define PPP_IPCP 0x8021
-#define PPP_IP6CP 0x8057
-#define PPP_IP 0x21
-#define PPP_IP6 0x57
+#define PPP_LCP		0xc021
+#define PPP_IPCP	0x8021
+#define PPP_IP6CP	0x8057
+#define PPP_IP		0x21
+#define PPP_IP6		0x57
 
 #define CONFREQ 1
 #define CONFACK 2
@@ -652,34 +652,13 @@ int ppp_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable)
 
 		/* check PPP header and extract protocol */
 		pp = ph += ppp->encap_len;
-		if (pp[0] == 0xff && pp[0] == 0x03 && load_be16(pp + 6) == PPP_LCP) {
-			/* No ACCOMP or PFCOMP for LCP frames */
-			proto = PPP_LCP;
-			pp += 4;
-		} else {
-			if (ppp->in_lcp_opts & ACCOMP) {
-				if (pp[0] == 0xff && pp[1] == 0x03)
-					pp += 2; /* ACCOMP is still optional */
-			} else {
-				if (pp[0] != 0xff || pp[1] != 0x03) {
-				bad_ppp_pkt:
-					vpn_progress(vpninfo, PRG_ERR,
-						     _("Bad incoming PPP packet:\n"));
-					dump_buf_hex(vpninfo, PRG_ERR, '<', ph, len);
-					return 1;
-				}
-				pp += 2;
-			}
-			if (ppp->in_lcp_opts & PFCOMP) {
-				proto = *pp++;
-				if (!(proto & 1)) {
-					proto <<= 8;
-					proto += *pp++;
-				}
-			} else {
-				proto = load_be16(pp);
-				pp += 2;
-			}
+		if (pp[0] == 0xff && pp[1] == 0x03)
+			/* XX: Neither byte is a possible proto value (https://tools.ietf.org/html/rfc1661#section-2) */
+			pp += 2;
+		proto = *pp++;
+		if (!(proto & 1)) {
+			proto <<= 8;
+			proto += *pp++;
 		}
 		payload_len -= pp - ph;
 
@@ -693,7 +672,8 @@ int ppp_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable)
 				goto short_pkt;
 			} else if (load_be16(pp + 2) > payload_len) {
 				vpn_progress(vpninfo, PRG_ERR, "PPP config packet too short (header says %d bytes, received %d)\n", load_be16(pp+2), payload_len);
-				goto bad_ppp_pkt;
+				dump_buf_hex(vpninfo, PRG_ERR, '<', ph, len);
+				return 1;
 			} else if (load_be16(pp + 2) < payload_len) {
 				vpn_progress(vpninfo, PRG_DEBUG, "PPP config packet has junk at end (header says %d bytes, received %d)\n", load_be16(pp+2), payload_len);
 				payload_len = load_be16(pp + 2);
