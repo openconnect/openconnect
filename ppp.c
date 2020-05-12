@@ -46,6 +46,9 @@ const char *lcp_names[] = {NULL, "Configure-Request", "Configure-Ack", "Configur
 
 #define NEED_ESCAPE(c, map) ( ((c < 0x20) && (map && (1UL << (c)))) || (c == 0x7d) || (c == 0x7e) )
 
+#define HDLC_ZERO_FCS 1
+#define HDLC_REAL_FCS 2
+
 static struct pkt *hdlc_into_new_pkt(struct openconnect_info *vpninfo, unsigned char *bytes, int len, int asyncmap)
 {
         const unsigned char *inp = bytes, *endp = bytes + len;
@@ -81,16 +84,14 @@ static int unhdlc_in_place(struct openconnect_info *vpninfo, unsigned char *byte
 	int escape = 0;
 	uint16_t fcs;
 
-	if (inp[0] == 0x7e)
+	if (*inp == 0x7e)
 		inp++;
 	else
 		vpn_progress(vpninfo, PRG_DEBUG,
 			     _("HDLC initial flag sequence (0x7e) is missing\n"));
 
-	for (; inp < endp - 2; inp++) {
-		if (inp[2] == 0x7e)
-			goto done;
-		else if (*inp == 0x7d)
+	for (; *inp != 0x7e && inp < endp; inp++) {
+		if (*inp == 0x7d)
 			escape = 1;
 		else if (escape) {
 			*outp++ = *inp ^ 0x20;
@@ -98,26 +99,29 @@ static int unhdlc_in_place(struct openconnect_info *vpninfo, unsigned char *byte
 		} else
 			*outp++ = *inp;
 	}
-	vpn_progress(vpninfo, PRG_ERR,
-		     _("HDLC buffer ended without FCS and flag sequence (0x7e)\n"));
-	return -EINVAL;
-
- done:
-	if (escape)
+	if (*inp++ != 0x7e) {
+		vpn_progress(vpninfo, PRG_ERR,
+			     _("HDLC buffer ended without flag sequence (0x7e)\n"));
+		return -EINVAL;
+	}
+	if (escape) {
 		vpn_progress(vpninfo, PRG_DEBUG, _("HDLC packet ended with dangling escape.\n"));
+		return -EINVAL;
+	}
 
-	fcs = load_be16(inp);
-	inp += 3;
+	/* Last two decoded bytes are FCS */
+	outp -= 2;
+	fcs = load_be16(outp);
 
 	/* XX: check FCS */
 	vpn_progress(vpninfo, PRG_TRACE,
 		     _("Un-HDLC'ed packet (%d bytes -> %ld), FCS=0x%04x\n"),
 		     len, outp - bytes, fcs);
 
-	/* Save pointer to remaining data */
-	if (next) *next = inp + 3;
+	/* Save pointer to remaining data, and return size after decoding */
+	if (next) *next = inp;
 
-	return inp - bytes;
+	return outp - bytes;
 }
 
 #define ACCOMP 1
@@ -195,7 +199,7 @@ struct oc_ppp *openconnect_ppp_new(int encap, int want_ipv4, int want_ipv6)
 
 	case PPP_ENCAP_F5_HDLC:
 		ppp->encap_len = 0;
-		ppp->hdlc = 1;
+		ppp->hdlc = HDLC_ZERO_FCS;
 		break;
 
 	default:
