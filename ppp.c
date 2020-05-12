@@ -454,7 +454,6 @@ static int handle_config_request(struct openconnect_info *vpninfo,
 		}
 	}
 
-out:
 	buf_free(rejbuf);
 	return ret;
 }
