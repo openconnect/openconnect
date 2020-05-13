@@ -18,16 +18,14 @@
 #ifndef __OPENCONNECT_PPP_H__
 #define __OPENCONNECT_PPP_H__
 
-#include <config.h>
-
-#include "openconnect-internal.h"
-
+/* PPP protocol field values */
 #define PPP_LCP		0xc021
 #define PPP_IPCP	0x8021
 #define PPP_IP6CP	0x8057
 #define PPP_IP		0x21
 #define PPP_IP6		0x57
 
+/* NCP packet formats (https://tools.ietf.org/html/rfc1661#section-3.2) */
 #define CONFREQ 1
 #define CONFACK 2
 #define CONFNAK 3
@@ -40,17 +38,17 @@
 #define ECHOREP 10
 #define DISCREQ 11
 
+/* HDLC (https://tools.ietf.org/html/rfc1662) */
 #define PPPINITFCS16    0xffff  /* Initial FCS value */
 #define PPPGOODFCS16    0xf0b8  /* Good final FCS value */
+#define ASYNCMAP_LCP 0xffffffffUL /* When sending LCP, always escape characters < 0x20 */
 
-/* When sending LCP, always escape characters < 0x20 */
-#define ASYNCMAP_LCP 0xffffffffUL
+/* Negotiable options (our own values, not wire protocol) */
+#define ACCOMP 1		/* https://tools.ietf.org/html/rfc1661#section-6.6 */
+#define PFCOMP 2		/* https://tools.ietf.org/html/rfc1661#section-6.5 */
+#define VJCOMP 4		/* https://tools.ietf.org/html/rfc1332#section-4 */
 
-/* Our own flag values, not wire protocol */
-#define ACCOMP 1
-#define PFCOMP 2
-#define VJCOMP 4
-
+/* PPP states (https://tools.ietf.org/html/rfc1661#section-3.2) */
 #define PPPS_DEAD		0
 #define PPPS_ESTABLISH		1
 #define PPPS_OPENED		2
@@ -58,6 +56,7 @@
 #define PPPS_NETWORK		4
 #define PPPS_TERMINATE		5
 
+/* NCP states */
 #define NCP_CONF_REQ_RECEIVED	1
 #define NCP_CONF_REQ_SENT	2
 #define NCP_CONF_ACK_RECEIVED	4
