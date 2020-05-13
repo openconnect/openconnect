@@ -137,7 +137,9 @@ rm -f $RPM_BUILD_ROOT/%{_libexecdir}/openconnect/hipreport-android.sh
 
 %check
 %if 0%{?fedora} || 0%{?rhel} > 7
-make VERBOSE=1 check
+# Clear RDRAND capability bit to work around
+# https://bugzilla.redhat.com/show_bug.cgi?id=1831086
+make VERBOSE=1 OPENSSL_ia32cap=~0x4000000000000000 check
 %else
 make VERBOSE=1 XFAIL_TESTS="auth-nonascii bad_dtls_test" check
 %endif
