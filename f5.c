@@ -55,7 +55,7 @@ int f5_obtain_cookie(struct openconnect_info *vpninfo)
  * Extract the content of the "params" node which is needed for the
  * next request.
  */
-static int parse_profile(struct openconnect_info *vpninfo, struct oc_text_buf *buf,
+static int parse_profile(struct openconnect_info *vpninfo, char *buf, int len,
 			 char **params)
 {
 	xmlDocPtr xml_doc;
@@ -63,16 +63,16 @@ static int parse_profile(struct openconnect_info *vpninfo, struct oc_text_buf *b
 	char *type = NULL;
 	int ret;
 
-	if (buf_error(buf))
-		return buf_error(buf);
+	if (!buf || !len)
+		return -EINVAL;
 
-	xml_doc = xmlReadMemory(buf->data, buf->pos, "noname.xml", NULL,
+	xml_doc = xmlReadMemory(buf, len, "noname.xml", NULL,
 				XML_PARSE_NOERROR|XML_PARSE_RECOVER);
 	if (!xml_doc) {
 		vpn_progress(vpninfo, PRG_ERR,
 			     _("Failed to parse F5 profile response\n"));
 		vpn_progress(vpninfo, PRG_DEBUG,
-			     _("Response was:%s\n"), buf->data);
+			     _("Response was:%s\n"), buf);
 		return -EINVAL;
 	}
 	xml_node = xmlDocGetRootElement(xml_doc);
@@ -114,7 +114,7 @@ static int parse_profile(struct openconnect_info *vpninfo, struct oc_text_buf *b
 	vpn_progress(vpninfo, PRG_ERR,
 		     _("Failed to find VPN profile parameters\n"));
 	vpn_progress(vpninfo, PRG_DEBUG,
-		     _("Response was:%s\n"), buf->data);
+		     _("Response was:%s\n"), buf);
 	ret = -EINVAL;
  out:
 	xmlFreeDoc(xml_doc);
@@ -164,7 +164,7 @@ static const char *add_option(struct openconnect_info *vpninfo, const char *opt,
 	return new->value;
 }
 
-static int parse_options(struct openconnect_info *vpninfo, struct oc_text_buf *buf,
+static int parse_options(struct openconnect_info *vpninfo, char *buf, int len,
 			 char **session_id, char **ur_z, int *ipv4, int *ipv6, int *hdlc)
 {
 	xmlNode *fav_node, *obj_node, *xml_node;
@@ -173,16 +173,16 @@ static int parse_options(struct openconnect_info *vpninfo, struct oc_text_buf *b
 	char *s = NULL;
 	struct oc_text_buf *domains = NULL;
 
-	if (buf_error(buf))
-		return buf_error(buf);
+	if (!buf || !len)
+		return -EINVAL;
 
-	xml_doc = xmlReadMemory(buf->data, buf->pos, "noname.xml", NULL,
+	xml_doc = xmlReadMemory(buf, len, "noname.xml", NULL,
 				XML_PARSE_NOERROR|XML_PARSE_RECOVER);
 	if (!xml_doc) {
 		vpn_progress(vpninfo, PRG_ERR,
 			     _("Failed to parse F5 options response\n"));
 		vpn_progress(vpninfo, PRG_DEBUG,
-			     _("Response was:%s\n"), buf->data);
+			     _("Response was:%s\n"), buf);
 		return -EINVAL;
 	}
 	fav_node = xmlDocGetRootElement(xml_doc);
@@ -294,7 +294,7 @@ static int parse_options(struct openconnect_info *vpninfo, struct oc_text_buf *b
 		vpn_progress(vpninfo, PRG_ERR,
 			     _("Failed to find VPN options\n"));
 		vpn_progress(vpninfo, PRG_DEBUG,
-			     _("Response was:%s\n"), buf->data);
+			     _("Response was:%s\n"), buf);
 		ret = -EINVAL;
 	}
  	xmlFreeDoc(xml_doc);
@@ -323,10 +323,11 @@ static int get_ip_address(struct openconnect_info *vpninfo, char *header, char *
 int f5_connect(struct openconnect_info *vpninfo)
 {
 	int ret;
-	struct oc_text_buf *reqbuf;
+	struct oc_text_buf *reqbuf = NULL;
 	char *profile_params = NULL;
 	char *sid = NULL, *ur_z = NULL;
 	int ipv4 = -1, ipv6 = -1, hdlc = -1;
+	char *res_buf = NULL;
 
 	/* XXX: We should do what cstp_connect() does to check that configuration
 	   hasn't changed on a reconnect. */
@@ -334,103 +335,50 @@ int f5_connect(struct openconnect_info *vpninfo)
 	if (!vpninfo->cookies && vpninfo->cookie)
 		http_add_cookie(vpninfo, "MRHSession", vpninfo->cookie, 1);
 
-	ret = openconnect_open_https(vpninfo);
-	if (ret)
-		return ret;
-
-	reqbuf = buf_alloc();
-
-	buf_append(reqbuf, "GET /vdesk/vpn/index.php3?outform=xml&client_version=2.0 HTTP/1.1\r\n");
-	http_common_headers(vpninfo, reqbuf);
-	buf_append(reqbuf, "\r\n");
-
-	if (buf_error(reqbuf)) {
-		vpn_progress(vpninfo, PRG_ERR,
-			     _("Error creating f5 profile request\n"));
-		ret = buf_error(reqbuf);
-		goto out;
-	}
-	if (vpninfo->dump_http_traffic)
-		dump_buf(vpninfo, '>', reqbuf->data);
-
-	ret = vpninfo->ssl_write(vpninfo, reqbuf->data, reqbuf->pos);
+	free(vpninfo->urlpath);
+	vpninfo->urlpath = strdup("vdesk/vpn/index.php3?outform=xml&client_version=2.0");
+	ret = do_https_request(vpninfo, "GET", NULL, NULL, &res_buf, 0);
 	if (ret < 0)
 		goto out;
 
-	ret = process_http_response(vpninfo, 0, NULL, reqbuf);
-	if (ret < 0)
-		goto out;
-
-	if (ret != 201 && ret != 200) {
-		vpn_progress(vpninfo, PRG_ERR,
-			     _("Unexpected %d result from server\n"),
-			     ret);
-		ret = -EINVAL;
-		goto out;
-	}
-
-	if (vpninfo->dump_http_traffic)
-		dump_buf(vpninfo, '<', reqbuf->data);
-	ret = parse_profile(vpninfo, reqbuf, &profile_params);
+	ret = parse_profile(vpninfo, res_buf, ret, &profile_params);
 	if (ret)
 		goto out;
 
 	vpn_progress(vpninfo, PRG_DEBUG,
 		     _("Got profile parameters '%s'\n"), profile_params);
-	buf_truncate(reqbuf);
 
-	/* Now fetch the connection options */
-	ret = openconnect_open_https(vpninfo);
-	if (ret)
-		goto out;
-	buf_append(reqbuf, "GET /vdesk/vpn/connect.php3?%s&outform=xml&client_version=2.0 HTTP/1.1\r\n",
-		   profile_params);
-	http_common_headers(vpninfo, reqbuf);
-	buf_append(reqbuf, "\r\n");
+	free(res_buf);
+	res_buf = NULL;
 
-	if (buf_error(reqbuf)) {
-		vpn_progress(vpninfo, PRG_ERR,
-			     _("Error creating f5 options request\n"));
-		ret = buf_error(reqbuf);
+	free(vpninfo->urlpath);
+	if (asprintf(&vpninfo->urlpath, "vdesk/vpn/connect.php3?%s&outform=xml&client_version=2.0",
+		     profile_params) == -1) {
+		ret = -ENOMEM;
 		goto out;
 	}
-	if (vpninfo->dump_http_traffic)
-		dump_buf(vpninfo, '>', reqbuf->data);
-	ret = vpninfo->ssl_write(vpninfo, reqbuf->data, reqbuf->pos);
+	ret = do_https_request(vpninfo, "GET", NULL, NULL, &res_buf, 0);
 	if (ret < 0)
 		goto out;
 
-	ret = process_http_response(vpninfo, 0, NULL, reqbuf);
-	if (ret < 0)
-		goto out;
-
-	if (ret != 201 && ret != 200) {
-		vpn_progress(vpninfo, PRG_ERR,
-			     _("Unexpected %d result from server\n"),
-			     ret);
-		ret = -EINVAL;
-		goto out;
-	}
-
-	if (vpninfo->dump_http_traffic)
-		dump_buf(vpninfo, '<', reqbuf->data);
-	ret = parse_options(vpninfo, reqbuf, &sid, &ur_z, &ipv4, &ipv6, &hdlc);
+	ret = parse_options(vpninfo, res_buf, ret, &sid, &ur_z, &ipv4, &ipv6, &hdlc);
 	if (ret)
 		goto out;
 
 	vpn_progress(vpninfo, PRG_DEBUG,
 		     _("Got ipv4 %d ipv6 %d hdlc %d ur_Z '%s'\n"), ipv4, ipv6, hdlc, ur_z);
-	buf_truncate(reqbuf);
 
 	if (ipv4 == -1)
 		ipv4 = 0;
 	if (ipv6 == -1)
 		ipv6 = 0;
 
-	/* Now fetch the connection options */
+	/* Now establish the actual connection */
 	ret = openconnect_open_https(vpninfo);
 	if (ret)
 		goto out;
+
+	reqbuf = buf_alloc();
 	buf_append(reqbuf, "GET /myvpn?sess=%s&hdlc_framing=%s&ipv4=%s&ipv6=%s&Z=%s&hostname=",
 		   sid, hdlc?"yes":"no", ipv4?"yes":"no", ipv6?"yes":"no", ur_z);
 	buf_append_base64(reqbuf, vpninfo->localname, strlen(vpninfo->localname));
@@ -440,7 +388,7 @@ int f5_connect(struct openconnect_info *vpninfo)
 
 	if (buf_error(reqbuf)) {
 		vpn_progress(vpninfo, PRG_ERR,
-			     _("Error creating f5 options request\n"));
+			     _("Error establishing F5 connection\n"));
 		ret = buf_error(reqbuf);
 		goto out;
 	}
@@ -494,7 +442,7 @@ int f5_connect(struct openconnect_info *vpninfo)
 int f5_bye(struct openconnect_info *vpninfo, const char *reason)
 {
 	char *orig_path;
-	char *res_buf=NULL;
+	char *res_buf = NULL;
 	int ret;
 
 	/* XX: handle clean PPP termination?

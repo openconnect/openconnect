@@ -81,7 +81,7 @@ static const char *add_option(struct openconnect_info *vpninfo, const char *opt,
 	return new->value;
 }
 
-static int parse_fortinet_xml_config(struct openconnect_info *vpninfo, struct oc_text_buf *buf,
+static int parse_fortinet_xml_config(struct openconnect_info *vpninfo, char *buf, int len,
 				     int *ipv4, int *ipv6)
 {
 	xmlNode *fav_node, *obj_node, *xml_node;
@@ -90,16 +90,16 @@ static int parse_fortinet_xml_config(struct openconnect_info *vpninfo, struct oc
 	char *s = NULL;
 	struct oc_text_buf *domains = NULL;
 
-	if (buf_error(buf))
-		return buf_error(buf);
+	if (!buf || !len)
+		return -EINVAL;
 
-	xml_doc = xmlReadMemory(buf->data, buf->pos, "noname.xml", NULL,
+	xml_doc = xmlReadMemory(buf, len, "noname.xml", NULL,
 				XML_PARSE_NOERROR|XML_PARSE_RECOVER);
 	if (!xml_doc) {
 		vpn_progress(vpninfo, PRG_ERR,
-			     _("Failed to parse Fortinet options response\n"));
+			     _("Failed to parse Fortinet config XML\n"));
 		vpn_progress(vpninfo, PRG_DEBUG,
-			     _("Response was:%s\n"), buf->data);
+			     _("Response was:%s\n"), buf);
 		return -EINVAL;
 	}
 	fav_node = xmlDocGetRootElement(xml_doc);
@@ -205,7 +205,7 @@ static int parse_fortinet_xml_config(struct openconnect_info *vpninfo, struct oc
 		vpn_progress(vpninfo, PRG_ERR,
 			     _("Failed to find VPN options\n"));
 		vpn_progress(vpninfo, PRG_DEBUG,
-			     _("Response was:%s\n"), buf->data);
+			     _("Response was:%s\n"), buf);
 		ret = -EINVAL;
 	}
  	xmlFreeDoc(xml_doc);
@@ -215,7 +215,8 @@ static int parse_fortinet_xml_config(struct openconnect_info *vpninfo, struct oc
 
 int fortinet_connect(struct openconnect_info *vpninfo)
 {
-	struct oc_text_buf *reqbuf;
+	char *res_buf = NULL;
+	struct oc_text_buf *reqbuf = NULL;
 	int ret, ipv4 = -1, ipv6 = -1;
 
 	/* XXX: We should do what cstp_connect() does to check that configuration
@@ -237,121 +238,37 @@ int fortinet_connect(struct openconnect_info *vpninfo)
 	 * we're letting the auth happen externally for now, let's do it
 	 * here...
 	 */
-
-	buf_append(reqbuf, "GET /remote/index HTTP/1.1\r\n");
-	http_common_headers(vpninfo, reqbuf);
-	buf_append(reqbuf, "\r\n");
-
-	if (buf_error(reqbuf)) {
-		vpn_progress(vpninfo, PRG_ERR,
-			     _("Error creating Fortinet index request\n"));
-		ret = buf_error(reqbuf);
-		goto out;
-	}
-	if (vpninfo->dump_http_traffic)
-		dump_buf(vpninfo, '>', reqbuf->data);
-
-	ret = vpninfo->ssl_write(vpninfo, reqbuf->data, reqbuf->pos);
+	free(vpninfo->urlpath);
+	vpninfo->urlpath = strdup("remote/index");
+	ret = do_https_request(vpninfo, "GET", NULL, NULL, &res_buf, 0);
 	if (ret < 0)
 		goto out;
-
-	ret = process_http_response(vpninfo, 0, NULL, reqbuf);
-	if (ret < 0)
-		goto out;
-
-	if (ret != 201 && ret != 200) {
-		vpn_progress(vpninfo, PRG_ERR,
-			     _("Unexpected %d result from server\n"),
-			     ret);
-		ret = -EINVAL;
-		goto out;
-	}
-
-	/* We don't care about what it returns */
-	if (vpninfo->dump_http_traffic)
-		dump_buf(vpninfo, '<', reqbuf->data);
-	buf_truncate(reqbuf);
+	/* We don't care what it returned as long as it was successful */
+	free(res_buf);
+	res_buf = NULL;
 
 	/* XXX: Why was auth_request_vpn_allocation() doing this anyway?
 	 * It's fetching the legacy non-XML configuration, isn't it?
 	 * Do we *actually* have to do this, before fetching the XML config?
 	 */
-	buf_append(reqbuf, "GET /remote/fortisslvpn HTTP/1.1\r\n");
-	http_common_headers(vpninfo, reqbuf);
-	buf_append(reqbuf, "\r\n");
-
-	if (buf_error(reqbuf)) {
-		vpn_progress(vpninfo, PRG_ERR,
-			     _("Error creating Fortinet legacy config request\n"));
-		ret = buf_error(reqbuf);
+	free(vpninfo->urlpath);
+	vpninfo->urlpath = strdup("remote/fortisslvpn");
+	ret = do_https_request(vpninfo, "GET", NULL, NULL, &res_buf, 0);
+	if (ret < 0)
 		goto out;
-	}
-	if (vpninfo->dump_http_traffic)
-		dump_buf(vpninfo, '>', reqbuf->data);
+	/* We don't care what it returned as long as it was successful */
+	free(res_buf);
+	res_buf = NULL;
 
-	ret = vpninfo->ssl_write(vpninfo, reqbuf->data, reqbuf->pos);
+	free(vpninfo->urlpath);
+	vpninfo->urlpath = strdup("remote/fortisslvpn_xml");
+	ret = do_https_request(vpninfo, "GET", NULL, NULL, &res_buf, 0);
 	if (ret < 0)
 		goto out;
 
-	ret = process_http_response(vpninfo, 0, NULL, reqbuf);
-	if (ret < 0)
-		goto out;
-
-	if (ret != 201 && ret != 200) {
-		vpn_progress(vpninfo, PRG_ERR,
-			     _("Unexpected %d result from server\n"),
-			     ret);
-		ret = -EINVAL;
-		goto out;
-	}
-
-	/* ... and auth_request_vpn_allocation() just throws it away,
-	 * before fetching the XML version. Or refetching this and
-	 * *actually* looking at it, if the legacy mode is enabled.
-	 * WTF? */
-	if (vpninfo->dump_http_traffic)
-		dump_buf(vpninfo, '<', reqbuf->data);
-	buf_truncate(reqbuf);
-
-	/* Now fetch the XML version of the config for real */
-	ret = openconnect_open_https(vpninfo);
+	ret = parse_fortinet_xml_config(vpninfo, res_buf, ret, &ipv4, &ipv6);
 	if (ret)
 		goto out;
-	buf_append(reqbuf, "GET /remote/fortisslvpn_xml HTTP/1.1\r\n");
-	http_common_headers(vpninfo, reqbuf);
-	buf_append(reqbuf, "\r\n");
-
-	if (buf_error(reqbuf)) {
-		vpn_progress(vpninfo, PRG_ERR,
-			     _("Error creating fortinet options request\n"));
-		ret = buf_error(reqbuf);
-		goto out;
-	}
-	if (vpninfo->dump_http_traffic)
-		dump_buf(vpninfo, '>', reqbuf->data);
-	ret = vpninfo->ssl_write(vpninfo, reqbuf->data, reqbuf->pos);
-	if (ret < 0)
-		goto out;
-
-	ret = process_http_response(vpninfo, 0, NULL, reqbuf);
-	if (ret < 0)
-		goto out;
-
-	if (ret != 201 && ret != 200) {
-		vpn_progress(vpninfo, PRG_ERR,
-			     _("Unexpected %d result from server\n"),
-			     ret);
-		ret = -EINVAL;
-		goto out;
-	}
-
-	if (vpninfo->dump_http_traffic)
-		dump_buf(vpninfo, '<', reqbuf->data);
-	ret = parse_fortinet_xml_config(vpninfo, reqbuf, &ipv4, &ipv6);
-	if (ret)
-		goto out;
-
-	buf_truncate(reqbuf);
 
 	if (ipv4 == -1)
 		ipv4 = 0;
@@ -362,7 +279,8 @@ int fortinet_connect(struct openconnect_info *vpninfo)
 	ret = openconnect_open_https(vpninfo);
 	if (ret)
 		goto out;
-	buf_append(reqbuf, "GET /remopte/sslvpn-tunnel HTTP/1.1\r\n");
+	reqbuf = buf_alloc();
+	buf_append(reqbuf, "GET /remote/sslvpn-tunnel HTTP/1.1\r\n");
 	http_common_headers(vpninfo, reqbuf);
 	buf_append(reqbuf, "\r\n");
 
@@ -406,6 +324,7 @@ int fortinet_connect(struct openconnect_info *vpninfo)
 		monitor_except_fd(vpninfo, ssl);
 	}
 	buf_free(reqbuf);
+	free(res_buf);
 
 	free(vpninfo->cstp_pkt);
 	vpninfo->cstp_pkt = NULL;
@@ -430,7 +349,7 @@ int fortinet_bye(struct openconnect_info *vpninfo, const char *reason)
 	openconnect_close_https(vpninfo, 0);
 
 	orig_path = vpninfo->urlpath;
-	vpninfo->urlpath = strdup("/remote/logout");
+	vpninfo->urlpath = strdup("remote/logout");
 	ret = do_https_request(vpninfo, "GET", NULL, NULL, &res_buf, 0);
 	free(vpninfo->urlpath);
 	vpninfo->urlpath = orig_path;
