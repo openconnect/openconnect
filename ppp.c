@@ -72,11 +72,14 @@ static struct pkt *hdlc_into_new_pkt(struct openconnect_info *vpninfo, unsigned 
         const unsigned char *inp = bytes, *endp = bytes + len;
 	unsigned char *outp;
 	uint16_t fcs = PPPINITFCS16;
-	struct pkt *p = malloc(sizeof(struct pkt) + len*2 + 6);
+	/* Every byte in payload and 2-byte FCS potentially expands to two bytes,
+	 * plus 2 for flag (0x7e) at start and end. We know that we will output
+	 * at least 4 bytes so we can stash those in the header. */
+	struct pkt *p = malloc(sizeof(struct pkt) + len*2 + 2);
 	if (!p)
 		return NULL;
 
-	outp = p->data;
+	outp = p->data - 4;
 	*outp++ = 0x7e;
 
 	for (; inp < endp; inp++) {
@@ -90,7 +93,7 @@ static struct pkt *hdlc_into_new_pkt(struct openconnect_info *vpninfo, unsigned 
 	HDLC_OUT(outp, fcs >> 8, asyncmap);
 
 	*outp++ = 0x7e;
-	p->ppp.hlen = 0;
+	p->ppp.hlen = 4;
 	p->len = outp - p->data;
 	return p;
 }
