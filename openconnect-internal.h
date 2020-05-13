@@ -176,8 +176,9 @@ struct pkt {
 #define DTLS_CONNECTING	4	/* ESP probe received; must tell server */
 #define DTLS_CONNECTED	5	/* Server informed and should be sending ESP */
 
-#define PPP_ENCAP_F5	    1	/* F5 BigIP no HDLC */
-#define PPP_ENCAP_F5_HDLC   2	/* F5 BigIP HDLC */
+#define PPP_ENCAP_F5		1	/* F5 BigIP no HDLC */
+#define PPP_ENCAP_F5_HDLC	2	/* F5 BigIP HDLC */
+#define PPP_ENCAP_FORTINET_HDLC	3	/* Fortinet HDLC */
 
 #define COMPR_DEFLATE	(1<<0)
 #define COMPR_LZS	(1<<1)
@@ -936,6 +937,11 @@ int pulse_eap_ttls_recv(struct openconnect_info *vpninfo, void *data, int len);
 int f5_obtain_cookie(struct openconnect_info *vpninfo);
 int f5_connect(struct openconnect_info *vpninfo);
 int f5_bye(struct openconnect_info *vpninfo, const char *reason);
+
+/* fortinet.c */
+int fortinet_obtain_cookie(struct openconnect_info *vpninfo);
+int fortinet_connect(struct openconnect_info *vpninfo);
+int fortinet_bye(struct openconnect_info *vpninfo, const char *reason);
 
 /* ppp.c */
 struct oc_ppp;

@@ -177,6 +177,7 @@ struct oc_ppp *openconnect_ppp_new(int encap, int want_ipv4, int want_ipv6)
 		break;
 
 	case PPP_ENCAP_F5_HDLC:
+	case PPP_ENCAP_FORTINET_HDLC:
 		ppp->encap_len = 0;
 		ppp->hdlc = 1;
 		break;
@@ -660,6 +661,7 @@ int ppp_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable)
 			break;
 
 		case PPP_ENCAP_F5_HDLC:
+		case PPP_ENCAP_FORTINET_HDLC:
 			payload_len = unhdlc_in_place(vpninfo, ph, len, &pp);
 			if (payload_len < 0)
 				continue; /* unhdlc_in_place already logged */
@@ -857,6 +859,7 @@ int ppp_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable)
 			this->ppp.hlen = -n + 4;
 			break;
 		case PPP_ENCAP_F5_HDLC:
+		case PPP_ENCAP_FORTINET_HDLC:
 			/* XX: use worst-case escaping for LCP */
 			this = hdlc_into_new_pkt(vpninfo, this->data + n, this->len - n,
 						 proto == PPP_LCP ? ASYNCMAP_LCP : ppp->out_asyncmap);
