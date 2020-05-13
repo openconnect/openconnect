@@ -372,7 +372,7 @@ static int handle_config_request(struct openconnect_info *vpninfo,
 				     _("Error composing ConfRej packet\n"));
 			return buf_free(rejbuf);
 		}
-		vpn_progress(vpninfo, PRG_DEBUG, _("Nak proto 0x%04x/id %d config from server\n"), proto, id);
+		vpn_progress(vpninfo, PRG_DEBUG, _("Reject proto 0x%04x/id %d config from server\n"), proto, id);
 		if ((ret = queue_config_packet(vpninfo, proto, id, CONFREJ, rejbuf->pos, rejbuf->data)) >= 0) {
 			ret = 0;
 		}
@@ -459,6 +459,71 @@ out:
 	return ret;
 }
 
+static int handle_config_reject(struct openconnect_info *vpninfo,
+				 int proto, int id, unsigned char *payload, int len)
+{
+	struct oc_ppp *ppp = vpninfo->ppp;
+	struct oc_ncp *ncp;
+	unsigned char *p;
+
+	switch (proto) {
+	case PPP_LCP: ncp = &ppp->lcp; break;
+	case PPP_IPCP: ncp = &ppp->ipcp; break;
+	case PPP_IP6CP: ncp = &ppp->ip6cp; break;
+	default: return -EINVAL;
+	}
+
+	/* If it isn't a response to our latest ConfReq, we don't care */
+	if (id != ncp->id)
+		return 0;
+
+	for (p = payload ; p+1 < payload+len && p+p[1] <= payload+len; p += p[1]) {
+		unsigned char t = p[0], l = p[1];
+		switch (PROTO_TAG_LEN(proto, t, l-2)) {
+		case PROTO_TAG_LEN(PPP_LCP, LCP_MRU, 2):
+			vpn_progress(vpninfo, PRG_DEBUG,
+				     _("Server rejected LCP MRU option\n"));
+			ppp->out_lcp_opts &= ~BIT_MRU;
+			break;
+		case PROTO_TAG_LEN(PPP_LCP, LCP_ASYNCMAP, 4):
+			vpn_progress(vpninfo, PRG_DEBUG,
+				     _("Server rejected LCP asyncmap option\n"));
+			ppp->out_asyncmap = ASYNCMAP_LCP;
+			ppp->out_lcp_opts &= ~BIT_ASYNCMAP;
+			break;
+		case PROTO_TAG_LEN(PPP_LCP, LCP_MAGIC, 4):
+			vpn_progress(vpninfo, PRG_DEBUG,
+				     _("Server rejected LCP magic option\n"));
+			ppp->out_lcp_opts &= ~BIT_MAGIC;
+			break;
+		case PROTO_TAG_LEN(PPP_LCP, LCP_PFCOMP, 0):
+			vpn_progress(vpninfo, PRG_DEBUG,
+				     _("Server rejected LCP PFCOMP option\n"));
+			ppp->out_lcp_opts &= ~BIT_PFCOMP;
+			break;
+		case PROTO_TAG_LEN(PPP_LCP, LCP_ACCOMP, 0):
+			vpn_progress(vpninfo, PRG_DEBUG,
+				     _("Received address and control field compression from server\n"));
+			ppp->in_lcp_opts |= BIT_ACCOMP;
+			break;
+		default:
+			vpn_progress(vpninfo, PRG_DEBUG,
+				     _("Server rejected unknown proto 0x%04x TLV (tag %d, len %d+2)\n"),
+				     proto, t, l);
+			dump_buf_hex(vpninfo, PRG_DEBUG, '<', p, (int)p[1]);
+			/* XX: Should abort negotiation */
+			return -EINVAL;
+		}
+	}
+	if (p != payload+len) {
+		vpn_progress(vpninfo, PRG_DEBUG,
+			     _("Received %ld extra bytes at end of Config-Reject:\n"), payload + len - p);
+		dump_buf_hex(vpninfo, PRG_DEBUG, '<', p, payload + len - p);
+	}
+
+	return queue_config_request(vpninfo, proto);
+}
+
 static int handle_config_packet(struct openconnect_info *vpninfo,
 				uint16_t proto, unsigned char *p, int len)
 {
@@ -508,8 +573,11 @@ static int handle_config_packet(struct openconnect_info *vpninfo,
 	case DISCREQ:
 		break;
 
-	case CONFNAK:
 	case CONFREJ:
+		ret = handle_config_reject(vpninfo, proto, id, p + 4, len - 4);
+		break;
+
+	case CONFNAK:
 	case CODEREJ:
 	case PROTREJ:
 	default:
