@@ -59,6 +59,13 @@ static const uint16_t fcstab[256] = {
 
 #define foldfcs(fcs, c) (  ( (fcs) >> 8 ) ^ fcstab[(fcs ^ (c)) & 0xff] )
 #define NEED_ESCAPE(c, map) ( (((c) < 0x20) && (map && (1UL << (c)))) || ((c) == 0x7d) || ((c) == 0x7e) )
+#define HDLC_OUT(outp, c, map) do {   \
+	if (NEED_ESCAPE((c), map)) {  \
+		*outp++ = 0x7d;       \
+		*outp++ = (c) ^ 0x20; \
+	} else                        \
+		*outp++ = (c);        \
+} while (0)
 
 static struct pkt *hdlc_into_new_pkt(struct openconnect_info *vpninfo, unsigned char *bytes, int len, int asyncmap)
 {
@@ -74,27 +81,13 @@ static struct pkt *hdlc_into_new_pkt(struct openconnect_info *vpninfo, unsigned 
 
 	for (; inp < endp; inp++) {
 		fcs = foldfcs(fcs, *inp);
-		if (NEED_ESCAPE(*inp, asyncmap)) {
-			*outp++ = 0x7d;
-			*outp++ = *inp ^ 0x20;
-		} else
-			*outp++ = *inp;
+		HDLC_OUT(outp, *inp, asyncmap);
 	}
 
 	/* Append FCS, escaped, little-endian */
 	fcs ^= 0xffff;
-	if (NEED_ESCAPE(fcs & 0xff, asyncmap)) {
-		*outp++ = 0x7d;
-		*outp++ = (fcs & 0xff) ^ 0x20;
-	} else
-		*outp++ = fcs & 0xff;
-
-	fcs >>= 8;
-	if (NEED_ESCAPE(fcs, asyncmap)) {
-		*outp++ = 0x7d;
-		*outp++ = fcs ^ 0x20;
-	} else
-		*outp++ = fcs;
+	HDLC_OUT(outp, fcs & 0xff, asyncmap);
+	HDLC_OUT(outp, fcs >> 8, asyncmap);
 
 	*outp++ = 0x7e;
 	p->ppp.hlen = 0;
