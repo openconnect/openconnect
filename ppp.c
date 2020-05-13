@@ -157,7 +157,7 @@ static int unhdlc_in_place(struct openconnect_info *vpninfo, unsigned char *byte
 }
 
 static const char *ppps_names[] = { "DEAD", "ESTABLISH", "OPENED", "AUTHENTICATE", "NETWORK", "TERMINATE" };
-static const char *encap_names[PPPS_ENCAP_MAX] = { NULL,
+static const char *encap_names[] = { NULL,
 			   "F5", "F5 HDLC", "FORTINET HDLC" };
 static const char *lcp_names[] = { NULL,
 			   "Configure-Request", "Configure-Ack",
