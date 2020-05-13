@@ -279,41 +279,41 @@ static int handle_config_request(struct openconnect_info *vpninfo,
 	for (p = payload ; p+1 < payload+len && p+p[1] <= payload+len; p += p[1]) {
 		unsigned char t = p[0], l = p[1];
 		switch (PROTO_TAG_LEN(proto, t, l-2)) {
-		case PROTO_TAG_LEN(PPP_LCP, 1, 2):
+		case PROTO_TAG_LEN(PPP_LCP, LCP_MRU, 2):
 			vpninfo->ip_info.mtu = load_be16(p+2);
 			vpn_progress(vpninfo, PRG_DEBUG,
 				     _("Received MTU %d from server\n"),
 				     vpninfo->ip_info.mtu);
 			break;
-		case PROTO_TAG_LEN(PPP_LCP, 2, 4):
+		case PROTO_TAG_LEN(PPP_LCP, LCP_ASYNCMAP, 4):
 			ppp->in_asyncmap = load_be32(p+2);
 			vpn_progress(vpninfo, PRG_DEBUG,
 				     _("Received asyncmap of 0x%08x from server\n"),
 				     ppp->in_asyncmap);
 			break;
-		case PROTO_TAG_LEN(PPP_LCP, 5, 4):
+		case PROTO_TAG_LEN(PPP_LCP, LCP_MAGIC, 4):
 			memcpy(&ppp->in_lcp_magic, p+2, 4);
 			vpn_progress(vpninfo, PRG_DEBUG,
 				     _("Received magic number of 0x%08x from server\n"),
 				     ntohl(ppp->in_lcp_magic));
 			break;
-		case PROTO_TAG_LEN(PPP_LCP, 7, 0):
+		case PROTO_TAG_LEN(PPP_LCP, LCP_PFCOMP, 0):
 			vpn_progress(vpninfo, PRG_DEBUG,
 				     _("Received protocol field compression from server\n"));
 			ppp->in_lcp_opts |= PFCOMP;
 			break;
-		case PROTO_TAG_LEN(PPP_LCP, 8, 0):
+		case PROTO_TAG_LEN(PPP_LCP, LCP_ACCOMP, 0):
 			vpn_progress(vpninfo, PRG_DEBUG,
 				     _("Received address and control field compression from server\n"));
 			ppp->in_lcp_opts |= ACCOMP;
 			break;
-		case PROTO_TAG_LEN(PPP_IPCP, 1, 8):
+		case PROTO_TAG_LEN(PPP_IPCP, IPCP_IPADDRS, 8):
 			/* XX: Ancient and deprecated. We're supposed to ignore it if we receive it, unless
 			 * we've been Nak'ed. https://tools.ietf.org/html/rfc1332#section-3.1 */
 			vpn_progress(vpninfo, PRG_DEBUG,
 				     _("Received deprecated IP-Addresses from server, ignoring\n"));
 			break;
-		case PROTO_TAG_LEN(PPP_IPCP, 2, 2):
+		case PROTO_TAG_LEN(PPP_IPCP, IPCP_IPCOMP, 2):
 			if (load_be16(p+2) == 0x002d) {
 				/* Van Jacobson TCP/IP compression */
 				vpn_progress(vpninfo, PRG_DEBUG,
@@ -322,13 +322,13 @@ static int handle_config_request(struct openconnect_info *vpninfo,
 				goto reject;
 			}
 			goto unknown;
-		case PROTO_TAG_LEN(PPP_IPCP, 3, 4):
+		case PROTO_TAG_LEN(PPP_IPCP, IPCP_IPADDR, 4):
 			memcpy(&ppp->in_peer_addr, p+2, 4);
 			vpn_progress(vpninfo, PRG_DEBUG,
 				     _("Received peer IPv4 address %s from server\n"),
 				     inet_ntoa(ppp->in_peer_addr));
 			break;
-		case PROTO_TAG_LEN(PPP_IP6CP, 1, 8):
+		case PROTO_TAG_LEN(PPP_IP6CP, IP6CP_INT_ID, 8):
 			memcpy(&ppp->in_ipv6_int_ident, p+2, 8);
 			vpn_progress(vpninfo, PRG_DEBUG,
 				     _("Received peer IPv6 interface identifier :%x:%x:%x:%x from server\n"),
@@ -399,13 +399,13 @@ static int queue_config_request(struct openconnect_info *vpninfo, int proto)
 		if (!vpninfo->ip_info.mtu)
 			vpninfo->ip_info.mtu = 1300; /* FIXME */
 
-		buf_append_ppp_tlv_be16(buf, 1, vpninfo->ip_info.mtu);
-		buf_append_ppp_tlv_be32(buf, 2, ppp->out_asyncmap);
-		buf_append_ppp_tlv(buf, 5, 4, &ppp->out_lcp_magic);
+		buf_append_ppp_tlv_be16(buf, LCP_MRU, vpninfo->ip_info.mtu);
+		buf_append_ppp_tlv_be32(buf, LCP_ASYNCMAP, ppp->out_asyncmap);
+		buf_append_ppp_tlv(buf, LCP_MAGIC, 4, &ppp->out_lcp_magic);
 		if (ppp->out_lcp_opts & PFCOMP)
-			buf_append_ppp_tlv(buf, 7, 0, NULL);
+			buf_append_ppp_tlv(buf, LCP_PFCOMP, 0, NULL);
 		if (ppp->out_lcp_opts & ACCOMP)
-			buf_append_ppp_tlv(buf, 8, 0, NULL);
+			buf_append_ppp_tlv(buf, LCP_ACCOMP, 0, NULL);
 		break;
 
 	case PPP_IPCP:
@@ -413,7 +413,7 @@ static int queue_config_request(struct openconnect_info *vpninfo, int proto)
 		if (vpninfo->ip_info.addr)
 			ppp->out_peer_addr.s_addr = inet_addr(vpninfo->ip_info.addr);
 
-		buf_append_ppp_tlv(buf, 3, 4, &ppp->out_peer_addr);
+		buf_append_ppp_tlv(buf, IPCP_IPADDR, 4, &ppp->out_peer_addr);
 		break;
 
 	case PPP_IP6CP:
@@ -422,7 +422,7 @@ static int queue_config_request(struct openconnect_info *vpninfo, int proto)
 			inet_pton(AF_INET6, vpninfo->ip_info.addr6, &ipv6a);
 		memcpy(&ppp->out_ipv6_int_ident, ipv6a+8, 8); /* last 8 bytes of addr6 */
 
-		buf_append_ppp_tlv(buf, 1, 8, &ppp->out_ipv6_int_ident);
+		buf_append_ppp_tlv(buf, IP6CP_INT_ID, 8, &ppp->out_ipv6_int_ident);
 		break;
 
 	default:

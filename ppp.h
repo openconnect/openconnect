@@ -66,6 +66,21 @@
 #define NCP_TERM_ACK_SENT	16
 #define NCP_TERM_ACK_RECEIVED	32
 
+/* RFC1661 (or RFC1662 for ASYNCMAP) */
+#define LCP_MRU			1
+#define LCP_ASYNCMAP		2
+#define LCP_MAGIC		5
+#define LCP_PFCOMP		7
+#define LCP_ACCOMP		8
+
+/* RFC1332 */
+#define IPCP_IPADDRS		1
+#define IPCP_IPCOMP		2
+#define IPCP_IPADDR		3
+
+/* RFC5072 */
+#define IP6CP_INT_ID		1
+
 struct oc_ncp {
 	int state;
 	int id;
