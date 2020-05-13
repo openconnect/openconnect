@@ -374,12 +374,11 @@ static int handle_config_request(struct openconnect_info *vpninfo,
 	return ret;
 }
 
-static int queue_config_request(struct openconnect_info *vpninfo,
-			       int proto, int id)
+static int queue_config_request(struct openconnect_info *vpninfo, int proto)
 {
 	struct oc_ppp *ppp = vpninfo->ppp;
 	unsigned char ipv6a[16] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
-	int ret;
+	int ret, id;
 	struct oc_ncp *ncp;
 	struct oc_text_buf *buf;
 
@@ -429,7 +428,9 @@ static int queue_config_request(struct openconnect_info *vpninfo,
 	if ((ret = buf_error(buf)) != 0)
 		goto out;
 
-	vpn_progress(vpninfo, PRG_DEBUG, _("Sending our proto 0x%04x/id %d config request to server\n"), proto, id);
+	id = ++ncp->id;
+	vpn_progress(vpninfo, PRG_DEBUG, _("Sending our proto 0x%04x/id %d config request to server\n"),
+		     proto, id);
 	if ((ret = queue_config_packet(vpninfo, proto, id, CONFREQ, buf->pos, buf->data)) >= 0) {
 		ncp->state |= NCP_CONF_REQ_SENT;
 		ret = 0;
@@ -521,7 +522,7 @@ static int handle_state_transition(struct openconnect_info *vpninfo, int *timeou
 			ppp->ppp_state = PPPS_OPENED;
 		else if (ka_check_deadline(timeout, now, ppp->lcp.last_req + 3)) {
 			ppp->lcp.last_req = now;
-			queue_config_request(vpninfo, PPP_LCP, 1);
+			queue_config_request(vpninfo, PPP_LCP);
 		}
 		break;
 	case PPPS_OPENED:
@@ -531,7 +532,7 @@ static int handle_state_transition(struct openconnect_info *vpninfo, int *timeou
 				network = 0;
 				if (ka_check_deadline(timeout, now, ppp->ipcp.last_req + 3)) {
 					ppp->ipcp.last_req = now;
-					queue_config_request(vpninfo, PPP_IPCP, 1);
+					queue_config_request(vpninfo, PPP_IPCP);
 				}
 			}
 		}
@@ -541,7 +542,7 @@ static int handle_state_transition(struct openconnect_info *vpninfo, int *timeou
 				network = 0;
 				if (ka_check_deadline(timeout, now, ppp->ip6cp.last_req + 3)) {
 					ppp->ip6cp.last_req = now;
-					queue_config_request(vpninfo, PPP_IP6CP, 1);
+					queue_config_request(vpninfo, PPP_IP6CP);
 				}
 			}
 		}
@@ -818,11 +819,11 @@ int ppp_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable)
 		    (vpninfo->dtls_state != DTLS_CONNECTED && ppp->ppp_state == PPPS_NETWORK && vpninfo->outgoing_queue.head))
 			break;
 		vpn_progress(vpninfo, PRG_DEBUG, _("Send PPP discard request as keepalive\n"));
-		queue_config_packet(vpninfo, PPP_LCP, ppp->util_id++, DISCREQ, 0, NULL);
+		queue_config_packet(vpninfo, PPP_LCP, ++ppp->lcp.id, DISCREQ, 0, NULL);
 		break;
 	case KA_DPD:
 		vpn_progress(vpninfo, PRG_DEBUG, _("Send PPP echo request as DPD\n"));
-		queue_config_packet(vpninfo, PPP_LCP, ppp->util_id++, ECHOREQ, 4, &ppp->out_lcp_magic);
+		queue_config_packet(vpninfo, PPP_LCP, ++ppp->lcp.id, ECHOREQ, 4, &ppp->out_lcp_magic);
 	}
 
 	/* Service control queue; also, outgoing packet queue, if no DTLS  */

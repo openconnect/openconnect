@@ -92,7 +92,6 @@ struct oc_ppp {
 	int32_t out_lcp_magic; /* stored in on-the-wire order */
 	struct in_addr out_peer_addr;
 	uint64_t out_ipv6_int_ident;
-	uint8_t util_id;
 
 	/* Incoming options */
 	int exp_ppp_hdr_size;
