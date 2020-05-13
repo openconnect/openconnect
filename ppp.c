@@ -187,13 +187,22 @@ struct oc_ppp *openconnect_ppp_new(int encap, int want_ipv4, int want_ipv6)
 		break;
 
 	default:
-		/* XX: fail */
-		break;
+		free(ppp);
+		return NULL;
 	}
 
 	ppp->want_ipv4 = want_ipv4;
 	ppp->want_ipv6 = want_ipv6;
 	ppp->exp_ppp_hdr_size = 4; /* Address(1), Control(1), Proto(2) */
+
+	ppp->out_asyncmap = 0;
+	ppp->out_lcp_opts = BIT_MRU | BIT_ASYNCMAP | BIT_MAGIC | BIT_PFCOMP | BIT_ACCOMP;
+
+	if (openconnect_random(&ppp->out_lcp_magic, sizeof(ppp->out_lcp_magic))) {
+		free(ppp);
+		return NULL;
+	}
+
 	return ppp;
 }
 
@@ -300,12 +309,12 @@ static int handle_config_request(struct openconnect_info *vpninfo,
 		case PROTO_TAG_LEN(PPP_LCP, LCP_PFCOMP, 0):
 			vpn_progress(vpninfo, PRG_DEBUG,
 				     _("Received protocol field compression from server\n"));
-			ppp->in_lcp_opts |= PFCOMP;
+			ppp->in_lcp_opts |= BIT_PFCOMP;
 			break;
 		case PROTO_TAG_LEN(PPP_LCP, LCP_ACCOMP, 0):
 			vpn_progress(vpninfo, PRG_DEBUG,
 				     _("Received address and control field compression from server\n"));
-			ppp->in_lcp_opts |= ACCOMP;
+			ppp->in_lcp_opts |= BIT_ACCOMP;
 			break;
 		case PROTO_TAG_LEN(PPP_IPCP, IPCP_IPADDRS, 8):
 			/* XX: Ancient and deprecated. We're supposed to ignore it if we receive it, unless
@@ -393,18 +402,22 @@ static int queue_config_request(struct openconnect_info *vpninfo, int proto)
 	switch (proto) {
 	case PPP_LCP:
 		ncp = &ppp->lcp;
-		ppp->out_asyncmap = 0;
-		ppp->out_lcp_magic = ~ppp->in_lcp_magic;
-		ppp->out_lcp_opts = ACCOMP | PFCOMP;
 		if (!vpninfo->ip_info.mtu)
 			vpninfo->ip_info.mtu = 1300; /* FIXME */
 
-		buf_append_ppp_tlv_be16(buf, LCP_MRU, vpninfo->ip_info.mtu);
-		buf_append_ppp_tlv_be32(buf, LCP_ASYNCMAP, ppp->out_asyncmap);
-		buf_append_ppp_tlv(buf, LCP_MAGIC, 4, &ppp->out_lcp_magic);
-		if (ppp->out_lcp_opts & PFCOMP)
+		if (ppp->out_lcp_opts & BIT_MRU)
+			buf_append_ppp_tlv_be16(buf, LCP_MRU, vpninfo->ip_info.mtu);
+
+		if (ppp->out_lcp_opts & BIT_ASYNCMAP)
+			buf_append_ppp_tlv_be32(buf, LCP_ASYNCMAP, ppp->out_asyncmap);
+
+		if (ppp->out_lcp_opts & BIT_MAGIC)
+			buf_append_ppp_tlv(buf, LCP_MAGIC, 4, &ppp->out_lcp_magic);
+
+		if (ppp->out_lcp_opts & BIT_PFCOMP)
 			buf_append_ppp_tlv(buf, LCP_PFCOMP, 0, NULL);
-		if (ppp->out_lcp_opts & ACCOMP)
+
+		if (ppp->out_lcp_opts & BIT_ACCOMP)
 			buf_append_ppp_tlv(buf, LCP_ACCOMP, 0, NULL);
 		break;
 
@@ -848,9 +861,9 @@ int ppp_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable)
 
 		/* XX: store PPP header, in reverse */
 		this->data[--n] = proto & 0xff;
-		if (proto > 0xff || !(ppp->out_lcp_opts & PFCOMP))
+		if (proto > 0xff || !(ppp->out_lcp_opts & BIT_PFCOMP))
 			this->data[--n] = proto >> 8;
-		if (proto == PPP_LCP || !(ppp->out_lcp_opts & ACCOMP)) {
+		if (proto == PPP_LCP || !(ppp->out_lcp_opts & BIT_ACCOMP)) {
 			this->data[--n] = 0x03; /* Control */
 			this->data[--n] = 0xff; /* Address */
 		}

@@ -43,11 +43,6 @@
 #define PPPGOODFCS16    0xf0b8  /* Good final FCS value */
 #define ASYNCMAP_LCP 0xffffffffUL /* When sending LCP, always escape characters < 0x20 */
 
-/* Negotiable options (our own values, not wire protocol) */
-#define ACCOMP 1		/* https://tools.ietf.org/html/rfc1661#section-6.6 */
-#define PFCOMP 2		/* https://tools.ietf.org/html/rfc1661#section-6.5 */
-#define VJCOMP 4		/* https://tools.ietf.org/html/rfc1332#section-4 */
-
 /* PPP states (https://tools.ietf.org/html/rfc1661#section-3.2) */
 #define PPPS_DEAD		0
 #define PPPS_ESTABLISH		1
@@ -72,6 +67,12 @@
 #define LCP_MAGIC		5
 #define LCP_PFCOMP		7
 #define LCP_ACCOMP		8
+
+#define BIT_MRU		(1 << LCP_MRU)
+#define BIT_ASYNCMAP	(1 << LCP_ASYNCMAP)
+#define BIT_MAGIC	(1 << LCP_MAGIC)
+#define BIT_PFCOMP	(1 << LCP_PFCOMP)
+#define BIT_ACCOMP	(1 << LCP_ACCOMP)
 
 /* RFC1332 */
 #define IPCP_IPADDRS		1
