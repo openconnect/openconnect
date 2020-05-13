@@ -508,20 +508,12 @@ static int handle_config_packet(struct openconnect_info *vpninfo,
 	return ret;
 }
 
-int ppp_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable)
+static int handle_state_transition(struct openconnect_info *vpninfo, int *timeout)
 {
-	int ret, last_state, magic, rsv_hdr_size;
-	int work_done = 0;
-	time_t now = time(NULL);
-	struct pkt *this;
 	struct oc_ppp *ppp = vpninfo->ppp;
-	int proto;
+	time_t now = time(NULL);
+	int last_state = ppp->ppp_state, network;
 
-	if (vpninfo->ssl_fd == -1)
-		goto do_reconnect;
-
-	/* Handle PPP state transitions */
-	last_state = ppp->ppp_state;
 	switch (ppp->ppp_state) {
 	case PPPS_DEAD:
 		ppp->ppp_state = PPPS_ESTABLISH;
@@ -535,10 +527,10 @@ int ppp_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable)
 		}
 		break;
 	case PPPS_OPENED:
-		ret = 1;
+		network = 1;
 		if (ppp->want_ipv4) {
 			if (!(ppp->ipcp.state & NCP_CONF_ACK_SENT) || !(ppp->ipcp.state & NCP_CONF_ACK_RECEIVED)) {
-				ret = 0;
+				network = 0;
 				if (ka_check_deadline(timeout, now, ppp->ipcp.last_req + 3)) {
 					ppp->ipcp.last_req = now;
 					queue_config_request(vpninfo, PPP_IPCP, 1);
@@ -548,7 +540,7 @@ int ppp_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable)
 
 		if (ppp->want_ipv6) {
 			if (!(ppp->ip6cp.state & NCP_CONF_ACK_SENT) || !(ppp->ip6cp.state & NCP_CONF_ACK_RECEIVED)) {
-				ret = 0;
+				network = 0;
 				if (ka_check_deadline(timeout, now, ppp->ip6cp.last_req + 3)) {
 					ppp->ip6cp.last_req = now;
 					queue_config_request(vpninfo, PPP_IP6CP, 1);
@@ -556,7 +548,7 @@ int ppp_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable)
 			}
 		}
 
-		if (ret)
+		if (network)
 			ppp->ppp_state = PPPS_NETWORK;
 		break;
 	case PPPS_NETWORK:
@@ -570,6 +562,7 @@ int ppp_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable)
 		vpninfo->quit_reason = "Unexpected state";
 		return -EINVAL;
 	}
+
 	if (last_state != ppp->ppp_state) {
 		vpn_progress(vpninfo, PRG_DEBUG,
 			     _("PPP state transition from %s to %s\n"),
@@ -577,6 +570,22 @@ int ppp_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable)
 		print_ppp_state(vpninfo, PRG_TRACE);
 		return 1;
 	}
+	return 0;
+}
+
+int ppp_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable)
+{
+	int ret, magic, rsv_hdr_size;
+	int work_done = 0;
+	struct pkt *this;
+	struct oc_ppp *ppp = vpninfo->ppp;
+	int proto;
+
+	if (vpninfo->ssl_fd == -1)
+		goto do_reconnect;
+
+	if ((ret = handle_state_transition(vpninfo, timeout) < 0))
+	    return ret;
 
 	/* FIXME: The poll() handling here is fairly simplistic. Actually,
 	   if the SSL connection stalls it could return a WANT_WRITE error
@@ -697,7 +706,9 @@ int ppp_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable)
 				vpn_progress(vpninfo, PRG_DEBUG, "PPP config packet has junk at end (header says %d bytes, received %d)\n", load_be16(pp+2), payload_len);
 				payload_len = load_be16(pp + 2);
 			}
-			ret = handle_config_packet(vpninfo, proto, pp, payload_len);
+			if ((ret = handle_config_packet(vpninfo, proto, pp, payload_len)) >= 0)
+				if ((ret = handle_state_transition(vpninfo, timeout)) < 0)
+					return ret;
 			break;
 
 		case PPP_IP:
