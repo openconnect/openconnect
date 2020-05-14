@@ -782,7 +782,7 @@ int ppp_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable)
 							 _("Packet contains %ld bytes after payload. Concatenated packets are not handled yet.\n"),
 							 len - (pp - ph));
 			if (vpninfo->dump_http_traffic)
-				dump_buf_hex(vpninfo, PRG_TRACE, '<', pp, payload_len);
+				dump_buf_hex(vpninfo, PRG_TRACE, '<', ph, payload_len);
 			break;
 
 		case PPP_ENCAP_NX_HDLC:
@@ -797,7 +797,7 @@ int ppp_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable)
 							 _("Packet contains %ld bytes after payload. Concatenated packets are not handled yet.\n"),
 							 len - (pp - ph));
 			if (vpninfo->dump_http_traffic)
-				dump_buf_hex(vpninfo, PRG_TRACE, '<', pp, payload_len);
+				dump_buf_hex(vpninfo, PRG_TRACE, '<', ph + ppp->encap_len, payload_len);
 			break;
 
 		default:
