@@ -684,6 +684,23 @@ static int handle_state_transition(struct openconnect_info *vpninfo, int *timeou
 	return 0;
 }
 
+static inline unsigned char *add_ppp_header(struct pkt *p, struct oc_ppp *ppp, int proto) {
+	int n = 0;
+	/* XX: store PPP header, in reverse */
+	p->data[--n] = proto & 0xff;
+	if (proto > 0xff || !(ppp->out_lcp_opts & BIT_PFCOMP))
+		p->data[--n] = proto >> 8;
+	if (proto == PPP_LCP || !(ppp->out_lcp_opts & BIT_ACCOMP)) {
+		p->data[--n] = 0x03; /* Control */
+		p->data[--n] = 0xff; /* Address */
+	}
+
+	/* reserve space for pre-PPP encapsulation header */
+	p->ppp.hlen = -n;
+	p->ppp.hlen += ppp->encap_len;
+	return (p->data - p->ppp.hlen);
+}
+
 int ppp_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable)
 {
 	int ret, magic, rsv_hdr_size;
@@ -967,28 +984,19 @@ int ppp_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable)
 	}
 
 	if (this) {
-		int n = 0;
-
-		/* XX: store PPP header, in reverse */
-		this->data[--n] = proto & 0xff;
-		if (proto > 0xff || !(ppp->out_lcp_opts & BIT_PFCOMP))
-			this->data[--n] = proto >> 8;
-		if (proto == PPP_LCP || !(ppp->out_lcp_opts & BIT_ACCOMP)) {
-			this->data[--n] = 0x03; /* Control */
-			this->data[--n] = 0xff; /* Address */
-		}
+		/* Add PPP header and reserve space for pre-PPP encapsulation header */
+		unsigned char *eh = add_ppp_header(this, ppp, proto);
 
 		/* Add pre-PPP encapsulation header */
 		switch (ppp->encap) {
 		case PPP_ENCAP_F5:
-			store_be16(this->data + n - 2, this->len - n);
-			store_be16(this->data + n - 4, 0xf500);
-			this->ppp.hlen = -n + 4;
+			store_be16(eh, 0xf500);
+			store_be16(eh + 2, this->len + this->ppp.hlen - 4);
 			break;
 		case PPP_ENCAP_F5_HDLC:
 		case PPP_ENCAP_FORTINET_HDLC:
 			/* XX: use worst-case escaping for LCP */
-			this = hdlc_into_new_pkt(vpninfo, this->data + n, this->len - n,
+			this = hdlc_into_new_pkt(vpninfo, this->data - this->ppp.hlen, this->len + this->ppp.hlen,
 						 proto == PPP_LCP ? ASYNCMAP_LCP : ppp->out_asyncmap);
 			if (!this)
 				return 1; /* XX */
@@ -997,19 +1005,15 @@ int ppp_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable)
 			break;
 		case PPP_ENCAP_NX_HDLC:
 			/* XX: use worst-case escaping for LCP */
-			this = hdlc_into_new_pkt(vpninfo, this->data + n, this->len - n,
+			this = hdlc_into_new_pkt(vpninfo, this->data - this->ppp.hlen, this->len + this->ppp.hlen,
 						 proto == PPP_LCP ? ASYNCMAP_LCP : ppp->out_asyncmap);
 			if (!this)
 				return 1; /* XX */
 
 			/* XX: header is simply the number of bytes on the wire (excluding itself) */
-			store_be32(this->data - this->ppp.hlen - 4, this->len + this->ppp.hlen);
-			this->ppp.hlen += 4;
+			store_be32(eh, this->len + this->ppp.hlen - 4);
 			free(vpninfo->current_ssl_pkt);
 			vpninfo->current_ssl_pkt = this;
-			break;
-		default:
-			/* XX: fail */
 			break;
 		}
 
