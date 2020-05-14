@@ -786,7 +786,7 @@ int ppp_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable)
 
 		case PPP_ENCAP_NX_HDLC:
 			payload_len_hdr = load_be32(ph);
-			payload_len = unhdlc_in_place(vpninfo, ph + ppp->encap_len, len, &pp);
+			payload_len = unhdlc_in_place(vpninfo, ph + ppp->encap_len, len - ppp->encap_len, &pp);
 			vpn_progress(vpninfo, PRG_INFO, "payload_len_hdr: %x, payload_len: %x, len: %x\n",
 						 payload_len_hdr, payload_len, len);
 			if (payload_len < 0)
@@ -997,7 +997,7 @@ int ppp_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable)
 		case PPP_ENCAP_NX_HDLC:
 			/* XX: use worst-case escaping for LCP */
 			this = hdlc_into_new_pkt(vpninfo, this->data + n, this->len - n,
-									 proto == PPP_LCP ? ASYNCMAP_LCP : ppp->out_asyncmap);
+						 proto == PPP_LCP ? ASYNCMAP_LCP : ppp->out_asyncmap);
 			if (!this)
 				return 1; /* XX */
 			store_be32(this->data + n - 4, this->len - n);
