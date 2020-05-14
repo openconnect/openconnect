@@ -10,15 +10,18 @@
 #
 # It should also be fairly simple to extend this to cross-compile for any target
 
-NDK     := /opt/android-sdk-linux_x86/android-ndk-r16b
-ARCH    := arm
+# Last tested with https://dl.google.com/android/repository/android-ndk-r21b-linux-x86_64.zip
+
+
+NDK     := /opt/android-sdk-linux_x86/android-ndk-r21b
+ARCH    := x86_64
+API_LEVEL := 23
 
 EXTRA_CFLAGS :=
 
 # You should be able to just 'make ARCH=x86' and it should DTRT.
 ifeq ($(ARCH),arm)
 TRIPLET := arm-linux-androideabi
-API_LEVEL := 14
 EXTRA_CFLAGS := -march=armv7-a -mthumb
 endif
 ifeq ($(ARCH),arm64)
@@ -27,11 +30,9 @@ API_LEVEL := 26
 endif
 ifeq ($(ARCH),x86)
 TRIPLET := i686-linux-android
-API_LEVEL := 14
 endif
 ifeq ($(ARCH),x86_64)
 TRIPLET := x86_64-linux-android
-API_LEVEL := 21
 endif
 
 TOPDIR := $(shell pwd)
