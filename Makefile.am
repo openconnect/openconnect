@@ -30,6 +30,7 @@ endif
 library_srcs = ssl.c http.c http-auth.c auth-common.c library.c compat.c lzs.c mainloop.c script.c ntlm.c digest.c openconnect-internal.h
 lib_srcs_cisco = auth.c cstp.c
 lib_srcs_juniper = oncp.c lzo.c auth-juniper.c
+lib_srcs_nx = nx.c
 lib_srcs_pulse = pulse.c
 lib_srcs_f5 = f5.c
 lib_srcs_ppp = ppp.c ppp.h
@@ -40,7 +41,9 @@ lib_srcs_oidc = oidc.c
 
 library_srcs += $(lib_srcs_juniper) $(lib_srcs_cisco) $(lib_srcs_oath) \
 		$(lib_srcs_globalprotect) $(lib_srcs_pulse) $(lib_srcs_f5) \
-		$(lib_srcs_ppp) $(lib_srcs_fortinet) $(lib_srcs_oidc)
+		$(lib_srcs_ppp) $(lib_srcs_fortinet) $(lib_srcs_nx) \
+		$(lib_srcs_oidc)
+
 
 lib_srcs_gnutls = gnutls.c gnutls_tpm.c gnutls_tpm2.c
 lib_srcs_openssl = openssl.c openssl-pkcs11.c

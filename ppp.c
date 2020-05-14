@@ -170,6 +170,7 @@ static const char *encap_names[PPP_ENCAP_MAX+1] = {
 	"F5",
 	"F5 HDLC",
 	"FORTINET HDLC",
+	"NX HDLC",
 };
 
 static const char *lcp_names[] = {
@@ -203,6 +204,11 @@ struct oc_ppp *openconnect_ppp_new(int encap, int want_ipv4, int want_ipv6)
 	case PPP_ENCAP_F5_HDLC:
 	case PPP_ENCAP_FORTINET_HDLC:
 		ppp->encap_len = 0;
+		ppp->hdlc = 1;
+		break;
+
+	case PPP_ENCAP_NX_HDLC:
+		ppp->encap_len = 4;
 		ppp->hdlc = 1;
 		break;
 
@@ -704,7 +710,7 @@ int ppp_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable)
 		   handle that */
 		unsigned char *ph, *pp;
 		int receive_mtu = MAX(16384, vpninfo->ip_info.mtu);
-		int len, payload_len;
+		int len, payload_len, payload_len_hdr;
 
 		if (!vpninfo->cstp_pkt) {
 			vpninfo->cstp_pkt = malloc(sizeof(struct pkt) + receive_mtu);
@@ -772,10 +778,25 @@ int ppp_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable)
 				continue; /* unhdlc_in_place already logged */
 			if (pp != ph + len)
 				vpn_progress(vpninfo, PRG_ERR,
-					     _("Packet contains %ld bytes after payload. Concatenated packets are not handled yet.\n"),
-					     len - (pp - ph));
-			//if (vpninfo->dump_http_traffic)
-			//	dump_buf_hex(vpninfo, PRG_TRACE, '<', pp, payload_len);
+							 _("Packet contains %ld bytes after payload. Concatenated packets are not handled yet.\n"),
+							 len - (pp - ph));
+			if (vpninfo->dump_http_traffic)
+				dump_buf_hex(vpninfo, PRG_TRACE, '<', pp, payload_len);
+			break;
+
+		case PPP_ENCAP_NX_HDLC:
+			payload_len_hdr = load_be32(ph);
+			payload_len = unhdlc_in_place(vpninfo, ph + ppp->encap_len, len, &pp);
+			vpn_progress(vpninfo, PRG_INFO, "payload_len_hdr: %x, payload_len: %x, len: %x\n",
+						 payload_len_hdr, payload_len, len);
+			if (payload_len < 0)
+				continue; /* unhdlc_in_place already logged */
+			if (pp != ph + len)
+				vpn_progress(vpninfo, PRG_ERR,
+							 _("Packet contains %ld bytes after payload. Concatenated packets are not handled yet.\n"),
+							 len - (pp - ph));
+			if (vpninfo->dump_http_traffic)
+				dump_buf_hex(vpninfo, PRG_TRACE, '<', pp, payload_len);
 			break;
 
 		default:
@@ -971,6 +992,17 @@ int ppp_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable)
 			if (!this)
 				return 1; /* XX */
 			free(vpninfo->current_ssl_pkt);
+			vpninfo->current_ssl_pkt = this;
+			break;
+		case PPP_ENCAP_NX_HDLC:
+			/* XX: use worst-case escaping for LCP */
+			this = hdlc_into_new_pkt(vpninfo, this->data + n, this->len - n,
+									 proto == PPP_LCP ? ASYNCMAP_LCP : ppp->out_asyncmap);
+			if (!this)
+				return 1; /* XX */
+			store_be32(this->data + n - 4, this->len - n);
+			free(vpninfo->current_ssl_pkt);
+			this->ppp.hlen = -n + 4;
 			vpninfo->current_ssl_pkt = this;
 			break;
 		default:
