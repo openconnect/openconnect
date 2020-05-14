@@ -88,9 +88,9 @@ $(TOOLCHAIN_BUILT):
 #
 # Build libxml2 with minimal configuration for OpenConnect
 #
-LIBXML2_VER := 2.9.7
+LIBXML2_VER := 2.9.10
 LIBXML2_TAR := libxml2-$(LIBXML2_VER).tar.gz
-LIBXML2_SHA := f63c5e7d30362ed28b38bfa1ac6313f9a80230720b7fb6c80575eeab3ff5900c
+LIBXML2_SHA := aafee193ffb8fe0c82d4afef6ef91972cbaf5feea100edc2f262750611b4be1f
 LIBXML2_SRC := sources/libxml2-$(LIBXML2_VER)
 LIBXML2_BUILD := $(TRIPLET)/libxml2
 
@@ -136,9 +136,9 @@ libxml: $(LIBXML_DEPS)
 #
 # Build GNU MP
 #
-GMP_VER := 6.1.2
+GMP_VER := 6.2.0
 GMP_TAR := gmp-$(GMP_VER).tar.xz
-GMP_SHA := 87b565e89a9a684fe4ebeeddb8399dce2599f9c9049854ca8c0dfbdea0e21912
+GMP_SHA := 258e6cd51b3fbdfc185c716d55f82c08aff57df0c6fbd143cf6ed561267a1526
 GMP_SRC := sources/gmp-$(GMP_VER)
 GMP_BUILD := $(TRIPLET)/gmp
 
@@ -170,9 +170,9 @@ gmp: $(GMP_DEPS)
 #
 # Build nettle
 #
-NETTLE_VER := 3.4
+NETTLE_VER := 3.5.1
 NETTLE_TAR := nettle-$(NETTLE_VER).tar.gz
-NETTLE_SHA := ae7a42df026550b85daca8389b6a60ba6313b0567f374392e54918588a411e94
+NETTLE_SHA := 75cca1998761b02e16f2db56da52992aef622bf55a3b45ec538bc2eedadc9419
 NETTLE_SRC := sources/nettle-$(NETTLE_VER)
 NETTLE_BUILD := $(TRIPLET)/nettle
 
@@ -203,9 +203,9 @@ nettle: $(NETTLE_DEPS)
 #
 # Build GnuTLS
 #
-GNUTLS_VER := 3.5.17
+GNUTLS_VER := 3.6.13
 GNUTLS_TAR := gnutls-$(GNUTLS_VER).tar.xz
-GNUTLS_SHA := 86b142afef587c118d63f72ccf307f3321dbc40357aae528202b65d913d20919
+GNUTLS_SHA := 32041df447d9f4644570cf573c9f60358e865637d69b7e59d1159b7240b52f38
 GNUTLS_SRC := sources/gnutls-$(GNUTLS_VER)
 GNUTLS_BUILD := $(TRIPLET)/gnutls
 
@@ -228,15 +228,14 @@ $(GNUTLS_SRC)/configure: $(GNUTLS_TAR)
 $(GNUTLS_BUILD)/Makefile: $(TOOLCHAIN_BUILT) $(GNUTLS_SRC)/configure $(NETTLE_DEPS)
 	mkdir -p $(GNUTLS_BUILD)
 	cd $(GNUTLS_BUILD) && ../../$(GNUTLS_SRC)/configure $(CONFIGURE_ARGS) \
-		AUTOGEN=/bin/true \
-		--disable-threads --disable-tests --without-zlib --disable-nls \
+		AUTOGEN=/bin/false \
+		--disable-threads --disable-tests --disable-nls \
 		--disable-doc --disable-openssl-compatibility --disable-cxx \
-		--disable-openssl-compatibility --disable-ocsp \
-		--disable-openpgp-authentication --disable-anon-authentication \
+		--disable-openssl-compatibility --disable-ocsp --disable-tools \
+		--disable-anon-authentication --with-included-libtasn1 \
 		--enable-psk-authentication --disable-srp-authentication \
 		--disable-dtls-srtp-support  --enable-dhe --enable-ecdhe \
-		--disable-rsa-export --with-included-libtasn1 \
-		--with-included-unistring --without-p11-kit
+		--with-included-unistring --without-p11-kit --disable-guile
 
 $(GNUTLS_BUILD)/lib/libgnutls.la: $(GNUTLS_BUILD)/Makefile
 	$(MAKE) -C $(GNUTLS_BUILD)
@@ -324,9 +323,9 @@ oath: $(OATH_DEPS)
 #
 # Build liblz4
 #
-LZ4_VER := 1.8.1.2
+LZ4_VER := 1.9.2
 LZ4_TAR := lz4-v$(LZ4_VER).tar.gz
-LZ4_SHA := 12f3a9e776a923275b2dc78ae138b4967ad6280863b77ff733028ce89b8123f9
+LZ4_SHA := 658ba6191fa44c92280d4aa2c271b0f4fbc0e34d249578dd05e50e76d0e5efcc
 LZ4_DIR := $(TRIPLET)/lz4-$(LZ4_VER)
 
 $(LZ4_TAR):
