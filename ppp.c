@@ -790,23 +790,14 @@ int ppp_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable)
 			}
 			break;
 
-		case PPP_ENCAP_F5_HDLC:
-		case PPP_ENCAP_FORTINET_HDLC:
-			payload_len = unhdlc_in_place(vpninfo, ph, len, &pp);
-			if (payload_len < 0)
-				continue; /* unhdlc_in_place already logged */
-			if (pp != ph + len)
-				vpn_progress(vpninfo, PRG_ERR,
-							 _("Packet contains %ld bytes after payload. Concatenated packets are not handled yet.\n"),
-							 len - (pp - ph));
-			if (vpninfo->dump_http_traffic)
-				dump_buf_hex(vpninfo, PRG_TRACE, '<', ph, payload_len);
-			break;
-
 		case PPP_ENCAP_NX_HDLC:
 			payload_len = load_be32(ph);
 			if (len < 4 + payload_len)
 				goto incomplete_pkt;
+			/* fall through */
+
+		case PPP_ENCAP_F5_HDLC:
+		case PPP_ENCAP_FORTINET_HDLC:
 			payload_len = unhdlc_in_place(vpninfo, ph + ppp->encap_len, len - ppp->encap_len, &pp);
 			if (payload_len < 0)
 				continue; /* unhdlc_in_place already logged */
