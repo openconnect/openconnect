@@ -17,14 +17,14 @@
 
 <p>
 <!-- latest-release-start -->
-The latest release is <a href="ftp://ftp.infradead.org/pub/openconnect/openconnect-8.09.tar.gz">OpenConnect v8.09</a>
-<i>(<a href="ftp://ftp.infradead.org/pub/openconnect/openconnect-8.09.tar.gz.asc">PGP signature</a>)</i>,
-released on 2020-04-29 with the following changelog:</p>
+The latest release is <a href="ftp://ftp.infradead.org/pub/openconnect/openconnect-8.10.tar.gz">OpenConnect v8.10</a>
+<i>(<a href="ftp://ftp.infradead.org/pub/openconnect/openconnect-8.10.tar.gz.asc">PGP signature</a>)</i>,
+released on 2020-05-14 with the following changelog:</p>
      <ul>
-       <li>Add bash completion support.</li>
-       <li>Give more helpful error in case of Pulse servers asking for TNCC.</li>
-       <li>Sanitize non-canonical Legacy IP network addresses (<a href="https://gitlab.com/openconnect/openconnect/merge_requests/97">!97</a>)</li>
-       <li>Fix OpenSSL validation for trusted but invalid certificates (CVE-2020-12105).</li>
+       <li>Install bash completion script to <tt>${datadir}/bash-completion/completions/openconnect</tt>.</li>
+       <li>Improve compatibility of <tt>csd-post.sh</tt> trojan.</li>
+       <li>Update Android build dependencies and bump API level to support Android 10.</li>
+       <li>Fix potential buffer overflow with GnuTLS describing local certs (CVE-2020-12823).</li>
      </ul>
 <!-- latest-release-end -->
 

@@ -15,6 +15,12 @@
 <ul>
    <li><b>OpenConnect HEAD</b>
      <ul>
+       <li><i>No changelog entries yet</i></li>
+     </ul><br/>
+  </li>
+  <li><b><a href="ftp://ftp.infradead.org/pub/openconnect/openconnect-8.10.tar.gz">OpenConnect v8.10</a></b>
+     <i>(<a href="ftp://ftp.infradead.org/pub/openconnect/openconnect-8.10.tar.gz.asc">PGP signature</a>)</i> &#8212; 2020-05-14
+     <ul>
        <li>Install bash completion script to <tt>${datadir}/bash-completion/completions/openconnect</tt>.</li>
        <li>Improve compatibility of <tt>csd-post.sh</tt> trojan.</li>
        <li>Update Android build dependencies and bump API level to support Android 10.</li>
