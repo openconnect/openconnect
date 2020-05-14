@@ -1001,9 +1001,11 @@ int ppp_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable)
 						 proto == PPP_LCP ? ASYNCMAP_LCP : ppp->out_asyncmap);
 			if (!this)
 				return 1; /* XX */
-			store_be32(this->data + n - 4, this->len - n);
+
+			/* XX: header is simply the number of bytes on the wire (excluding itself) */
+			store_be32(this->data - this->ppp.hlen - 4, this->len + this->ppp.hlen);
+			this->ppp.hlen += 4;
 			free(vpninfo->current_ssl_pkt);
-			this->ppp.hlen = -n + 4;
 			vpninfo->current_ssl_pkt = this;
 			break;
 		default:
