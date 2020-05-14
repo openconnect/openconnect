@@ -67,9 +67,10 @@ static const uint16_t fcstab[256] = {
 		*outp++ = (c);        \
 } while (0)
 
-static struct pkt *hdlc_into_new_pkt(struct openconnect_info *vpninfo, unsigned char *bytes, int len, int asyncmap)
+static struct pkt *hdlc_into_new_pkt(struct openconnect_info *vpninfo, struct pkt *old, int asyncmap)
 {
-        const unsigned char *inp = bytes, *endp = bytes + len;
+	int len = old->len + old->ppp.hlen;
+	const unsigned char *inp = old->data - old->ppp.hlen, *endp = inp + len;
 	unsigned char *outp;
 	uint16_t fcs = PPPINITFCS16;
 	/* Every byte in payload and 2-byte FCS potentially expands to two bytes,
@@ -987,33 +988,26 @@ int ppp_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable)
 		/* Add PPP header and reserve space for pre-PPP encapsulation header */
 		unsigned char *eh = add_ppp_header(this, ppp, proto);
 
+		/* XX: Copy the whole packet into new HDLC'ed packet if needed */
+		if (ppp->hdlc) {
+			/* XX: use worst-case escaping for LCP */
+			this = hdlc_into_new_pkt(vpninfo, this,
+						 proto == PPP_LCP ? ASYNCMAP_LCP : ppp->out_asyncmap);
+			if (!this)
+				return 1; /* XX */
+			free(vpninfo->current_ssl_pkt);
+			vpninfo->current_ssl_pkt = this;
+		}
+
 		/* Add pre-PPP encapsulation header */
 		switch (ppp->encap) {
 		case PPP_ENCAP_F5:
 			store_be16(eh, 0xf500);
 			store_be16(eh + 2, this->len + this->ppp.hlen - 4);
 			break;
-		case PPP_ENCAP_F5_HDLC:
-		case PPP_ENCAP_FORTINET_HDLC:
-			/* XX: use worst-case escaping for LCP */
-			this = hdlc_into_new_pkt(vpninfo, this->data - this->ppp.hlen, this->len + this->ppp.hlen,
-						 proto == PPP_LCP ? ASYNCMAP_LCP : ppp->out_asyncmap);
-			if (!this)
-				return 1; /* XX */
-			free(vpninfo->current_ssl_pkt);
-			vpninfo->current_ssl_pkt = this;
-			break;
 		case PPP_ENCAP_NX_HDLC:
-			/* XX: use worst-case escaping for LCP */
-			this = hdlc_into_new_pkt(vpninfo, this->data - this->ppp.hlen, this->len + this->ppp.hlen,
-						 proto == PPP_LCP ? ASYNCMAP_LCP : ppp->out_asyncmap);
-			if (!this)
-				return 1; /* XX */
-
 			/* XX: header is simply the number of bytes on the wire (excluding itself) */
 			store_be32(eh, this->len + this->ppp.hlen - 4);
-			free(vpninfo->current_ssl_pkt);
-			vpninfo->current_ssl_pkt = this;
 			break;
 		}
 
