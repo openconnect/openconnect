@@ -81,13 +81,34 @@ static const char *add_option(struct openconnect_info *vpninfo, const char *opt,
 	return new->value;
 }
 
+/* Parse this:
+<?xml version="1.0" encoding="utf-8"?>
+<sslvpn-tunnel ver="2" dtls="1" patch="1">
+  <dtls-config heartbeat-interval="10" heartbeat-fail-count="10" heartbeat-idle-timeout="10" client-hello-timeout="10"/>
+  <tunnel-method value="ppp"/>
+  <tunnel-method value="tun"/>
+  <fos platform="FG100E" major="5" minor="06" patch="6" build="1630" branch="1630"/>
+  <client-config save-password="off" keep-alive="on" auto-connect="off"/>
+  <ipv4>
+    <assigned-addr ipv4="172.16.1.1"/>
+    <split-tunnel-info>
+      <addr ip="10.11.10.10" mask="255.255.255.255"/>
+      <addr ip="10.11.1.0" mask="255.255.255.0"/>
+      <dns ip="1.1.1.1"/>
+      <dns ip="8.8.8.8" domain="foo.com"/>
+    </split-tunnel-info>
+  </ipv4>
+  <idle-timeout val="3600"/>
+  <auth-timeout val="18000"/>
+</sslvpn-tunnel>
+*/
 static int parse_fortinet_xml_config(struct openconnect_info *vpninfo, char *buf, int len,
 				     int *ipv4, int *ipv6)
 {
-	xmlNode *fav_node, *obj_node, *xml_node;
+	xmlNode *xml_node, *x, *x2;
 	xmlDocPtr xml_doc;
-	int ret = 0, ii, n_dns = 0, n_nbns = 0, default_route = 0;
-	char *s = NULL;
+	int ret = 0, ii, n_dns = 0 /*, n_nbns = 0, default_route = 0 */;
+	char *s = NULL, *s2 = NULL;
 	struct oc_text_buf *domains = NULL;
 
 	if (!buf || !len)
@@ -102,13 +123,10 @@ static int parse_fortinet_xml_config(struct openconnect_info *vpninfo, char *buf
 			     _("Response was:%s\n"), buf);
 		return -EINVAL;
 	}
-	fav_node = xmlDocGetRootElement(xml_doc);
-	if (!xmlnode_is_named(fav_node, "favorite"))
-		goto err;
 
-	obj_node = xmlFirstElementChild(fav_node);
-	if (!xmlnode_is_named(obj_node, "object"))
-		goto err;
+	xml_node = xmlDocGetRootElement(xml_doc);
+	if (!xml_node || !xmlnode_is_named(xml_node, "sslvpn-tunnel"))
+		return -EINVAL;
 
 	/* Clear old options which will be overwritten */
 	vpninfo->ip_info.addr = vpninfo->ip_info.netmask = NULL;
@@ -121,79 +139,64 @@ static int parse_fortinet_xml_config(struct openconnect_info *vpninfo, char *buf
 
 	domains = buf_alloc();
 
-	for (xml_node = xmlFirstElementChild(obj_node);
-	     xml_node;
-	     xml_node = xmlNextElementSibling(xml_node)) {
-		if (xmlnode_is_named(xml_node, "IPV4_0"))
-			*ipv4 = xmlnode_bool_or_int_value(vpninfo, xml_node);
-		else if (xmlnode_is_named(xml_node, "IPV6_0")) {
-			if (!vpninfo->disable_ipv6)
-				*ipv6 = xmlnode_bool_or_int_value(vpninfo, xml_node);
-		} else if (xmlnode_is_named(xml_node, "idle_session_timeout")) {
-			int sec = vpninfo->idle_timeout = xmlnode_bool_or_int_value(vpninfo, xml_node);
+	for (xml_node = xml_node->children; xml_node; xml_node=xml_node->next) {
+		if (xmlnode_is_named(xml_node, "auth-timeout") && !xmlnode_get_prop(xml_node, "val", &s))
+			vpn_progress(vpninfo, PRG_INFO, _("Session will expire after %d minutes.\n"), atoi(s)/60);
+		else if (xmlnode_is_named(xml_node, "idle-timeout") && !xmlnode_get_prop(xml_node, "val", &s)) {
+			int sec = vpninfo->idle_timeout = atoi(s);
 			vpn_progress(vpninfo, PRG_INFO, _("Idle timeout is %d minutes.\n"), sec/60);
-		} else if (xmlnode_is_named(xml_node, "tunnel_port_dtls")) {
-			int port = xmlnode_bool_or_int_value(vpninfo, xml_node);
-			udp_sockaddr(vpninfo, port);
-			vpn_progress(vpninfo, PRG_INFO, _("DTLS port is %d.\n"), port);
-		} else if (xmlnode_is_named(xml_node, "UseDefaultGateway0")) {
-			default_route = xmlnode_bool_or_int_value(vpninfo, xml_node);
-			vpn_progress(vpninfo, PRG_INFO, _("Got UseDefaultGateway0 value of %d.\n"), default_route);
-		} else if (xmlnode_is_named(xml_node, "SplitTunneling0")) {
-			int st = xmlnode_bool_or_int_value(vpninfo, xml_node);
-			vpn_progress(vpninfo, PRG_INFO, _("Got SplitTunneling0 value of %d.\n"), st);
-                }
-		/* XX: This is an objectively stupid way to use XML, a hierarchical data format. */
-		else if (   (!strncmp((char *)xml_node->name, "DNS", 3) && isdigit(xml_node->name[3]))
-			 || (!strncmp((char *)xml_node->name, "DNS6_", 5) && isdigit(xml_node->name[5])) ) {
-			s = (char *)xmlNodeGetContent(xml_node);
-			if (s && *s) {
-				vpn_progress(vpninfo, PRG_INFO, _("Got IPv%d DNS server %s.\n"),
-					     xml_node->name[4]=='_' ? 6 : 4, s);
-				if (n_dns < 3) vpninfo->ip_info.dns[n_dns++] = add_option(vpninfo, "DNS", &s);
+		} else if (xmlnode_is_named(xml_node, "fos")) {
+			char platform[80] = {0}, *p = platform, *e = platform + 80;
+			if (!xmlnode_get_prop(xml_node, "platform", &s)) {
+			    p+=snprintf(p, e-p, "%s", s);
+			    if (!xmlnode_get_prop(xml_node, "major", &s))  p+=snprintf(p, e-p, " v%s", s);
+			    if (!xmlnode_get_prop(xml_node, "minor", &s))  p+=snprintf(p, e-p, ".%s", s);
+			    if (!xmlnode_get_prop(xml_node, "patch", &s))  p+=snprintf(p, e-p, ".%s", s);
+			    if (!xmlnode_get_prop(xml_node, "build", &s))  p+=snprintf(p, e-p, " build %s", s);
+			    if (!xmlnode_get_prop(xml_node, "branch", &s)) p+=snprintf(p, e-p, " branch %s", s);
+			    vpn_progress(vpninfo, PRG_INFO,
+					 _("Reported platform is %s\n"), platform);
 			}
-		} else if (!strncmp((char *)xml_node->name, "WINS", 4) && isdigit(xml_node->name[4])) {
-			s = (char *)xmlNodeGetContent(xml_node);
-			if (s && *s) {
-				vpn_progress(vpninfo, PRG_INFO, _("Got WINS/NBNS server %s.\n"), s);
-				if (n_nbns < 3) vpninfo->ip_info.dns[n_nbns++] = add_option(vpninfo, "WINS", &s);
-			}
-		} else if (!strncmp((char *)xml_node->name, "DNSSuffix", 9) && isdigit(xml_node->name[9])) {
-			s = (char *)xmlNodeGetContent(xml_node);
-			if (s && *s) {
-				vpn_progress(vpninfo, PRG_INFO, _("Got search domain %s.\n"), s);
-				buf_append(domains, "%s ", s);
-			}
-		} else if (   (!strncmp((char *)xml_node->name, "LAN", 3) && isdigit((char)xml_node->name[3]))
-			   || (!strncmp((char *)xml_node->name, "LAN6_", 5) && isdigit((char)xml_node->name[5]))) {
-			s = (char *)xmlNodeGetContent(xml_node);
-			if (s && *s) {
-				char *word, *next;
-				struct oc_split_include *inc;
-
-				for (word = (char *)add_option(vpninfo, "route-list", &s);
-				     *word; word = next) {
-					for (next = word; *next && !isspace(*next); next++);
-					if (*next)
-						*next++ = 0;
-					if (next == word + 1)
-						continue;
-
-					inc = malloc(sizeof(*inc));
-					inc->route = word;
-					inc->next = vpninfo->ip_info.split_includes;
-					vpninfo->ip_info.split_includes = inc;
-					vpn_progress(vpninfo, PRG_INFO, _("Got IPv%d route %s.\n"),
-						     xml_node->name[4]=='_' ? 6 : 4, word);
+		} else if (xmlnode_is_named(xml_node, "ipv4")) {
+			*ipv4 = 1;
+			for (x = xml_node->children; x; x=x->next) {
+				if (xmlnode_is_named(x, "assigned-addr") && !xmlnode_get_prop(x, "ipv4", &s)) {
+					vpn_progress(vpninfo, PRG_INFO, _("Got legacy IP address %s\n"), s);
+					vpninfo->ip_info.addr = add_option(vpninfo, "ipaddr", &s);
+				} else if (xmlnode_is_named(x, "dns")) {
+					if (!xmlnode_get_prop(x, "domain", &s) && s && *s) {
+						vpn_progress(vpninfo, PRG_INFO, _("Got search domain %s.\n"), s);
+						buf_append(domains, "%s ", s);
+					}
+					if (!xmlnode_get_prop(x, "ip", &s) && s && *s) {
+						vpn_progress(vpninfo, PRG_INFO, _("Got IPv%d DNS server %s.\n"), 4, s);
+						if (n_dns < 3) vpninfo->ip_info.dns[n_dns++] = add_option(vpninfo, "DNS", &s);
+					}
+				} else if (xmlnode_is_named(x, "split-tunnel-info")) {
+					for (x2 = x->children; x2; x2=x2->next) {
+						if (xmlnode_is_named(x2, "addr")) {
+							struct oc_split_include *inc = malloc(sizeof(*inc));
+							char *route = malloc(32);
+							if (route && inc &&
+							    !xmlnode_get_prop(x2, "ip", &s) &&
+							    !xmlnode_get_prop(x2, "mask", &s2) &&
+							    s && s2 && *s && *s2) {
+								snprintf(route, 32, "%s/%s", s, s2);
+								vpn_progress(vpninfo, PRG_INFO, _("Got IPv%d route %s.\n"), 4, route);
+								inc->route = add_option(vpninfo, "split-include", &route);
+								inc->next = vpninfo->ip_info.split_includes;
+							}
+						}
+					}
 				}
 			}
 		}
 	}
 
-	if (default_route && ipv4)
-		vpninfo->ip_info.netmask = strdup("0.0.0.0");
-	if (default_route && ipv6)
-		vpninfo->ip_info.netmask6 = strdup("::");
+	/* if (default_route && ipv4) */
+	/* 	vpninfo->ip_info.netmask = strdup("0.0.0.0"); */
+	/* if (default_route && ipv6) */
+	/*       vpninfo->ip_info.netmask6 = strdup("::"); */
 	if (buf_error(domains) == 0 && domains->pos > 0) {
 		domains->data[domains->pos-1] = '\0';
 		vpninfo->ip_info.domain = add_option(vpninfo, "search", &domains->data);
@@ -210,6 +213,7 @@ static int parse_fortinet_xml_config(struct openconnect_info *vpninfo, char *buf
 	}
  	xmlFreeDoc(xml_doc);
 	free(s);
+	free(s2);
 	return ret;
 }
 
