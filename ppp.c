@@ -685,7 +685,7 @@ static int handle_state_transition(struct openconnect_info *vpninfo, int *timeou
 	return 0;
 }
 
-static inline unsigned char *add_ppp_header(struct pkt *p, struct oc_ppp *ppp, int proto) {
+static inline void add_ppp_header(struct pkt *p, struct oc_ppp *ppp, int proto) {
 	int n = 0;
 	/* XX: store PPP header, in reverse */
 	p->data[--n] = proto & 0xff;
@@ -695,11 +695,7 @@ static inline unsigned char *add_ppp_header(struct pkt *p, struct oc_ppp *ppp, i
 		p->data[--n] = 0x03; /* Control */
 		p->data[--n] = 0xff; /* Address */
 	}
-
-	/* reserve space for pre-PPP encapsulation header */
 	p->ppp.hlen = -n;
-	p->ppp.hlen += ppp->encap_len;
-	return (p->data - p->ppp.hlen);
 }
 
 int ppp_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable)
@@ -976,8 +972,10 @@ int ppp_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable)
 	}
 
 	if (this) {
-		/* Add PPP header and reserve space for pre-PPP encapsulation header */
-		unsigned char *eh = add_ppp_header(this, ppp, proto);
+		unsigned char *eh;
+
+		/* Add PPP header */
+		add_ppp_header(this, ppp, proto);
 
 		/* XX: Copy the whole packet into new HDLC'ed packet if needed */
 		if (ppp->hdlc) {
@@ -991,16 +989,18 @@ int ppp_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable)
 		}
 
 		/* Add pre-PPP encapsulation header */
+		eh = this->data - this->ppp.hlen - ppp->encap_len;
 		switch (ppp->encap) {
 		case PPP_ENCAP_F5:
 			store_be16(eh, 0xf500);
-			store_be16(eh + 2, this->len + this->ppp.hlen - 4);
+			store_be16(eh + 2, this->len + this->ppp.hlen);
 			break;
 		case PPP_ENCAP_NX_HDLC:
 			/* XX: header is simply the number of bytes on the wire (excluding itself) */
-			store_be32(eh, this->len + this->ppp.hlen - 4);
+			store_be32(eh, this->len + this->ppp.hlen);
 			break;
 		}
+		this->ppp.hlen += ppp->encap_len;
 
 		vpn_progress(vpninfo, PRG_TRACE,
 			     _("Sending proto 0x%04x packet (%d bytes total)\n"),
