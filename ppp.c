@@ -710,7 +710,7 @@ int ppp_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable)
 		   handle that */
 		unsigned char *ph, *pp;
 		int receive_mtu = MAX(16384, vpninfo->ip_info.mtu);
-		int len, payload_len, payload_len_hdr;
+		int len, payload_len;
 
 		if (!vpninfo->cstp_pkt) {
 			vpninfo->cstp_pkt = malloc(sizeof(struct pkt) + receive_mtu);
@@ -763,6 +763,7 @@ int ppp_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable)
 					     _("Packet contains %d bytes after payload. Concatenated packets are not handled yet.\n"),
 					     len - 4 + payload_len);
 			} else if (len < 4 + payload_len) {
+			incomplete_pkt:
 				vpn_progress(vpninfo, PRG_ERR,
 					     _("Packet is incomplete. Received %d bytes on wire (includes %d encap) but header payload_len is %d\n"),
 					     len, ppp->encap_len, payload_len);
@@ -785,10 +786,10 @@ int ppp_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable)
 			break;
 
 		case PPP_ENCAP_NX_HDLC:
-			payload_len_hdr = load_be32(ph);
+			payload_len = load_be32(ph);
+			if (len < 4 + payload_len)
+				goto incomplete_pkt;
 			payload_len = unhdlc_in_place(vpninfo, ph + ppp->encap_len, len - ppp->encap_len, &pp);
-			vpn_progress(vpninfo, PRG_INFO, "payload_len_hdr: %x, payload_len: %x, len: %x\n",
-						 payload_len_hdr, payload_len, len);
 			if (payload_len < 0)
 				continue; /* unhdlc_in_place already logged */
 			if (pp != ph + len)
