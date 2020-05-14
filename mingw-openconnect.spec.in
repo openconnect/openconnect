@@ -83,7 +83,7 @@ The OpenConnect multiprotocol VPN client library, cross-compiled for MinGW.
 NOCONFIGURE=x ./autogen.sh
 %else
 %gpg_verify
-%setup -q
+%setup -q -n openconnect-%{version}
 if [ ! -x configure ]; then
     NOCONFIGURE=x ./autogen.sh
 fi
