@@ -984,7 +984,7 @@ static int run_hip_script(struct openconnect_info *vpninfo)
 		return ret;
 	} else {
 		/* in child: run HIP script */
-		char *hip_argv[32];
+		const char *hip_argv[32];
 		int i = 0;
 		close(pipefd[0]);
 		/* The duplicated fd does not have O_CLOEXEC */
@@ -994,20 +994,20 @@ static int run_hip_script(struct openconnect_info *vpninfo)
 			exit(1);
 
 		hip_argv[i++] = openconnect_utf8_to_legacy(vpninfo, vpninfo->csd_wrapper);
-		hip_argv[i++] = (char *)"--cookie";
+		hip_argv[i++] = "--cookie";
 		hip_argv[i++] = vpninfo->cookie;
 		if (vpninfo->ip_info.addr) {
-			hip_argv[i++] = (char *)"--client-ip";
-			hip_argv[i++] = (char *)vpninfo->ip_info.addr;
+			hip_argv[i++] = "--client-ip";
+			hip_argv[i++] = vpninfo->ip_info.addr;
 		}
 		if (vpninfo->ip_info.addr6) {
-			hip_argv[i++] = (char *)"--client-ipv6";
-			hip_argv[i++] = (char *)vpninfo->ip_info.addr6;
+			hip_argv[i++] = "--client-ipv6";
+			hip_argv[i++] = vpninfo->ip_info.addr6;
 		}
-		hip_argv[i++] = (char *)"--md5";
+		hip_argv[i++] = "--md5";
 		hip_argv[i++] = vpninfo->csd_token;
 		hip_argv[i++] = NULL;
-		execv(hip_argv[0], hip_argv);
+		execv(hip_argv[0], (char **)hip_argv);
 
 	out:
 		vpn_progress(vpninfo, PRG_ERR,

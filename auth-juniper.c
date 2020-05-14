@@ -132,7 +132,8 @@ static int parse_input_node(struct openconnect_info *vpninfo, struct oc_auth_for
 		xmlnode_get_prop(node, "name", &opt->name);
 		if (opt->name && (!strcmp(opt->name, submit_button) ||
 				  !strcmp(opt->name, "sn-postauth-proceed") ||
-				  !strcmp(opt->name, "sn-preauth-proceed"))) {
+				  !strcmp(opt->name, "sn-preauth-proceed") ||
+				  !strcmp(opt->name, "secidactionEnter"))) {
 			/* Use this as the 'Submit' action for the form, by
 			   implicitly adding it as a hidden option. */
 			xmlnode_get_prop(node, "value", &opt->_value);
