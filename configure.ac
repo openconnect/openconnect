@@ -989,6 +989,16 @@ if test "$jni_standalone" = "yes" ; then
 fi
 AC_SUBST(SYMVER_JAVA, $symver_java)
 
+AC_ARG_ENABLE([insecure-debugging],
+	AS_HELP_STRING([--enable-insecure-debugging],
+		       [Enable --no-cert-check option, and don't logout on SIGINT]),
+	[insecure_debugging=yes],[insecure_debugging=no])
+
+if test "$insecure_debugging" = "yes"; then
+    oldcflags="$CFLAGS"
+    CFLAGS="$CFLAGS -DINSECURE_DEBUGGING"
+fi
+
 AC_CHECK_HEADER([if_tun.h],
     [AC_DEFINE([IF_TUN_HDR], ["if_tun.h"], [if_tun.h include path])],
     [AC_CHECK_HEADER([linux/if_tun.h],
@@ -1121,6 +1131,7 @@ SUMMARY([Java bindings], [$with_java])
 SUMMARY([Build docs], [$build_www])
 SUMMARY([Unit tests], [$have_cwrap])
 SUMMARY([Net namespace tests], [$have_netns])
+SUMMARY([Insecure debugging], [$insecure_debugging])
 
 if test "$ssl_library" = "OpenSSL"; then
     AC_MSG_WARN([[
