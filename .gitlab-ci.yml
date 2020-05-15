@@ -137,8 +137,8 @@ CentOS6/OpenSSL:
 Fedora/Coverity:
   only:
     refs:
-       - master
-       - coverity
+       - master@openconnect/openconnect
+       - coverity@openconnect/openconnect
   script:
   - dnf update -y
   - dnf install -y git autoconf automake libtool python gettext make
