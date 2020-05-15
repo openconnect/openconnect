@@ -67,9 +67,10 @@ static const uint16_t fcstab[256] = {
 		*outp++ = (c);        \
 } while (0)
 
-static struct pkt *hdlc_into_new_pkt(struct openconnect_info *vpninfo, unsigned char *bytes, int len, int asyncmap)
+static struct pkt *hdlc_into_new_pkt(struct openconnect_info *vpninfo, struct pkt *old, int asyncmap)
 {
-        const unsigned char *inp = bytes, *endp = bytes + len;
+	int len = old->len + old->ppp.hlen;
+	const unsigned char *inp = old->data - old->ppp.hlen, *endp = inp + len;
 	unsigned char *outp;
 	uint16_t fcs = PPPINITFCS16;
 	/* Every byte in payload and 2-byte FCS potentially expands to two bytes,
@@ -557,6 +558,16 @@ static int handle_config_packet(struct openconnect_info *vpninfo,
 	int code = p[0], id = p[1];
 	int ret = 0, add_state = 0;
 
+	/* XX: The NCP header consist of 4 bytes: u8 code, u8 id, u16 length (length includes this header) */
+	if (load_be16(p + 2) > len) {
+		vpn_progress(vpninfo, PRG_ERR, "PPP config packet too short (header says %d bytes, received %d)\n", load_be16(p+2), len);
+		dump_buf_hex(vpninfo, PRG_ERR, '<', p, len);
+		return -EINVAL;
+	} else if (load_be16(p + 2) < len) {
+		vpn_progress(vpninfo, PRG_DEBUG, "PPP config packet has junk at end (header says %d bytes, received %d)\n", load_be16(p+2), len);
+		len = load_be16(p + 2);
+	}
+
         if (code > 0 && code <= 11)
 		vpn_progress(vpninfo, PRG_TRACE, _("Received proto 0x%04x/id %d %s from server\n"), proto, id, lcp_names[code]);
 	switch (code) {
@@ -684,6 +695,19 @@ static int handle_state_transition(struct openconnect_info *vpninfo, int *timeou
 	return 0;
 }
 
+static inline void add_ppp_header(struct pkt *p, struct oc_ppp *ppp, int proto) {
+	int n = 0;
+	/* XX: store PPP header, in reverse */
+	p->data[--n] = proto & 0xff;
+	if (proto > 0xff || !(ppp->out_lcp_opts & BIT_PFCOMP))
+		p->data[--n] = proto >> 8;
+	if (proto == PPP_LCP || !(ppp->out_lcp_opts & BIT_ACCOMP)) {
+		p->data[--n] = 0x03; /* Control */
+		p->data[--n] = 0xff; /* Address */
+	}
+	p->ppp.hlen = -n;
+}
+
 int ppp_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable)
 {
 	int ret, magic, rsv_hdr_size;
@@ -708,9 +732,9 @@ int ppp_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable)
 		/* Some servers send us packets that are larger than
 		   negotiated MTU. We reserve some extra space to
 		   handle that */
-		unsigned char *ph, *pp;
+		unsigned char *eh, *ph, *pp, *next;
 		int receive_mtu = MAX(16384, vpninfo->ip_info.mtu);
-		int len, payload_len, payload_len_hdr;
+		int len, payload_len, next_len;
 
 		if (!vpninfo->cstp_pkt) {
 			vpninfo->cstp_pkt = malloc(sizeof(struct pkt) + receive_mtu);
@@ -719,19 +743,26 @@ int ppp_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable)
 				break;
 			}
 		}
+		this = vpninfo->cstp_pkt;
 
 		/* XX: PPP header is of variable length. We attempt to
 		 * anticipate the actual length received, so we don't have to memmove
 		 * the payload later. */
 		rsv_hdr_size = ppp->encap_len + ppp->exp_ppp_hdr_size;
 
-		/* Load the header to end up with the payload where we expect it */
-		ph = vpninfo->cstp_pkt->data - rsv_hdr_size;
-		len = ssl_nonblock_read(vpninfo, ph, receive_mtu + rsv_hdr_size);
+		/* Load the encap header to end up with the payload where we expect it */
+		eh = this->data - rsv_hdr_size;
+		len = ssl_nonblock_read(vpninfo, eh, receive_mtu + rsv_hdr_size);
 		if (!len)
 			break;
 		if (len < 0)
 			goto do_reconnect;
+
+	next_pkt:
+		/* At this point:
+		 *   eh: pointer to start of bytes-from-the-wire
+		 *   len: number of bytes-from-the-wire
+		 */
 
 		if (len < 8) {
 		short_pkt:
@@ -741,62 +772,46 @@ int ppp_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable)
 		}
 
 		if (vpninfo->dump_http_traffic)
-			dump_buf_hex(vpninfo, PRG_DEBUG, '<', ph, len);
+			dump_buf_hex(vpninfo, PRG_DEBUG, '<', eh, len);
 
 		/* check pre-PPP header */
 		switch (ppp->encap) {
 		case PPP_ENCAP_F5:
-			magic = load_be16(ph);
-			payload_len = load_be16(ph + 2);
+			magic = load_be16(eh);
+			payload_len = load_be16(eh + 2);
+			next = eh + 4 + payload_len;
 
 			if (magic != 0xf500) {
 				vpn_progress(vpninfo, PRG_ERR,
 					     _("Unexpected pre-PPP packet header for encap %d.\n"),
 					     ppp->encap);
-				dump_buf_hex(vpninfo, PRG_ERR, '<', ph, len);
+				dump_buf_hex(vpninfo, PRG_ERR, '<', eh, len);
 				continue;
 			}
 
-			if (len > 4 + payload_len) {
-				/* XX: SSL record contains another packet after this one */
-				vpn_progress(vpninfo, PRG_ERR,
-					     _("Packet contains %d bytes after payload. Concatenated packets are not handled yet.\n"),
-					     len - 4 + payload_len);
-			} else if (len < 4 + payload_len) {
+			if (len < 4 + payload_len) {
+			incomplete_pkt:
 				vpn_progress(vpninfo, PRG_ERR,
 					     _("Packet is incomplete. Received %d bytes on wire (includes %d encap) but header payload_len is %d\n"),
 					     len, ppp->encap_len, payload_len);
-				dump_buf_hex(vpninfo, PRG_ERR, '<', ph, len);
+				dump_buf_hex(vpninfo, PRG_ERR, '<', eh, len);
 				continue;
 			}
 			break;
 
+		case PPP_ENCAP_NX_HDLC:
+			payload_len = load_be32(eh);
+			if (len < 4 + payload_len)
+				goto incomplete_pkt;
+			/* fall through */
+
 		case PPP_ENCAP_F5_HDLC:
 		case PPP_ENCAP_FORTINET_HDLC:
-			payload_len = unhdlc_in_place(vpninfo, ph, len, &pp);
+			payload_len = unhdlc_in_place(vpninfo, eh + ppp->encap_len, len - ppp->encap_len, &next);
 			if (payload_len < 0)
 				continue; /* unhdlc_in_place already logged */
-			if (pp != ph + len)
-				vpn_progress(vpninfo, PRG_ERR,
-							 _("Packet contains %ld bytes after payload. Concatenated packets are not handled yet.\n"),
-							 len - (pp - ph));
 			if (vpninfo->dump_http_traffic)
-				dump_buf_hex(vpninfo, PRG_TRACE, '<', pp, payload_len);
-			break;
-
-		case PPP_ENCAP_NX_HDLC:
-			payload_len_hdr = load_be32(ph);
-			payload_len = unhdlc_in_place(vpninfo, ph + ppp->encap_len, len, &pp);
-			vpn_progress(vpninfo, PRG_INFO, "payload_len_hdr: %x, payload_len: %x, len: %x\n",
-						 payload_len_hdr, payload_len, len);
-			if (payload_len < 0)
-				continue; /* unhdlc_in_place already logged */
-			if (pp != ph + len)
-				vpn_progress(vpninfo, PRG_ERR,
-							 _("Packet contains %ld bytes after payload. Concatenated packets are not handled yet.\n"),
-							 len - (pp - ph));
-			if (vpninfo->dump_http_traffic)
-				dump_buf_hex(vpninfo, PRG_TRACE, '<', pp, payload_len);
+				dump_buf_hex(vpninfo, PRG_TRACE, '<', eh + ppp->encap_len, payload_len);
 			break;
 
 		default:
@@ -805,8 +820,25 @@ int ppp_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable)
 			return -EINVAL;
 		}
 
+		ph = eh + ppp->encap_len;
+		next_len = eh + len - next;
+		if (next_len)
+			vpn_progress(vpninfo, PRG_TRACE,
+				     _("Packet contains %d bytes after payload. Assuming concatenated packet.\n"),
+				     next_len);
+
+		/* At this point:
+		 *   ph: pointer to start of PPP header
+		 *   payload_len: number of bytes in PPP packet
+		 *
+		 *   Packet has been un-HDLC'ed, if necessary, and checked for incompleteness
+		 *
+		 *   next: pointer to next concatenated packet
+		 *   next_len: its length
+		 */
+
 		/* check PPP header and extract protocol */
-		pp = ph += ppp->encap_len;
+		pp = ph;
 		if (pp[0] == 0xff && pp[1] == 0x03)
 			/* XX: Neither byte is a possible proto value (https://tools.ietf.org/html/rfc1661#section-2) */
 			pp += 2;
@@ -817,22 +849,19 @@ int ppp_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable)
 		}
 		payload_len -= pp - ph;
 
+		/* At this point:
+		 *   pp: pointer to start of PPP payload
+		 *   payload_len: number of bytes in PPP *payload*
+		 */
+
 		vpninfo->ssl_times.last_rx = time(NULL);
 
 		switch (proto) {
 		case PPP_LCP:
 		case PPP_IPCP:
 		case PPP_IP6CP:
-			if (payload_len < 4) {
+			if (payload_len < 4)
 				goto short_pkt;
-			} else if (load_be16(pp + 2) > payload_len) {
-				vpn_progress(vpninfo, PRG_ERR, "PPP config packet too short (header says %d bytes, received %d)\n", load_be16(pp+2), payload_len);
-				dump_buf_hex(vpninfo, PRG_ERR, '<', ph, payload_len+4);
-				return 1;
-			} else if (load_be16(pp + 2) < payload_len) {
-				vpn_progress(vpninfo, PRG_DEBUG, "PPP config packet has junk at end (header says %d bytes, received %d)\n", load_be16(pp+2), payload_len);
-				payload_len = load_be16(pp + 2);
-			}
 			if ((ret = handle_config_packet(vpninfo, proto, pp, payload_len)) >= 0)
 				if ((ret = handle_state_transition(vpninfo, timeout)) < 0)
 					return ret;
@@ -850,7 +879,7 @@ int ppp_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable)
 					     _("Received IPv%d data packet of %d bytes\n"),
 					     proto == PPP_IP6 ? 6 : 4, payload_len);
 
-				if (pp != vpninfo->cstp_pkt->data) {
+				if (pp != this->data) {
 					vpn_progress(vpninfo, PRG_TRACE,
 						     _("Expected %d PPP header bytes but got %ld, shifting payload.\n"),
 						     ppp->exp_ppp_hdr_size, pp - ph);
@@ -859,12 +888,14 @@ int ppp_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable)
 					/* XX: If PPP header was SMALLER than expected, we could be overwriting data for the
 					 * following concatenated packet, or conceivably moving a huge packet past
 					 * the allocated buffer. */
-					memmove(vpninfo->cstp_pkt->data, pp, payload_len);
+					memmove(this->data, pp, payload_len);
 				}
 
-				vpninfo->cstp_pkt->len = payload_len;
-				queue_packet(&vpninfo->incoming_queue, vpninfo->cstp_pkt);
-				vpninfo->cstp_pkt = NULL;
+				this->len = payload_len;
+				queue_packet(&vpninfo->incoming_queue, this);
+				/* XX: keep reference in this to build next packet */
+				if (this == vpninfo->cstp_pkt)
+					vpninfo->cstp_pkt = NULL;
 				work_done = 1;
 				continue;
 			}
@@ -877,19 +908,28 @@ int ppp_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable)
 			dump_buf_hex(vpninfo, PRG_ERR, '<', pp, payload_len);
 			return 1;
 		}
+
+		if (next_len) {
+			/* XX: need to copy to a new struct pkt, not just move pointers, because data
+			 * packets will get stolen for incoming queue and free()'d.
+			 */
+			this = malloc(sizeof(struct pkt) + next_len - rsv_hdr_size);
+			eh = this->data - rsv_hdr_size;
+			memcpy(eh, next, next_len);
+			len = next_len;
+			goto next_pkt;
+		}
 	}
 
 	/* If SSL_write() fails we are expected to try again. With exactly
 	   the same data, at exactly the same location. So we keep the
 	   packet we had before.... */
-	if (vpninfo->current_ssl_pkt) {
+	if ((this = vpninfo->current_ssl_pkt)) {
 	handle_outgoing:
 		vpninfo->ssl_times.last_tx = time(NULL);
 		unmonitor_write_fd(vpninfo, ssl);
 
-		ret = ssl_nonblock_write(vpninfo,
-					 vpninfo->current_ssl_pkt->data - vpninfo->current_ssl_pkt->ppp.hlen,
-					 vpninfo->current_ssl_pkt->len + vpninfo->current_ssl_pkt->ppp.hlen);
+		ret = ssl_nonblock_write(vpninfo, this->data - this->ppp.hlen, this->len + this->ppp.hlen);
 		if (ret < 0)
 			goto do_reconnect;
 		else if (!ret) {
@@ -910,17 +950,15 @@ int ppp_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable)
 			}
 		}
 
-		if (ret != vpninfo->current_ssl_pkt->len + vpninfo->current_ssl_pkt->ppp.hlen) {
+		if (ret != this->len + this->ppp.hlen) {
 			vpn_progress(vpninfo, PRG_ERR,
 				     _("SSL wrote too few bytes! Asked for %d, sent %d\n"),
-				     vpninfo->current_ssl_pkt->len + vpninfo->current_ssl_pkt->ppp.hlen, ret);
+				     this->len + this->ppp.hlen, ret);
 			vpninfo->quit_reason = "Internal error";
 			return 1;
 		}
 
-		if (1 /*vpninfo->current_ssl_pkt != &dpd_pkt*/)
-			free(vpninfo->current_ssl_pkt);
-
+		free(this);
 		vpninfo->current_ssl_pkt = NULL;
 	}
 
@@ -966,49 +1004,35 @@ int ppp_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable)
 	}
 
 	if (this) {
-		int n = 0;
+		unsigned char *eh;
 
-		/* XX: store PPP header, in reverse */
-		this->data[--n] = proto & 0xff;
-		if (proto > 0xff || !(ppp->out_lcp_opts & BIT_PFCOMP))
-			this->data[--n] = proto >> 8;
-		if (proto == PPP_LCP || !(ppp->out_lcp_opts & BIT_ACCOMP)) {
-			this->data[--n] = 0x03; /* Control */
-			this->data[--n] = 0xff; /* Address */
-		}
+		/* Add PPP header */
+		add_ppp_header(this, ppp, proto);
 
-		/* Add pre-PPP encapsulation header */
-		switch (ppp->encap) {
-		case PPP_ENCAP_F5:
-			store_be16(this->data + n - 2, this->len - n);
-			store_be16(this->data + n - 4, 0xf500);
-			this->ppp.hlen = -n + 4;
-			break;
-		case PPP_ENCAP_F5_HDLC:
-		case PPP_ENCAP_FORTINET_HDLC:
+		/* XX: Copy the whole packet into new HDLC'ed packet if needed */
+		if (ppp->hdlc) {
 			/* XX: use worst-case escaping for LCP */
-			this = hdlc_into_new_pkt(vpninfo, this->data + n, this->len - n,
+			this = hdlc_into_new_pkt(vpninfo, this,
 						 proto == PPP_LCP ? ASYNCMAP_LCP : ppp->out_asyncmap);
 			if (!this)
 				return 1; /* XX */
 			free(vpninfo->current_ssl_pkt);
 			vpninfo->current_ssl_pkt = this;
+		}
+
+		/* Add pre-PPP encapsulation header */
+		eh = this->data - this->ppp.hlen - ppp->encap_len;
+		switch (ppp->encap) {
+		case PPP_ENCAP_F5:
+			store_be16(eh, 0xf500);
+			store_be16(eh + 2, this->len + this->ppp.hlen);
 			break;
 		case PPP_ENCAP_NX_HDLC:
-			/* XX: use worst-case escaping for LCP */
-			this = hdlc_into_new_pkt(vpninfo, this->data + n, this->len - n,
-									 proto == PPP_LCP ? ASYNCMAP_LCP : ppp->out_asyncmap);
-			if (!this)
-				return 1; /* XX */
-			store_be32(this->data + n - 4, this->len - n);
-			free(vpninfo->current_ssl_pkt);
-			this->ppp.hlen = -n + 4;
-			vpninfo->current_ssl_pkt = this;
-			break;
-		default:
-			/* XX: fail */
+			/* XX: header is simply the number of bytes on the wire (excluding itself) */
+			store_be32(eh, this->len + this->ppp.hlen);
 			break;
 		}
+		this->ppp.hlen += ppp->encap_len;
 
 		vpn_progress(vpninfo, PRG_TRACE,
 			     _("Sending proto 0x%04x packet (%d bytes total)\n"),
