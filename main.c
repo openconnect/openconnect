@@ -836,7 +836,6 @@ static void usage(void)
 
 	printf("\n%s:\n", _("Server validation"));
 	printf("      --servercert=FINGERPRINT    %s\n", _("Server's certificate SHA1 fingerprint"));
-	printf("      --no-cert-check             %s\n", _("Do not require server SSL cert to be valid"));
 	printf("      --no-system-trust           %s\n", _("Disable default system certificate authorities"));
 	printf("      --cafile=FILE               %s\n", _("Cert file for server verification"));
 
