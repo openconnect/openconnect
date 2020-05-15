@@ -924,14 +924,12 @@ int ppp_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable)
 	/* If SSL_write() fails we are expected to try again. With exactly
 	   the same data, at exactly the same location. So we keep the
 	   packet we had before.... */
-	if (vpninfo->current_ssl_pkt) {
+	if ((this = vpninfo->current_ssl_pkt)) {
 	handle_outgoing:
 		vpninfo->ssl_times.last_tx = time(NULL);
 		unmonitor_write_fd(vpninfo, ssl);
 
-		ret = ssl_nonblock_write(vpninfo,
-					 vpninfo->current_ssl_pkt->data - vpninfo->current_ssl_pkt->ppp.hlen,
-					 vpninfo->current_ssl_pkt->len + vpninfo->current_ssl_pkt->ppp.hlen);
+		ret = ssl_nonblock_write(vpninfo, this->data - this->ppp.hlen, this->len + this->ppp.hlen);
 		if (ret < 0)
 			goto do_reconnect;
 		else if (!ret) {
@@ -952,17 +950,15 @@ int ppp_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable)
 			}
 		}
 
-		if (ret != vpninfo->current_ssl_pkt->len + vpninfo->current_ssl_pkt->ppp.hlen) {
+		if (ret != this->len + this->ppp.hlen) {
 			vpn_progress(vpninfo, PRG_ERR,
 				     _("SSL wrote too few bytes! Asked for %d, sent %d\n"),
-				     vpninfo->current_ssl_pkt->len + vpninfo->current_ssl_pkt->ppp.hlen, ret);
+				     this->len + this->ppp.hlen, ret);
 			vpninfo->quit_reason = "Internal error";
 			return 1;
 		}
 
-		if (1 /*vpninfo->current_ssl_pkt != &dpd_pkt*/)
-			free(vpninfo->current_ssl_pkt);
-
+		free(this);
 		vpninfo->current_ssl_pkt = NULL;
 	}
 
