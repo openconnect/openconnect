@@ -195,7 +195,8 @@ Fedora/GnuTLS:
   - cd openconnect-$(git describe --tags | sed s/^v//)
   - ./configure --with-java --disable-dsa-tests --without-gnutls-version-check CFLAGS=-g
   - make -j4
-  - make VERBOSE=1 -j4 check
+  # Disable rdrand to work around https://bugzilla.redhat.com/1831086
+  - make VERBOSE=1 OPENSSL_ia32cap=~0x4000000000000000 -j4 check
   tags:
   - shared
   except:
@@ -224,7 +225,8 @@ Fedora/GnuTLS/clang:
   - cd openconnect-$(git describe --tags | sed s/^v//)
   - ./configure --with-java --disable-dsa-tests --without-gnutls-version-check CC=clang CFLAGS=-g
   - make -j4
-  - make VERBOSE=1 -j4 check
+  # Disable rdrand to work around https://bugzilla.redhat.com/1831086
+  - make VERBOSE=1 OPENSSL_ia32cap=~0x4000000000000000 -j4 check
   tags:
   - shared
   except:
