@@ -671,6 +671,15 @@ void openconnect_clear_cookie(struct openconnect_info *vpninfo)
 		memset(vpninfo->cookie, 0, strlen(vpninfo->cookie));
 }
 
+int openconnect_set_cookie(struct openconnect_info *vpninfo,
+			    const char *cookie)
+{
+	UTF8CHECK(cookie);
+
+	STRDUP(vpninfo->cookie, cookie);
+	return 0;
+}
+
 void openconnect_reset_ssl(struct openconnect_info *vpninfo)
 {
 	vpninfo->got_cancel_cmd = 0;

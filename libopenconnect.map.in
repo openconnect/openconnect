@@ -108,6 +108,11 @@ OPENCONNECT_5_6 {
 	openconnect_set_trojan_interval;
 } OPENCONNECT_5_5;
 
+OPENCONNECT_5_7 {
+ global:
+	openconnect_set_cookie;
+} OPENCONNECT_5_6;
+
 OPENCONNECT_PRIVATE {
  global: @SYMVER_TIME@ @SYMVER_GETLINE@ @SYMVER_JAVA@ @SYMVER_ASPRINTF@ @SYMVER_VASPRINTF@ @SYMVER_WIN32_STRERROR@
 	openconnect_get_tls_library_version;

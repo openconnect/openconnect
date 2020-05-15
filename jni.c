@@ -1353,6 +1353,14 @@ JNIEXPORT void JNICALL Java_org_infradead_libopenconnect_LibOpenConnect_setUrlpa
 	SET_STRING_END();
 }
 
+JNIEXPORT void JNICALL Java_org_infradead_libopenconnect_LibOpenConnect_setCookie(
+	JNIEnv *jenv, jobject jobj, jstring jarg)
+{
+	SET_STRING_START_VOID()
+	openconnect_set_cookie(ctx->vpninfo, arg);
+	SET_STRING_END();
+}
+
 JNIEXPORT void JNICALL Java_org_infradead_libopenconnect_LibOpenConnect_setLocalName(
 	JNIEnv *jenv, jobject jobj, jstring jarg)
 {
