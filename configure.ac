@@ -991,7 +991,7 @@ AC_SUBST(SYMVER_JAVA, $symver_java)
 
 AC_ARG_ENABLE([insecure-debugging],
 	AS_HELP_STRING([--enable-insecure-debugging],
-		       [Enable --no-cert-check option, and don't logout on SIGINT]),
+                      [Enable --servercert=ACCEPT option, and don't logout on SIGINT]),
 	[insecure_debugging=yes],[insecure_debugging=no])
 
 if test "$insecure_debugging" = "yes"; then
