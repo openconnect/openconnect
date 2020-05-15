@@ -134,6 +134,15 @@ CentOS6/OpenSSL:
     paths:
       - tests/*.log
 
+Signoff:
+  script:
+  - dnf install -y git
+  # Quoted to work around https://gitlab.com/gitlab-org/gitlab-foss/-/issues/20177
+  - 'echo "Checking for new commits without Signed-off-by: tags as described in http://www.infradead.org/openconnect/contribute.html"'
+  # Last bad commit
+  - 'git log origin/master ceab1765db11c15a18a0c605812dbc11afd63e8b.. --grep "(^Signed-off-by)|(^Merge branch)|(^This reverts commit)" --extended-regexp --invert-grep --exit-code'
+  - echo "None (good)"
+
 Fedora/Coverity:
   only:
     refs:
