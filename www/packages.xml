@@ -13,30 +13,68 @@
 <p>
   <i>Updates to the information below are welcomed, especially for distributions (including *BSD etc.) which aren't yet mentioned.</i>
 </p>
-<ul><li><h2>Fedora</h2>
-  Both <tt>openconnect</tt> and <tt>NetworkManager-openconnect</tt> packages are included in Fedora and
-  kept up to date.
-  Fedora's OpenSSL packages include all required patches for DTLS compatibility.
-</li>
-<li><h2>Debian</h2>
-  The <tt>openconnect</tt> and <tt>network-manager-openconnect</tt> packages are included in Debian.<br/>
-  Debian's OpenSSL packages include all required patches for DTLS compatibility.
-</li>
-<li><h2>Ubuntu</h2>
-  Reasonably current versions of the required packages are finally included in Ubuntu 10.04 "Lucid". Older releases still have <a href="https://bugs.launchpad.net/ubuntu/+source/openssl/+bug/516318">out of date OpenSSL</a> and <a href="https://bugs.launchpad.net/ubuntu/+source/openconnect/+bug/516324">out of date OpenConnect which doesn't work around the latest Cisco bugs</a>.</li>
-<li><h2>OpenSuSE</h2>
- OpenSuSE 12.1 should finally include <tt>openconnect</tt> and <tt>NetworkManager-openconnect</tt> packages, which are absent from older releases.</li>
-
-<li><h2>Gentoo</h2>
-  Gentoo Portage contains packages for both <tt>openconnect</tt> and <tt>networkmanager-openconnect</tt>.
-</li>
-<li> <h2>NetBSD, DragonFly BSD, etc. <i>(pkgsrc)</i></h2>
-  There are somewhat out of date packages for <a href="http://pkgsrc-wip.cvs.sourceforge.net/viewvc/pkgsrc-wip/wip/vpnc-script/">vpnc-script</a> and <a href="http://pkgsrc-wip.cvs.sourceforge.net/viewvc/pkgsrc-wip/wip/openconnect/">openconnect</a> in the pkgsrc-wip repository <i>(<a href="http://pkgsrc-wip.sourceforge.net/">pkgsrc-wip.sf.net</a>)</i>.</li>
-<li>  <h2>FreeBSD</h2>
-  An <tt>openconnect</tt> <a href="http://www.freebsd.org/cgi/cvsweb.cgi/ports/security/openconnect/">port</a> is available for FreeBSD.
-</li>
-<li>  <h2>OpenBSD</h2>
-  The OpenBSD ports collection contains an <tt>openconnect</tt> package.</li>
+<ul>
+  <li><h2>Fedora</h2>
+    <p>
+      Both <tt>openconnect</tt> and <tt>NetworkManager-openconnect</tt> packages are included in Fedora and
+      generally kept up to date with the latest release.
+    </p>
+    <p>
+      In addition, the latest git <tt>master</tt> branch is built automatically in the
+      <a href="https://copr.fedorainfracloud.org/coprs/dwmw2/openconnect/">dwmw2/openconnect</a> COPR for
+      current versions of Fedora as well as RHEL/EPEL and also a <tt>mingw-openconnect</tt> package
+      cross-compiled for Windows.
+    </p>
+  </li>
+  <li><h2>Debian / OpenSUSE / Gentoo</h2>
+    <p>
+      The <tt>openconnect</tt> and <tt>NetworkManager-openconnect</tt>
+      <i>(or <tt>network-manager-openconnect</tt>)</i> packages are included in most
+      Linux distributions.
+    </p>
+  </li>
+  <li><h2>Ubuntu</h2>
+    <p>
+      The <tt>openconnect</tt> and <tt>network-manager-openconnect</tt> packages are included in Ubuntu
+      but bug fixes are sometimes very slow.
+    </p>
+    <p>
+      OpenConnect releases for Ubuntu LTS distributions can be found in the
+      <a href="https://launchpad.net/~dwmw2/+archive/ubuntu/openconnect">dwmw2/openconnect</a>
+      PPA.
+    </p>
+  </li>
+  <li><h2>NetBSD, DragonFly BSD, Solaris, etc. <i>(pkgsrc)</i></h2>
+    <p>
+      There is an <a href="https://github.com/NetBSD/pkgsrc/tree/trunk/net/openconnect">OpenConnect</a>
+      package in the <a href="https://www.netbsd.org/docs/pkgsrc/">NetBSD pkgsrc</a> repository,
+      which covers <a href="https://pkgsrc.org/#platforms">many UNIX-like systems</a>.
+    </p>
+  </li>
+  <li><h2>FreeBSD</h2>
+    <p>
+      An <tt>openconnect</tt> <a href="http://www.freebsd.org/cgi/cvsweb.cgi/ports/security/openconnect/">port</a> is available for FreeBSD.
+    </p>
+  </li>
+  <li><h2>OpenBSD</h2>
+    <p>
+      The OpenBSD ports collection contains an <a href="https://openports.se/net/openconnect">OpenConnect</a> package.
+    </p>
+  </li>
+  <li><h2>Mac OS X</h2>
+    <p>
+      The Homebrew project contains an <a href="https://formulae.brew.sh/formula/openconnect">OpenConnect</a>
+      package.
+    </p>
+  </li>
+  <li><h2>Windows</h2>
+    <p>
+      The Fedora
+      <a href="https://copr.fedorainfracloud.org/coprs/dwmw2/openconnect/">dwmw2/openconnect</a>
+      COPR mentioned above contains <tt>mingw-openconnect</tt> packages built for 32-bit and
+      64-bit Windows.
+    </p>
+  </li>
 </ul>
 
 <INCLUDE file="inc/footer.tmpl" />

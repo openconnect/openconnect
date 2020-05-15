@@ -11,9 +11,9 @@
     	<h1>Building OpenConnect</h1>
 
 <p>Unless you need to test the very latest version, you should not
-need to build OpenConnect for yourself. Your operating system should
-have a <a href="packages.html">prepackaged</a> version which you can
-install; if it does not then file a bug or enhancement request asking for
+need to build OpenConnect for yourself. See the <a href="packages.html">packages</a>
+page for information about your operating system or distribution. If there
+is none, then you can file a bug or enhancement request asking for
 one.</p>
 
 <h2>Requirements</h2>
