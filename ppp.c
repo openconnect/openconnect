@@ -558,6 +558,16 @@ static int handle_config_packet(struct openconnect_info *vpninfo,
 	int code = p[0], id = p[1];
 	int ret = 0, add_state = 0;
 
+	/* XX: The NCP header consist of 4 bytes: u8 code, u8 id, u16 length (length includes this header) */
+	if (load_be16(p + 2) > len) {
+		vpn_progress(vpninfo, PRG_ERR, "PPP config packet too short (header says %d bytes, received %d)\n", load_be16(p+2), len);
+		dump_buf_hex(vpninfo, PRG_ERR, '<', p, len);
+		return -EINVAL;
+	} else if (load_be16(p + 2) < len) {
+		vpn_progress(vpninfo, PRG_DEBUG, "PPP config packet has junk at end (header says %d bytes, received %d)\n", load_be16(p+2), len);
+		len = load_be16(p + 2);
+	}
+
         if (code > 0 && code <= 11)
 		vpn_progress(vpninfo, PRG_TRACE, _("Received proto 0x%04x/id %d %s from server\n"), proto, id, lcp_names[code]);
 	switch (code) {
@@ -829,16 +839,8 @@ int ppp_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable)
 		case PPP_LCP:
 		case PPP_IPCP:
 		case PPP_IP6CP:
-			if (payload_len < 4) {
+			if (payload_len < 4)
 				goto short_pkt;
-			} else if (load_be16(pp + 2) > payload_len) {
-				vpn_progress(vpninfo, PRG_ERR, "PPP config packet too short (header says %d bytes, received %d)\n", load_be16(pp+2), payload_len);
-				dump_buf_hex(vpninfo, PRG_ERR, '<', ph, payload_len+4);
-				return 1;
-			} else if (load_be16(pp + 2) < payload_len) {
-				vpn_progress(vpninfo, PRG_DEBUG, "PPP config packet has junk at end (header says %d bytes, received %d)\n", load_be16(pp+2), payload_len);
-				payload_len = load_be16(pp + 2);
-			}
 			if ((ret = handle_config_packet(vpninfo, proto, pp, payload_len)) >= 0)
 				if ((ret = handle_state_transition(vpninfo, timeout)) < 0)
 					return ret;
