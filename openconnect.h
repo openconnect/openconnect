@@ -33,9 +33,12 @@ extern "C" {
 #endif
 
 #define OPENCONNECT_API_VERSION_MAJOR 5
-#define OPENCONNECT_API_VERSION_MINOR 6
+#define OPENCONNECT_API_VERSION_MINOR 7
 
 /*
+ * API version 5.7:
+ *  - Add openconnect_set_cookie()
+ *
  * API version 5.6 (v8.06; 2020-03-31):
  *  - Add openconnect_set_trojan_interval()
  *
@@ -540,6 +543,7 @@ int openconnect_get_ip_info(struct openconnect_info *,
 
 int openconnect_get_port(struct openconnect_info *);
 const char *openconnect_get_cookie(struct openconnect_info *);
+int openconnect_set_cookie(struct openconnect_info *, const char *);
 void openconnect_clear_cookie(struct openconnect_info *);
 
 void openconnect_disable_ipv6(struct openconnect_info *vpninfo);
