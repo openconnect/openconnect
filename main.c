@@ -2022,6 +2022,10 @@ int main(int argc, char **argv)
 		vpn_progress(vpninfo, PRG_INFO, _("User detached from session (SIGHUP); exiting.\n"));
 		ret = 0;
 		break;
+	case -EIO:
+		vpn_progress(vpninfo, PRG_INFO, _("Unrecoverable I/O error; exiting.\n"));
+		ret = 1;
+		break;
 	default:
 		vpn_progress(vpninfo, PRG_ERR, _("Unknown error; exiting.\n"));
 		ret = 1;

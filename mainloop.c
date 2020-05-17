@@ -132,6 +132,8 @@ static int setup_tun_device(struct openconnect_info *vpninfo)
 	ret = openconnect_setup_tun_device(vpninfo, vpninfo->vpnc_script, vpninfo->ifname);
 	if (ret) {
 		fprintf(stderr, _("Set up tun device failed\n"));
+		if (!vpninfo->quit_reason)
+			vpninfo->quit_reason = "Set up tun device failed";
 		return ret;
 	}
 
