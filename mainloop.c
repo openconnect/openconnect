@@ -204,7 +204,7 @@ int openconnect_mainloop(struct openconnect_info *vpninfo,
 		else
 			timeout = 1000;
 
-		if (vpninfo->dtls_state > DTLS_DISABLED) {
+		if (!tun_is_up(vpninfo)) {
 			/* Postpone tun device creation after DTLS is connected so
 			 * we have a better knowledge of the link MTU. We also
 			 * force the creation if DTLS enters sleeping mode - i.e.,
@@ -212,21 +212,26 @@ int openconnect_mainloop(struct openconnect_info *vpninfo,
 			if (!tun_is_up(vpninfo) && (vpninfo->dtls_state == DTLS_CONNECTED ||
 			    vpninfo->dtls_state == DTLS_SLEEPING)) {
 				ret = setup_tun_device(vpninfo);
-				if (ret) {
+				if (ret)
 					break;
-				}
+			} else if (vpninfo->delay_tunnel_reason) {
+				vpn_progress(vpninfo, PRG_INFO, _("Delaying tunnel for %d ms with reason: %s\n"),
+					     timeout, vpninfo->delay_tunnel_reason);
+				/* XX: don't let this spin forever */
+				vpninfo->delay_tunnel_reason = NULL;
+			} else {
+				/* No DTLS, or DTLS failed; setup TUN device unconditionally */
+				ret = setup_tun_device(vpninfo);
+				if (ret)
+					break;
 			}
+		}
 
+		if (vpninfo->dtls_state > DTLS_DISABLED) {
 			ret = vpninfo->proto->udp_mainloop(vpninfo, &timeout, udp_r);
 			if (vpninfo->quit_reason)
 				break;
 			did_work += ret;
-
-		} else if (!tun_is_up(vpninfo)) {
-			/* No DTLS - setup TUN device unconditionally */
-			ret = setup_tun_device(vpninfo);
-			if (ret)
-				break;
 		}
 
 		ret = vpninfo->proto->tcp_mainloop(vpninfo, &timeout, tcp_r);
@@ -242,28 +247,49 @@ int openconnect_mainloop(struct openconnect_info *vpninfo,
 
 		poll_cmd_fd(vpninfo, 0);
 		if (vpninfo->got_cancel_cmd) {
-			if (vpninfo->cancel_type == OC_CMD_CANCEL) {
+			if (vpninfo->delay_close != NO_DELAY_CLOSE) {
+				if (vpninfo->delay_close == DELAY_CLOSE_IMMEDIATE_CALLBACK) {
+					vpn_progress(vpninfo, PRG_DEBUG, _("Delaying cancel (immediate callback).\n"));
+					did_work++;
+				} else
+					vpn_progress(vpninfo, PRG_DEBUG, _("Delaying cancel.\n"));
+				/* XX: don't let this spin forever */
+				vpninfo->delay_close = NO_DELAY_CLOSE;
+			} else if (vpninfo->cancel_type == OC_CMD_CANCEL) {
 				vpninfo->quit_reason = "Aborted by caller";
+				vpninfo->got_cancel_cmd = 0;
 				ret = -EINTR;
+				break;
 			} else {
+				vpninfo->got_cancel_cmd = 0;
 				ret = -ECONNABORTED;
+				break;
 			}
-			vpninfo->got_cancel_cmd = 0;
-			break;
 		}
 
 		if (vpninfo->got_pause_cmd) {
-			/* close all connections and wait for the user to call
-			   openconnect_mainloop() again */
-			openconnect_close_https(vpninfo, 0);
-			if (vpninfo->dtls_state > DTLS_DISABLED) {
-				vpninfo->proto->udp_close(vpninfo);
-				vpninfo->new_dtls_started = 0;
-			}
+			if (vpninfo->delay_close != NO_DELAY_CLOSE) {
+				 /* XX: don't let this spin forever */
+				if (vpninfo->delay_close == DELAY_CLOSE_IMMEDIATE_CALLBACK) {
+					vpn_progress(vpninfo, PRG_DEBUG, _("Delaying pause (immediate callback).\n"));
+					did_work++;
+				} else
+					vpn_progress(vpninfo, PRG_DEBUG, _("Delaying pause.\n"));
+				/* XX: don't let this spin forever */
+				vpninfo->delay_close = NO_DELAY_CLOSE;
+			} else {
+				/* close all connections and wait for the user to call
+				   openconnect_mainloop() again */
+				openconnect_close_https(vpninfo, 0);
+				if (vpninfo->dtls_state > DTLS_DISABLED) {
+					vpninfo->proto->udp_close(vpninfo);
+					vpninfo->new_dtls_started = 0;
+				}
 
-			vpninfo->got_pause_cmd = 0;
-			vpn_progress(vpninfo, PRG_INFO, _("Caller paused the connection\n"));
-			return 0;
+				vpninfo->got_pause_cmd = 0;
+				vpn_progress(vpninfo, PRG_INFO, _("Caller paused the connection\n"));
+				return 0;
+			}
 		}
 
 		if (did_work)

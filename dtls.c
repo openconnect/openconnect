@@ -712,4 +712,3 @@ void dtls_detect_mtu(struct openconnect_info *vpninfo)
  skip_mtu:
 	free(buf);
 }
-
