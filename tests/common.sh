@@ -71,7 +71,7 @@ cleanup() {
 		ret=1
 	fi
 	wait
-	test -n "$SOCKDIR" && rm -rf $SOCKDIR
+	test -n "$SOCKDIR" && rm -rf $SOCKDIR && mkdir -p $SOCKDIR
 	return $ret
 }
 
