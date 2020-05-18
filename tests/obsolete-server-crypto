@@ -1,0 +1,62 @@
+#!/bin/sh
+#
+# Copyright (C) 2020 Daniel Lenski
+#
+# This file is part of openconnect.
+#
+# This is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Lesser General Public License
+# as published by the Free Software Foundation; either version 2.1 of
+# the License, or (at your option) any later version.
+#
+# This library is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Lesser General Public License for more details.
+#
+# You should have received a copy of the GNU Lesser General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>
+
+SERV="${SERV:-../src/ocserv}"
+srcdir=${srcdir:-.}
+top_builddir=${top_builddir:-..}
+
+. `dirname $0`/common.sh
+
+########################################
+# Need to override mandatory system-wide crypto policy on Fedora 31+,
+# for both ocserv and openconnect.
+########################################
+
+export GNUTLS_SYSTEM_PRIORITY_FILE=/dev/null
+
+########################################
+# Verify that we cannot connect to a server offering only obsolete, insecure
+# crypto UNLESS --allow-insecure-crypto is specified.
+########################################
+
+echo "Testing against server with insecure crypto (3DES and RC4 only)... "
+
+# Run servers
+PORT=4568
+TLS_PRIORITIES="LEGACY:%SERVER_PRECEDENCE:%COMPAT:-VERS-TLS-ALL:+VERS-TLS1.0:-CIPHER-ALL:+3DES-CBC:+ARCFOUR-128:+MD5:+SHA1"
+update_config test-obsolete-server-crypto.config
+launch_simple_sr_server -d 1 -f -c $CONFIG
+PID=$!
+wait_server $PID
+
+echo -n "Connecting without --allow-insecure-crypto... "
+( echo "test" | LD_PRELOAD=libsocket_wrapper.so $OPENCONNECT -q $ADDRESS:$PORT -u test --servercert=d66b507ae074d03b02eafca40d35f87dd81049d3 --cookieonly >/dev/null 2>&1) &&
+	fail $PID "Connected successfully when we shouldn't"
+
+echo ok
+
+echo -n "Connecting with --allow-insecure-crypto... "
+( echo "test" | LD_PRELOAD=libsocket_wrapper.so $OPENCONNECT -q $ADDRESS:$PORT -u test --servercert=d66b507ae074d03b02eafca40d35f87dd81049d3 --allow-insecure-crypto --cookieonly >/dev/null 2>&1) ||
+	fail $PID "Could not connect and obtain cookie with --allow-insecure-crypto"
+
+echo ok
+
+cleanup
+
+exit 0
