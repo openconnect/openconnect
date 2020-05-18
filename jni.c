@@ -1071,6 +1071,16 @@ JNIEXPORT void JNICALL Java_org_infradead_libopenconnect_LibOpenConnect_setPFS(
 	openconnect_set_pfs(ctx->vpninfo, arg);
 }
 
+JNIEXPORT jint JNICALL Java_org_infradead_libopenconnect_LibOpenConnect_setAllowInsecureCrypto(
+	JNIEnv *jenv, jobject jobj, jboolean arg)
+{
+	struct libctx *ctx = getctx(jenv, jobj);
+
+	if (!ctx)
+		return -EINVAL;
+	return openconnect_set_allow_insecure_crypto(ctx->vpninfo, arg);
+}
+
 JNIEXPORT void JNICALL Java_org_infradead_libopenconnect_LibOpenConnect_setSystemTrust(
 	JNIEnv *jenv, jobject jobj, jboolean arg)
 {

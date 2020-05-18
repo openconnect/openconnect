@@ -464,6 +464,14 @@ option, then you have found a bug in OpenConnect. Please see
 http://www.infradead.org/openconnect/mail.html and report this to the
 developers.
 .TP
+.B \-\-allow\-insecure\-crypto
+The ancient, broken 3DES and RC4 ciphers are insecure; we explicitly
+disable them by default. However, some still-in-use VPN servers can't do
+any better.
+
+This option enables use of these insecure ciphers, as well as the use
+of SHA1 for server certificate validation.
+.TP
 .B \-\-non\-inter
 Do not expect user input; exit if it is required.
 .TP
@@ -503,7 +511,7 @@ will call liboath to generate an RFC 6238 time-based password, and
 .B \-\-token\-mode=hotp
 will call liboath to generate an RFC 4226 HMAC-based password. Yubikey
 tokens which generate OATH codes in hardware are supported with
-.B \-\-token\-mode=yubioath. \-\-token\-mode=oidc will use the provided 
+.B \-\-token\-mode=yubioath. \-\-token\-mode=oidc will use the provided
 OpenIDConnect token as an RFC 6750 bearer token.
 .TP
 .B \-\-token\-secret={ SECRET[,COUNTER] | @FILENAME }

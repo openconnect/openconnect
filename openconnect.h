@@ -38,6 +38,7 @@ extern "C" {
 /*
  * API version 5.7:
  *  - Add openconnect_set_cookie()
+ *  - Add openconnect_set_allow_insecure_crypto()
  *
  * API version 5.6 (v8.06; 2020-03-31):
  *  - Add openconnect_set_trojan_interval()
@@ -552,6 +553,7 @@ int openconnect_parse_url(struct openconnect_info *vpninfo, const char *url);
 void openconnect_set_cert_expiry_warning(struct openconnect_info *vpninfo,
 					 int seconds);
 void openconnect_set_pfs(struct openconnect_info *vpninfo, unsigned val);
+int openconnect_set_allow_insecure_crypto(struct openconnect_info *vpninfo, unsigned val);
 
 /* If this is set, then openconnect_obtain_cookie() will abort and return
    failure if the file descriptor is readable. Typically a user may create

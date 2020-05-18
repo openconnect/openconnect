@@ -188,6 +188,7 @@ enum {
 	OPT_OS,
 	OPT_TIMESTAMP,
 	OPT_PFS,
+	OPT_ALLOW_INSECURE_CRYPTO,
 	OPT_PROXY_AUTH,
 	OPT_HTTP_AUTH,
 	OPT_LOCAL_HOSTNAME,
@@ -217,6 +218,7 @@ static const struct option long_options[] = {
 	OPTION("csd-wrapper", 1, OPT_CSD_WRAPPER),
 #endif
 	OPTION("pfs", 0, OPT_PFS),
+	OPTION("allow-insecure-crypto", 0, OPT_ALLOW_INSECURE_CRYPTO),
 	OPTION("certificate", 1, 'c'),
 	OPTION("sslkey", 1, 'k'),
 	OPTION("cookie", 1, 'C'),
@@ -912,6 +914,7 @@ static void usage(void)
 	printf("\n%s:\n", _("Server bugs"));
 	printf("      --no-http-keepalive         %s\n", _("Disable HTTP connection re-use"));
 	printf("      --no-xmlpost                %s\n", _("Do not attempt XML POST authentication"));
+	printf("      --allow-insecure-crypto     %s\n", _("Allow use of the ancient, insecure 3DES and RC4 ciphers"));
 
 	printf("\n");
 
@@ -1536,6 +1539,13 @@ int main(int argc, char **argv)
 			break;
 		case OPT_PFS:
 			openconnect_set_pfs(vpninfo, 1);
+			break;
+		case OPT_ALLOW_INSECURE_CRYPTO:
+			if (openconnect_set_allow_insecure_crypto(vpninfo, 1)) {
+				fprintf(stderr, _("Cannot enable insecure 3DES or RC4 ciphers, because the library\n"
+						  "%s no longer supports them.\n"), openconnect_get_tls_library_version());
+				exit(1);
+			}
 			break;
 		case OPT_SERVERCERT:
 			server_cert = keep_config_arg();

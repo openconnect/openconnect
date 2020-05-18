@@ -61,6 +61,14 @@ const char *openconnect_get_tls_library_version()
 	return tls_library_version;
 }
 
+int can_enable_insecure_crypto()
+{
+	if (EVP_des_ede3_cbc() == NULL ||
+	    EVP_rc4() == NULL)
+		return -ENOENT;
+	return 0;
+}
+
 int openconnect_sha1(unsigned char *result, void *data, int len)
 {
 	EVP_MD_CTX *c = EVP_MD_CTX_new();
@@ -1718,8 +1726,9 @@ int openconnect_open_https(struct openconnect_info *vpninfo)
 			SSL_CTX_set_default_verify_paths(vpninfo->https_ctx);
 
 		if (!strlen(vpninfo->ciphersuite_config)) {
-			strncpy(vpninfo->ciphersuite_config, vpninfo->pfs ? "HIGH:!aNULL:!eNULL:-RSA" : "DEFAULT",
-				sizeof(vpninfo->ciphersuite_config)-1);
+			snprintf(vpninfo->ciphersuite_config, sizeof(vpninfo->ciphersuite_config), "%s%s",
+				 vpninfo->pfs ? "HIGH:!aNULL:!eNULL:-RSA" : "DEFAULT",
+				 vpninfo->allow_insecure_crypto?":+3DES:+RC4":":-3DES:-RC4");
 		}
 
 		if (!SSL_CTX_set_cipher_list(vpninfo->https_ctx, vpninfo->ciphersuite_config)) {
