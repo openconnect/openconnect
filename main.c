@@ -1379,16 +1379,48 @@ static int autocomplete(int argc, char **argv)
 	return 0;
 }
 
+static void print_connection_info(struct openconnect_info *vpninfo)
+{
+	const struct oc_ip_info *ip_info;
+	const char *ssl_compr, *udp_compr, *dtls_state;
+
+	openconnect_get_ip_info(vpninfo, &ip_info, NULL, NULL);
+
+	switch (vpninfo->dtls_state) {
+	case DTLS_NOSECRET:
+		dtls_state = _("unsuccessful");
+		break;
+	case DTLS_SLEEPING:
+	case DTLS_SECRET:
+		dtls_state = _("in progress");
+		break;
+	case DTLS_DISABLED:
+		dtls_state = _("disabled");
+		break;
+	default:
+		dtls_state = _("connected");
+	}
+
+	ssl_compr = openconnect_get_cstp_compression(vpninfo);
+	udp_compr = openconnect_get_dtls_compression(vpninfo);
+	vpn_progress(vpninfo, PRG_INFO,
+		     _("Connected as %s%s%s, using SSL%s%s, with %s%s%s %s\n"),
+		     ip_info->addr?:"",
+		     (ip_info->netmask6 && ip_info->addr) ? " + " : "",
+		     ip_info->netmask6 ? : "",
+		     ssl_compr ? " + " : "", ssl_compr ? : "",
+		     vpninfo->proto->udp_protocol ? : "UDP", udp_compr ? " + " : "", udp_compr ? : "",
+		     dtls_state);
+}
+
 int main(int argc, char **argv)
 {
 	struct openconnect_info *vpninfo;
 	char *urlpath = NULL;
 	struct oc_vpn_option *gai;
 	char *ip;
-	const char *ssl_compr, *udp_compr;
 	char *proxy = getenv("https_proxy");
 	char *vpnc_script = NULL;
-	const struct oc_ip_info *ip_info;
 	int autoproxy = 0;
 	int opt;
 	char *pidfile = NULL;
@@ -1932,7 +1964,7 @@ int main(int argc, char **argv)
 		fprintf(stderr, _("Set up UDP failed; using SSL instead\n"));
 	}
 
-	openconnect_get_ip_info(vpninfo, &ip_info, NULL, NULL);
+	print_connection_info(vpninfo);
 
 #if !defined(_WIN32) && !defined(__native_client__)
 	if (use_syslog) {
@@ -1940,17 +1972,6 @@ int main(int argc, char **argv)
 		vpninfo->progress = syslog_progress;
 	}
 #endif /* !_WIN32 && !__native_client__ */
-
-	ssl_compr = openconnect_get_cstp_compression(vpninfo);
-	udp_compr = openconnect_get_dtls_compression(vpninfo);
-	vpn_progress(vpninfo, PRG_INFO,
-		     _("Connected as %s%s%s, using SSL%s%s, with %s%s%s %s\n"),
-		     ip_info->addr?:"",
-		     (ip_info->netmask6 && ip_info->addr) ? " + " : "",
-		     ip_info->netmask6 ? : "",
-		     ssl_compr ? " + " : "", ssl_compr ? : "",
-		     vpninfo->proto->udp_protocol ? : "UDP", udp_compr ? " + " : "", udp_compr ? : "",
-		     (vpninfo->dtls_state == DTLS_DISABLED || vpninfo->dtls_state == DTLS_NOSECRET ? _("disabled") : _("in progress")));
 
 	if (!vpninfo->vpnc_script) {
 		vpn_progress(vpninfo, PRG_INFO,
