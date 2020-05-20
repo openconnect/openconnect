@@ -205,16 +205,7 @@ int openconnect_mainloop(struct openconnect_info *vpninfo,
 			timeout = 1000;
 
 		if (!tun_is_up(vpninfo)) {
-			/* Postpone tun device creation after DTLS is connected so
-			 * we have a better knowledge of the link MTU. We also
-			 * force the creation if DTLS enters sleeping mode - i.e.,
-			 * we failed to connect on time. */
-			if (!tun_is_up(vpninfo) && (vpninfo->dtls_state == DTLS_CONNECTED ||
-			    vpninfo->dtls_state == DTLS_SLEEPING)) {
-				ret = setup_tun_device(vpninfo);
-				if (ret)
-					break;
-			} else if (vpninfo->delay_tunnel_reason) {
+			if (vpninfo->delay_tunnel_reason) {
 				vpn_progress(vpninfo, PRG_INFO, _("Delaying tunnel for %d ms with reason: %s\n"),
 					     timeout, vpninfo->delay_tunnel_reason);
 				/* XX: don't let this spin forever */

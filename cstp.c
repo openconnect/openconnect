@@ -351,6 +351,8 @@ static int start_cstp_connection(struct openconnect_info *vpninfo)
 			buf_free(dtls12_cl);
 		}
 		append_compr_types(reqbuf, "DTLS", vpninfo->req_compr & ~COMPR_DEFLATE);
+
+		vpninfo->delay_tunnel_reason = "DTLS MTU detection";
 	}
 #endif
 	buf_append(reqbuf, "\r\n");
