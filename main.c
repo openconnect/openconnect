@@ -80,7 +80,11 @@ static void init_token(struct openconnect_info *vpninfo,
 
 static int verbose = PRG_INFO;
 static int timestamp;
-int background;
+#ifndef _WIN32
+static int background;
+static FILE *pid_fp = NULL;
+static char *pidfile = NULL;
+#endif
 static int do_passphrase_from_fsid;
 static int non_inter;
 static int cookieonly;
@@ -1413,6 +1417,50 @@ static void print_connection_info(struct openconnect_info *vpninfo)
 		     dtls_state);
 }
 
+#ifndef _WIN32
+static FILE *background_self(struct openconnect_info *vpninfo, char *pidfile) {
+	FILE *fp = NULL;
+	int pid;
+
+	/* Open the pidfile before forking, so we can report errors
+	   more sanely. It's *possible* that we'll fail to write to
+	   it, but very unlikely. */
+	if (pidfile != NULL) {
+		fp = openconnect_fopen_utf8(vpninfo, pidfile, "w");
+		if (!fp) {
+			fprintf(stderr, _("Failed to open '%s' for write: %s\n"),
+				pidfile, strerror(errno));
+			openconnect_vpninfo_free(vpninfo);
+			exit(1);
+		}
+	}
+	if ((pid = fork())) {
+		if (fp) {
+			fprintf(fp, "%d\n", pid);
+			fclose(fp);
+		}
+		vpn_progress(vpninfo, PRG_INFO,
+			     _("Continuing in background; pid %d\n"),
+			     pid);
+		openconnect_vpninfo_free(vpninfo);
+		exit(0);
+	}
+	if (fp)
+		fclose(fp);
+	return fp;
+}
+#endif /* _WIN32 */
+
+static void fully_up_cb(void *_vpninfo) {
+	struct openconnect_info *vpninfo = _vpninfo;
+
+	print_connection_info(vpninfo);
+#ifndef _WIN32
+	if (background)
+		pid_fp = background_self(vpninfo, pidfile);
+#endif
+}
+
 int main(int argc, char **argv)
 {
 	struct openconnect_info *vpninfo;
@@ -1423,8 +1471,6 @@ int main(int argc, char **argv)
 	char *vpnc_script = NULL;
 	int autoproxy = 0;
 	int opt;
-	char *pidfile = NULL;
-	FILE *fp = NULL;
 	char *config_arg;
 	char *config_filename;
 	char *token_str = NULL;
@@ -1566,9 +1612,11 @@ int main(int argc, char **argv)
 		case OPT_CAFILE:
 			openconnect_set_cafile(vpninfo, dup_config_arg());
 			break;
+#ifndef _WIN32
 		case OPT_PIDFILE:
 			pidfile = keep_config_arg();
 			break;
+#endif
 		case OPT_PFS:
 			openconnect_set_pfs(vpninfo, 1);
 			break;
@@ -1964,7 +2012,6 @@ int main(int argc, char **argv)
 		fprintf(stderr, _("Set up UDP failed; using SSL instead\n"));
 	}
 
-	print_connection_info(vpninfo);
 
 #if !defined(_WIN32) && !defined(__native_client__)
 	if (use_syslog) {
@@ -1980,39 +2027,9 @@ int main(int argc, char **argv)
 			     _("See http://www.infradead.org/openconnect/vpnc-script.html\n"));
 	}
 
-#ifndef _WIN32
-	if (background) {
-		int pid;
-
-		/* Open the pidfile before forking, so we can report errors
-		   more sanely. It's *possible* that we'll fail to write to
-		   it, but very unlikely. */
-		if (pidfile != NULL) {
-			fp = openconnect_fopen_utf8(vpninfo, pidfile, "w");
-			if (!fp) {
-				fprintf(stderr, _("Failed to open '%s' for write: %s\n"),
-					pidfile, strerror(errno));
-				openconnect_vpninfo_free(vpninfo);
-				exit(1);
-			}
-		}
-		if ((pid = fork())) {
-			if (fp) {
-				fprintf(fp, "%d\n", pid);
-				fclose(fp);
-			}
-			vpn_progress(vpninfo, PRG_INFO,
-				     _("Continuing in background; pid %d\n"),
-				     pid);
-			openconnect_vpninfo_free(vpninfo);
-			exit(0);
-		}
-		if (fp)
-			fclose(fp);
-	}
-#endif
 
 	openconnect_set_loglevel(vpninfo, verbose);
+	openconnect_set_setup_tun_handler(vpninfo, fully_up_cb);
 
 	while (1) {
 		ret = openconnect_mainloop(vpninfo, reconnect_timeout, RECONNECT_INTERVAL_MIN);
@@ -2022,8 +2039,10 @@ int main(int argc, char **argv)
 		vpn_progress(vpninfo, PRG_INFO, _("User requested reconnect\n"));
 	}
 
-	if (fp)
+#ifndef _WIN32
+	if (pid_fp)
 		unlink(pidfile);
+#endif
 
  out:
 	switch (ret) {

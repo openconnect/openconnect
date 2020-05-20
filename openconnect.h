@@ -693,7 +693,7 @@ typedef int (*openconnect_getaddrinfo_vfn) (void *privdata, const char *node, co
 					    const struct addrinfo *hints, struct addrinfo **res);
 void openconnect_override_getaddrinfo(struct openconnect_info *vpninfo, openconnect_getaddrinfo_vfn gai_fn);
 
-/* Callback for configuring the interface after MTU detection finishes. */
+/* Callback for configuring the interface after tunnel is fully up. */
 typedef void (*openconnect_setup_tun_vfn) (void *privdata);
 void openconnect_set_setup_tun_handler(struct openconnect_info *vpninfo,
 				       openconnect_setup_tun_vfn setup_tun);
