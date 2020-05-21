@@ -208,8 +208,8 @@ int openconnect_mainloop(struct openconnect_info *vpninfo,
 
 		if (!tun_is_up(vpninfo)) {
 			if (vpninfo->delay_tunnel_reason) {
-				vpn_progress(vpninfo, PRG_INFO, _("Delaying tunnel for %d ms with reason: %s\n"),
-					     timeout, vpninfo->delay_tunnel_reason);
+				vpn_progress(vpninfo, PRG_TRACE, _("Delaying tunnel with reason: %s\n"),
+					     vpninfo->delay_tunnel_reason);
 				/* XX: don't let this spin forever */
 				vpninfo->delay_tunnel_reason = NULL;
 			} else {
@@ -242,10 +242,10 @@ int openconnect_mainloop(struct openconnect_info *vpninfo,
 		if (vpninfo->got_cancel_cmd) {
 			if (vpninfo->delay_close != NO_DELAY_CLOSE) {
 				if (vpninfo->delay_close == DELAY_CLOSE_IMMEDIATE_CALLBACK) {
-					vpn_progress(vpninfo, PRG_DEBUG, _("Delaying cancel (immediate callback).\n"));
+					vpn_progress(vpninfo, PRG_TRACE, _("Delaying cancel (immediate callback).\n"));
 					did_work++;
 				} else
-					vpn_progress(vpninfo, PRG_DEBUG, _("Delaying cancel.\n"));
+					vpn_progress(vpninfo, PRG_TRACE, _("Delaying cancel.\n"));
 				/* XX: don't let this spin forever */
 				vpninfo->delay_close = NO_DELAY_CLOSE;
 			} else if (vpninfo->cancel_type == OC_CMD_CANCEL) {
@@ -264,10 +264,10 @@ int openconnect_mainloop(struct openconnect_info *vpninfo,
 			if (vpninfo->delay_close != NO_DELAY_CLOSE) {
 				 /* XX: don't let this spin forever */
 				if (vpninfo->delay_close == DELAY_CLOSE_IMMEDIATE_CALLBACK) {
-					vpn_progress(vpninfo, PRG_DEBUG, _("Delaying pause (immediate callback).\n"));
+					vpn_progress(vpninfo, PRG_TRACE, _("Delaying pause (immediate callback).\n"));
 					did_work++;
 				} else
-					vpn_progress(vpninfo, PRG_DEBUG, _("Delaying pause.\n"));
+					vpn_progress(vpninfo, PRG_TRACE, _("Delaying pause.\n"));
 				/* XX: don't let this spin forever */
 				vpninfo->delay_close = NO_DELAY_CLOSE;
 			} else {
