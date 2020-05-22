@@ -303,6 +303,52 @@ Fedora/OpenSSL/clang:
     paths:
       - tests/*.log
 
+Ubuntu18.04/GnuTLS:
+  image: ubuntu:18.04
+  script:
+  - apt-get -y update
+  - apt-get -y install build-essential gettext autoconf automake libproxy-dev
+    libxml2-dev libtool vpnc-scripts pkg-config zlib1g-dev
+    libgnutls28-dev ocserv iproute2 openjdk-8-jdk python3
+    libsofthsm2-dev libsocket-wrapper libuid-wrapper
+  - ./autogen.sh
+  - ./configure --with-java CFLAGS=-g
+  - make -j4
+# UTF-8 support is not available
+  - make VERBOSE=1 XFAIL_TESTS="auth-nonascii" -j4 check
+  tags:
+  - shared
+  except:
+  - tags
+  artifacts:
+    expire_in: 1 week
+    when: on_failure
+    paths:
+      - tests/*.log
+
+Ubuntu18.04/OpenSSL:
+  image: ubuntu:18.04
+  script:
+  - apt-get -y update
+  - apt-get -y install build-essential gettext autoconf automake libproxy-dev
+    libxml2-dev libtool vpnc-scripts pkg-config zlib1g-dev
+    libssl-dev ocserv iproute2 openjdk-8-jdk python3
+    libsofthsm2-dev libsocket-wrapper libuid-wrapper
+  - ./autogen.sh
+  - ./configure --without-gnutls --with-openssl --with-java --without-openssl-version-check --disable-dsa-tests CFLAGS=-g
+  - make -j4
+# UTF-8 support is not available
+  - make VERBOSE=1 XFAIL_TESTS="auth-nonascii" -j4 check
+  tags:
+  - shared
+  except:
+  - tags
+  artifacts:
+    expire_in: 1 week
+    when: on_failure
+    paths:
+      - tests/*.log
+
 MinGW32/GnuTLS:
   script:
   - dnf update -y
