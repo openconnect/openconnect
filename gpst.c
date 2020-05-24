@@ -456,7 +456,9 @@ out:
 static int gpst_parse_config_xml(struct openconnect_info *vpninfo, xmlNode *xml_node, void *cb_data)
 {
 	xmlNode *member;
-	char *s = NULL;
+	char *s = NULL, *deferred_netmask = NULL;
+	struct oc_split_include *inc;
+	int split_route_is_default_route = 0;
 	int ii;
 
 	if (!xml_node || !xmlnode_is_named(xml_node, "response"))
@@ -480,9 +482,12 @@ static int gpst_parse_config_xml(struct openconnect_info *vpninfo, xmlNode *xml_
 	for (xml_node = xml_node->children; xml_node; xml_node=xml_node->next) {
 		if (!xmlnode_get_val(xml_node, "ip-address", &s))
 			vpninfo->ip_info.addr = add_option(vpninfo, "ipaddr", &s);
-		else if (!xmlnode_get_val(xml_node, "netmask", &s))
-			vpninfo->ip_info.netmask = add_option(vpninfo, "netmask", &s);
-		else if (!xmlnode_get_val(xml_node, "mtu", &s))
+		else if (!xmlnode_get_val(xml_node, "netmask", &deferred_netmask)) {
+			/* XX: GlobalProtect servers always (almost always?) send 255.255.255.255 as their netmask
+			 * (a /32 host route), and if they want to include an actual default route (0.0.0.0/0)
+			 * they instead put it under <access-routes/>. We defer saving the netmask until later.
+			 */
+		} else if (!xmlnode_get_val(xml_node, "mtu", &s))
 			vpninfo->ip_info.mtu = atoi(s);
 		else if (!xmlnode_get_val(xml_node, "lifetime", &s))
 			vpn_progress(vpninfo, PRG_INFO, _("Session will expire after %d minutes.\n"), atoi(s)/60);
@@ -532,10 +537,19 @@ static int gpst_parse_config_xml(struct openconnect_info *vpninfo, xmlNode *xml_
 		} else if (xmlnode_is_named(xml_node, "access-routes") || xmlnode_is_named(xml_node, "exclude-access-routes")) {
 			for (member = xml_node->children; member; member=member->next) {
 				if (!xmlnode_get_val(member, "member", &s)) {
-					struct oc_split_include *inc = malloc(sizeof(*inc));
-					if (!inc)
+					int is_inc = xmlnode_is_named(xml_node, "access-routes");
+
+					/* XX: if this is a default route jammed into the split-include
+					 * routes, just mark it for now.
+					 */
+					if (is_inc && !strcmp(s, "0.0.0.0/0")) {
+						split_route_is_default_route = 1;
 						continue;
-					if (xmlnode_is_named(xml_node, "access-routes")) {
+					}
+
+					if ((inc = malloc(sizeof(*inc))) == NULL)
+						return -ENOMEM;
+					if (is_inc) {
 						inc->route = add_option(vpninfo, "split-include", &s);
 						inc->next = vpninfo->ip_info.split_includes;
 						vpninfo->ip_info.split_includes = inc;
@@ -598,6 +612,34 @@ static int gpst_parse_config_xml(struct openconnect_info *vpninfo, xmlNode *xml_
 				vpn_progress(vpninfo, PRG_DEBUG, _("Unknown GlobalProtect config tag <%s>: %s\n"), xml_node->name, s);
 		}
 	}
+
+	/* Fix the issue of a 0.0.0.0/0 "split"-include route by swapping the "split" route with the default netmask. */
+	if (split_route_is_default_route) {
+		char *original_netmask = deferred_netmask;
+
+		if ((deferred_netmask = strdup("0.0.0.0")) == NULL)
+			return -ENOMEM;
+
+		/* If the original netmask wasn't /32, add it as a split route */
+		if (vpninfo->ip_info.addr && original_netmask) {
+			uint32_t nm_bits = inet_addr(original_netmask);
+			if (nm_bits != 0xffffffff) { /* 255.255.255.255 */
+				struct in_addr net_addr;
+				inet_aton(vpninfo->ip_info.addr, &net_addr);
+				net_addr.s_addr &= nm_bits; /* clear host bits */
+
+				if ((inc = malloc(sizeof(*inc))) == NULL ||
+				    asprintf(&s, "%s/%s", inet_ntoa(net_addr), original_netmask) <= 0)
+					return -ENOMEM;
+				inc->route = add_option(vpninfo, "split-include", &s);
+				inc->next = vpninfo->ip_info.split_includes;
+				vpninfo->ip_info.split_includes = inc;
+			}
+		}
+		free(original_netmask);
+	}
+	if (deferred_netmask)
+		vpninfo->ip_info.netmask = add_option(vpninfo, "netmask", &deferred_netmask);
 
 	/* Set 10-second DPD/keepalive (same as Windows client) unless
 	 * overridden with --force-dpd */
