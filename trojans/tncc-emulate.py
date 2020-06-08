@@ -140,7 +140,7 @@ def decode_0ce7(buf, indent):
     logging.debug('%scmd 0ce7 (id %08x string) %d bytes', indent, id, len(buf))
 
     if s.startswith(b'COMPRESSED:'):
-        typ, length, data = s.split(':', 2)
+        typ, length, data = s.split(b':', 2)
         s = zlib.decompress(data)
 
     s = s.rstrip(b'\0')
