@@ -17,6 +17,7 @@
      <ul>
        <li>Make <tt>tncc-emulate.py</tt> work with Python 3.7+. (<a href="https://gitlab.com/openconnect/openconnect/-/issues/152">!152</a>, <a href="https://gitlab.com/openconnect/openconnect/merge_requests/120">!120</a>)</li>
        <li>Emulated a newer version of GlobalProtect official clients, 5.1.5-8; was 4.0.2-19 (<a href="https://gitlab.com/openconnect/openconnect/merge_requests/131">!131</a>)</li>
+       <li>Support Juniper login forms containing both password and 2FA token (<a href="https://gitlab.com/openconnect/openconnect/-/merge_requests/121">!121</a>)</li>
      </ul><br/>
   </li>
   <li><b><a href="ftp://ftp.infradead.org/pub/openconnect/openconnect-8.10.tar.gz">OpenConnect v8.10</a></b>

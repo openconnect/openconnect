@@ -75,13 +75,14 @@ static int oncp_can_gen_tokencode(struct openconnect_info *vpninfo,
 		return -EINVAL;
 
 	if (!strcmp(form->auth_id, "frmLogin")) {
-		// The first "password" input in frmLogin is likely to be a password, not 2FA token
-		struct oc_form_opt **p = &form->opts;
-		while (*p) {
-			if ((*p)->type == OC_FORM_OPT_PASSWORD) {
-				return can_gen_tokencode(vpninfo, form, opt);
-			}
-			p = &(*p)->next;
+		/* XX: The first occurence of a password input field in frmLogin is likely to be a password,
+		 * not token, input. However, if we have already added a password input field to this form,
+		 * then a second one is likely to hold a token.
+		 */
+		struct oc_form_opt *p;
+		for (p = form->opts; p; p = p->next) {
+			if (p->type == OC_FORM_OPT_PASSWORD)
+				goto okay;
 		}
 		return -EINVAL;
 	}
@@ -91,6 +92,7 @@ static int oncp_can_gen_tokencode(struct openconnect_info *vpninfo,
 	    strcmp(form->auth_id, "frmTotpToken"))
 		return -EINVAL;
 
+ okay:
 	return can_gen_tokencode(vpninfo, form, opt);
 }
 
