@@ -74,6 +74,18 @@ static int oncp_can_gen_tokencode(struct openconnect_info *vpninfo,
 	    vpninfo->token_bypassed)
 		return -EINVAL;
 
+	if (!strcmp(form->auth_id, "frmLogin")) {
+		// The first "password" input in frmLogin is likely to be a password, not 2FA token
+		struct oc_form_opt **p = &form->opts;
+		while (*p) {
+			if ((*p)->type == OC_FORM_OPT_PASSWORD) {
+				return can_gen_tokencode(vpninfo, form, opt);
+			}
+			p = &(*p)->next;
+		}
+		return -EINVAL;
+	}
+
 	if (strcmp(form->auth_id, "frmDefender") &&
 	    strcmp(form->auth_id, "frmNextToken") &&
 	    strcmp(form->auth_id, "frmTotpToken"))
