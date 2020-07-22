@@ -197,6 +197,16 @@ is the string to be filled in automatically. For example, the standard username 
 could also be provided with this option thus:
 .I \-\-form\-entry
 .IR main:username=joebloggs .
+
+This option should
+.I not
+be used to enter passwords.
+.I \-\-passwd\-on\-stdin
+should be used for that purpose. Not only will this option expose the password value
+via the OpenConnect process's command line, but unlike
+.I \-\-passwd\-on\-stdin
+this option will not recognize the case of an incorrect password, and stop trying
+to re-enter it repeatedly.
 .TP
 .B \-h,\-\-help
 Display help text
