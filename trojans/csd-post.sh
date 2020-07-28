@@ -87,11 +87,11 @@ done
 
 if [[ "$INSECURE" == "true" ]]; then
     # Don't validate server certificate at all
-    PINNEDPUBKEY="-s -k"
+    PINNEDPUBKEY="-k"
 else
     # Validate certificate using pin-sha256 value in CSD_SHA256, or fallback to
     # cURL's default certificate validation if not set.
-    PINNEDPUBKEY="-s ${CSD_SHA256:+"-k --pinnedpubkey sha256//$CSD_SHA256"}"
+    PINNEDPUBKEY="${CSD_SHA256:+"-k --pinnedpubkey sha256//$CSD_SHA256"}"
 fi
 
 URL="https://$CSD_HOSTNAME/+CSCOE+/sdesktop/token.xml?ticket=$TICKET&stub=$STUB"
@@ -171,7 +171,7 @@ fi
 COOKIE_HEADER="Cookie: sdesktop=$TOKEN"
 CONTENT_HEADER="Content-Type: text/xml"
 URL="https://$CSD_HOSTNAME/+CSCOE+/sdesktop/scan.xml?reusebrowser=1"
-curl $PINNEDPUBKEY -H "$CONTENT_HEADER" -H "$COOKIE_HEADER" -H 'Expect: ' --data-binary @$RESPONSE "$URL" > $RESULT
+curl $PINNEDPUBKEY -s -H "$CONTENT_HEADER" -H "$COOKIE_HEADER" -H 'Expect: ' --data-binary @$RESPONSE "$URL" > $RESULT
 
 cat $RESULT || :
 
