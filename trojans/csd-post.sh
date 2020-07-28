@@ -21,6 +21,18 @@ else
     XMLSTARLET=true
 fi
 
+# cURL 7.39 (https://bugzilla.redhat.com/show_bug.cgi?id=1195771)
+# is required to support pin-based certificate validation. Must set this
+# to false if using an older version of cURL.
+
+INSECURE=false
+if [[ "$INSECURE" == "true" ]]; then
+    echo "*********************************************************************" >&2
+    echo "WARNING: running insecurely; will not validate CSD server certificate" >&2
+    echo "*********************************************************************" >&2
+fi
+
+
 export RESPONSE=$(mktemp /tmp/csdresponseXXXXXXX)
 export RESULT=$(mktemp /tmp/csdresultXXXXXXX)
 trap 'rm $RESPONSE $RESULT' EXIT
@@ -73,7 +85,15 @@ while [ "$1" ]; do
     shift
 done
 
-PINNEDPUBKEY="-s ${CSD_SHA256:+"-k --pinnedpubkey sha256//$CSD_SHA256"}"
+if [[ "$INSECURE" == "true" ]]; then
+    # Don't validate server certificate at all
+    PINNEDPUBKEY="-s -k"
+else
+    # Validate certificate using pin-sha256 value in CSD_SHA256, or fallback to
+    # cURL's default certificate validation if not set.
+    PINNEDPUBKEY="-s ${CSD_SHA256:+"-k --pinnedpubkey sha256//$CSD_SHA256"}"
+fi
+
 URL="https://$CSD_HOSTNAME/+CSCOE+/sdesktop/token.xml?ticket=$TICKET&stub=$STUB"
 if [ -n "$XMLSTARLET" ]; then
     TOKEN=$(curl $PINNEDPUBKEY -s "$URL"  | xmlstarlet sel -t -v /hostscan/token)

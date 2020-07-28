@@ -15,7 +15,20 @@ URL="https://${CSD_HOSTNAME}/CACHE"
 HOSTSCAN_DIR="$HOME/.cisco/hostscan"
 LIB_DIR="$HOSTSCAN_DIR/lib"
 BIN_DIR="$HOSTSCAN_DIR/bin"
-PINNEDPUBKEY="-s ${CSD_SHA256:+"-k --pinnedpubkey sha256//$CSD_SHA256"}"
+
+# cURL 7.39 (https://bugzilla.redhat.com/show_bug.cgi?id=1195771)
+# is required to support pin-based certificate validation. Must set this
+# to false if using an older version of cURL.
+
+INSECURE=false
+if [[ "$INSECURE" == "true" ]]; then
+    echo "*********************************************************************" >&2
+    echo "WARNING: running insecurely; will not validate CSD server certificate" >&2
+    echo "*********************************************************************" >&2
+    PINNEDPUBKEY="-s -k"
+else
+    PINNEDPUBKEY="-s ${CSD_SHA256:+"-k --pinnedpubkey sha256//$CSD_SHA256"}"
+fi
 
 BINS=("cscan" "cstub" "cnotify")
 
