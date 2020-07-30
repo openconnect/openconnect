@@ -67,8 +67,7 @@ CentOS8/GnuTLS:
   - ./autogen.sh
   - ./configure --with-java --without-gnutls-version-check CFLAGS=-g
   - make -j4
-# Until we get a GnuTLS with the client random bug fixed, DTLS fails
-  - make VERBOSE=1 XFAIL_TESTS="dtls-psk" -j4 check
+  - make VERBOSE=1 -j4 check
   tags:
   - shared
   except:
@@ -254,7 +253,7 @@ Fedora/OpenSSL:
     ocserv softhsm 'pkgconfig(uid_wrapper)' 'pkgconfig(socket_wrapper)'
     vpnc-script 'pkgconfig(libpskc)' 'pkgconfig(libpcsclite)'
     java-devel-openjdk glibc-langpack-cs iproute iputils nuttcp
-    'pkgconfig(krb5-gssapi)'
+    'pkgconfig(krb5-gssapi)' crypto-policies-scripts
 # Re-enable DSA since we test it
   - update-crypto-policies --set LEGACY
   - ./autogen.sh
@@ -284,7 +283,7 @@ Fedora/OpenSSL/clang:
     ocserv softhsm 'pkgconfig(uid_wrapper)' 'pkgconfig(socket_wrapper)'
     vpnc-script 'pkgconfig(libpskc)' 'pkgconfig(libpcsclite)'
     java-devel-openjdk clang glibc-langpack-cs iproute iputils nuttcp
-    'pkgconfig(krb5-gssapi)'
+    'pkgconfig(krb5-gssapi)' crypto-policies-scripts
 # Re-enable DSA since we test it
   - update-crypto-policies --set LEGACY
   - ./autogen.sh
