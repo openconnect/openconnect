@@ -974,6 +974,8 @@ static int run_hip_script(struct openconnect_info *vpninfo)
 		}
 		hip_argv[i++] = "--md5";
 		hip_argv[i++] = vpninfo->csd_token;
+		hip_argv[i++] = "--client-os";
+		hip_argv[i++] = gpst_os_name(vpninfo);
 		hip_argv[i++] = NULL;
 		execv(hip_argv[0], (char **)hip_argv);
 
