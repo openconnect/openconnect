@@ -755,6 +755,14 @@ int oncp_obtain_cookie(struct openconnect_info *vpninfo)
 				break;
 			}
 		} else {
+			char *form_action = (char *)xmlGetProp(node, (unsigned char *)"action");
+			if (form_action && strstr(form_action, "remediate.cgi")) {
+				vpn_progress(vpninfo, PRG_ERR,
+					     _("Form action (%s) likely indicates that TNCC/Host Checker failed.\n"),
+					     form_action);
+			}
+			free(form_action);
+
 			vpn_progress(vpninfo, PRG_ERR,
 				     _("Unknown form ID '%s'\n"),
 				     form_id);
