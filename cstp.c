@@ -529,6 +529,18 @@ static int start_cstp_connection(struct openconnect_info *vpninfo)
 
 		if (!strcmp(buf + 7, "Keepalive")) {
 			vpninfo->ssl_times.keepalive = atol(colon);
+		} else if (!strcmp(buf + 7, "Lease-Duration") ||
+			   !strcmp(buf + 7, "Session-Timeout") ||
+			   !strcmp(buf + 7, "Session-Timeout-Remaining")) {
+
+			/* XX: Distinction between Lease-Duration and Session-Timeout is rather unclear. Cisco doc:
+			 * https://www.cisco.com/assets/sol/sb/RV345P_Emulators/RV345P_Emulator_v1-0-01-17/help/help/t_SSL_VPN.html
+			 * Empirically, it appears that the best behavior is to accept whichever of these headers has the
+			 * lowest non-zero value.
+			 */
+			long j = atol(colon);
+			if (j && (!vpninfo->auth_expiration || j < vpninfo->auth_expiration))
+				vpninfo->auth_expiration = time(NULL) + j;
 		} else if (!strcmp(buf + 7, "Idle-Timeout")) {
 			vpninfo->idle_timeout = atol(colon);
 		} else if (!strcmp(buf + 7, "DPD")) {

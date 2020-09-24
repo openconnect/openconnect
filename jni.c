@@ -1164,6 +1164,36 @@ JNIEXPORT jint JNICALL Java_org_infradead_libopenconnect_LibOpenConnect_getIdleT
 	return openconnect_get_idle_timeout(ctx->vpninfo);
 }
 
+JNIEXPORT jobject JNICALL Java_org_infradead_libopenconnect_LibOpenConnect_getAuthExpiration(
+	JNIEnv *jenv, jobject jobj)
+{
+	struct libctx *ctx = getctx(jenv, jobj);
+	jmethodID mid;
+	jobject result;
+	jclass jcls;
+	time_t auth_expiration;
+
+	if (!ctx)
+		return NULL;
+
+	auth_expiration = openconnect_get_auth_expiration(ctx->vpninfo);
+	jcls = (*ctx->jenv)->FindClass(ctx->jenv, "java/time/Instant");
+	if (jcls == NULL)
+		goto err;
+	mid = (*jenv)->GetStaticMethodID(jenv, jcls, "ofEpochSecond", "(J)Ljava/time/Instant;");
+	if (!mid)
+		goto err;
+	result = (*jenv)->CallStaticObjectMethod(jenv, jcls, mid, auth_expiration);
+	if (result == NULL)
+		goto err;
+
+	return result;
+
+err:
+	return NULL;
+}
+
+
 /* simple cases: return a const string (no need to free it) */
 
 #define RETURN_STRING_START \

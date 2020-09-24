@@ -611,6 +611,11 @@ int openconnect_get_idle_timeout(struct openconnect_info *vpninfo)
 	return vpninfo->idle_timeout;
 }
 
+time_t openconnect_get_auth_expiration(struct openconnect_info *vpninfo)
+{
+	return vpninfo->auth_expiration;
+}
+
 int openconnect_get_ip_info(struct openconnect_info *vpninfo,
 			    const struct oc_ip_info **info,
 			    const struct oc_vpn_option **cstp_options,
