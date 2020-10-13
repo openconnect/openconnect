@@ -1823,8 +1823,6 @@ int main(int argc, char **argv)
 	if (vpninfo->dump_http_traffic && verbose < PRG_DEBUG)
 		verbose = PRG_DEBUG;
 
-	vpninfo->progress = write_progress;
-
 	if (autoproxy) {
 #ifdef LIBPROXY_HDR
 		vpninfo->proxy_factory = px_proxy_factory_new();
@@ -1839,13 +1837,6 @@ int main(int argc, char **argv)
 
 	if (proxy && openconnect_set_http_proxy(vpninfo, strdup(proxy)))
 		exit(1);
-
-#if !defined(_WIN32) && !defined(__native_client__)
-	if (use_syslog) {
-		openlog("openconnect", LOG_PID, LOG_DAEMON);
-		vpninfo->progress = syslog_progress;
-	}
-#endif /* !_WIN32 && !__native_client__ */
 
 #ifndef _WIN32
 	memset(&sa, 0, sizeof(sa));
@@ -1932,6 +1923,13 @@ int main(int argc, char **argv)
 	}
 
 	openconnect_get_ip_info(vpninfo, &ip_info, NULL, NULL);
+
+#if !defined(_WIN32) && !defined(__native_client__)
+	if (use_syslog) {
+		openlog("openconnect", LOG_PID, LOG_DAEMON);
+		vpninfo->progress = syslog_progress;
+	}
+#endif /* !_WIN32 && !__native_client__ */
 
 	ssl_compr = openconnect_get_cstp_compression(vpninfo);
 	udp_compr = openconnect_get_dtls_compression(vpninfo);
