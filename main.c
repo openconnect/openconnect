@@ -1912,10 +1912,9 @@ int main(int argc, char **argv)
 			exit(0);
 		}
 	}
-	if (openconnect_make_cstp_connection(vpninfo)) {
+	if ((ret = openconnect_make_cstp_connection(vpninfo)) != 0) {
 		fprintf(stderr, _("Creating SSL connection failed\n"));
-		openconnect_vpninfo_free(vpninfo);
-		exit(1);
+		goto out;
 	}
 
 	if (!vpnc_script)
@@ -1997,9 +1996,10 @@ int main(int argc, char **argv)
 	if (fp)
 		unlink(pidfile);
 
+ out:
 	switch (ret) {
 	case -EPERM:
-		vpn_progress(vpninfo, PRG_ERR, _("Cookie was rejected on reconnection; exiting.\n"));
+		vpn_progress(vpninfo, PRG_ERR, _("Cookie was rejected by server; exiting.\n"));
 		ret = 2;
 		break;
 	case -EPIPE:
