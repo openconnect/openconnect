@@ -390,4 +390,3 @@ MinGW64/OpenSSL:
     when: on_failure
     paths:
       - tests/*.log
-
