@@ -334,11 +334,13 @@ static int parse_login_xml(struct openconnect_info *vpninfo, xmlNode *xml_node, 
 			if (value && (!value[0] || !strcmp(value, "(null)") || !strcmp(value, "-1"))) {
 				free(value);
 				value = NULL;
-			} else {
-				/* XX: The usage of URL encoding in the fields sent by GP servers here is
-				 * inconsistent, but in particular the value "%28empty_domain%29" keeps popping up
-				 * in places where the server expects "(empty_domain)" (like the stupidly redundant
-				 * logout operation). So we do this to be safe and to ensure logout succeeds.
+			} else if (arg->save) {
+				/* XX: Some of the fields returned here (e.g. portal-*cookie) should NOT be
+				 * URL-decoded in order to be reused correctly, but the ones which get saved
+				 * into "cookie" must be URL-decoded. They will be needed for the (stupidly
+				 * redundant) logout parameters. In particular the domain value "%28empty_domain%29"
+				 * appears frequently in the wild, and it needs to be decoded here for the logout
+				 * request to succeed.
 				 */
 				urldecode_inplace(value);
 			}
