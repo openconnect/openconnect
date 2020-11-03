@@ -140,7 +140,7 @@ def decode_0ce7(buf, indent):
     logging.debug('%scmd 0ce7 (id %08x string) %d bytes', indent, id, len(buf))
 
     if s.startswith(b'COMPRESSED:'):
-        typ, length, data = s.split(':', 2)
+        typ, length, data = s.split(b':', 2)
         s = zlib.decompress(data)
 
     s = s.rstrip(b'\0')
@@ -659,10 +659,14 @@ if __name__ == "__main__":
     elif not asn1crypto:
         logging.warn("asn1crypto module not available, will not validate server certificate")
     else:
-        # we need to monkey-patch this, because SSLContext.sslsocket_class isn't
-        # available until Python 3.7
-        # https://docs.python.org/3/library/ssl.html#ssl.SSLContext.wrap_socket
-        ssl.SSLSocket = fingerprint_checking_SSLSocket(fingerprint)
+        # For Python <3.7, we monkey-patch ssl.SSLSocket directly, because ssl.SSLContext.sslsocket_class
+        # isn't available until Python 3.7. For Python 3.7+, we set ssl.SSLContext.sslsocket_class
+        # to our modified version (which is sort of monkey-patching too).
+        # (see https://gist.github.com/dlenski/fc42156c00a615f4aa18a6d19d67e208)
+        if sys.version_info >= (3, 7):
+            ssl.SSLContext.sslsocket_class = fingerprint_checking_SSLSocket(fingerprint)
+        else:
+            ssl.SSLSocket = fingerprint_checking_SSLSocket(fingerprint)
 
     certs = []
     if asn1crypto:
