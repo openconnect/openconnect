@@ -211,6 +211,44 @@ static int parse_hex_val(const char *str, unsigned char *storage, unsigned int m
 	return len/2;
 }
 
+int check_address_sanity(struct openconnect_info *vpninfo, const char *old_addr, const char *old_netmask, const char *old_addr6, const char *old_netmask6)
+{
+	if (old_addr) {
+		if (!vpninfo->ip_info.addr || strcmp(old_addr, vpninfo->ip_info.addr)) {
+			vpn_progress(vpninfo, PRG_ERR,
+						 _("Reconnect gave different Legacy IP address (%s != %s)\n"),
+						 vpninfo->ip_info.addr, old_addr);
+			/* EPERM means that the retry loop will abort and won't keep trying. */
+			return -EPERM;
+		}
+	}
+	if (old_netmask) {
+		if (!vpninfo->ip_info.netmask || strcmp(old_netmask, vpninfo->ip_info.netmask)) {
+			vpn_progress(vpninfo, PRG_ERR,
+				     _("Reconnect gave different Legacy IP netmask (%s != %s)\n"),
+				     vpninfo->ip_info.netmask, old_netmask);
+			return -EPERM;
+		}
+	}
+	if (old_addr6) {
+		if (!vpninfo->ip_info.addr6 || strcmp(old_addr6, vpninfo->ip_info.addr6)) {
+			vpn_progress(vpninfo, PRG_ERR,
+						 _("Reconnect gave different IPv6 address (%s != %s)\n"),
+						 vpninfo->ip_info.addr6, old_addr6);
+			return -EPERM;
+		}
+	}
+	if (old_netmask6) {
+		if (!vpninfo->ip_info.netmask6 || strcmp(old_netmask6, vpninfo->ip_info.netmask6)) {
+			vpn_progress(vpninfo, PRG_ERR,
+				     _("Reconnect gave different IPv6 netmask (%s != %s)\n"),
+				     vpninfo->ip_info.netmask6, old_netmask6);
+			return -EPERM;
+		}
+	}
+	return 0;
+}
+
 static int start_cstp_connection(struct openconnect_info *vpninfo)
 {
 	struct oc_text_buf *reqbuf;
@@ -262,8 +300,18 @@ static int start_cstp_connection(struct openconnect_info *vpninfo)
 		buf_append(reqbuf, "X-CSTP-MTU: %d\r\n", mtu);
 	buf_append(reqbuf, "X-CSTP-Address-Type: %s\r\n",
 			       vpninfo->disable_ipv6 ? "IPv4" : "IPv6,IPv4");
-	if (!vpninfo->disable_ipv6)
+	/* Explicitly request the same IPv4 and IPv6 addresses on reconnect
+	 *
+	 * XX: It's not clear which Cisco servers attempt to follow specific
+	 * IP address requests from the X-CSTP-Address headers in the CONNECT
+	 * request; most seem to ignore it. */
+	if (old_addr)
+		buf_append(reqbuf, "X-CSTP-Address: %s\r\n", old_addr);
+	if (!vpninfo->disable_ipv6) {
 		buf_append(reqbuf, "X-CSTP-Full-IPv6-Capability: true\r\n");
+		if (old_addr6)
+			buf_append(reqbuf, "X-CSTP-Address: %s\r\n", old_addr6);
+	}
 #ifdef HAVE_DTLS
 	if (vpninfo->dtls_state != DTLS_DISABLED) {
 		/* The X-DTLS-Master-Secret is only used for the legacy protocol negotation
@@ -599,39 +647,10 @@ static int start_cstp_connection(struct openconnect_info *vpninfo)
 			     _("IPv6 configuration received but MTU %d is too small.\n"),
 			     mtu);
 	}
-	if (old_addr) {
-		if (!vpninfo->ip_info.addr || strcmp(old_addr, vpninfo->ip_info.addr)) {
-			vpn_progress(vpninfo, PRG_ERR,
-				     _("Reconnect gave different Legacy IP address (%s != %s)\n"),
-				     vpninfo->ip_info.addr, old_addr);
-			/* EPERM means that the retry loop will abort and won't keep trying. */
-			return -EPERM;
-		}
-	}
-	if (old_netmask) {
-		if (!vpninfo->ip_info.netmask || strcmp(old_netmask, vpninfo->ip_info.netmask)) {
-			vpn_progress(vpninfo, PRG_ERR,
-				     _("Reconnect gave different Legacy IP netmask (%s != %s)\n"),
-				     vpninfo->ip_info.netmask, old_netmask);
-			return -EPERM;
-		}
-	}
-	if (old_addr6) {
-		if (!vpninfo->ip_info.addr6 || strcmp(old_addr6, vpninfo->ip_info.addr6)) {
-			vpn_progress(vpninfo, PRG_ERR,
-				     _("Reconnect gave different IPv6 address (%s != %s)\n"),
-				     vpninfo->ip_info.addr6, old_addr6);
-			return -EPERM;
-		}
-	}
-	if (old_netmask6) {
-		if (!vpninfo->ip_info.netmask6 || strcmp(old_netmask6, vpninfo->ip_info.netmask6)) {
-			vpn_progress(vpninfo, PRG_ERR,
-				     _("Reconnect gave different IPv6 netmask (%s != %s)\n"),
-				     vpninfo->ip_info.netmask6, old_netmask6);
-			return -EPERM;
-		}
-	}
+
+	i = check_address_sanity(vpninfo, old_addr, old_netmask, old_addr6, old_netmask6);
+	if (i)
+		return i;
 
 	free_optlist(old_dtls_opts);
 	free_optlist(old_cstp_opts);
