@@ -59,15 +59,20 @@ CentOS8/GnuTLS:
   script:
   - yum update -y
   - yum install -y epel-release
+  - yum install -y 'dnf-command(config-manager)'
+  - yum config-manager --set-enabled PowerTools # {socket,uid}_wrapper and softhsm
+  - yum module enable -y idm:DL1                # softhsm
   - yum install -y git autoconf automake libtool python36 gettext
     'pkgconfig(openssl)' 'pkgconfig(libxml-2.0)' 'pkgconfig(liblz4)'
     'pkgconfig(gnutls)' 'pkgconfig(liboath)' 'pkgconfig(stoken)' ocserv
+    softhsm 'pkgconfig(uid_wrapper)' 'pkgconfig(socket_wrapper)'
     vpnc-script 'pkgconfig(libpskc)' file make
     java-devel-openjdk iproute iputils nuttcp
   - ./autogen.sh
-  - ./configure --with-java --without-gnutls-version-check CFLAGS=-g
+  - ./configure --with-java --without-gnutls-version-check --disable-dsa-tests CFLAGS=-g
   - make -j4
-  - make VERBOSE=1 -j4 check
+# UTF-8 support is not available
+  - make VERBOSE=1 XFAIL_TESTS="auth-nonascii" -j4 check
   tags:
   - shared
   except:
@@ -83,15 +88,20 @@ CentOS8/OpenSSL:
   script:
   - yum update -y
   - yum install -y epel-release
+  - yum install -y 'dnf-command(config-manager)'
+  - yum config-manager --set-enabled PowerTools # {socket,uid}_wrapper and softhsm
+  - yum module enable -y idm:DL1                # softhsm
   - yum install -y git autoconf automake libtool python36 gettext
     'pkgconfig(openssl)' 'pkgconfig(libxml-2.0)' 'pkgconfig(liblz4)'
     'pkgconfig(gnutls)' 'pkgconfig(liboath)' 'pkgconfig(stoken)' ocserv
+    softhsm 'pkgconfig(uid_wrapper)' 'pkgconfig(socket_wrapper)'
     vpnc-script 'pkgconfig(libpskc)' file make
     java-devel-openjdk iproute iputils nuttcp
   - ./autogen.sh
   - ./configure --without-gnutls --with-openssl --with-java --without-openssl-version-check --disable-dsa-tests CFLAGS=-g
   - make -j4
-  - make VERBOSE=1 -j4 check
+# UTF-8 support is not available
+  - make VERBOSE=1 XFAIL_TESTS="auth-nonascii" -j4 check
   tags:
   - shared
   except:
@@ -303,6 +313,52 @@ Fedora/OpenSSL/clang:
     paths:
       - tests/*.log
 
+Ubuntu18.04/GnuTLS:
+  image: ubuntu:18.04
+  script:
+  - apt-get -y update
+  - apt-get -y install build-essential gettext autoconf automake libproxy-dev
+    libxml2-dev libtool vpnc-scripts pkg-config zlib1g-dev
+    libgnutls28-dev ocserv iproute2 openjdk-8-jdk python3
+    libsofthsm2-dev libsocket-wrapper libuid-wrapper
+  - ./autogen.sh
+  - ./configure --with-java CFLAGS=-g
+  - make -j4
+# UTF-8 support is not available
+  - make VERBOSE=1 XFAIL_TESTS="auth-nonascii" -j4 check
+  tags:
+  - shared
+  except:
+  - tags
+  artifacts:
+    expire_in: 1 week
+    when: on_failure
+    paths:
+      - tests/*.log
+
+Ubuntu18.04/OpenSSL:
+  image: ubuntu:18.04
+  script:
+  - apt-get -y update
+  - apt-get -y install build-essential gettext autoconf automake libproxy-dev
+    libxml2-dev libtool vpnc-scripts pkg-config zlib1g-dev
+    libssl-dev ocserv iproute2 openjdk-8-jdk python3
+    libsofthsm2-dev libsocket-wrapper libuid-wrapper
+  - ./autogen.sh
+  - ./configure --without-gnutls --with-openssl --with-java --without-openssl-version-check --disable-dsa-tests CFLAGS=-g
+  - make -j4
+# UTF-8 support is not available
+  - make VERBOSE=1 XFAIL_TESTS="auth-nonascii" -j4 check
+  tags:
+  - shared
+  except:
+  - tags
+  artifacts:
+    expire_in: 1 week
+    when: on_failure
+    paths:
+      - tests/*.log
+
 MinGW32/GnuTLS:
   script:
   - dnf update -y
@@ -390,4 +446,3 @@ MinGW64/OpenSSL:
     when: on_failure
     paths:
       - tests/*.log
-
