@@ -604,14 +604,19 @@ static int assign_privkey(struct openconnect_info *vpninfo,
 }
 
 static int verify_signed_data(gnutls_pubkey_t pubkey, gnutls_privkey_t privkey,
+			      gnutls_digest_algorithm_t dig,
 			      const gnutls_datum_t *data, const gnutls_datum_t *sig)
 {
 	gnutls_sign_algorithm_t algo;
+	unsigned flags = 0;
+#ifdef GNUTLS_VERIFY_ALLOW_BROKEN
+	flags |= GNUTLS_VERIFY_ALLOW_BROKEN;
+#endif
 
 	algo = gnutls_pk_to_sign(gnutls_privkey_get_pk_algorithm(privkey, NULL),
-				 GNUTLS_DIG_SHA1);
+				 dig);
 
-	return gnutls_pubkey_verify_data2(pubkey, algo, 0, data, sig);
+	return gnutls_pubkey_verify_data2(pubkey, algo, flags, data, sig);
 }
 #endif /* (P11KIT || TROUSERS || TSS2 || SYSTEM_KEYS) */
 
@@ -1477,53 +1482,71 @@ static int load_certificate(struct openconnect_info *vpninfo)
 	   match. So sign some dummy data and then check the signature against each
 	   of the available certificates until we find the right one. */
 	if (pkey) {
+		unsigned i;
+		gnutls_digest_algorithm_t dig;
+
 		/* The TPM code may have already signed it, to test authorisation. We
 		   only sign here for PKCS#11 keys, in which case fdata might be
-		   empty too so point it at dummy data. */
-		if (!pkey_sig.data) {
-			if (!fdata.data) {
-				fdata.data = dummy_hash_data;
-				fdata.size = 20;
+		   empty too so point it at dummy data. We try multiple hashes
+		   because depending on the algorithm or device not all may be usable */
+		for (i=0;i<3;i++) {
+			switch(i) {
+				case 0:
+					dig = GNUTLS_DIG_SHA256;
+					break;
+				case 1:
+					dig = GNUTLS_DIG_SHA1;
+					break;
+				case 2:
+					dig = GNUTLS_DIG_SHA512;
+					break;
 			}
-
-			err = gnutls_privkey_sign_data(pkey, GNUTLS_DIG_SHA1, 0, &fdata, &pkey_sig);
-			if (err) {
-				vpn_progress(vpninfo, PRG_ERR,
-					     _("Error signing test data with private key: %s\n"),
-					     gnutls_strerror(err));
-				ret = -EINVAL;
-				goto out;
-			}
-		}
-
-		/* If extra_certs[] is NULL, we have one candidate in 'cert' to check. */
-		for (i = 0; i < (extra_certs ? nr_extra_certs : 1); i++) {
-			gnutls_pubkey_t pubkey;
-
-			gnutls_pubkey_init(&pubkey);
-			err = gnutls_pubkey_import_x509(pubkey, extra_certs ? extra_certs[i] : cert, 0);
-			if (err) {
-				vpn_progress(vpninfo, PRG_ERR,
-					     _("Error validating signature against certificate: %s\n"),
-					     gnutls_strerror(err));
-				/* We'll probably fail shortly if we don't find it. */
-				gnutls_pubkey_deinit(pubkey);
-				continue;
-			}
-			err = verify_signed_data(pubkey, pkey, &fdata, &pkey_sig);
-			gnutls_pubkey_deinit(pubkey);
-
-			if (err >= 0) {
-				if (extra_certs) {
-					cert = extra_certs[i];
-					extra_certs[i] = NULL;
+			if (!pkey_sig.data) {
+				if (!fdata.data) {
+					fdata.data = dummy_hash_data;
+					fdata.size = 20;
 				}
-				gnutls_free(pkey_sig.data);
-				goto got_key;
+
+				err = gnutls_privkey_sign_data(pkey, dig, 0, &fdata, &pkey_sig);
+				if (err) {
+					vpn_progress(vpninfo, PRG_ERR,
+						     _("Error signing test data with private key: %s\n"),
+						     gnutls_strerror(err));
+					ret = -EINVAL;
+					goto out;
+				}
 			}
+
+			/* If extra_certs[] is NULL, we have one candidate in 'cert' to check. */
+			for (i = 0; i < (extra_certs ? nr_extra_certs : 1); i++) {
+				gnutls_pubkey_t pubkey;
+
+				gnutls_pubkey_init(&pubkey);
+				err = gnutls_pubkey_import_x509(pubkey, extra_certs ? extra_certs[i] : cert, 0);
+				if (err) {
+					vpn_progress(vpninfo, PRG_ERR,
+						     _("Error validating signature against certificate: %s\n"),
+						     gnutls_strerror(err));
+					/* We'll probably fail shortly if we don't find it. */
+					gnutls_pubkey_deinit(pubkey);
+					continue;
+				}
+				err = verify_signed_data(pubkey, pkey, dig, &fdata, &pkey_sig);
+				gnutls_pubkey_deinit(pubkey);
+
+				if (err >= 0) {
+					if (extra_certs) {
+						cert = extra_certs[i];
+						extra_certs[i] = NULL;
+					}
+					gnutls_free(pkey_sig.data);
+					pkey_sig.data = NULL;
+					goto got_key;
+				}
+			}
+			gnutls_free(pkey_sig.data);
+			pkey_sig.data = NULL;
 		}
-		gnutls_free(pkey_sig.data);
-		pkey_sig.data = NULL;
 	}
 #endif /* P11KIT || TROUSERS || TSS2 || SYSTEM_KEYS */
 

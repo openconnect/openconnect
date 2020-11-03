@@ -1,4 +1,4 @@
-image: fedora:latest
+image: fedora:33
 
 CentOS7/GnuTLS:
   image: centos:7
@@ -67,8 +67,7 @@ CentOS8/GnuTLS:
   - ./autogen.sh
   - ./configure --with-java --without-gnutls-version-check CFLAGS=-g
   - make -j4
-# Until we get a GnuTLS with the client random bug fixed, DTLS fails
-  - make VERBOSE=1 XFAIL_TESTS="dtls-psk" -j4 check
+  - make VERBOSE=1 -j4 check
   tags:
   - shared
   except:
@@ -156,7 +155,7 @@ Fedora/Coverity:
     'pkgconfig(libproxy-1.0)' 'pkgconfig(liboath)' 'pkgconfig(stoken)'
     ocserv softhsm 'pkgconfig(uid_wrapper)' 'pkgconfig(socket_wrapper)'
     vpnc-script 'pkgconfig(libpskc)' 'pkgconfig(libpcsclite)' tss2-devel
-    java-devel-openjdk glibc-langpack-cs iproute iputils nuttcp
+    java-11-openjdk-devel glibc-langpack-cs iproute iputils nuttcp
     'pkgconfig(tss2-esys)' 'pkgconfig(krb5-gssapi)' 'pkgconfig(libp11)'
     ant
   - curl -o /tmp/cov-analysis-linux64.tgz https://scan.coverity.com/download/linux64
@@ -195,7 +194,7 @@ Fedora/GnuTLS:
     'pkgconfig(libproxy-1.0)' 'pkgconfig(liboath)' 'pkgconfig(stoken)'
     ocserv softhsm 'pkgconfig(uid_wrapper)' 'pkgconfig(socket_wrapper)'
     vpnc-script 'pkgconfig(libpskc)' 'pkgconfig(libpcsclite)' tss2-devel
-    java-devel-openjdk glibc-langpack-cs iproute iputils nuttcp
+    java-11-openjdk-devel glibc-langpack-cs iproute iputils nuttcp
     'pkgconfig(tss2-esys)' 'pkgconfig(krb5-gssapi)'
   - ./autogen.sh
   - ./configure --with-java --disable-dsa-tests --without-gnutls-version-check CFLAGS=-g
@@ -224,7 +223,7 @@ Fedora/GnuTLS/clang:
     'pkgconfig(libproxy-1.0)' 'pkgconfig(liboath)' 'pkgconfig(stoken)'
     ocserv softhsm 'pkgconfig(uid_wrapper)' 'pkgconfig(socket_wrapper)'
     vpnc-script 'pkgconfig(libpskc)' 'pkgconfig(libpcsclite)' tss2-devel
-    java-devel-openjdk clang glibc-langpack-cs iproute iputils nuttcp
+    java-11-openjdk-devel clang glibc-langpack-cs iproute iputils nuttcp
     'pkgconfig(tss2-esys)' 'pkgconfig(krb5-gssapi)'
   - ./autogen.sh
   - ./configure --with-java --disable-dsa-tests --without-gnutls-version-check CC=clang CFLAGS=-g
@@ -253,8 +252,8 @@ Fedora/OpenSSL:
     'pkgconfig(libproxy-1.0)' 'pkgconfig(liboath)' 'pkgconfig(stoken)'
     ocserv softhsm 'pkgconfig(uid_wrapper)' 'pkgconfig(socket_wrapper)'
     vpnc-script 'pkgconfig(libpskc)' 'pkgconfig(libpcsclite)'
-    java-devel-openjdk glibc-langpack-cs iproute iputils nuttcp
-    'pkgconfig(krb5-gssapi)'
+    java-11-openjdk-devel glibc-langpack-cs iproute iputils nuttcp
+    'pkgconfig(krb5-gssapi)' crypto-policies-scripts
 # Re-enable DSA since we test it
   - update-crypto-policies --set LEGACY
   - ./autogen.sh
@@ -283,8 +282,8 @@ Fedora/OpenSSL/clang:
     'pkgconfig(libproxy-1.0)' 'pkgconfig(liboath)' 'pkgconfig(stoken)'
     ocserv softhsm 'pkgconfig(uid_wrapper)' 'pkgconfig(socket_wrapper)'
     vpnc-script 'pkgconfig(libpskc)' 'pkgconfig(libpcsclite)'
-    java-devel-openjdk clang glibc-langpack-cs iproute iputils nuttcp
-    'pkgconfig(krb5-gssapi)'
+    java-11-openjdk-devel clang glibc-langpack-cs iproute iputils nuttcp
+    'pkgconfig(krb5-gssapi)' crypto-policies-scripts
 # Re-enable DSA since we test it
   - update-crypto-policies --set LEGACY
   - ./autogen.sh
