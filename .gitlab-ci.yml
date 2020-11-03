@@ -21,6 +21,7 @@ CentOS7/GnuTLS:
   - shared
   except:
   - tags
+  - schedules
   artifacts:
     expire_in: 1 week
     when: on_failure
@@ -48,6 +49,7 @@ CentOS7/OpenSSL:
   - shared
   except:
   - tags
+  - schedules
   artifacts:
     expire_in: 1 week
     when: on_failure
@@ -77,6 +79,7 @@ CentOS8/GnuTLS:
   - shared
   except:
   - tags
+  - schedules
   artifacts:
     expire_in: 1 week
     when: on_failure
@@ -106,6 +109,7 @@ CentOS8/OpenSSL:
   - shared
   except:
   - tags
+  - schedules
   artifacts:
     expire_in: 1 week
     when: on_failure
@@ -137,6 +141,7 @@ CentOS6/OpenSSL:
   - shared
   except:
   - tags
+  - schedules
   artifacts:
     expire_in: 1 week
     when: on_failure
@@ -153,12 +158,11 @@ Signoff:
   - echo "None (good)"
 
 Fedora/Coverity:
+  image: fedora:31
   only:
-    refs:
-       - master@openconnect/openconnect
-       - coverity@openconnect/openconnect
+  - schedules
+  - coverity
   script:
-  - dnf update -y
   - dnf install -y git autoconf automake libtool python gettext make
     'pkgconfig(openssl)' 'pkgconfig(libxml-2.0)' 'pkgconfig(liblz4)'
     'pkgconfig(gnutls)' trousers-devel 'pkgconfig(libpcsclite)'
@@ -172,23 +176,21 @@ Fedora/Coverity:
     --form project=$COVERITY_SCAN_PROJECT_NAME --form token=$COVERITY_SCAN_TOKEN
   - tar xfz /tmp/cov-analysis-linux64.tgz
   - ./autogen.sh
+  - ./configure --with-java --without-gnutls --with-openssl --disable-dsa-tests
   - cd java
   - ../cov-analysis-linux64-*/bin/cov-build --dir ../cov-int ant
   - cd ..
-  - ./configure --with-java --without-gnutls --with-openssl --disable-dsa-tests
   - cov-analysis-linux64-*/bin/cov-build --dir cov-int make -j4
   - make clean
   - ./configure --with-java --disable-dsa-tests --without-gnutls-version-check
   - cov-analysis-linux64-*/bin/cov-build --dir cov-int make -j4
   - tar cfz cov-int.tar.gz cov-int
   - curl https://scan.coverity.com/builds?project=$COVERITY_SCAN_PROJECT_NAME
-    --form token=$COVERITY_SCAN_TOKEN --form email=$GITLAB_USER_EMAIL
+    --form token=$COVERITY_SCAN_TOKEN --form email=email=$GITLAB_USER_EMAIL
     --form file=@cov-int.tar.gz --form version="`git describe --tags`"
     --form description="`git describe --tags` / $CI_COMMIT_TITLE / $CI_COMMIT_REF_NAME:$CI_PIPELINE_ID "
   tags:
   - shared
-  except:
-  - tags
   artifacts:
     expire_in: 1 week
     when: on_failure
@@ -218,6 +220,7 @@ Fedora/GnuTLS:
   - shared
   except:
   - tags
+  - schedules
   artifacts:
     expire_in: 1 week
     when: on_failure
@@ -247,6 +250,7 @@ Fedora/GnuTLS/clang:
   - shared
   except:
   - tags
+  - schedules
   artifacts:
     expire_in: 1 week
     when: on_failure
@@ -277,6 +281,7 @@ Fedora/OpenSSL:
   - shared
   except:
   - tags
+  - schedules
   artifacts:
     expire_in: 1 week
     when: on_failure
@@ -307,6 +312,7 @@ Fedora/OpenSSL/clang:
   - shared
   except:
   - tags
+  - schedules
   artifacts:
     expire_in: 1 week
     when: on_failure
@@ -330,6 +336,7 @@ Ubuntu18.04/GnuTLS:
   - shared
   except:
   - tags
+  - schedules
   artifacts:
     expire_in: 1 week
     when: on_failure
@@ -353,6 +360,7 @@ Ubuntu18.04/OpenSSL:
   - shared
   except:
   - tags
+  - schedules
   artifacts:
     expire_in: 1 week
     when: on_failure
@@ -375,6 +383,7 @@ MinGW32/GnuTLS:
   - shared
   except:
   - tags
+  - schedules
   artifacts:
     expire_in: 1 week
     when: on_failure
@@ -397,6 +406,7 @@ MinGW32/OpenSSL:
   - shared
   except:
   - tags
+  - schedules
   artifacts:
     expire_in: 1 week
     when: on_failure
@@ -419,6 +429,7 @@ MinGW64/GnuTLS:
   - shared
   except:
   - tags
+  - schedules
   artifacts:
     expire_in: 1 week
     when: on_failure
@@ -441,6 +452,7 @@ MinGW64/OpenSSL:
   - shared
   except:
   - tags
+  - schedules
   artifacts:
     expire_in: 1 week
     when: on_failure
