@@ -76,6 +76,16 @@ const char *openconnect_get_tls_library_version()
 	return tls_library_version;
 }
 
+int can_enable_insecure_crypto()
+{
+	/* XX: As of GnuTLS 3.6.13, no released version has (yet) removed 3DES/RC4 from default builds,
+	 * but like OpenSSL (removed in 1.1.0) it may happen. */
+	if (gnutls_cipher_get_id("3DES-CBC") == GNUTLS_CIPHER_UNKNOWN ||
+	    gnutls_cipher_get_id("ARCFOUR-128") == GNUTLS_CIPHER_UNKNOWN)
+		return -ENOENT;
+	return 0;
+}
+
 /* Helper functions for reading/writing lines over SSL. */
 static int _openconnect_gnutls_write(gnutls_session_t ses, int fd, struct openconnect_info *vpninfo, char *buf, size_t len)
 {
@@ -2227,14 +2237,26 @@ int openconnect_open_https(struct openconnect_info *vpninfo)
 #ifdef DEFAULT_PRIO
 		default_prio = DEFAULT_PRIO ":%COMPAT";
 #else
-		/* GnuTLS 3.5.19 and onward refuse to negotiate AES-CBC-HMAC-SHA256
-		 * by default but some Cisco servers can't do anything better, so
-		 * explicitly add '+SHA256' to allow it. Yay Cisco. */
+		/* GnuTLS 3.5.19 and onward remove AES-CBC-HMAC-SHA256 from NORMAL,
+		 * but some Cisco servers can't do anything better, so
+		 * explicitly add '+SHA256' to allow it. Yay Cisco.
+		 * - GnuTLS commit that removed: c433cdf92349afae66c703bdacedf987f423605e
+		 * - Old server requiring SHA256: https://gitlab.com/openconnect/openconnect/-/issues/21
+		 *
+		 * Likewise, GnuTLS 3.6.0 and onward remove 3DES-CBC from NORMAL,
+		 * but some ancient servers can't do anything better. This (and ARCFOUR-128)
+		 * should not be reenabled by default due to serious security flaws, so adding as an
+		 * option, --allow-insecure-crypto. Yay ancient, unpatched servers.
+		 * - GnuTLS commit that removed: 66f2a0a271bcc10e8fb68771f9349a3d3ecf6dda
+		 * - Old server requiring 3DES-CBC: https://gitlab.com/openconnect/openconnect/-/issues/145
+		 */
 		default_prio = "NORMAL:-VERS-SSL3.0:+SHA256:%COMPAT";
 #endif
 
-		snprintf(vpninfo->ciphersuite_config, sizeof(vpninfo->ciphersuite_config), "%s%s%s",
-		         default_prio, vpninfo->pfs?":-RSA":"", vpninfo->no_tls13?":-VERS-TLS1.3":"");
+		snprintf(vpninfo->ciphersuite_config, sizeof(vpninfo->ciphersuite_config), "%s%s%s%s%s",
+		         default_prio, vpninfo->pfs?":-RSA":"", vpninfo->no_tls13?":-VERS-TLS1.3":"",
+			 vpninfo->allow_insecure_crypto?":+3DES-CBC:+ARCFOUR-128:+SHA1":":-3DES-CBC:-ARCFOUR-128",
+			 vpninfo->allow_insecure_crypto && gnutls_check_version_numeric(3,6,0) ? ":%VERIFY_ALLOW_SIGN_WITH_SHA1" : "");
         }
 
 	err = gnutls_priority_set_direct(vpninfo->https_sess,

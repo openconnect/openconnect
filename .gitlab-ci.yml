@@ -104,7 +104,8 @@ CentOS8/OpenSSL:
   - ./configure --without-gnutls --with-openssl --with-java --without-openssl-version-check --disable-dsa-tests CFLAGS=-g
   - make -j4
 # UTF-8 support is not available
-  - make VERBOSE=1 XFAIL_TESTS="auth-nonascii" -j4 check
+# OpenSSL 1.1.0 disables 3DES and RC4 by default (https://www.openssl.org/blog/blog/2016/08/24/sweet32/)
+  - make VERBOSE=1 XFAIL_TESTS="auth-nonascii obsolete-server-crypto" -j4 check
   tags:
   - shared
   except:
@@ -276,7 +277,8 @@ Fedora/OpenSSL:
   - cd openconnect-$(git describe --tags | sed s/^v//)
   - ./configure --without-gnutls --with-openssl --without-openssl-version-check --disable-dsa-tests CFLAGS=-g
   - make -j4
-  - make VERBOSE=1 -j4 check
+# OpenSSL 1.1.0 disables 3DES and RC4 by default (https://www.openssl.org/blog/blog/2016/08/24/sweet32/)
+  - make VERBOSE=1 XFAIL_TESTS="obsolete-server-crypto" -j4 check
   tags:
   - shared
   except:
@@ -307,7 +309,8 @@ Fedora/OpenSSL/clang:
   - cd openconnect-$(git describe --tags | sed s/^v//)
   - ./configure CC=clang --without-gnutls --with-openssl --without-openssl-version-check --disable-dsa-tests CFLAGS=-g
   - make -j4
-  - make VERBOSE=1 -j4 check
+# OpenSSL 1.1.0 disables 3DES and RC4 by default (https://www.openssl.org/blog/blog/2016/08/24/sweet32/)
+  - make VERBOSE=1 XFAIL_TESTS="obsolete-server-crypto" -j4 check
   tags:
   - shared
   except:
@@ -355,7 +358,8 @@ Ubuntu18.04/OpenSSL:
   - ./configure --without-gnutls --with-openssl --with-java --without-openssl-version-check --disable-dsa-tests CFLAGS=-g
   - make -j4
 # UTF-8 support is not available
-  - make VERBOSE=1 XFAIL_TESTS="auth-nonascii" -j4 check
+# OpenSSL 1.1.0 disables 3DES and RC4 by default (https://www.openssl.org/blog/blog/2016/08/24/sweet32/)
+  - make VERBOSE=1 XFAIL_TESTS="auth-nonascii obsolete-server-crypto" -j4 check
   tags:
   - shared
   except:

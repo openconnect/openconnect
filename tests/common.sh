@@ -51,7 +51,8 @@ update_config() {
 	       -e 's|@ADDRESS@|'${ADDRESS}'|g' "$file.$$.tmp" \
 	       -e 's|@VPNNET@|'${VPNNET}'|g' "$file.$$.tmp" \
 	       -e 's|@VPNNET6@|'${VPNNET6}'|g' "$file.$$.tmp" \
-	       -e 's|@OCCTL_SOCKET@|'${OCCTL_SOCKET}'|g' "$file.$$.tmp"
+	       -e 's|@OCCTL_SOCKET@|'${OCCTL_SOCKET}'|g' "$file.$$.tmp" \
+	       -e 's|@TLS_PRIORITIES@|'${TLS_PRIORITIES}'|g' "$file.$$.tmp"
 	CONFIG="$file.$$.tmp"
 }
 
@@ -71,7 +72,7 @@ cleanup() {
 		ret=1
 	fi
 	wait
-	test -n "$SOCKDIR" && rm -rf $SOCKDIR
+	test -n "$SOCKDIR" && rm -rf $SOCKDIR && mkdir -p $SOCKDIR
 	return $ret
 }
 
@@ -84,4 +85,4 @@ fail() {
 	exit 1
 }
 
-trap "fail \"Failed to launch the server, aborting test... \"" 10 
+trap "fail \"Failed to launch the server, aborting test... \"" 10
