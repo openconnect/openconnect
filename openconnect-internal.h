@@ -892,6 +892,7 @@ char *openconnect_bin2hex(const char *prefix, const uint8_t *data, unsigned len)
 char *openconnect_bin2base64(const char *prefix, const uint8_t *data, unsigned len);
 
 /* cstp.c */
+int check_address_sanity(struct openconnect_info *vpninfo, const char *old_addr, const char *old_netmask, const char *old_addr6, const char *old_netmask6);
 void cstp_common_headers(struct openconnect_info *vpninfo, struct oc_text_buf *buf);
 int cstp_connect(struct openconnect_info *vpninfo);
 int cstp_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable);

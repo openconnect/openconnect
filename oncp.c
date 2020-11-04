@@ -544,9 +544,7 @@ int oncp_connect(struct openconnect_info *vpninfo)
 	int ret, len, kmp, kmplen, group, check_len;
 	struct oc_text_buf *reqbuf;
 	unsigned char bytes[65536];
-
-	/* XXX: We should do what cstp_connect() does to check that configuration
-	   hasn't changed on a reconnect. */
+	const char *old_addr = vpninfo->ip_info.addr, *old_netmask = vpninfo->ip_info.netmask;
 
 	if (!vpninfo->cookies) {
 		ret = parse_cookie(vpninfo);
@@ -789,6 +787,9 @@ int oncp_connect(struct openconnect_info *vpninfo)
 			     _("Short write in oNCP negotiation\n"));
 		ret = -EIO;
 	}
+
+	ret = check_address_sanity(vpninfo, old_addr, old_netmask, NULL, NULL);
+
  out:
 	if (ret)
 		openconnect_close_https(vpninfo, 0);

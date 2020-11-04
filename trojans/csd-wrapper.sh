@@ -15,7 +15,20 @@ URL="https://${CSD_HOSTNAME}/CACHE"
 HOSTSCAN_DIR="$HOME/.cisco/hostscan"
 LIB_DIR="$HOSTSCAN_DIR/lib"
 BIN_DIR="$HOSTSCAN_DIR/bin"
-PINNEDPUBKEY="-s ${CSD_SHA256:+"-k --pinnedpubkey sha256//$CSD_SHA256"}"
+
+# cURL 7.39 (https://bugzilla.redhat.com/show_bug.cgi?id=1195771)
+# is required to support pin-based certificate validation. Must set this
+# to false if using an older version of cURL.
+
+INSECURE=false
+if [[ "$INSECURE" == "true" ]]; then
+    echo "*********************************************************************" >&2
+    echo "WARNING: running insecurely; will not validate CSD server certificate" >&2
+    echo "*********************************************************************" >&2
+    PINNEDPUBKEY="-k"
+else
+    PINNEDPUBKEY="${CSD_SHA256:+"-k --pinnedpubkey sha256//$CSD_SHA256"}"
+fi
 
 BINS=("cscan" "cstub" "cnotify")
 
@@ -57,7 +70,7 @@ for dir in $HOSTSCAN_DIR $LIB_DIR $BIN_DIR ; do
 done
 
 # getting manifest, and checking binaries
-curl $PINNEDPUBKEY "${URL}/sdesktop/hostscan/$ARCH/manifest" -o "$HOSTSCAN_DIR/manifest"
+curl $PINNEDPUBKEY -s "${URL}/sdesktop/hostscan/$ARCH/manifest" -o "$HOSTSCAN_DIR/manifest"
 
 # generating md5.sum with full paths from manifest
 export HOSTSCAN_DIR=$HOSTSCAN_DIR
@@ -96,7 +109,7 @@ while read HASHTYPE FILE EQU HASHVAL; do
 	echo "Downloading: $FILE"
 	TMPFILE="${PATHNAME}.tmp"
 
-        curl $PINNEDPUBKEY "${URL}/sdesktop/hostscan/$ARCH/$FILE" -o "${TMPFILE}"
+        curl $PINNEDPUBKEY -s "${URL}/sdesktop/hostscan/$ARCH/$FILE" -o "${TMPFILE}"
 
         # some files are in gz (don't understand logic here)
         if [[ ! -f "${TMPFILE}" || ! -s "${TMPFILE}" ]]
@@ -108,7 +121,7 @@ while read HASHTYPE FILE EQU HASHVAL; do
 
             echo "Failure on $FILE, trying gz"
             FILE_GZ="${TMPFILE}.gz"
-            curl $PINNEDPUBKEY "${URL}/sdesktop/hostscan/$ARCH/$FILE_GZ" -o "${FILE_GZ}" &&
+            curl $PINNEDPUBKEY -s "${URL}/sdesktop/hostscan/$ARCH/$FILE_GZ" -o "${FILE_GZ}" &&
 		gunzip --verbose --decompress "${FILE_GZ}"
         fi
 

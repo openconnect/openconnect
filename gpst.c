@@ -674,40 +674,8 @@ static int gpst_get_config(struct openconnect_info *vpninfo)
 		result = -EINVAL;
 		goto out;
 	}
-	if (old_addr) {
-		if (!vpninfo->ip_info.addr || strcmp(old_addr, vpninfo->ip_info.addr)) {
-			vpn_progress(vpninfo, PRG_ERR,
-				     _("Reconnect gave different Legacy IP address (%s != %s)\n"),
-				     vpninfo->ip_info.addr, old_addr);
-			result = -EINVAL;
-			goto out;
-		}
-	}
-	if (old_netmask) {
-		if (!vpninfo->ip_info.netmask || strcmp(old_netmask, vpninfo->ip_info.netmask)) {
-			vpn_progress(vpninfo, PRG_ERR,
-				     _("Reconnect gave different Legacy IP netmask (%s != %s)\n"),
-				     vpninfo->ip_info.netmask, old_netmask);
-			result = -EINVAL;
-			goto out;
-		}
-	}
-	if (old_addr6) {
-		if (!vpninfo->ip_info.addr6 || strcmp(old_addr6, vpninfo->ip_info.addr6)) {
-			vpn_progress(vpninfo, PRG_ERR,
-				     _("Reconnect gave different IPv6 address (%s != %s)\n"),
-				     vpninfo->ip_info.addr6, old_addr6);
-			return -EINVAL;
-		}
-	}
-	if (old_netmask6) {
-		if (!vpninfo->ip_info.netmask6 || strcmp(old_netmask6, vpninfo->ip_info.netmask6)) {
-			vpn_progress(vpninfo, PRG_ERR,
-			             _("Reconnect gave different IPv6 netmask (%s != %s)\n"),
-			             vpninfo->ip_info.netmask6, old_netmask6);
-			return -EINVAL;
-		}
-	}
+
+	result = check_address_sanity(vpninfo, old_addr, old_netmask, old_addr6, old_netmask6);
 
 out:
 	free_optlist(old_cstp_opts);
@@ -1006,6 +974,8 @@ static int run_hip_script(struct openconnect_info *vpninfo)
 		}
 		hip_argv[i++] = "--md5";
 		hip_argv[i++] = vpninfo->csd_token;
+		hip_argv[i++] = "--client-os";
+		hip_argv[i++] = gpst_os_name(vpninfo);
 		hip_argv[i++] = NULL;
 		execv(hip_argv[0], (char **)hip_argv);
 

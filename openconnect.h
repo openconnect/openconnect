@@ -188,7 +188,7 @@ extern "C" {
 #define OC_PROTO_AUTH_CERT	(1<<2)
 #define OC_PROTO_AUTH_OTP	(1<<3)
 #define OC_PROTO_AUTH_STOKEN	(1<<4)
-#define OC_PROTO_PERIODIC_TROJAN	(1<<4)
+#define OC_PROTO_PERIODIC_TROJAN	(1<<5)
 
 struct oc_vpn_proto {
 	const char *name;

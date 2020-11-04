@@ -107,6 +107,17 @@ while ! ${CMDNS1} ip addr list dev ${TUNDEV} &>/dev/null; do
     fi
     sleep 1
 done
+sleep 1 # XX: CI needs additional delay here
+
+TIMEOUT=10
+while ! ${CMDNS2} ip addr list|grep vpns >/dev/null; do
+    TIMEOUT=$(($TIMEOUT - 1))
+    if [ $TIMEOUT -eq 0 ]; then
+	echo "Timed out waiting for vpns"
+	exit 1
+    fi
+    sleep 1
+done
 
 echo " * add routes"
 

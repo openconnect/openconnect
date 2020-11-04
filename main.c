@@ -1823,8 +1823,6 @@ int main(int argc, char **argv)
 	if (vpninfo->dump_http_traffic && verbose < PRG_DEBUG)
 		verbose = PRG_DEBUG;
 
-	vpninfo->progress = write_progress;
-
 	if (autoproxy) {
 #ifdef LIBPROXY_HDR
 		vpninfo->proxy_factory = px_proxy_factory_new();
@@ -1839,13 +1837,6 @@ int main(int argc, char **argv)
 
 	if (proxy && openconnect_set_http_proxy(vpninfo, strdup(proxy)))
 		exit(1);
-
-#if !defined(_WIN32) && !defined(__native_client__)
-	if (use_syslog) {
-		openlog("openconnect", LOG_PID, LOG_DAEMON);
-		vpninfo->progress = syslog_progress;
-	}
-#endif /* !_WIN32 && !__native_client__ */
 
 #ifndef _WIN32
 	memset(&sa, 0, sizeof(sa));
@@ -1912,10 +1903,9 @@ int main(int argc, char **argv)
 			exit(0);
 		}
 	}
-	if (openconnect_make_cstp_connection(vpninfo)) {
+	if ((ret = openconnect_make_cstp_connection(vpninfo)) != 0) {
 		fprintf(stderr, _("Creating SSL connection failed\n"));
-		openconnect_vpninfo_free(vpninfo);
-		exit(1);
+		goto out;
 	}
 
 	if (!vpnc_script)
@@ -1933,6 +1923,13 @@ int main(int argc, char **argv)
 	}
 
 	openconnect_get_ip_info(vpninfo, &ip_info, NULL, NULL);
+
+#if !defined(_WIN32) && !defined(__native_client__)
+	if (use_syslog) {
+		openlog("openconnect", LOG_PID, LOG_DAEMON);
+		vpninfo->progress = syslog_progress;
+	}
+#endif /* !_WIN32 && !__native_client__ */
 
 	ssl_compr = openconnect_get_cstp_compression(vpninfo);
 	udp_compr = openconnect_get_dtls_compression(vpninfo);
@@ -1997,9 +1994,10 @@ int main(int argc, char **argv)
 	if (fp)
 		unlink(pidfile);
 
+ out:
 	switch (ret) {
 	case -EPERM:
-		vpn_progress(vpninfo, PRG_ERR, _("Cookie was rejected on reconnection; exiting.\n"));
+		vpn_progress(vpninfo, PRG_ERR, _("Cookie was rejected by server; exiting.\n"));
 		ret = 2;
 		break;
 	case -EPIPE:

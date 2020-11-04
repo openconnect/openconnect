@@ -1,4 +1,4 @@
-image: fedora:latest
+image: fedora:33
 
 CentOS7/GnuTLS:
   image: centos:7
@@ -21,6 +21,7 @@ CentOS7/GnuTLS:
   - shared
   except:
   - tags
+  - schedules
   artifacts:
     expire_in: 1 week
     when: on_failure
@@ -48,6 +49,7 @@ CentOS7/OpenSSL:
   - shared
   except:
   - tags
+  - schedules
   artifacts:
     expire_in: 1 week
     when: on_failure
@@ -59,20 +61,25 @@ CentOS8/GnuTLS:
   script:
   - yum update -y
   - yum install -y epel-release
+  - yum install -y 'dnf-command(config-manager)'
+  - yum config-manager --set-enabled PowerTools # {socket,uid}_wrapper and softhsm
+  - yum module enable -y idm:DL1                # softhsm
   - yum install -y git autoconf automake libtool python36 gettext
     'pkgconfig(openssl)' 'pkgconfig(libxml-2.0)' 'pkgconfig(liblz4)'
     'pkgconfig(gnutls)' 'pkgconfig(liboath)' 'pkgconfig(stoken)' ocserv
+    softhsm 'pkgconfig(uid_wrapper)' 'pkgconfig(socket_wrapper)'
     vpnc-script 'pkgconfig(libpskc)' file make
     java-devel-openjdk iproute iputils nuttcp
   - ./autogen.sh
-  - ./configure --with-java --without-gnutls-version-check CFLAGS=-g
+  - ./configure --with-java --without-gnutls-version-check --disable-dsa-tests CFLAGS=-g
   - make -j4
-# Until we get a GnuTLS with the client random bug fixed, DTLS fails
-  - make VERBOSE=1 XFAIL_TESTS="dtls-psk" -j4 check
+# UTF-8 support is not available
+  - make VERBOSE=1 XFAIL_TESTS="auth-nonascii" -j4 check
   tags:
   - shared
   except:
   - tags
+  - schedules
   artifacts:
     expire_in: 1 week
     when: on_failure
@@ -84,19 +91,25 @@ CentOS8/OpenSSL:
   script:
   - yum update -y
   - yum install -y epel-release
+  - yum install -y 'dnf-command(config-manager)'
+  - yum config-manager --set-enabled PowerTools # {socket,uid}_wrapper and softhsm
+  - yum module enable -y idm:DL1                # softhsm
   - yum install -y git autoconf automake libtool python36 gettext
     'pkgconfig(openssl)' 'pkgconfig(libxml-2.0)' 'pkgconfig(liblz4)'
     'pkgconfig(gnutls)' 'pkgconfig(liboath)' 'pkgconfig(stoken)' ocserv
+    softhsm 'pkgconfig(uid_wrapper)' 'pkgconfig(socket_wrapper)'
     vpnc-script 'pkgconfig(libpskc)' file make
     java-devel-openjdk iproute iputils nuttcp
   - ./autogen.sh
   - ./configure --without-gnutls --with-openssl --with-java --without-openssl-version-check --disable-dsa-tests CFLAGS=-g
   - make -j4
-  - make VERBOSE=1 -j4 check
+# UTF-8 support is not available
+  - make VERBOSE=1 XFAIL_TESTS="auth-nonascii" -j4 check
   tags:
   - shared
   except:
   - tags
+  - schedules
   artifacts:
     expire_in: 1 week
     when: on_failure
@@ -128,6 +141,7 @@ CentOS6/OpenSSL:
   - shared
   except:
   - tags
+  - schedules
   artifacts:
     expire_in: 1 week
     when: on_failure
@@ -144,42 +158,39 @@ Signoff:
   - echo "None (good)"
 
 Fedora/Coverity:
+  image: fedora:31
   only:
-    refs:
-       - master@openconnect/openconnect
-       - coverity@openconnect/openconnect
+  - schedules
+  - coverity
   script:
-  - dnf update -y
   - dnf install -y git autoconf automake libtool python gettext make
     'pkgconfig(openssl)' 'pkgconfig(libxml-2.0)' 'pkgconfig(liblz4)'
     'pkgconfig(gnutls)' trousers-devel 'pkgconfig(libpcsclite)'
     'pkgconfig(libproxy-1.0)' 'pkgconfig(liboath)' 'pkgconfig(stoken)'
     ocserv softhsm 'pkgconfig(uid_wrapper)' 'pkgconfig(socket_wrapper)'
     vpnc-script 'pkgconfig(libpskc)' 'pkgconfig(libpcsclite)' tss2-devel
-    java-devel-openjdk glibc-langpack-cs iproute iputils nuttcp
+    java-11-openjdk-devel glibc-langpack-cs iproute iputils nuttcp
     'pkgconfig(tss2-esys)' 'pkgconfig(krb5-gssapi)' 'pkgconfig(libp11)'
     ant
   - curl -o /tmp/cov-analysis-linux64.tgz https://scan.coverity.com/download/linux64
     --form project=$COVERITY_SCAN_PROJECT_NAME --form token=$COVERITY_SCAN_TOKEN
   - tar xfz /tmp/cov-analysis-linux64.tgz
   - ./autogen.sh
+  - ./configure --with-java --without-gnutls --with-openssl --disable-dsa-tests
   - cd java
   - ../cov-analysis-linux64-*/bin/cov-build --dir ../cov-int ant
   - cd ..
-  - ./configure --with-java --without-gnutls --with-openssl --disable-dsa-tests
   - cov-analysis-linux64-*/bin/cov-build --dir cov-int make -j4
   - make clean
   - ./configure --with-java --disable-dsa-tests --without-gnutls-version-check
   - cov-analysis-linux64-*/bin/cov-build --dir cov-int make -j4
   - tar cfz cov-int.tar.gz cov-int
   - curl https://scan.coverity.com/builds?project=$COVERITY_SCAN_PROJECT_NAME
-    --form token=$COVERITY_SCAN_TOKEN --form email=$GITLAB_USER_EMAIL
+    --form token=$COVERITY_SCAN_TOKEN --form email=email=$GITLAB_USER_EMAIL
     --form file=@cov-int.tar.gz --form version="`git describe --tags`"
     --form description="`git describe --tags` / $CI_COMMIT_TITLE / $CI_COMMIT_REF_NAME:$CI_PIPELINE_ID "
   tags:
   - shared
-  except:
-  - tags
   artifacts:
     expire_in: 1 week
     when: on_failure
@@ -195,7 +206,7 @@ Fedora/GnuTLS:
     'pkgconfig(libproxy-1.0)' 'pkgconfig(liboath)' 'pkgconfig(stoken)'
     ocserv softhsm 'pkgconfig(uid_wrapper)' 'pkgconfig(socket_wrapper)'
     vpnc-script 'pkgconfig(libpskc)' 'pkgconfig(libpcsclite)' tss2-devel
-    java-devel-openjdk glibc-langpack-cs iproute iputils nuttcp
+    java-11-openjdk-devel glibc-langpack-cs iproute iputils nuttcp
     'pkgconfig(tss2-esys)' 'pkgconfig(krb5-gssapi)'
   - ./autogen.sh
   - ./configure --with-java --disable-dsa-tests --without-gnutls-version-check CFLAGS=-g
@@ -209,6 +220,7 @@ Fedora/GnuTLS:
   - shared
   except:
   - tags
+  - schedules
   artifacts:
     expire_in: 1 week
     when: on_failure
@@ -224,7 +236,7 @@ Fedora/GnuTLS/clang:
     'pkgconfig(libproxy-1.0)' 'pkgconfig(liboath)' 'pkgconfig(stoken)'
     ocserv softhsm 'pkgconfig(uid_wrapper)' 'pkgconfig(socket_wrapper)'
     vpnc-script 'pkgconfig(libpskc)' 'pkgconfig(libpcsclite)' tss2-devel
-    java-devel-openjdk clang glibc-langpack-cs iproute iputils nuttcp
+    java-11-openjdk-devel clang glibc-langpack-cs iproute iputils nuttcp
     'pkgconfig(tss2-esys)' 'pkgconfig(krb5-gssapi)'
   - ./autogen.sh
   - ./configure --with-java --disable-dsa-tests --without-gnutls-version-check CC=clang CFLAGS=-g
@@ -238,6 +250,7 @@ Fedora/GnuTLS/clang:
   - shared
   except:
   - tags
+  - schedules
   artifacts:
     expire_in: 1 week
     when: on_failure
@@ -253,8 +266,8 @@ Fedora/OpenSSL:
     'pkgconfig(libproxy-1.0)' 'pkgconfig(liboath)' 'pkgconfig(stoken)'
     ocserv softhsm 'pkgconfig(uid_wrapper)' 'pkgconfig(socket_wrapper)'
     vpnc-script 'pkgconfig(libpskc)' 'pkgconfig(libpcsclite)'
-    java-devel-openjdk glibc-langpack-cs iproute iputils nuttcp
-    'pkgconfig(krb5-gssapi)'
+    java-11-openjdk-devel glibc-langpack-cs iproute iputils nuttcp
+    'pkgconfig(krb5-gssapi)' crypto-policies-scripts
 # Re-enable DSA since we test it
   - update-crypto-policies --set LEGACY
   - ./autogen.sh
@@ -268,6 +281,7 @@ Fedora/OpenSSL:
   - shared
   except:
   - tags
+  - schedules
   artifacts:
     expire_in: 1 week
     when: on_failure
@@ -283,8 +297,8 @@ Fedora/OpenSSL/clang:
     'pkgconfig(libproxy-1.0)' 'pkgconfig(liboath)' 'pkgconfig(stoken)'
     ocserv softhsm 'pkgconfig(uid_wrapper)' 'pkgconfig(socket_wrapper)'
     vpnc-script 'pkgconfig(libpskc)' 'pkgconfig(libpcsclite)'
-    java-devel-openjdk clang glibc-langpack-cs iproute iputils nuttcp
-    'pkgconfig(krb5-gssapi)'
+    java-11-openjdk-devel clang glibc-langpack-cs iproute iputils nuttcp
+    'pkgconfig(krb5-gssapi)' crypto-policies-scripts
 # Re-enable DSA since we test it
   - update-crypto-policies --set LEGACY
   - ./autogen.sh
@@ -298,6 +312,55 @@ Fedora/OpenSSL/clang:
   - shared
   except:
   - tags
+  - schedules
+  artifacts:
+    expire_in: 1 week
+    when: on_failure
+    paths:
+      - tests/*.log
+
+Ubuntu18.04/GnuTLS:
+  image: ubuntu:18.04
+  script:
+  - apt-get -y update
+  - apt-get -y install build-essential gettext autoconf automake libproxy-dev
+    libxml2-dev libtool vpnc-scripts pkg-config zlib1g-dev
+    libgnutls28-dev ocserv iproute2 openjdk-8-jdk python3
+    libsofthsm2-dev libsocket-wrapper libuid-wrapper
+  - ./autogen.sh
+  - ./configure --with-java CFLAGS=-g
+  - make -j4
+# UTF-8 support is not available
+  - make VERBOSE=1 XFAIL_TESTS="auth-nonascii" -j4 check
+  tags:
+  - shared
+  except:
+  - tags
+  - schedules
+  artifacts:
+    expire_in: 1 week
+    when: on_failure
+    paths:
+      - tests/*.log
+
+Ubuntu18.04/OpenSSL:
+  image: ubuntu:18.04
+  script:
+  - apt-get -y update
+  - apt-get -y install build-essential gettext autoconf automake libproxy-dev
+    libxml2-dev libtool vpnc-scripts pkg-config zlib1g-dev
+    libssl-dev ocserv iproute2 openjdk-8-jdk python3
+    libsofthsm2-dev libsocket-wrapper libuid-wrapper
+  - ./autogen.sh
+  - ./configure --without-gnutls --with-openssl --with-java --without-openssl-version-check --disable-dsa-tests CFLAGS=-g
+  - make -j4
+# UTF-8 support is not available
+  - make VERBOSE=1 XFAIL_TESTS="auth-nonascii" -j4 check
+  tags:
+  - shared
+  except:
+  - tags
+  - schedules
   artifacts:
     expire_in: 1 week
     when: on_failure
@@ -320,6 +383,7 @@ MinGW32/GnuTLS:
   - shared
   except:
   - tags
+  - schedules
   artifacts:
     expire_in: 1 week
     when: on_failure
@@ -342,6 +406,7 @@ MinGW32/OpenSSL:
   - shared
   except:
   - tags
+  - schedules
   artifacts:
     expire_in: 1 week
     when: on_failure
@@ -364,6 +429,7 @@ MinGW64/GnuTLS:
   - shared
   except:
   - tags
+  - schedules
   artifacts:
     expire_in: 1 week
     when: on_failure
@@ -386,9 +452,9 @@ MinGW64/OpenSSL:
   - shared
   except:
   - tags
+  - schedules
   artifacts:
     expire_in: 1 week
     when: on_failure
     paths:
       - tests/*.log
-
