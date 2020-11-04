@@ -623,7 +623,7 @@ static int gpst_get_config(struct openconnect_info *vpninfo)
 	vpninfo->cstp_options = NULL;
 
 	/* submit getconfig request */
-	buf_append(request_body, "client-type=1&protocol-version=p1&app-version=4.0.5-8");
+	buf_append(request_body, "client-type=1&protocol-version=p1&app-version=5.1.5-8");
 	append_opt(request_body, "clientos", gpst_os_name(vpninfo));
 	append_opt(request_body, "os-version", vpninfo->platname);
 	append_opt(request_body, "hmac-algo", "sha1,md5,sha256");

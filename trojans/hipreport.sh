@@ -47,7 +47,7 @@ if [ -z "$COOKIE" -o -z "$MD5" -o -z "$IP$IPV6" ]; then
     echo "Parameters --cookie, --md5, and --client-ip and/or --client-ipv6 are required" >&2
     exit 1;
 fi
-	
+
 # Extract username and domain and computer from cookie
 USER=$(echo "$COOKIE" | sed -rn 's/(.+&|^)user=([^&]+)(&.+|$)/\2/p')
 DOMAIN=$(echo "$COOKIE" | sed -rn 's/(.+&|^)domain=([^&]+)(&.+|$)/\2/p')
@@ -62,10 +62,12 @@ case $CLIENTOS in
 		OS_VENDOR="Linux"
 		NETWORK_INTERFACE_NAME="virbr0"
 		NETWORK_INTERFACE_DESCRIPTION="virbr0"
+		# Not currently used for Linux
+		ENCDRIVE='/'
 		;;
 
 	*)
-		CLIENT_VERSION="4.0.2-19"
+		CLIENT_VERSION="5.1.5-8"
 		OS="Microsoft Windows 10 Pro , 64-bit"
 		OS_VENDOR="Microsoft"
 		NETWORK_INTERFACE_NAME="{DEADBEEF-DEAD-BEEF-DEAD-BEEFDEADBEEF}"
