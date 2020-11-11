@@ -1005,7 +1005,9 @@ int openconnect_setup_tun_device(struct openconnect_info *vpninfo,
 
 	prepare_script_env(vpninfo);
 
-	legacy_ifname = openconnect_utf8_to_legacy(vpninfo, vpninfo->ifname);
+	/* XX: vpninfo->ifname will only be non-NULL here if set by the -i option,
+	   which only works on some platforms (see os_setup_tun implementations) */
+	legacy_ifname = vpninfo->ifname ? openconnect_utf8_to_legacy(vpninfo, vpninfo->ifname) : NULL;
 	script_setenv(vpninfo, "TUNDEV", legacy_ifname, 0, 0);
 	if (legacy_ifname != vpninfo->ifname)
 		free(legacy_ifname);
@@ -1020,6 +1022,13 @@ int openconnect_setup_tun_device(struct openconnect_info *vpninfo,
 	if (vpninfo->tun_idx != -1)
 		script_setenv_int(vpninfo, "TUNIDX", vpninfo->tun_idx);
 #endif
+
+	/* XX: os_setup_tun has set (or even changed) ifname */
+	legacy_ifname = openconnect_utf8_to_legacy(vpninfo, vpninfo->ifname);
+	script_setenv(vpninfo, "TUNDEV", legacy_ifname, 0, 0);
+	if (legacy_ifname != vpninfo->ifname)
+		free(legacy_ifname);
+
 	script_config_tun(vpninfo, "connect");
 
 	return openconnect_setup_tun_fd(vpninfo, tun_fd);
