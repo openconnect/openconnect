@@ -1,17 +1,17 @@
-image: fedora:33
+variables:
+  BUILD_IMAGES_PROJECT: openconnect/build-images
+  CENTOS6_BUILD: openconnect-cli-centos6
+  CENTOS7_BUILD: openconnect-cli-centos7
+  CENTOS8_BUILD: openconnect-cli-centos8
+  FEDORA_BUILD: openconnect-cli-fedora
+  FEDORA31_BUILD: openconnect-cli-fedora31
+  UBUNTU_BUILD: openconnect-cli-ubuntu 
+
+image: $CI_REGISTRY/$BUILD_IMAGES_PROJECT:$FEDORA_BUILD
 
 CentOS7/GnuTLS:
-  image: centos:7
+  image: $CI_REGISTRY/$BUILD_IMAGES_PROJECT:$CENTOS7_BUILD
   script:
-  - yum update -y
-  - yum install -y epel-release
-  - yum install -y git autoconf automake libtool python gettext
-    'pkgconfig(openssl)' 'pkgconfig(libxml-2.0)' 'pkgconfig(liblz4)'
-    'pkgconfig(gnutls)' trousers-devel 'pkgconfig(libpcsclite)'
-    'pkgconfig(libproxy-1.0)' 'pkgconfig(liboath)' 'pkgconfig(stoken)'
-    ocserv softhsm 'pkgconfig(uid_wrapper)' 'pkgconfig(socket_wrapper)'
-    vpnc-script 'pkgconfig(libpskc)' 'pkgconfig(libpcsclite)' tss2-devel
-    java-devel-openjdk iproute iputils nuttcp
   - ./autogen.sh
   - ./configure --with-java CFLAGS=-g
   - make -j4
@@ -29,17 +29,8 @@ CentOS7/GnuTLS:
       - tests/*.log
 
 CentOS7/OpenSSL:
-  image: centos:7
+  image: $CI_REGISTRY/$BUILD_IMAGES_PROJECT:$CENTOS7_BUILD
   script:
-  - yum update -y
-  - yum install -y epel-release
-  - yum install -y git autoconf automake libtool python gettext
-    'pkgconfig(openssl)' 'pkgconfig(libxml-2.0)' 'pkgconfig(liblz4)'
-    'pkgconfig(gnutls)' trousers-devel 'pkgconfig(libpcsclite)'
-    'pkgconfig(libproxy-1.0)' 'pkgconfig(liboath)' 'pkgconfig(stoken)'
-    ocserv softhsm 'pkgconfig(uid_wrapper)' 'pkgconfig(socket_wrapper)'
-    vpnc-script 'pkgconfig(libpskc)' 'pkgconfig(libpcsclite)'
-    java-devel-openjdk 'pkgconfig(libp11)' iproute iputils nuttcp
   - ./autogen.sh
   - ./configure --without-gnutls --with-openssl --with-java --without-openssl-version-check --enable-dtls-xfail --disable-dsa-tests CFLAGS=-g
   - make -j4
@@ -57,19 +48,8 @@ CentOS7/OpenSSL:
       - tests/*.log
 
 CentOS8/GnuTLS:
-  image: centos:8
+  image: $CI_REGISTRY/$BUILD_IMAGES_PROJECT:$CENTOS8_BUILD
   script:
-  - yum update -y
-  - yum install -y epel-release
-  - yum install -y 'dnf-command(config-manager)'
-  - yum config-manager --set-enabled PowerTools # {socket,uid}_wrapper and softhsm
-  - yum module enable -y idm:DL1                # softhsm
-  - yum install -y git autoconf automake libtool python36 gettext
-    'pkgconfig(openssl)' 'pkgconfig(libxml-2.0)' 'pkgconfig(liblz4)'
-    'pkgconfig(gnutls)' 'pkgconfig(liboath)' 'pkgconfig(stoken)' ocserv
-    softhsm 'pkgconfig(uid_wrapper)' 'pkgconfig(socket_wrapper)'
-    vpnc-script 'pkgconfig(libpskc)' file make
-    java-devel-openjdk iproute iputils nuttcp
   - ./autogen.sh
   - ./configure --with-java --without-gnutls-version-check --disable-dsa-tests CFLAGS=-g
   - make -j4
@@ -87,19 +67,8 @@ CentOS8/GnuTLS:
       - tests/*.log
 
 CentOS8/OpenSSL:
-  image: centos:8
+  image: $CI_REGISTRY/$BUILD_IMAGES_PROJECT:$CENTOS8_BUILD
   script:
-  - yum update -y
-  - yum install -y epel-release
-  - yum install -y 'dnf-command(config-manager)'
-  - yum config-manager --set-enabled PowerTools # {socket,uid}_wrapper and softhsm
-  - yum module enable -y idm:DL1                # softhsm
-  - yum install -y git autoconf automake libtool python36 gettext
-    'pkgconfig(openssl)' 'pkgconfig(libxml-2.0)' 'pkgconfig(liblz4)'
-    'pkgconfig(gnutls)' 'pkgconfig(liboath)' 'pkgconfig(stoken)' ocserv
-    softhsm 'pkgconfig(uid_wrapper)' 'pkgconfig(socket_wrapper)'
-    vpnc-script 'pkgconfig(libpskc)' file make
-    java-devel-openjdk iproute iputils nuttcp
   - ./autogen.sh
   - ./configure --without-gnutls --with-openssl --with-java --without-openssl-version-check --disable-dsa-tests CFLAGS=-g
   - make -j4
@@ -118,21 +87,8 @@ CentOS8/OpenSSL:
       - tests/*.log
 
 CentOS6/OpenSSL:
-  image: centos:6
+  image: $CI_REGISTRY/$BUILD_IMAGES_PROJECT:$CENTOS6_BUILD
   script:
-  - yum update -y
-  - yum install -y epel-release
-  - yum -y reinstall glibc-common
-  - localedef -i cs_CZ -f UTF-8 cs_CZ.UTF-8
-  - localedef -i cs_CZ -f ISO-8859-2 cs_CZ.ISO8859-2
-  - yum install -y git autoconf automake libtool python gettext
-    'pkgconfig(openssl)' 'pkgconfig(libxml-2.0)' 'pkgconfig(liblz4)'
-    'pkgconfig(gnutls)' trousers-devel 'pkgconfig(libpcsclite)'
-    'pkgconfig(libproxy-1.0)' 'pkgconfig(liboath)' 'pkgconfig(stoken)'
-    ocserv softhsm 'pkgconfig(uid_wrapper)' 'pkgconfig(socket_wrapper)'
-    vpnc-script 'pkgconfig(libpskc)' 'pkgconfig(libpcsclite)'
-    java-devel-openjdk vpnc 'pkgconfig(libp11)' 'pkgconfig(p11-kit-1)'
-    iproute iputils nuttcp
   - ./autogen.sh
   - ./configure --with-java --without-openssl-version-check --enable-dtls-xfail CFLAGS=-g
   - make -j4
@@ -151,7 +107,6 @@ CentOS6/OpenSSL:
 
 Signoff:
   script:
-  - dnf install -y git
   # Quoted to work around https://gitlab.com/gitlab-org/gitlab-foss/-/issues/20177
   - 'echo "Checking for new commits without Signed-off-by: tags as described in http://www.infradead.org/openconnect/contribute.html"'
   # Last bad commit
@@ -159,20 +114,11 @@ Signoff:
   - echo "None (good)"
 
 Fedora/Coverity:
-  image: fedora:31
+  image: $CI_REGISTRY/$BUILD_IMAGES_PROJECT:$FEDORA31_BUILD
   only:
   - schedules
   - coverity
   script:
-  - dnf install -y git autoconf automake libtool python gettext make
-    'pkgconfig(openssl)' 'pkgconfig(libxml-2.0)' 'pkgconfig(liblz4)'
-    'pkgconfig(gnutls)' trousers-devel 'pkgconfig(libpcsclite)'
-    'pkgconfig(libproxy-1.0)' 'pkgconfig(liboath)' 'pkgconfig(stoken)'
-    ocserv softhsm 'pkgconfig(uid_wrapper)' 'pkgconfig(socket_wrapper)'
-    vpnc-script 'pkgconfig(libpskc)' 'pkgconfig(libpcsclite)' tss2-devel
-    java-11-openjdk-devel glibc-langpack-cs iproute iputils nuttcp
-    'pkgconfig(tss2-esys)' 'pkgconfig(krb5-gssapi)' 'pkgconfig(libp11)'
-    ant
   - curl -o /tmp/cov-analysis-linux64.tgz https://scan.coverity.com/download/linux64
     --form project=$COVERITY_SCAN_PROJECT_NAME --form token=$COVERITY_SCAN_TOKEN
   - tar xfz /tmp/cov-analysis-linux64.tgz
@@ -200,15 +146,6 @@ Fedora/Coverity:
 
 Fedora/GnuTLS:
   script:
-  - dnf update -y
-  - dnf install -y git autoconf automake libtool python gettext make
-    'pkgconfig(openssl)' 'pkgconfig(libxml-2.0)' 'pkgconfig(liblz4)'
-    'pkgconfig(gnutls)' trousers-devel 'pkgconfig(libpcsclite)'
-    'pkgconfig(libproxy-1.0)' 'pkgconfig(liboath)' 'pkgconfig(stoken)'
-    ocserv softhsm 'pkgconfig(uid_wrapper)' 'pkgconfig(socket_wrapper)'
-    vpnc-script 'pkgconfig(libpskc)' 'pkgconfig(libpcsclite)' tss2-devel
-    java-11-openjdk-devel glibc-langpack-cs iproute iputils nuttcp
-    'pkgconfig(tss2-esys)' 'pkgconfig(krb5-gssapi)'
   - ./autogen.sh
   - ./configure --with-java --disable-dsa-tests --without-gnutls-version-check CFLAGS=-g
   - make tmp-distdir
@@ -230,15 +167,6 @@ Fedora/GnuTLS:
 
 Fedora/GnuTLS/clang:
   script:
-  - dnf update -y
-  - dnf install -y git autoconf automake libtool python gettext make
-    'pkgconfig(openssl)' 'pkgconfig(libxml-2.0)' 'pkgconfig(liblz4)'
-    'pkgconfig(gnutls)' trousers-devel 'pkgconfig(libpcsclite)'
-    'pkgconfig(libproxy-1.0)' 'pkgconfig(liboath)' 'pkgconfig(stoken)'
-    ocserv softhsm 'pkgconfig(uid_wrapper)' 'pkgconfig(socket_wrapper)'
-    vpnc-script 'pkgconfig(libpskc)' 'pkgconfig(libpcsclite)' tss2-devel
-    java-11-openjdk-devel clang glibc-langpack-cs iproute iputils nuttcp
-    'pkgconfig(tss2-esys)' 'pkgconfig(krb5-gssapi)'
   - ./autogen.sh
   - ./configure --with-java --disable-dsa-tests --without-gnutls-version-check CC=clang CFLAGS=-g
   - make tmp-distdir
@@ -260,15 +188,6 @@ Fedora/GnuTLS/clang:
 
 Fedora/OpenSSL:
   script:
-  - dnf update -y
-  - dnf install -y git autoconf automake libtool python gettext make
-    'pkgconfig(openssl)' 'pkgconfig(libxml-2.0)' 'pkgconfig(liblz4)'
-    'pkgconfig(gnutls)' trousers-devel 'pkgconfig(libpcsclite)'
-    'pkgconfig(libproxy-1.0)' 'pkgconfig(liboath)' 'pkgconfig(stoken)'
-    ocserv softhsm 'pkgconfig(uid_wrapper)' 'pkgconfig(socket_wrapper)'
-    vpnc-script 'pkgconfig(libpskc)' 'pkgconfig(libpcsclite)'
-    java-11-openjdk-devel glibc-langpack-cs iproute iputils nuttcp
-    'pkgconfig(krb5-gssapi)' crypto-policies-scripts
 # Re-enable DSA since we test it
   - update-crypto-policies --set LEGACY
   - ./autogen.sh
@@ -292,15 +211,6 @@ Fedora/OpenSSL:
 
 Fedora/OpenSSL/clang:
   script:
-  - dnf update -y
-  - dnf install -y git autoconf automake libtool python gettext make
-    'pkgconfig(openssl)' 'pkgconfig(libxml-2.0)' 'pkgconfig(liblz4)'
-    'pkgconfig(gnutls)' trousers-devel 'pkgconfig(libpcsclite)'
-    'pkgconfig(libproxy-1.0)' 'pkgconfig(liboath)' 'pkgconfig(stoken)'
-    ocserv softhsm 'pkgconfig(uid_wrapper)' 'pkgconfig(socket_wrapper)'
-    vpnc-script 'pkgconfig(libpskc)' 'pkgconfig(libpcsclite)'
-    java-11-openjdk-devel clang glibc-langpack-cs iproute iputils nuttcp
-    'pkgconfig(krb5-gssapi)' crypto-policies-scripts
 # Re-enable DSA since we test it
   - update-crypto-policies --set LEGACY
   - ./autogen.sh
@@ -323,13 +233,8 @@ Fedora/OpenSSL/clang:
       - tests/*.log
 
 Ubuntu18.04/GnuTLS:
-  image: ubuntu:18.04
+  image: $CI_REGISTRY/$BUILD_IMAGES_PROJECT:$UBUNTU_BUILD
   script:
-  - apt-get -y update
-  - apt-get -y install build-essential gettext autoconf automake libproxy-dev
-    libxml2-dev libtool vpnc-scripts pkg-config zlib1g-dev
-    libgnutls28-dev ocserv iproute2 openjdk-8-jdk python3
-    libsofthsm2-dev libsocket-wrapper libuid-wrapper
   - ./autogen.sh
   - ./configure --with-java CFLAGS=-g
   - make -j4
@@ -347,13 +252,8 @@ Ubuntu18.04/GnuTLS:
       - tests/*.log
 
 Ubuntu18.04/OpenSSL:
-  image: ubuntu:18.04
+  image: $CI_REGISTRY/$BUILD_IMAGES_PROJECT:$UBUNTU_BUILD
   script:
-  - apt-get -y update
-  - apt-get -y install build-essential gettext autoconf automake libproxy-dev
-    libxml2-dev libtool vpnc-scripts pkg-config zlib1g-dev
-    libssl-dev ocserv iproute2 openjdk-8-jdk python3
-    libsofthsm2-dev libsocket-wrapper libuid-wrapper
   - ./autogen.sh
   - ./configure --without-gnutls --with-openssl --with-java --without-openssl-version-check --disable-dsa-tests CFLAGS=-g
   - make -j4
@@ -373,10 +273,6 @@ Ubuntu18.04/OpenSSL:
 
 MinGW32/GnuTLS:
   script:
-  - dnf update -y
-  - dnf install -y git autoconf automake libtool python gettext make
-    mingw32-gnutls mingw32-openssl mingw32-libxml2 mingw32-zlib
-    mingw32-gcc wine.i686 make iproute iputils nuttcp
   - mount -t binfmt_misc binfmt_misc /proc/sys/fs/binfmt_misc
   - echo ':DOSWin:M::MZ::/usr/bin/wine:' > /proc/sys/fs/binfmt_misc/register
   - ./autogen.sh
@@ -396,10 +292,6 @@ MinGW32/GnuTLS:
 
 MinGW32/OpenSSL:
   script:
-  - dnf update -y
-  - dnf install -y git autoconf automake libtool python gettext make
-    mingw32-gnutls mingw32-openssl mingw32-libxml2 mingw32-zlib
-    mingw32-gcc wine.i686 make iproute iputils nuttcp
   - mount -t binfmt_misc binfmt_misc /proc/sys/fs/binfmt_misc
   - echo ':DOSWin:M::MZ::/usr/bin/wine:' > /proc/sys/fs/binfmt_misc/register
   - ./autogen.sh
@@ -419,10 +311,7 @@ MinGW32/OpenSSL:
 
 MinGW64/GnuTLS:
   script:
-  - dnf update -y
-  - dnf install -y git autoconf automake libtool python gettext make
-    mingw64-gnutls mingw64-openssl mingw64-libxml2 mingw64-zlib
-    mingw64-gcc wine.i686 make iproute iputils nuttcp
+  - dnf remove -y wine.i686
   - mount -t binfmt_misc binfmt_misc /proc/sys/fs/binfmt_misc
   - echo ':DOSWin:M::MZ::/usr/bin/wine:' > /proc/sys/fs/binfmt_misc/register
   - ./autogen.sh
@@ -442,10 +331,7 @@ MinGW64/GnuTLS:
 
 MinGW64/OpenSSL:
   script:
-  - dnf update -y
-  - dnf install -y git autoconf automake libtool python gettext make
-    mingw64-gnutls mingw64-openssl mingw64-libxml2 mingw64-zlib
-    mingw64-gcc wine.x86_64 make iproute iputils nuttcp
+  - dnf remove -y wine.i686
   - mount -t binfmt_misc binfmt_misc /proc/sys/fs/binfmt_misc
   - echo ':DOSWin:M::MZ::/usr/bin/wine:' > /proc/sys/fs/binfmt_misc/register
   - ./autogen.sh
