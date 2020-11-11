@@ -32,7 +32,7 @@ mkdir -p $SOCKDIR
 export SOCKET_WRAPPER_DIR=$SOCKDIR
 export SOCKET_WRAPPER_DEFAULT_IFACE=2
 ADDRESS=127.0.0.$SOCKET_WRAPPER_DEFAULT_IFACE
-OPENCONNECT="${OPENCONNECT:-${top_builddir}/openconnect}"
+OPENCONNECT="${OPENCONNECT:-${top_builddir}/openconnect}"${EXEEXT}
 
 certdir="${srcdir}/certs"
 confdir="${srcdir}/configs"
