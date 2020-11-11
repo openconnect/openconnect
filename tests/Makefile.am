@@ -82,7 +82,8 @@ TESTS_ENVIRONMENT = srcdir="$(srcdir)" \
 	top_builddir="$(top_builddir)" \
 	key_list="$(USER_KEYS)" \
 	pkcs11_keys="$(PKCS11_KEYS)" \
-	pkcs11_tokens="$(PKCS11_TOKENS)"
+	pkcs11_tokens="$(PKCS11_TOKENS)" \
+	EXEEXT=$(EXEEXT)
 
 
 C_TESTS = lzstest seqtest
