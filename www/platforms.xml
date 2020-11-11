@@ -23,7 +23,7 @@ and on which <a href="http://www.gnutls.org/">GnuTLS</a> or
 <p>For Solaris support, and for IPv6 on any platform, the
 <tt>vpnc-script</tt> shipped with vpnc itself (as of v0.5.3)
 is not sufficient. It is necessary to use the script from the <a
-href="http://git.infradead.org/users/dwmw2/vpnc-scripts.git">vpnc-scripts</a>
+href="https://gitlab.com/openconnect/vpnc-scripts/">vpnc-scripts</a>
 repository instead. That repository also contains an updated version of
 <tt>vpnc-script-win.js</tt> which is required for correct IPv6 configuration
 under Windows.</p>
