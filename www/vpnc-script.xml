@@ -21,7 +21,8 @@ You may already have a <tt>vpnc-script</tt> installed on your system,
 perhaps in a location such as <tt>/etc/vpnc/vpnc-script</tt>.</p>
 
 <p>If you don't already have it, you can get a current version from <a
-href="http://git.infradead.org/users/dwmw2/vpnc-scripts.git/blob_plain/HEAD:/vpnc-script">here</a>.
+href="https://gitlab.com/openconnect/vpnc-scripts/-/raw/master/vpnc-script">directly here</a> or
+from <a href="https://gitlab.com/openconnect/vpnc-scripts/">its repository</a>.
 Even if you already have a copy from vpnc, you may wish to install this updated
 version which has support for IPv6, and for running on Solaris and on newer Linux
 kernels amongst other bug fixes.</p>
