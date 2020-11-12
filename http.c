@@ -1056,7 +1056,7 @@ int do_https_request(struct openconnect_info *vpninfo, const char *method,
 		rq_retry = 1;
 	} else {
 		rq_retry = 0;
-		if ((result = openconnect_open_https(vpninfo))) {
+		if ((openconnect_open_https(vpninfo))) {
 			vpn_progress(vpninfo, PRG_ERR,
 				     _("Failed to open HTTPS connection to %s\n"),
 				     vpninfo->hostname);
