@@ -786,6 +786,7 @@ int oncp_connect(struct openconnect_info *vpninfo)
 		vpn_progress(vpninfo, PRG_ERR,
 			     _("Short write in oNCP negotiation\n"));
 		ret = -EIO;
+		goto out;
 	}
 
 	ret = check_address_sanity(vpninfo, old_addr, old_netmask, NULL, NULL);
