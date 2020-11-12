@@ -478,8 +478,6 @@ int process_http_response(struct openconnect_info *vpninfo, int connect,
 				     strerror(-ret));
 			goto err;
 		}
-		/* Default error case */
-		ret = -EINVAL;
 
 		/* Empty line ends headers */
 		if (!hdrbuf->pos)
