@@ -393,7 +393,7 @@ static int start_cstp_connection(struct openconnect_info *vpninfo)
 		if (!strncmp(buf, "HTTP/1.1 503 ", 13)) {
 			/* "Service Unavailable. Why? */
 			const char *reason = "<unknown>";
-			while ((i = vpninfo->ssl_gets(vpninfo, buf, sizeof(buf)))) {
+			while ((vpninfo->ssl_gets(vpninfo, buf, sizeof(buf)))) {
 				if (!strncmp(buf, "X-Reason: ", 10)) {
 					reason = buf + 10;
 					break;
