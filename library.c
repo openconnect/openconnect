@@ -1159,9 +1159,12 @@ int openconnect_check_peer_cert_hash(struct openconnect_info *vpninfo,
 		if (len < 0)
 			return len;
 
-		if (openconnect_sha1(sha1_bin, cert, len))
+		if (openconnect_sha1(sha1_bin, cert, len)) {
+			free(cert);
 			return -EIO;
+		}
 
+		free(cert);
 		fingerprint = openconnect_bin2hex(NULL, sha1_bin, sizeof(sha1_bin));
 	}
 
