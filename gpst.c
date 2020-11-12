@@ -909,14 +909,17 @@ static int run_hip_script(struct openconnect_info *vpninfo)
 	if (pipe2(pipefd, O_CLOEXEC))
 #endif
 	{
-		if (pipe(pipefd))
-			goto out;
+		if (pipe(pipefd)) {
+			vpn_progress(vpninfo, PRG_ERR, _("Failed to create pipe for HIP script\n"));
+			return -EPERM;
+		}
 		set_fd_cloexec(pipefd[0]);
 		set_fd_cloexec(pipefd[1]);
 	}
 	child = fork();
 	if (child == -1) {
-		goto out;
+		vpn_progress(vpninfo, PRG_ERR, _("Failed to fork for HIP script\n"));
+		return -EPERM;
 	} else if (child > 0) {
 		/* in parent: read report from child */
 		struct oc_text_buf *report_buf = buf_alloc();
@@ -979,7 +982,6 @@ static int run_hip_script(struct openconnect_info *vpninfo)
 		hip_argv[i++] = NULL;
 		execv(hip_argv[0], (char **)hip_argv);
 
-	out:
 		vpn_progress(vpninfo, PRG_ERR,
 				 _("Failed to exec HIP script %s\n"), hip_argv[0]);
 		exit(1);
