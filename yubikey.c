@@ -151,7 +151,7 @@ static int buf_tlv(struct oc_text_buf *buf, int *loc, unsigned char *type)
 			return -EINVAL;
 		len = (unsigned char)buf->data[(*loc)++];
 		len <<= 8;
-		len = (unsigned char)buf->data[(*loc)++];
+		len |= (unsigned char)buf->data[(*loc)++];
 		left -= 2;
 	}
 
