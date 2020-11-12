@@ -158,6 +158,9 @@ void cleanup_gssapi_auth(struct openconnect_info *vpninfo,
 {
 	OM_uint32 minor;
 
+	if (!auth_state)
+		return;
+
 	if (auth_state->gss_target_name != GSS_C_NO_NAME)
 		gss_release_name(&minor, &auth_state->gss_target_name);
 
