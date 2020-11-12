@@ -121,6 +121,7 @@ static const struct vpn_proto openconnect_protos[] = {
 		.tcp_mainloop = cstp_mainloop,
 		.add_http_headers = cstp_common_headers,
 		.obtain_cookie = cstp_obtain_cookie,
+		.secure_cookie = "webvpn",
 		.udp_protocol = "DTLS",
 #ifdef HAVE_DTLS
 		.udp_setup = dtls_setup,
@@ -138,6 +139,7 @@ static const struct vpn_proto openconnect_protos[] = {
 		.tcp_mainloop = oncp_mainloop,
 		.add_http_headers = oncp_common_headers,
 		.obtain_cookie = oncp_obtain_cookie,
+		.secure_cookie = "DSID",
 		.udp_protocol = "ESP",
 #ifdef HAVE_ESP
 		.udp_setup = esp_setup,
