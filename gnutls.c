@@ -583,7 +583,7 @@ static int assign_privkey(struct openconnect_info *vpninfo,
 			  unsigned int nr_certs,
 			  uint8_t *free_certs)
 {
-	gnutls_pcert_st *pcerts = calloc(nr_certs, sizeof(*pcerts));
+	gnutls_pcert_st *pcerts = gnutls_calloc(nr_certs, sizeof(*pcerts));
 	int i, err;
 
 	if (!pcerts)
@@ -1092,7 +1092,7 @@ static int load_certificate(struct openconnect_info *vpninfo)
 	if (!nr_extra_certs)
 		nr_extra_certs = 1; /* wtf? Oh well, we'll fail later... */
 
-	extra_certs = calloc(nr_extra_certs, sizeof(cert));
+	extra_certs = gnutls_calloc(nr_extra_certs, sizeof(cert));
 	if (!extra_certs) {
 		nr_extra_certs = 0;
 		ret = -ENOMEM;
@@ -1115,7 +1115,6 @@ static int load_certificate(struct openconnect_info *vpninfo)
 		goto out;
 	}
 	nr_extra_certs = err;
-	err = 0;
 
 	goto got_certs;
  got_certs:
@@ -2667,6 +2666,11 @@ void *establish_eap_ttls(struct openconnect_info *vpninfo)
 
 	err = gnutls_priority_set_direct(ttls_sess,
 				   vpninfo->ciphersuite_config, NULL);
+	if (err < 0) {
+		vpn_progress(vpninfo, PRG_TRACE,
+			     _("Could not set ciphersuites: %s\n"), vpninfo->ciphersuite_config);
+		goto fail;
+	}
 
 	err = gnutls_handshake(ttls_sess);
 	if (!err) {
@@ -2674,6 +2678,8 @@ void *establish_eap_ttls(struct openconnect_info *vpninfo)
 			     _("Established EAP-TTLS session\n"));
 		return ttls_sess;
 	}
+
+fail:
 	gnutls_deinit(ttls_sess);
 	return NULL;
 }
