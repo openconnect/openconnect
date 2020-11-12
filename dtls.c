@@ -682,7 +682,7 @@ static int probe_mtu(struct openconnect_info *vpninfo, unsigned char *buf)
 
 void dtls_detect_mtu(struct openconnect_info *vpninfo)
 {
-	int mtu = vpninfo->ip_info.mtu;
+	int mtu;
 	int prev_mtu = vpninfo->ip_info.mtu;
 	unsigned char *buf;
 
