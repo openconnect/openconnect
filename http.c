@@ -684,6 +684,7 @@ int process_http_response(struct openconnect_info *vpninfo, int connect,
 			vpn_progress(vpninfo, PRG_ERR,
 				     _("Cannot receive HTTP 1.0 body without closing connection\n"));
 			openconnect_close_https(vpninfo, 0);
+			buf_free(hdrbuf);
 			return -EINVAL;
 		}
 
