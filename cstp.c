@@ -157,19 +157,16 @@ static void calculate_mtu(struct openconnect_info *vpninfo, int *base_mtu, int *
 static void append_compr_types(struct oc_text_buf *buf, const char *proto, int avail)
 {
 	if (avail) {
-		char sep = ' ';
+		const char sep = ',';
 		buf_append(buf, "X-%s-Accept-Encoding:", proto);
 		if (avail & COMPR_LZ4) {
 			buf_append(buf, "%coc-lz4", sep);
-			sep = ',';
 		}
 		if (avail & COMPR_LZS) {
 			buf_append(buf, "%clzs", sep);
-			sep = ',';
 		}
 		if (avail & COMPR_DEFLATE) {
 			buf_append(buf, "%cdeflate", sep);
-			sep = ',';
 		}
 		buf_append(buf, "\r\n");
 	}
