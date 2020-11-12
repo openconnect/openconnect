@@ -780,12 +780,12 @@ int oncp_connect(struct openconnect_info *vpninfo)
 	vpn_progress(vpninfo, PRG_DEBUG, _("oNCP negotiation request outgoing:\n"));
 	dump_buf_hex(vpninfo, PRG_DEBUG, '>', (void *)reqbuf->data, reqbuf->pos);
 	ret = vpninfo->ssl_write(vpninfo, reqbuf->data, reqbuf->pos);
-	if (ret == reqbuf->pos)
-		ret = 0;
-	else if (ret >= 0) {
-		vpn_progress(vpninfo, PRG_ERR,
-			     _("Short write in oNCP negotiation\n"));
-		ret = -EIO;
+	if (ret != reqbuf->pos) {
+		if (ret >= 0) {
+			vpn_progress(vpninfo, PRG_ERR,
+				     _("Short write in oNCP negotiation\n"));
+			ret = -EIO;
+		}
 		goto out;
 	}
 
