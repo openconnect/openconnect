@@ -143,6 +143,92 @@ Coverity:
     paths:
       - cov-int/*.txt
 
+ubsan/GnuTLS/Fedora:
+  image: $CI_REGISTRY/$BUILD_IMAGES_PROJECT:$FEDORA_BUILD
+  script:
+  - ./autogen.sh
+  - export UBCFLAGS="-Wall -Wextra -fsanitize=undefined -fsanitize=bool -fsanitize=alignment -fsanitize=null -fsanitize=bounds-strict -fsanitize=enum -fno-sanitize-recover -g -O2"
+  - CFLAGS="$UBCFLAGS" ./configure --with-java --disable-dsa-tests --without-gnutls-version-check
+  - make -j4
+  - make VERBOSE=1 -j4 check
+  tags:
+  - shared
+  - linux
+  except:
+  - tags
+  - schedules
+  artifacts:
+    expire_in: 1 week
+    when: on_failure
+    paths:
+      - ./*.log
+      - tests/*.log
+
+ubsan/OpenSSL/Fedora:
+  image: $CI_REGISTRY/$BUILD_IMAGES_PROJECT:$FEDORA_BUILD
+  script:
+  - ./autogen.sh
+  - export UBCFLAGS="-Wall -Wextra -fsanitize=undefined -fsanitize=bool -fsanitize=alignment -fsanitize=null -fsanitize=bounds-strict -fsanitize=enum -fno-sanitize-recover -g -O2"
+  - CFLAGS="$UBCFLAGS" ./configure --without-gnutls --with-openssl --without-openssl-version-check --disable-dsa-tests
+  - make -j4
+# OpenSSL 1.1.0 disables 3DES and RC4 by default (https://www.openssl.org/blog/blog/2016/08/24/sweet32/)
+  - make VERBOSE=1 XFAIL_TESTS="obsolete-server-crypto" -j4 check
+  tags:
+  - shared
+  - linux
+  except:
+  - tags
+  - schedules
+  artifacts:
+    expire_in: 1 week
+    when: on_failure
+    paths:
+      - ./*.log
+      - tests/*.log
+
+asan/GnuTLS/Fedora:
+  image: $CI_REGISTRY/$BUILD_IMAGES_PROJECT:$FEDORA_BUILD
+  script:
+  - ./autogen.sh
+  - CC=clang CFLAGS="-fsanitize=address -fno-optimize-sibling-calls -fno-omit-frame-pointer -g -O1" 
+    ./configure --with-java --disable-dsa-tests --without-gnutls-version-check --without-asan-broken-tests
+  - make -j4
+  - make VERBOSE=1 -j4 check
+  tags:
+  - shared
+  - linux
+  except:
+  - tags
+  - schedules
+  artifacts:
+    expire_in: 1 week
+    when: on_failure
+    paths:
+      - ./*.log
+      - tests/*.log
+
+asan/OpenSSL/Fedora:
+  image: $CI_REGISTRY/$BUILD_IMAGES_PROJECT:$FEDORA_BUILD
+  script:
+  - ./autogen.sh
+  - CC=clang CFLAGS="-fsanitize=address -fno-optimize-sibling-calls -fno-omit-frame-pointer -g -O1" 
+    ./configure --without-gnutls --with-openssl --without-openssl-version-check --disable-dsa-tests --without-asan-broken-tests
+  - make -j4
+# OpenSSL 1.1.0 disables 3DES and RC4 by default (https://www.openssl.org/blog/blog/2016/08/24/sweet32/)
+  - make VERBOSE=1 XFAIL_TESTS="obsolete-server-crypto" -j4 check
+  tags:
+  - shared
+  - linux
+  except:
+  - tags
+  - schedules
+  artifacts:
+    expire_in: 1 week
+    when: on_failure
+    paths:
+      - ./*.log
+      - tests/*.log
+
 Fedora/GnuTLS:
   script:
   - ./autogen.sh

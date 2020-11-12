@@ -1051,6 +1051,16 @@ if test -n "$ac_cv_path_NUTTCP"; then
 fi
 AM_CONDITIONAL(HAVE_NETNS, test "x$have_netns" != xno)
 
+AC_ARG_WITH(asan-broken-tests,
+  AS_HELP_STRING([--without-asan-broken-tests], [disable any tests that cannot be run under asan]),
+  enable_asan_broken_tests=$withval,
+  enable_asan_broken_tests=yes)
+
+AC_MSG_CHECKING([whether to enable broken in asan tests])
+AC_MSG_RESULT([${enable_asan_broken_tests}])
+
+AM_CONDITIONAL(DISABLE_ASAN_BROKEN_TESTS, test "x$enable_asan_broken_tests" = xno)
+
 AC_SUBST([CONFIG_STATUS_DEPENDENCIES],
 	 ['$(top_srcdir)/po/LINGUAS \
 	   $(top_srcdir)/openconnect.h \

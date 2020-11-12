@@ -24,6 +24,11 @@ if ! test -x /usr/sbin/ocserv;then
 	exit 77
 fi
 
+if test "${DISABLE_ASAN_BROKEN_TESTS}" = 1 && test "${PRELOAD}" = 1;then
+	echo "This test cannot be run under asan"
+	exit 77
+fi
+
 OCSERV=/usr/sbin/ocserv
 
 top_builddir=${top_builddir:-..}

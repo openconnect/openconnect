@@ -45,7 +45,8 @@ EXTRA_DIST = certs/ca.pem certs/ca-key.pem certs/user-cert.pem $(USER_KEYS) $(US
 	configs/test-obsolete-server-crypto.config \
 	configs/user-cert.prm configs/server-cert.prm \
 	softhsm2.conf.in softhsm ns.sh configs/test-dtls-psk.config \
-	scripts/vpnc-script scripts/vpnc-script-detect-disconnect
+	scripts/vpnc-script scripts/vpnc-script-detect-disconnect \
+	suppressions.lsan
 
 dist_check_SCRIPTS = autocompletion
 
@@ -83,8 +84,8 @@ TESTS_ENVIRONMENT = srcdir="$(srcdir)" \
 	key_list="$(USER_KEYS)" \
 	pkcs11_keys="$(PKCS11_KEYS)" \
 	pkcs11_tokens="$(PKCS11_TOKENS)" \
-	EXEEXT=$(EXEEXT)
-
+	EXEEXT=$(EXEEXT) \
+	LSAN_OPTIONS=suppressions=suppressions.lsan
 
 C_TESTS = lzstest seqtest
 
@@ -301,3 +302,9 @@ softhsm-setup3:
 		   --load-privkey $(certsdir)/ec-key-pkcs8.pem \
 		   --label EC --id 03 --login \
 		   --write "pkcs11:token=openconnect-test3;pin-value=1234"
+
+if DISABLE_ASAN_BROKEN_TESTS
+TESTS_ENVIRONMENT += DISABLE_ASAN_BROKEN_TESTS=1
+else
+TESTS_ENVIRONMENT += DISABLE_ASAN_BROKEN_TESTS=0
+endif
