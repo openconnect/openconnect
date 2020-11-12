@@ -441,3 +441,39 @@ MinGW64/OpenSSL:
     when: on_failure
     paths:
       - tests/*.log
+
+static-analyzer/GnuTLS/Fedora:
+  image: $CI_REGISTRY/$BUILD_IMAGES_PROJECT:buildenv-fedora
+  script:
+  - ./autogen.sh
+  - scan-build ./configure
+  - scan-build --status-bugs -o scan-build-src make -j4
+  tags:
+  - shared
+  - linux
+  except:
+  - tags
+  - schedules
+  artifacts:
+    expire_in: 1 week
+    when: on_failure
+    paths:
+      - scan-build-src/*
+
+static-analyzer/OpenSSL/Fedora:
+  image: $CI_REGISTRY/$BUILD_IMAGES_PROJECT:buildenv-fedora
+  script:
+  - ./autogen.sh
+  - scan-build ./configure --without-gnutls --with-openssl --without-openssl-version-check
+  - scan-build --status-bugs -o scan-build-src make -j4
+  tags:
+  - shared
+  - linux
+  except:
+  - tags
+  - schedules
+  artifacts:
+    expire_in: 1 week
+    when: on_failure
+    paths:
+      - scan-build-src/*
