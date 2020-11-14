@@ -81,6 +81,7 @@ struct openconnect_info *openconnect_vpninfo_new(const char *useragent,
 	vpninfo->req_compr = COMPR_STATELESS;
 	vpninfo->max_qlen = 10;
 	vpninfo->localname = strdup("localhost");
+	vpninfo->port = 443;
 	vpninfo->useragent = openconnect_create_useragent(useragent);
 	vpninfo->validate_peer_cert = validate_peer_cert;
 	vpninfo->write_new_config = write_new_config;
