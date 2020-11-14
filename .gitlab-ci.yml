@@ -4,7 +4,6 @@ variables:
   CENTOS7_BUILD: openconnect-cli-centos7
   CENTOS8_BUILD: openconnect-cli-centos8
   FEDORA_BUILD: openconnect-cli-fedora
-  FEDORA31_BUILD: openconnect-cli-fedora31
   UBUNTU_BUILD: openconnect-cli-ubuntu 
 
 image: $CI_REGISTRY/$BUILD_IMAGES_PROJECT:$FEDORA_BUILD
@@ -113,8 +112,8 @@ Signoff:
   - 'git log ceab1765db11c15a18a0c605812dbc11afd63e8b.. --grep "(^Signed-off-by)|(^Merge branch)|(^This reverts commit)" --extended-regexp --invert-grep --exit-code'
   - echo "None (good)"
 
-Fedora/Coverity:
-  image: $CI_REGISTRY/$BUILD_IMAGES_PROJECT:$FEDORA31_BUILD
+Coverity:
+  image: $CI_REGISTRY/$BUILD_IMAGES_PROJECT:$CENTOS8_BUILD
   only:
   - schedules
   - coverity
