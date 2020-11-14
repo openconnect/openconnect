@@ -207,9 +207,6 @@ int connect_https_socket(struct openconnect_info *vpninfo)
 	int ssl_sock = -1;
 	int err;
 
-	if (!vpninfo->port)
-		vpninfo->port = 443;
-
 	/* If we're talking to a server which told us it has dynamic DNS, don't
 	   just re-use its previous IP address. If we're talking to a proxy, we
 	   can use *its* previous IP address. We expect it'll re-do the DNS
