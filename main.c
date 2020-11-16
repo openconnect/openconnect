@@ -1434,7 +1434,11 @@ static FILE *background_self(struct openconnect_info *vpninfo, char *pidfile) {
 			exit(1);
 		}
 	}
-	if ((pid = fork())) {
+	pid = fork();
+	if (pid == -1) {
+		vpn_perror(vpninfo, "Failed to continue in background\n");
+		exit(1);
+	} else if (pid > 0) {
 		if (fp) {
 			fprintf(fp, "%d\n", pid);
 			fclose(fp);
