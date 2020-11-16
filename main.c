@@ -1893,7 +1893,7 @@ int main(int argc, char **argv)
 			unlink(vpninfo->csd_scriptname);
 			vpninfo->csd_scriptname = NULL;
 		}
-		fprintf(stderr, _("Failed to obtain WebVPN cookie\n"));
+		fprintf(stderr, _("Failed to complete authentication\n"));
 		exit(1);
 	}
 
