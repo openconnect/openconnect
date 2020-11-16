@@ -103,7 +103,8 @@ static intptr_t search_taps(struct openconnect_info *vpninfo, tap_callback *cb, 
 			RegCloseKey(hkey);
 			continue;
 		}
-		if (strcmp(buf, TAP_COMPONENT_ID)) {
+		if (strcmp(buf, TAP_COMPONENT_ID) &&
+		    strcmp(buf, "root\\" TAP_COMPONENT_ID)) {
 			vpn_progress(vpninfo, PRG_TRACE,
 				     _("%s\\ComponentId is '%s' not '%s'\n"),
 				     keyname, buf, TAP_COMPONENT_ID);
@@ -112,7 +113,7 @@ static intptr_t search_taps(struct openconnect_info *vpninfo, tap_callback *cb, 
 		}
 
 		vpn_progress(vpninfo, PRG_TRACE, _("Found %s at %s\n"),
-			     TAP_COMPONENT_ID, keyname);
+			     buf, keyname);
 
 		len = sizeof(buf);
 		status = RegQueryValueExA(hkey, "NetCfgInstanceId", NULL,
