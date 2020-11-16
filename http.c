@@ -763,8 +763,10 @@ int internal_parse_url(const char *url, char **res_proto, char **res_host,
 		if (!*end) {
 			*port_str = 0;
 			port = new_port;
-			if (port <= 0 || port > 0xffff)
+			if (port <= 0 || port > 0xffff) {
+				free(host);
 				return -EINVAL;
+			}
 		}
 	}
 
