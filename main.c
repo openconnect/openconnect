@@ -745,11 +745,17 @@ static void handle_signal(int sig)
 
 	switch (sig) {
 	case SIGTERM:
-	case SIGINT:
 		cmd = OC_CMD_CANCEL;
 		break;
 	case SIGHUP:
 		cmd = OC_CMD_DETACH;
+		break;
+	case SIGINT:
+#ifdef INSECURE_DEBUGGING
+		cmd = OC_CMD_DETACH;
+#else
+		cmd = OC_CMD_CANCEL;
+#endif
 		break;
 	case SIGUSR2:
 	default:
@@ -840,7 +846,6 @@ static void usage(void)
 
 	printf("\n%s:\n", _("Server validation"));
 	printf("      --servercert=FINGERPRINT    %s\n", _("Server's certificate SHA1 fingerprint"));
-	printf("      --no-cert-check             %s\n", _("Do not require server SSL cert to be valid"));
 	printf("      --no-system-trust           %s\n", _("Disable default system certificate authorities"));
 	printf("      --cafile=FILE               %s\n", _("Cert file for server verification"));
 
@@ -1521,6 +1526,12 @@ int main(int argc, char **argv)
 			openconnect_binary_version, openconnect_version_str);
 	}
 
+#ifdef INSECURE_DEBUGGING
+	fprintf(stderr,
+		_("WARNING: This build is intended only for debugging purposes and\n"
+		  "         may allow you to establish insecure connections.\n"));
+#endif
+
 	openconnect_init_ssl();
 
 	vpninfo = openconnect_vpninfo_new((char *)"Open AnyConnect VPN Agent",
@@ -2059,11 +2070,23 @@ int main(int argc, char **argv)
 		ret = 1;
 		break;
 	case -EINTR:
-		vpn_progress(vpninfo, PRG_INFO, _("User cancelled (SIGINT/SIGTERM); exiting.\n"));
+		vpn_progress(vpninfo, PRG_INFO, _("User cancelled (%s); exiting.\n"),
+#ifdef INSECURE_DEBUGGING
+			     "SIGTERM"
+#else
+			     "SIGINT/SIGTERM"
+#endif
+			     );
 		ret = 0;
 		break;
 	case -ECONNABORTED:
-		vpn_progress(vpninfo, PRG_INFO, _("User detached from session (SIGHUP); exiting.\n"));
+		vpn_progress(vpninfo, PRG_INFO, _("User detached from session (%s); exiting.\n"),
+#ifdef INSECURE_DEBUGGING
+			     "SIGHUP/SIGINT"
+#else
+			     "SIGHUP"
+#endif
+			     );
 		ret = 0;
 		break;
 	case -EIO:
@@ -2146,7 +2169,11 @@ static int validate_peer_cert(void *_vpninfo, const char *reason)
 	const char *fingerprint;
 	struct accepted_cert *this;
 
+#ifdef INSECURE_DEBUGGING
+	if (server_cert && strcasecmp(server_cert, "ACCEPT")) {
+#else
 	if (server_cert) {
+#endif
 		int err = openconnect_check_peer_cert_hash(vpninfo, server_cert);
 
 		if (!err)
@@ -2185,6 +2212,12 @@ static int validate_peer_cert(void *_vpninfo, const char *reason)
 		if (non_inter)
 			return -EINVAL;
 
+#ifdef INSECURE_DEBUGGING
+		if (!strcasecmp(server_cert, "ACCEPT")) {
+			fprintf(stderr, _("Insecurely accepting because you ran with --servertcert=ACCEPT.\n"));
+			goto accepted;
+		}
+#endif
 		fprintf(stderr, _("Enter '%s' to accept, '%s' to abort; anything else to view: "),
 		       _("yes"), _("no"));
 
@@ -2193,7 +2226,11 @@ static int validate_peer_cert(void *_vpninfo, const char *reason)
 			return -EINVAL;
 
 		if (!strcasecmp(response, _("yes"))) {
-			struct accepted_cert *newcert = malloc(sizeof(*newcert));
+			struct accepted_cert *newcert;
+#ifdef INSECURE_DEBUGGING
+		accepted:
+#endif
+			newcert = malloc(sizeof(*newcert));
 			if (newcert) {
 				newcert->next = accepted_certs;
 				accepted_certs = newcert;
