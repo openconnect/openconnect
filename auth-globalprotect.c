@@ -124,7 +124,8 @@ static int parse_prelogin_xml(struct openconnect_info *vpninfo, xmlNode *xml_nod
 				             saml_method);
 			vpn_progress(vpninfo, PRG_ERR,
 			             _("When SAML authentication is complete, specify destination form field by appending :field_name to login URL.\n"));
-			result = -EINVAL;
+                       /* XX: EINVAL will lead to "failure to parse response", with unnecessary/confusing extra logging output */
+			result = -EPERM;
 			goto out;
 		} else
 			vpn_progress(vpninfo, PRG_DEBUG, _("Destination form field %s was specified; assuming SAML %s authentication is complete.\n"),
