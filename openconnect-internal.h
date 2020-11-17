@@ -669,6 +669,12 @@ struct openconnect_info {
 	char *version_string;
 
 	const char *quit_reason;
+	const char *delay_tunnel_reason;        /* If non-null, provides a reason why protocol is not yet ready for tunnel setup */
+	enum {
+		NO_DELAY_CLOSE = 0,
+		DELAY_CLOSE_WAIT,
+		DELAY_CLOSE_IMMEDIATE_CALLBACK,
+	} delay_close;                          /* Delay close of mainloop */
 
 	int verbose;
 	void *cbdata;

@@ -567,9 +567,11 @@ static int gpst_parse_config_xml(struct openconnect_info *vpninfo, xmlNode *xml_
 				}
 				if (openconnect_setup_esp_keys(vpninfo, 0))
 					vpn_progress(vpninfo, PRG_ERR, "Failed to setup ESP keys.\n");
-				else
+				else {
 					/* prevent race condition between esp_mainloop() and gpst_mainloop() timers */
 					vpninfo->dtls_times.last_rekey = time(&vpninfo->new_dtls_started);
+					vpninfo->delay_tunnel_reason = "awaiting GPST ESP connection";
+				}
 			}
 #else
 			vpn_progress(vpninfo, PRG_DEBUG, _("Ignoring ESP keys since ESP support not available in this build\n"));
@@ -1077,8 +1079,10 @@ int gpst_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable)
 	case DTLS_SECRET:
 	case DTLS_SLEEPING:
 		/* Allow 5 seconds after configuration for ESP to start */
-		if (!ka_check_deadline(timeout, time(NULL), vpninfo->new_dtls_started + 5))
+		if (!ka_check_deadline(timeout, time(NULL), vpninfo->new_dtls_started + 5)) {
+			vpninfo->delay_tunnel_reason = "awaiting GPST ESP connection";
 			return 0;
+		}
 
 		/* ... before we switch to HTTPS instead */
 		vpn_progress(vpninfo, PRG_ERR,

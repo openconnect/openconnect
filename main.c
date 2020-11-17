@@ -80,7 +80,11 @@ static void init_token(struct openconnect_info *vpninfo,
 
 static int verbose = PRG_INFO;
 static int timestamp;
-int background;
+#ifndef _WIN32
+static int background;
+static FILE *pid_fp = NULL;
+static char *pidfile = NULL;
+#endif
 static int do_passphrase_from_fsid;
 static int non_inter;
 static int cookieonly;
@@ -1379,20 +1383,98 @@ static int autocomplete(int argc, char **argv)
 	return 0;
 }
 
+static void print_connection_info(struct openconnect_info *vpninfo)
+{
+	const struct oc_ip_info *ip_info;
+	const char *ssl_compr, *udp_compr, *dtls_state;
+
+	openconnect_get_ip_info(vpninfo, &ip_info, NULL, NULL);
+
+	switch (vpninfo->dtls_state) {
+	case DTLS_NOSECRET:
+		dtls_state = _("unsuccessful");
+		break;
+	case DTLS_SLEEPING:
+	case DTLS_SECRET:
+		dtls_state = _("in progress");
+		break;
+	case DTLS_DISABLED:
+		dtls_state = _("disabled");
+		break;
+	default:
+		dtls_state = _("connected");
+	}
+
+	ssl_compr = openconnect_get_cstp_compression(vpninfo);
+	udp_compr = openconnect_get_dtls_compression(vpninfo);
+	vpn_progress(vpninfo, PRG_INFO,
+		     _("Connected as %s%s%s, using SSL%s%s, with %s%s%s %s\n"),
+		     ip_info->addr?:"",
+		     (ip_info->netmask6 && ip_info->addr) ? " + " : "",
+		     ip_info->netmask6 ? : "",
+		     ssl_compr ? " + " : "", ssl_compr ? : "",
+		     vpninfo->proto->udp_protocol ? : "UDP", udp_compr ? " + " : "", udp_compr ? : "",
+		     dtls_state);
+}
+
+#ifndef _WIN32
+static FILE *background_self(struct openconnect_info *vpninfo, char *pidfile) {
+	FILE *fp = NULL;
+	int pid;
+
+	/* Open the pidfile before forking, so we can report errors
+	   more sanely. It's *possible* that we'll fail to write to
+	   it, but very unlikely. */
+	if (pidfile != NULL) {
+		fp = openconnect_fopen_utf8(vpninfo, pidfile, "w");
+		if (!fp) {
+			fprintf(stderr, _("Failed to open '%s' for write: %s\n"),
+				pidfile, strerror(errno));
+			openconnect_vpninfo_free(vpninfo);
+			exit(1);
+		}
+	}
+	pid = fork();
+	if (pid == -1) {
+		vpn_perror(vpninfo, "Failed to continue in background\n");
+		exit(1);
+	} else if (pid > 0) {
+		if (fp) {
+			fprintf(fp, "%d\n", pid);
+			fclose(fp);
+		}
+		vpn_progress(vpninfo, PRG_INFO,
+			     _("Continuing in background; pid %d\n"),
+			     pid);
+		openconnect_vpninfo_free(vpninfo);
+		exit(0);
+	}
+	if (fp)
+		fclose(fp);
+	return fp;
+}
+#endif /* _WIN32 */
+
+static void fully_up_cb(void *_vpninfo) {
+	struct openconnect_info *vpninfo = _vpninfo;
+
+	print_connection_info(vpninfo);
+#ifndef _WIN32
+	if (background)
+		pid_fp = background_self(vpninfo, pidfile);
+#endif
+}
+
 int main(int argc, char **argv)
 {
 	struct openconnect_info *vpninfo;
 	char *urlpath = NULL;
 	struct oc_vpn_option *gai;
 	char *ip;
-	const char *ssl_compr, *udp_compr;
 	char *proxy = getenv("https_proxy");
 	char *vpnc_script = NULL;
-	const struct oc_ip_info *ip_info;
 	int autoproxy = 0;
 	int opt;
-	char *pidfile = NULL;
-	FILE *fp = NULL;
 	char *config_arg;
 	char *config_filename;
 	char *token_str = NULL;
@@ -1534,9 +1616,11 @@ int main(int argc, char **argv)
 		case OPT_CAFILE:
 			openconnect_set_cafile(vpninfo, dup_config_arg());
 			break;
+#ifndef _WIN32
 		case OPT_PIDFILE:
 			pidfile = keep_config_arg();
 			break;
+#endif
 		case OPT_PFS:
 			openconnect_set_pfs(vpninfo, 1);
 			break;
@@ -1932,7 +2016,6 @@ int main(int argc, char **argv)
 		fprintf(stderr, _("Set up UDP failed; using SSL instead\n"));
 	}
 
-	openconnect_get_ip_info(vpninfo, &ip_info, NULL, NULL);
 
 #if !defined(_WIN32) && !defined(__native_client__)
 	if (use_syslog) {
@@ -1941,17 +2024,6 @@ int main(int argc, char **argv)
 	}
 #endif /* !_WIN32 && !__native_client__ */
 
-	ssl_compr = openconnect_get_cstp_compression(vpninfo);
-	udp_compr = openconnect_get_dtls_compression(vpninfo);
-	vpn_progress(vpninfo, PRG_INFO,
-		     _("Connected as %s%s%s, using SSL%s%s, with %s%s%s %s\n"),
-		     ip_info->addr?:"",
-		     (ip_info->netmask6 && ip_info->addr) ? " + " : "",
-		     ip_info->netmask6 ? : "",
-		     ssl_compr ? " + " : "", ssl_compr ? : "",
-		     vpninfo->proto->udp_protocol ? : "UDP", udp_compr ? " + " : "", udp_compr ? : "",
-		     (vpninfo->dtls_state == DTLS_DISABLED || vpninfo->dtls_state == DTLS_NOSECRET ? _("disabled") : _("in progress")));
-
 	if (!vpninfo->vpnc_script) {
 		vpn_progress(vpninfo, PRG_INFO,
 			     _("No --script argument provided; DNS and routing are not configured\n"));
@@ -1959,39 +2031,9 @@ int main(int argc, char **argv)
 			     _("See http://www.infradead.org/openconnect/vpnc-script.html\n"));
 	}
 
-#ifndef _WIN32
-	if (background) {
-		int pid;
-
-		/* Open the pidfile before forking, so we can report errors
-		   more sanely. It's *possible* that we'll fail to write to
-		   it, but very unlikely. */
-		if (pidfile != NULL) {
-			fp = openconnect_fopen_utf8(vpninfo, pidfile, "w");
-			if (!fp) {
-				fprintf(stderr, _("Failed to open '%s' for write: %s\n"),
-					pidfile, strerror(errno));
-				openconnect_vpninfo_free(vpninfo);
-				exit(1);
-			}
-		}
-		if ((pid = fork())) {
-			if (fp) {
-				fprintf(fp, "%d\n", pid);
-				fclose(fp);
-			}
-			vpn_progress(vpninfo, PRG_INFO,
-				     _("Continuing in background; pid %d\n"),
-				     pid);
-			openconnect_vpninfo_free(vpninfo);
-			exit(0);
-		}
-		if (fp)
-			fclose(fp);
-	}
-#endif
 
 	openconnect_set_loglevel(vpninfo, verbose);
+	openconnect_set_setup_tun_handler(vpninfo, fully_up_cb);
 
 	while (1) {
 		ret = openconnect_mainloop(vpninfo, reconnect_timeout, RECONNECT_INTERVAL_MIN);
@@ -2001,8 +2043,10 @@ int main(int argc, char **argv)
 		vpn_progress(vpninfo, PRG_INFO, _("User requested reconnect\n"));
 	}
 
-	if (fp)
+#ifndef _WIN32
+	if (pid_fp)
 		unlink(pidfile);
+#endif
 
  out:
 	switch (ret) {
@@ -2021,6 +2065,10 @@ int main(int argc, char **argv)
 	case -ECONNABORTED:
 		vpn_progress(vpninfo, PRG_INFO, _("User detached from session (SIGHUP); exiting.\n"));
 		ret = 0;
+		break;
+	case -EIO:
+		vpn_progress(vpninfo, PRG_INFO, _("Unrecoverable I/O error; exiting.\n"));
+		ret = 1;
 		break;
 	default:
 		vpn_progress(vpninfo, PRG_ERR, _("Unknown error; exiting.\n"));

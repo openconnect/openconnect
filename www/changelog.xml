@@ -20,6 +20,7 @@
        <li>Support Juniper login forms containing both password and 2FA token (<a href="https://gitlab.com/openconnect/openconnect/-/merge_requests/121">!121</a>)</li>
        <li><i>Explicitly disable 3DES and RC4, unless enabled with <tt>--allow-insecure-crypto</tt> (<a href="https://gitlab.com/openconnect/openconnect/-/merge_requests/114">!114</a>)</i></li>
        <li><i>Add obsolete-server-crypto test (<a href="https://gitlab.com/openconnect/openconnect/-/merge_requests/114">!114</a>)</i></li>
+       <li>Allow protocols to delay tunnel setup and shutdown (<a href="https://gitlab.com/openconnect/openconnect/-/merge_requests/117">!117</a>)</li>
      </ul><br/>
   </li>
   <li><b><a href="ftp://ftp.infradead.org/pub/openconnect/openconnect-8.10.tar.gz">OpenConnect v8.10</a></b>

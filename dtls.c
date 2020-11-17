@@ -287,6 +287,7 @@ int dtls_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable)
 
 	if (vpninfo->dtls_state == DTLS_CONNECTING) {
 		dtls_try_handshake(vpninfo);
+		vpninfo->delay_tunnel_reason = "DTLS MTU detection";
 		return 0;
 	}
 
@@ -712,4 +713,3 @@ void dtls_detect_mtu(struct openconnect_info *vpninfo)
  skip_mtu:
 	free(buf);
 }
-
