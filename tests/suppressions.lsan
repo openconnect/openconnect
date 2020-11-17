@@ -1,0 +1,2 @@
+# reported by glibc
+leak:__vasprintf_internal

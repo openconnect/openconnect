@@ -1921,7 +1921,7 @@ int main(int argc, char **argv)
 	if (!vpnc_script)
 		vpnc_script = xstrdup(default_vpncscript);
 
-	STRDUP(vpninfo->vpnc_script, vpnc_script);
+	vpninfo->vpnc_script = vpnc_script;
 
 	if (vpninfo->dtls_state != DTLS_DISABLED &&
 	    openconnect_setup_dtls(vpninfo, 60)) {
