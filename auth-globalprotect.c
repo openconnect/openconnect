@@ -74,7 +74,7 @@ const char *gpst_os_name(struct openconnect_info *vpninfo)
 static int parse_prelogin_xml(struct openconnect_info *vpninfo, xmlNode *xml_node, void *cb_data)
 {
 	struct login_context *ctx = cb_data;
-	struct oc_auth_form *form = ctx->form;
+	struct oc_auth_form *form = NULL;
 	struct oc_form_opt *opt, *opt2;
 	char *prompt = NULL, *username_label = NULL, *password_label = NULL;
 	char *saml_method = NULL, *saml_path = NULL;
@@ -133,7 +133,6 @@ static int parse_prelogin_xml(struct openconnect_info *vpninfo, xmlNode *xml_nod
 	}
 
 	/* Replace old form */
-	free_auth_form(ctx->form);
 	form = ctx->form = calloc(1, sizeof(*form));
 	if (!form) {
 	nomem:

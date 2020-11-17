@@ -121,10 +121,8 @@ static int decrypt_stoken(struct openconnect_info *vpninfo)
 	while (1) {
 		nuke_opt_values(opts);
 
-		if (!opts[0].type) {
-			/* don't bug the user if there's nothing to enter */
-			ret = 0;
-		} else {
+		/* don't bug the user if there's nothing to enter */
+		if (opts[0].type) {
 			int some_empty = 0, all_empty = 1;
 
 			/* < 0 for error; 1 if cancelled */

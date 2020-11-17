@@ -157,19 +157,16 @@ static void calculate_mtu(struct openconnect_info *vpninfo, int *base_mtu, int *
 static void append_compr_types(struct oc_text_buf *buf, const char *proto, int avail)
 {
 	if (avail) {
-		char sep = ' ';
+		const char sep = ',';
 		buf_append(buf, "X-%s-Accept-Encoding:", proto);
 		if (avail & COMPR_LZ4) {
 			buf_append(buf, "%coc-lz4", sep);
-			sep = ',';
 		}
 		if (avail & COMPR_LZS) {
 			buf_append(buf, "%clzs", sep);
-			sep = ',';
 		}
 		if (avail & COMPR_DEFLATE) {
 			buf_append(buf, "%cdeflate", sep);
-			sep = ',';
 		}
 		buf_append(buf, "\r\n");
 	}
@@ -393,7 +390,7 @@ static int start_cstp_connection(struct openconnect_info *vpninfo)
 		if (!strncmp(buf, "HTTP/1.1 503 ", 13)) {
 			/* "Service Unavailable. Why? */
 			const char *reason = "<unknown>";
-			while ((i = vpninfo->ssl_gets(vpninfo, buf, sizeof(buf)))) {
+			while ((vpninfo->ssl_gets(vpninfo, buf, sizeof(buf)))) {
 				if (!strncmp(buf, "X-Reason: ", 10)) {
 					reason = buf + 10;
 					break;

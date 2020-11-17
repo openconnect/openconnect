@@ -2445,7 +2445,7 @@ static int lock_token(void *tokdata)
 	err = openconnect_set_token_mode(vpninfo, vpninfo->token_mode, file_token);
 	free(file_token);
 
-	return 0;
+	return err;
 }
 
 static int unlock_token(void *tokdata, const char *new_tok)

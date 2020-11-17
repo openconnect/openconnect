@@ -478,8 +478,6 @@ int process_http_response(struct openconnect_info *vpninfo, int connect,
 				     strerror(-ret));
 			goto err;
 		}
-		/* Default error case */
-		ret = -EINVAL;
 
 		/* Empty line ends headers */
 		if (!hdrbuf->pos)
@@ -684,6 +682,7 @@ int process_http_response(struct openconnect_info *vpninfo, int connect,
 			vpn_progress(vpninfo, PRG_ERR,
 				     _("Cannot receive HTTP 1.0 body without closing connection\n"));
 			openconnect_close_https(vpninfo, 0);
+			buf_free(hdrbuf);
 			return -EINVAL;
 		}
 
@@ -764,8 +763,10 @@ int internal_parse_url(const char *url, char **res_proto, char **res_host,
 		if (!*end) {
 			*port_str = 0;
 			port = new_port;
-			if (port <= 0 || port > 0xffff)
+			if (port <= 0 || port > 0xffff) {
+				free(host);
 				return -EINVAL;
+			}
 		}
 	}
 
@@ -1055,7 +1056,7 @@ int do_https_request(struct openconnect_info *vpninfo, const char *method,
 		rq_retry = 1;
 	} else {
 		rq_retry = 0;
-		if ((result = openconnect_open_https(vpninfo))) {
+		if ((openconnect_open_https(vpninfo))) {
 			vpn_progress(vpninfo, PRG_ERR,
 				     _("Failed to open HTTPS connection to %s\n"),
 				     vpninfo->hostname);

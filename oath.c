@@ -132,6 +132,9 @@ static char *parse_hex(const char *tok, int len)
 {
 	unsigned char *data, *p;
 
+	if (len <= 1)
+		return NULL;
+
 	data = malloc((len + 1) / 2);
 	if (!data)
 		return NULL;

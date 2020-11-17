@@ -873,6 +873,8 @@ static int ntlm_manual_challenge(struct openconnect_info *vpninfo, int proxy,
 	int token_len = -EINVAL;
 	int ntlmver;
 
+	memset(hash, 0, sizeof(hash));
+
 	if (!auth_state->challenge)
 		return -EINVAL;
 
