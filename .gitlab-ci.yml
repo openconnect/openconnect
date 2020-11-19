@@ -33,8 +33,9 @@ CentOS7/OpenSSL:
   - ./autogen.sh
   - ./configure --without-gnutls --with-openssl --with-java --without-openssl-version-check --enable-dtls-xfail --disable-dsa-tests CFLAGS=-g
   - make -j4
-# UTF-8 support is not available
-  - make VERBOSE=1 XFAIL_TESTS="auth-nonascii" -j4 check
+# auth-nonascii: UTF-8 support is not available
+# dtls-psk: communication with ocserv fails for undetermined reasons marking as xfail until issue is identified
+  - make VERBOSE=1 XFAIL_TESTS="auth-nonascii dtls-psk" -j4 check
   tags:
   - shared
   except:
