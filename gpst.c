@@ -511,6 +511,12 @@ static int gpst_parse_config_xml(struct openconnect_info *vpninfo, xmlNode *xml_
 				vpn_progress(vpninfo, PRG_DEBUG,
 							 _("Gateway address in config XML (%s) differs from external gateway address (%s).\n"), s, vpninfo->ip_info.gateway_addr);
 			vpninfo->esp_magic = inet_addr(s);
+		} else if (!xmlnode_get_val(xml_node, "connected-gw-ip", &s)) {
+			if (strcmp(s, vpninfo->ip_info.gateway_addr))
+				vpn_progress(vpninfo, PRG_DEBUG, _("Config XML <connected-gw-ip> address (%s) differs from external\n"
+				                                   "gateway address (%s). Please report any this to\n"
+								   "<openconnect-devel@lists.infradead.org>, including any problems\n"
+								   "with ESP or other apparent loss of connectivity or performance.\n"), s, vpninfo->ip_info.gateway_addr);
 		} else if (xmlnode_is_named(xml_node, "dns")) {
 			for (ii=0, member = xml_node->children; member && ii<3; member=member->next)
 				if (!xmlnode_get_val(member, "member", &s))
