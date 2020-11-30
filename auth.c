@@ -1069,11 +1069,6 @@ static int run_csd_script(struct openconnect_info *vpninfo, char *buf, int bufle
 		return -EPERM;
 	}
 
-#ifndef __linux__
-	vpn_progress(vpninfo, PRG_INFO,
-		     _("Trying to run Linux CSD trojan script.\n"));
-#endif
-
 	fname[0] = 0;
 	if (buflen) {
 		struct oc_vpn_option *opt;
@@ -1123,6 +1118,10 @@ static int run_csd_script(struct openconnect_info *vpninfo, char *buf, int bufle
 		close(fd);
 	}
 
+	vpn_progress(vpninfo, PRG_INFO,
+		     _("Trying to run CSD Trojan script '%s'.\n"),
+		     vpninfo->csd_wrapper ?: fname);
+
 	child = fork();
 	if (child == -1) {
 		goto out;
@@ -1145,6 +1144,10 @@ static int run_csd_script(struct openconnect_info *vpninfo, char *buf, int bufle
 				vpn_progress(vpninfo, PRG_ERR,
 					     _("Authentication may fail. If your script is not returning zero, fix it.\n"
 					       "Future versions of openconnect will abort on this error.\n"));
+			} else {
+				vpn_progress(vpninfo, PRG_INFO,
+					     _("CSD script '%s' completed successfully.\n"),
+					     vpninfo->csd_wrapper ?: fname);
 			}
 
 			free(vpninfo->urlpath);
@@ -1424,7 +1427,10 @@ newgroup:
 					result = -EINVAL;
 					goto out;
 				}
-			}
+			} else
+				vpn_progress(vpninfo, PRG_INFO,
+					     _("Fetched CSD stub for %s platform (size is %d bytes).\n"),
+					     vpninfo->platname, buflen);
 		}
 
 		/* This is the CSD stub script, which we now need to run */

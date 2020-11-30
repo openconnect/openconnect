@@ -955,6 +955,11 @@ static int run_hip_script(struct openconnect_info *vpninfo)
 		     _("Error: Running the 'HIP Report' script on this platform is not yet implemented.\n"));
 	return -EPERM;
 #else
+
+	vpn_progress(vpninfo, PRG_INFO,
+		     _("Trying to run HIP Trojan script '%s'.\n"),
+		     vpninfo->csd_wrapper);
+
 #ifdef __linux__
 	if (pipe2(pipefd, O_CLOEXEC))
 #endif
@@ -993,6 +998,10 @@ static int run_hip_script(struct openconnect_info *vpninfo)
 						 vpninfo->csd_wrapper, WEXITSTATUS(status));
 			ret = -EINVAL;
 		} else {
+			vpn_progress(vpninfo, PRG_INFO,
+				     _("HIP script '%s' completed successfully (report is %d bytes).\n"),
+				     vpninfo->csd_wrapper, report_buf->pos);
+
 			ret = check_or_submit_hip_report(vpninfo, report_buf->data);
 			if (ret < 0)
 				vpn_progress(vpninfo, PRG_ERR, _("HIP report submission failed.\n"));
