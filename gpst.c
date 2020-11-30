@@ -459,7 +459,7 @@ static int gpst_parse_config_xml(struct openconnect_info *vpninfo, xmlNode *xml_
 	char *s = NULL, *deferred_netmask = NULL;
 	struct oc_split_include *inc;
 	int split_route_is_default_route = 0;
-	int n_dns = 0, got_ipv6 = 0;
+	int n_dns = 0, got_ipv6 = 0, got_esp = 0;
 	int ii;
 
 	if (!xml_node || !xmlnode_is_named(xml_node, "response"))
@@ -601,9 +601,12 @@ static int gpst_parse_config_xml(struct openconnect_info *vpninfo, xmlNode *xml_
 					else if (!xmlnode_get_val(member, "ipsec-mode", &s) && strcmp(s, "esp-tunnel"))
 						vpn_progress(vpninfo, PRG_ERR, _("GlobalProtect config sent ipsec-mode=%s (expected esp-tunnel)\n"), s);
 				}
-				if (openconnect_setup_esp_keys(vpninfo, 0))
+				if (vpninfo->esp_enc > 0 && vpninfo->esp_hmac > 0 && vpninfo->enc_key_len > 0 && vpninfo->hmac_key_len > 0)
+					vpn_progress(vpninfo, PRG_ERR, "Server's ESP configuration is incomplete or uses unknown algorithms.\n");
+				else if (openconnect_setup_esp_keys(vpninfo, 0))
 					vpn_progress(vpninfo, PRG_ERR, "Failed to setup ESP keys.\n");
 				else {
+					got_esp = 1;
 					/* prevent race condition between esp_mainloop() and gpst_mainloop() timers */
 					vpninfo->dtls_times.last_rekey = time(&vpninfo->new_dtls_started);
 					vpninfo->delay_tunnel_reason = "awaiting GPST ESP connection";
@@ -674,6 +677,11 @@ static int gpst_parse_config_xml(struct openconnect_info *vpninfo, xmlNode *xml_
 		vpn_progress(vpninfo, PRG_ERR, _("GlobalProtect config includes IPv6, but this build does not support\n"
 						 "it IPv6 due to a lack of information on how GlobalProtect configures it.\n"
 						 "Please report this to <openconnect-devel@lists.infradead.org>.\n"));
+#ifdef HAVE_ESP
+	if (!got_esp)
+		vpn_progress(vpninfo, vpninfo->dtls_state != DTLS_DISABLED ? PRG_ERR : PRG_DEBUG,
+			     _("Did not receive ESP keys in GlobalProtect config; tunnel will be TLS only. "));
+#endif
 
 	free(s);
 	return 0;
