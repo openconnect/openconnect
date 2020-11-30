@@ -328,6 +328,9 @@ static int parse_login_xml(struct openconnect_info *vpninfo, xmlNode *xml_node, 
 		while (xml_node && xml_node->type != XML_ELEMENT_NODE)
 			xml_node = xml_node->next;
 
+		/* XX: argument 0 is unknown so we reuse this for extra arguments */
+		arg = &gp_login_args[(argn < gp_login_nargs) ? argn : 0];
+
 		if (!xml_node)
 			value = NULL;
 		else if (!xmlnode_get_val(xml_node, "argument", &value)) {
@@ -347,9 +350,6 @@ static int parse_login_xml(struct openconnect_info *vpninfo, xmlNode *xml_node, 
 			xml_node = xml_node->next;
 		} else
 			goto err_out;
-
-		/* XX: argument 0 is unknown so we reuse this for extra arguments */
-		arg = &gp_login_args[(argn < gp_login_nargs) ? argn : 0];
 
 		if (arg->unknown && value) {
 			unknown_args++;
