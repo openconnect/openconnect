@@ -139,7 +139,7 @@ int openconnect_random(void *bytes, int len)
 	return 0;
 }
 
-/* Helper functions for reading/writing lines over SSL.
+/* Helper functions for reading/writing lines over TLS/DTLS.
    We could use cURL for the HTTP stuff, but it's overkill */
 
 static int _openconnect_openssl_write(SSL *ssl, int fd, struct openconnect_info *vpninfo, char *buf, size_t len)
@@ -164,14 +164,14 @@ static int _openconnect_openssl_write(SSL *ssl, int fd, struct openconnect_info 
 			else if (err == SSL_ERROR_WANT_WRITE)
 				FD_SET(fd, &wr_set);
 			else {
-				vpn_progress(vpninfo, PRG_ERR, _("Failed to write to SSL socket\n"));
+				vpn_progress(vpninfo, PRG_ERR, _("Failed to write to TLS/DTLS socket\n"));
 				openconnect_report_ssl_errors(vpninfo);
 				return -EIO;
 			}
 			cmd_fd_set(vpninfo, &rd_set, &maxfd);
 			select(maxfd + 1, &rd_set, &wr_set, NULL, NULL);
 			if (is_cancel_pending(vpninfo, &rd_set)) {
-				vpn_progress(vpninfo, PRG_ERR, _("SSL write cancelled\n"));
+				vpn_progress(vpninfo, PRG_ERR, _("TLS/DTLS write cancelled\n"));
 				return -EINTR;
 			}
 		}
@@ -214,14 +214,14 @@ static int _openconnect_openssl_read(SSL *ssl, int fd, struct openconnect_info *
 		else if (err == SSL_ERROR_WANT_WRITE)
 			FD_SET(fd, &wr_set);
 		else {
-			vpn_progress(vpninfo, PRG_ERR, _("Failed to read from SSL socket\n"));
+			vpn_progress(vpninfo, PRG_ERR, _("Failed to read from TLS/DTLS socket\n"));
 			openconnect_report_ssl_errors(vpninfo);
 			return -EIO;
 		}
 		cmd_fd_set(vpninfo, &rd_set, &maxfd);
 		ret = select(maxfd + 1, &rd_set, &wr_set, NULL, tv);
 		if (is_cancel_pending(vpninfo, &rd_set)) {
-			vpn_progress(vpninfo, PRG_ERR, _("SSL read cancelled\n"));
+			vpn_progress(vpninfo, PRG_ERR, _("TLS/DTLS read cancelled\n"));
 			return -EINTR;
 		}
 
@@ -280,7 +280,7 @@ static int openconnect_openssl_gets(struct openconnect_info *vpninfo, char *buf,
 			else if (ret == SSL_ERROR_WANT_WRITE)
 				FD_SET(vpninfo->ssl_fd, &wr_set);
 			else {
-				vpn_progress(vpninfo, PRG_ERR, _("Failed to read from SSL socket\n"));
+				vpn_progress(vpninfo, PRG_ERR, _("Failed to read from TLS/DTLS socket\n"));
 				openconnect_report_ssl_errors(vpninfo);
 				ret = -EIO;
 				break;
@@ -288,7 +288,7 @@ static int openconnect_openssl_gets(struct openconnect_info *vpninfo, char *buf,
 			cmd_fd_set(vpninfo, &rd_set, &maxfd);
 			select(maxfd + 1, &rd_set, &wr_set, NULL, NULL);
 			if (is_cancel_pending(vpninfo, &rd_set)) {
-				vpn_progress(vpninfo, PRG_ERR, _("SSL read cancelled\n"));
+				vpn_progress(vpninfo, PRG_ERR, _("TLS/DTLS read cancelled\n"));
 				ret = -EINTR;
 				break;
 			}

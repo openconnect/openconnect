@@ -86,7 +86,7 @@ int can_enable_insecure_crypto()
 	return 0;
 }
 
-/* Helper functions for reading/writing lines over SSL. */
+/* Helper functions for reading/writing lines over TLS/DTLS. */
 static int _openconnect_gnutls_write(gnutls_session_t ses, int fd, struct openconnect_info *vpninfo, char *buf, size_t len)
 {
 	size_t orig_len = len;
@@ -115,11 +115,11 @@ static int _openconnect_gnutls_write(gnutls_session_t ses, int fd, struct openco
 				return -EIO;
 			}
 			if (is_cancel_pending(vpninfo, &rd_set)) {
-				vpn_progress(vpninfo, PRG_ERR, _("SSL write cancelled\n"));
+				vpn_progress(vpninfo, PRG_ERR, _("TLS/DTLS write cancelled\n"));
 				return -EINTR;
 			}
 		} else {
-			vpn_progress(vpninfo, PRG_ERR, _("Failed to write to SSL socket: %s\n"),
+			vpn_progress(vpninfo, PRG_ERR, _("Failed to write to TLS/DTLS socket: %s\n"),
 				     gnutls_strerror(done));
 			return -EIO;
 		}
@@ -165,12 +165,12 @@ static int _openconnect_gnutls_read(gnutls_session_t ses, int fd, struct opencon
 			cmd_fd_set(vpninfo, &rd_set, &maxfd);
 			ret = select(maxfd + 1, &rd_set, &wr_set, NULL, tv);
 			if (ret < 0 && errno != EINTR) {
-				vpn_perror(vpninfo, _("Failed select() for TLS"));
+				vpn_perror(vpninfo, _("Failed select() for TLS/DTLS"));
 				return -EIO;
 			}
 
 			if (is_cancel_pending(vpninfo, &rd_set)) {
-				vpn_progress(vpninfo, PRG_ERR, _("SSL read cancelled\n"));
+				vpn_progress(vpninfo, PRG_ERR, _("TLS/DTLS read cancelled\n"));
 				done = -EINTR;
 				goto cleanup;
 			}
@@ -183,7 +183,7 @@ static int _openconnect_gnutls_read(gnutls_session_t ses, int fd, struct opencon
 			/* We've seen this with HTTP 1.0 responses followed by abrupt
 			   socket closure and no clean SSL shutdown.
 			   https://bugs.launchpad.net/bugs/1225276 */
-			vpn_progress(vpninfo, PRG_DEBUG, _("SSL socket closed uncleanly\n"));
+			vpn_progress(vpninfo, PRG_DEBUG, _("TLS/DTLS socket closed uncleanly\n"));
 			done = 0;
 			goto cleanup;
 		} else if (done == GNUTLS_E_REHANDSHAKE) {
@@ -193,7 +193,7 @@ static int _openconnect_gnutls_read(gnutls_session_t ses, int fd, struct opencon
 				goto cleanup;
 			}
 		} else {
-			vpn_progress(vpninfo, PRG_ERR, _("Failed to read from SSL socket: %s\n"),
+			vpn_progress(vpninfo, PRG_ERR, _("Failed to read from TLS/DTLS socket: %s\n"),
 				     gnutls_strerror(done));
 			if (done == GNUTLS_E_TIMEDOUT) {
 				done = -ETIMEDOUT;
@@ -266,7 +266,7 @@ static int openconnect_gnutls_gets(struct openconnect_info *vpninfo, char *buf, 
 				return -EIO;
 			}
 			if (is_cancel_pending(vpninfo, &rd_set)) {
-				vpn_progress(vpninfo, PRG_ERR, _("SSL read cancelled\n"));
+				vpn_progress(vpninfo, PRG_ERR, _("TLS/DTLS read cancelled\n"));
 				ret = -EINTR;
 				break;
 			}
@@ -275,7 +275,7 @@ static int openconnect_gnutls_gets(struct openconnect_info *vpninfo, char *buf, 
 			if (ret)
 				return ret;
 		} else {
-			vpn_progress(vpninfo, PRG_ERR, _("Failed to read from SSL socket: %s\n"),
+			vpn_progress(vpninfo, PRG_ERR, _("Failed to read from TLS/DTLS socket: %s\n"),
 				     gnutls_strerror(ret));
 			ret = -EIO;
 			break;
