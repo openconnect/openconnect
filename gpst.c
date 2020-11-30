@@ -459,6 +459,7 @@ static int gpst_parse_config_xml(struct openconnect_info *vpninfo, xmlNode *xml_
 	char *s = NULL, *deferred_netmask = NULL;
 	struct oc_split_include *inc;
 	int split_route_is_default_route = 0;
+	int n_dns = 0, got_ipv6 = 0;
 	int ii;
 
 	if (!xml_node || !xmlnode_is_named(xml_node, "response"))
@@ -522,10 +523,21 @@ static int gpst_parse_config_xml(struct openconnect_info *vpninfo, xmlNode *xml_
 				                                   "gateway address (%s). Please report any this to\n"
 								   "<openconnect-devel@lists.infradead.org>, including any problems\n"
 								   "with ESP or other apparent loss of connectivity or performance.\n"), s, vpninfo->ip_info.gateway_addr);
+		} else if (xmlnode_is_named(xml_node, "dns-v6")) {
+			got_ipv6 |= 1;
+			goto handle_dns;
 		} else if (xmlnode_is_named(xml_node, "dns")) {
-			for (ii=0, member = xml_node->children; member && ii<3; member=member->next)
-				if (!xmlnode_get_val(member, "member", &s))
-					vpninfo->ip_info.dns[ii++] = add_option(vpninfo, "DNS", &s);
+		handle_dns:
+			for (member = xml_node->children; member && n_dns<3; member=member->next) {
+				if (!xmlnode_get_val(member, "member", &s)) {
+					for (ii=0; ii<n_dns; ii++)
+						/* XX: frequent duplicates between <dns> and <dns-v6> */
+						if (!strcmp(s, vpninfo->ip_info.dns[ii]))
+							break;
+					if (ii==n_dns)
+						vpninfo->ip_info.dns[n_dns++] = add_option(vpninfo, "DNS", &s);
+				}
+			}
 		} else if (xmlnode_is_named(xml_node, "wins")) {
 			for (ii=0, member = xml_node->children; member && ii<3; member=member->next)
 				if (!xmlnode_get_val(member, "member", &s))
@@ -540,10 +552,14 @@ static int gpst_parse_config_xml(struct openconnect_info *vpninfo, xmlNode *xml_
 				vpninfo->ip_info.domain = add_option(vpninfo, "search", &domains->data);
 			}
 			buf_free(domains);
+		} else if (xmlnode_is_named(xml_node, "access-routes-v6") || xmlnode_is_named(xml_node, "exclude-access-routes-v6")) {
+			got_ipv6 |= 1;
+			goto handle_routes;
 		} else if (xmlnode_is_named(xml_node, "access-routes") || xmlnode_is_named(xml_node, "exclude-access-routes")) {
+		handle_routes:
 			for (member = xml_node->children; member; member=member->next) {
 				if (!xmlnode_get_val(member, "member", &s)) {
-					int is_inc = xmlnode_is_named(xml_node, "access-routes");
+					int is_inc = (xml_node->name[0] == 'a');
 
 					/* XX: if this is a default route jammed into the split-include
 					 * routes, just mark it for now.
@@ -611,12 +627,10 @@ static int gpst_parse_config_xml(struct openconnect_info *vpninfo, xmlNode *xml_
 			 */
 			free(s);
 			s = (char *)xmlNodeGetContent(xml_node);
-			if (strchr((char *)xml_node->name, '6'))
-				vpn_progress(vpninfo, PRG_ERR, _("Potential IPv6-related GlobalProtect config tag <%s>: %s\n"
-				                                 "This build does not support GlobalProtect IPv6 due to a lack of\n"
-				                                 "of information on how it is configured. Please report this\n"
-				                                 "to <openconnect-devel@lists.infradead.org>.\n"), xml_node->name, s);
-			else
+			if (strchr((char *)xml_node->name, '6')) {
+				got_ipv6 |= 2;
+				vpn_progress(vpninfo, PRG_ERR, _("Potential IPv6-related GlobalProtect config tag <%s>: %s\n"), xml_node->name, s);
+			} else
 				vpn_progress(vpninfo, PRG_DEBUG, _("Unknown GlobalProtect config tag <%s>: %s\n"), xml_node->name, s);
 		}
 	}
@@ -654,6 +668,12 @@ static int gpst_parse_config_xml(struct openconnect_info *vpninfo, xmlNode *xml_
 	if (!vpninfo->ssl_times.dpd)
 		vpninfo->ssl_times.dpd = 10;
 	vpninfo->ssl_times.keepalive = vpninfo->esp_ssl_fallback = vpninfo->ssl_times.dpd;
+
+	/* Warn about IPv6 config, if present, and ESP config, if absent */
+	if (got_ipv6)
+		vpn_progress(vpninfo, PRG_ERR, _("GlobalProtect config includes IPv6, but this build does not support\n"
+						 "it IPv6 due to a lack of information on how GlobalProtect configures it.\n"
+						 "Please report this to <openconnect-devel@lists.infradead.org>.\n"));
 
 	free(s);
 	return 0;
