@@ -757,6 +757,9 @@ static void handle_signal(int sig)
 		cmd = OC_CMD_CANCEL;
 #endif
 		break;
+	case SIGUSR1:
+		cmd = OC_CMD_STATS;
+		break;
 	case SIGUSR2:
 	default:
 		cmd = OC_CMD_PAUSE;
@@ -1391,9 +1394,11 @@ static int autocomplete(int argc, char **argv)
 static void print_connection_info(struct openconnect_info *vpninfo)
 {
 	const struct oc_ip_info *ip_info;
-	const char *ssl_compr, *udp_compr, *dtls_state;
+	const char *ssl_compr, *udp_compr, *dtls_state, *ssl_state;
 
 	openconnect_get_ip_info(vpninfo, &ip_info, NULL, NULL);
+
+	ssl_state = vpninfo->ssl_fd == -1 ? _("disconnected") : _("connected");
 
 	switch (vpninfo->dtls_state) {
 	case DTLS_NOSECRET:
@@ -1413,13 +1418,47 @@ static void print_connection_info(struct openconnect_info *vpninfo)
 	ssl_compr = openconnect_get_cstp_compression(vpninfo);
 	udp_compr = openconnect_get_dtls_compression(vpninfo);
 	vpn_progress(vpninfo, PRG_INFO,
-		     _("Connected as %s%s%s, using SSL%s%s, with %s%s%s %s\n"),
+		     _("Configured as %s%s%s, with SSL%s%s %s and %s%s%s %s\n"),
 		     ip_info->addr?:"",
 		     (ip_info->netmask6 && ip_info->addr) ? " + " : "",
 		     ip_info->netmask6 ? : "",
 		     ssl_compr ? " + " : "", ssl_compr ? : "",
+		     ssl_state,
 		     vpninfo->proto->udp_protocol ? : "UDP", udp_compr ? " + " : "", udp_compr ? : "",
 		     dtls_state);
+}
+
+static void print_connection_stats(void *_vpninfo, const struct oc_stats *stats)
+{
+	struct openconnect_info *vpninfo = _vpninfo;
+	int saved_loglevel = vpninfo->verbose;
+
+	/* XX: print even if loglevel would otherwise suppress */
+	openconnect_set_loglevel(vpninfo, PRG_INFO);
+
+	print_connection_info(vpninfo);
+	vpn_progress(vpninfo, PRG_INFO,
+		     _("RX: %ld packets (%ld B); TX: %ld packets (%ld B)\n"),
+		       stats->rx_pkts, stats->rx_bytes, stats->tx_pkts, stats->tx_bytes);
+
+	if (vpninfo->ssl_fd != -1)
+		vpn_progress(vpninfo, PRG_INFO, _("SSL ciphersuite: %s\n"), openconnect_get_cstp_cipher(vpninfo));
+	if (vpninfo->dtls_state == DTLS_CONNECTED)
+		vpn_progress(vpninfo, PRG_INFO, _("%s ciphersuite: %s\n"),
+		     vpninfo->proto->udp_protocol ? : "UDP", openconnect_get_dtls_cipher(vpninfo));
+	if (vpninfo->ssl_times.last_rekey && vpninfo->ssl_times.rekey)
+		vpn_progress(vpninfo, PRG_INFO, _("Next SSL rekey in %ld seconds\n"),
+			     time(NULL) - vpninfo->ssl_times.last_rekey + vpninfo->ssl_times.rekey);
+	if (vpninfo->dtls_times.last_rekey && vpninfo->dtls_times.rekey)
+		vpn_progress(vpninfo, PRG_INFO, _("Next %s rekey in %ld seconds\n"),
+			     vpninfo->proto->udp_protocol ? : "UDP",
+			     time(NULL) - vpninfo->ssl_times.last_rekey + vpninfo->ssl_times.rekey);
+	if (vpninfo->trojan_interval && vpninfo->last_trojan)
+		vpn_progress(vpninfo, PRG_INFO, _("Next Trojan invocation in %ld seconds\n"),
+			     time(NULL) - vpninfo->last_trojan + vpninfo->trojan_interval);
+
+	/* XX: restore loglevel */
+	openconnect_set_loglevel(vpninfo, saved_loglevel);
 }
 
 #ifndef _WIN32
@@ -1950,6 +1989,7 @@ int main(int argc, char **argv)
 	sigaction(SIGTERM, &sa, NULL);
 	sigaction(SIGINT, &sa, NULL);
 	sigaction(SIGHUP, &sa, NULL);
+	sigaction(SIGUSR1, &sa, NULL);
 	sigaction(SIGUSR2, &sa, NULL);
 #endif /* !_WIN32 */
 
@@ -2045,6 +2085,7 @@ int main(int argc, char **argv)
 
 	openconnect_set_loglevel(vpninfo, verbose);
 	openconnect_set_setup_tun_handler(vpninfo, fully_up_cb);
+	openconnect_set_stats_handler(vpninfo, print_connection_stats);
 
 	while (1) {
 		ret = openconnect_mainloop(vpninfo, reconnect_timeout, RECONNECT_INTERVAL_MIN);
