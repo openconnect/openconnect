@@ -404,6 +404,10 @@ static int tncc_preauth(struct openconnect_info *vpninfo)
 		return -EINVAL;
 	}
 
+	vpn_progress(vpninfo, PRG_INFO,
+		     _("Trying to run TNCC/Host Checker Trojan script '%s'.\n"),
+		     vpninfo->csd_wrapper);
+
 #ifdef SOCK_CLOEXEC
 	if (socketpair(AF_UNIX, SOCK_STREAM | SOCK_CLOEXEC, 0, sockfd))
 #endif
