@@ -2094,7 +2094,10 @@ int main(int argc, char **argv)
 		ret = 1;
 		break;
 	default:
-		vpn_progress(vpninfo, PRG_ERR, _("Unknown error; exiting.\n"));
+		if (vpninfo->quit_reason)
+			vpn_progress(vpninfo, PRG_ERR, "%s; exiting\n", vpninfo->quit_reason);
+		else
+			vpn_progress(vpninfo, PRG_ERR, _("Unknown error; exiting.\n"));
 		ret = 1;
 		break;
 	}
