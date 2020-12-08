@@ -22,6 +22,7 @@
        <li><i>Add obsolete-server-crypto test (<a href="https://gitlab.com/openconnect/openconnect/-/merge_requests/114">!114</a>)</i></li>
        <li>Allow protocols to delay tunnel setup and shutdown (<a href="https://gitlab.com/openconnect/openconnect/-/merge_requests/117">!117</a>)</li>
        <li>Incomplete, speculative support for GlobalProtect IPv6 (<a href="https://gitlab.com/openconnect/openconnect/-/merge_requests/155">!155</a>; previous work in <a href="https://gitlab.com/openconnect/openconnect/commit/d6db0ec03394234d41fbec7ffc794ceeb486a8f0">d6db0ec</a>)</li>
+       <li>SIGUSR1 causes OpenConnect to log detailed connection information and statistics (<a href="https://gitlab.com/openconnect/openconnect/-/merge_requests/154">!154</a>)</li>
      </ul><br/>
   </li>
   <li><b><a href="ftp://ftp.infradead.org/pub/openconnect/openconnect-8.10.tar.gz">OpenConnect v8.10</a></b>
