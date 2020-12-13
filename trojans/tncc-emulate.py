@@ -33,8 +33,13 @@
 # https://github.com/russdill/juniper-vpn-py/blame/master/README.host_checker):
 #
 # TNCC_DEVICE_ID: May need to be overriden to match a known value from a computer
-#   running the official Windows client software (obtained from the registry key
+#   running the official client software (on Windows, obtained from the registry key
 #   \HKEY_CURRENT_USER\Software\Juniper Networks\Device Id)
+#
+# TNCC_USER_AGENT: May need to be overriden to match a known value from a computer
+#   running the official Windows client software. For historical reasons, the default
+#   value is 'Neoteris NC Http'; the value 'DSClient; PulseLinux' is known to be sent
+#   by the official Pulse Linux client.
 #
 # TNCC_FUNK: Set TNCC_FUNK=1 to force the use of client machine identification
 #   (known as "funk" to Juniper). This identification will include host platform,
@@ -270,7 +275,7 @@ class x509cert(object):
         self.subject = self.decode_names(tbs['subject'])
 
 class tncc(object):
-    def __init__(self, vpn_host, device_id=None, funk=None, platform=None, hostname=None, mac_addrs=[], certs=[], interval=None):
+    def __init__(self, vpn_host, device_id=None, funk=None, platform=None, hostname=None, mac_addrs=[], certs=[], interval=None, user_agent=None):
         self.vpn_host = vpn_host
         self.path = '/dana-na/'
 
@@ -304,7 +309,7 @@ class tncc(object):
             self.br.set_debug_redirects(True)
             self.br.set_debug_responses(True)
 
-        self.user_agent = 'Neoteris HC Http'
+        self.user_agent = user_agent
         self.br.addheaders = [('User-agent', self.user_agent)]
 
     def find_cookie(self, name):
@@ -636,6 +641,8 @@ if __name__ == "__main__":
 
     platform = os.environ.get('TNCC_PLATFORM', platform.system() + ' ' + platform.release())
 
+    user_agent = os.environ.get('TNCC_USER_AGENT', 'Neoteris HC Http')
+
     if 'TNCC_HWADDR' in os.environ:
         mac_addrs = [n.strip() for n in os.environ['TNCC_HWADDR'].split(',')]
     else:
@@ -685,7 +692,7 @@ if __name__ == "__main__":
     # \HKEY_CURRENT_USER\Software\Juniper Networks\Device Id
     device_id = os.environ.get('TNCC_DEVICE_ID')
 
-    t = tncc(vpn_host, device_id, funk, platform, hostname, mac_addrs, certs, interval)
+    t = tncc(vpn_host, device_id, funk, platform, hostname, mac_addrs, certs, interval, user_agent)
     sock = socket.fromfd(0, socket.AF_UNIX, socket.SOCK_SEQPACKET)
     server = tncc_server(sock, t)
     while True:
