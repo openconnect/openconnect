@@ -112,6 +112,7 @@ OPENCONNECT_5_7 {
  global:
 	openconnect_set_cookie;
 	openconnect_set_allow_insecure_crypto;
+	openconnect_get_auth_expiration;
 } OPENCONNECT_5_6;
 
 OPENCONNECT_PRIVATE {

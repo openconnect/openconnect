@@ -17,6 +17,7 @@ package com.example;
 
 import java.io.*;
 import java.util.*;
+import java.time.Instant;
 import org.infradead.libopenconnect.LibOpenConnect;
 
 public final class LibTest {
@@ -279,6 +280,8 @@ public final class LibTest {
 
 		int idleTimeout = lib.getIdleTimeout();
 		System.out.println("Idle Timeout: " + idleTimeout + " seconds");
+		Instant authExpiration = lib.getAuthExpiration();
+		System.out.println("Auth Expiration: " + authExpiration.toString());
 		printIPInfo(lib.getIPInfo());
 
 		if (lib.setupDTLS(60) != 0)

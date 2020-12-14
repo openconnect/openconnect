@@ -39,6 +39,7 @@ extern "C" {
  * API version 5.7:
  *  - Add openconnect_set_cookie()
  *  - Add openconnect_set_allow_insecure_crypto()
+ *  - Add openconnect_get_auth_expiration()
  *
  * API version 5.6 (v8.06; 2020-03-31):
  *  - Add openconnect_set_trojan_interval()
@@ -532,6 +533,7 @@ void openconnect_set_reqmtu(struct openconnect_info *, int reqmtu);
 void openconnect_set_dpd(struct openconnect_info *, int min_seconds);
 void openconnect_set_trojan_interval(struct openconnect_info *, int seconds);
 int openconnect_get_idle_timeout(struct openconnect_info *);
+time_t openconnect_get_auth_expiration(struct openconnect_info *);
 
 /* The returned structures are owned by the library and may be freed/replaced
    due to rekey or reconnect. Assume that once the mainloop starts, the

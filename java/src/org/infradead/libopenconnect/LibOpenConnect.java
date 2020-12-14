@@ -17,6 +17,7 @@ package org.infradead.libopenconnect;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.time.Instant;
 
 public abstract class LibOpenConnect {
 
@@ -166,6 +167,7 @@ public abstract class LibOpenConnect {
 	public synchronized native String getDTLSCompression();
 	public synchronized native String getProtocol();
 	public synchronized native int getIdleTimeout();
+	public synchronized native Instant getAuthExpiration();
 
 	/* certificate info */
 
