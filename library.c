@@ -1080,7 +1080,7 @@ const char *openconnect_get_dtls_cipher(struct openconnect_info *vpninfo)
 	 * one is enabled. */
 	if (vpninfo->dtls_cipher_desc == NULL) {
 #if defined(OPENCONNECT_GNUTLS)
-        vpninfo->dtls_cipher_desc = get_gnutls_cipher(vpninfo->dtls_ssl);
+		vpninfo->dtls_cipher_desc = get_gnutls_cipher(vpninfo->dtls_ssl);
 #else
 		if (asprintf(&vpninfo->dtls_cipher_desc, "%s-%s",
 		             SSL_get_version(vpninfo->dtls_ssl), SSL_get_cipher_name(vpninfo->dtls_ssl)) < 0)

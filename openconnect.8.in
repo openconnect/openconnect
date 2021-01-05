@@ -226,7 +226,7 @@ Use
 for tunnel interface
 .TP
 .B \-l,\-\-syslog
-Use syslog for progress messages
+After tunnel is brought up, use syslog for further progress messages
 .TP
 .B \-\-timestamp
 Prepend a timestamp to each progress message
@@ -606,6 +606,9 @@ gateway, and running the vpnc\-script to restore the network configuration.
 disconnects from the gateway and runs the vpnc\-script, but does not log the
 session off; this allows for reconnection later using
 .BR \-\-cookie .
+.TP
+.B SIGUSR1
+writes progress message with detailed connection information and statistics.
 .TP
 .B SIGUSR2
 forces an immediate disconnection and reconnection; this can be used to
