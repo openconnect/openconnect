@@ -82,6 +82,7 @@ static int verbose = PRG_INFO;
 static int timestamp;
 #ifndef _WIN32
 static int background;
+static int use_syslog = 0;
 static FILE *pid_fp = NULL;
 static char *pidfile = NULL;
 #endif
@@ -1506,7 +1507,14 @@ static void fully_up_cb(void *_vpninfo) {
 #ifndef _WIN32
 	if (background)
 		pid_fp = background_self(vpninfo, pidfile);
-#endif
+
+#ifndef __native_client__
+	if (use_syslog) {
+		openlog("openconnect", LOG_PID, LOG_DAEMON);
+		vpninfo->progress = syslog_progress;
+	}
+#endif /* !__native_client__ */
+#endif /* !_WIN32 */
 }
 
 int main(int argc, char **argv)
@@ -1531,7 +1539,6 @@ int main(int argc, char **argv)
 #ifndef _WIN32
 	struct sigaction sa;
 	struct utsname utsbuf;
-	int use_syslog = 0;
 #endif
 
 #ifdef ENABLE_NLS
@@ -2067,13 +2074,6 @@ int main(int argc, char **argv)
 		fprintf(stderr, _("Set up UDP failed; using SSL instead\n"));
 	}
 
-
-#if !defined(_WIN32) && !defined(__native_client__)
-	if (use_syslog) {
-		openlog("openconnect", LOG_PID, LOG_DAEMON);
-		vpninfo->progress = syslog_progress;
-	}
-#endif /* !_WIN32 && !__native_client__ */
 
 	if (!vpninfo->vpnc_script) {
 		vpn_progress(vpninfo, PRG_INFO,

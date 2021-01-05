@@ -226,7 +226,7 @@ Use
 for tunnel interface
 .TP
 .B \-l,\-\-syslog
-Use syslog for progress messages
+After tunnel is brought up, use syslog for further progress messages
 .TP
 .B \-\-timestamp
 Prepend a timestamp to each progress message
