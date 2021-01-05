@@ -50,8 +50,11 @@ the <tt>trojans/</tt> subdirectory:</p>
   <li><p><tt>tncc-emulate.py</tt>: This Python 3.x script does <b>not</b> actually run the <tt>tncc.jar</tt> binary.
   Instead, it <i>emulates</i> the behaviour of the <tt>tncc.jar</tt> binary, rather than actually
   executing it. Because this script does not actually execute a server-provided binary, security concerns are greatly
-  alleviated. However, it may require customization to work with VPNs that have modified
-  the behaviour of their Host Checker binaries in some way; consult its source code for details.</p>
+  alleviated.</p>
+
+  <p>It may require configuration or customization to work with VPNs that have modified
+  the behaviour of their Host Checker binaries in some way; consult its source code for details, starting with the
+  list of environment variables that may be set to overriden some of the data that it sends to the server.</p>
 
   <p>This script is based entirely on <a href="https://github.com/russdill/juniper-vpn-py"><tt>tncc.py</tt>
   from russdill/juniper-vpn-py on GitHub</a>.)</p></li>
