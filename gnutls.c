@@ -584,7 +584,8 @@ static int assign_privkey(struct openconnect_info *vpninfo,
 			  uint8_t *free_certs)
 {
 	gnutls_pcert_st *pcerts = gnutls_calloc(nr_certs, sizeof(*pcerts));
-	int i, err;
+	unsigned int i;
+	int err;
 
 	if (!pcerts)
 		return GNUTLS_E_MEMORY_ERROR;
@@ -608,8 +609,8 @@ static int assign_privkey(struct openconnect_info *vpninfo,
 	free_pcerts:
 		for (i = 0 ; i < nr_certs; i++)
 			gnutls_pcert_deinit(pcerts + i);
-		free(pcerts);
 	}
+	free(pcerts);
 	return err;
 }
 
