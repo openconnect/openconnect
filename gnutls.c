@@ -1492,7 +1492,7 @@ static int load_certificate(struct openconnect_info *vpninfo)
 	   match. So sign some dummy data and then check the signature against each
 	   of the available certificates until we find the right one. */
 	if (pkey) {
-		unsigned i;
+		unsigned i, j;
 		gnutls_digest_algorithm_t dig;
 
 		/* The TPM code may have already signed it, to test authorisation. We
@@ -1528,11 +1528,11 @@ static int load_certificate(struct openconnect_info *vpninfo)
 			}
 
 			/* If extra_certs[] is NULL, we have one candidate in 'cert' to check. */
-			for (i = 0; i < (extra_certs ? nr_extra_certs : 1); i++) {
+			for (j = 0; j < (extra_certs ? nr_extra_certs : 1); j++) {
 				gnutls_pubkey_t pubkey;
 
 				gnutls_pubkey_init(&pubkey);
-				err = gnutls_pubkey_import_x509(pubkey, extra_certs ? extra_certs[i] : cert, 0);
+				err = gnutls_pubkey_import_x509(pubkey, extra_certs ? extra_certs[j] : cert, 0);
 				if (err) {
 					vpn_progress(vpninfo, PRG_ERR,
 						     _("Error validating signature against certificate: %s\n"),
@@ -1546,8 +1546,8 @@ static int load_certificate(struct openconnect_info *vpninfo)
 
 				if (err >= 0) {
 					if (extra_certs) {
-						cert = extra_certs[i];
-						extra_certs[i] = NULL;
+						cert = extra_certs[j];
+						extra_certs[j] = NULL;
 					}
 					gnutls_free(pkey_sig.data);
 					pkey_sig.data = NULL;
