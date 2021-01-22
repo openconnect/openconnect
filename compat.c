@@ -19,6 +19,25 @@
 
 #include <string.h>
 #include <stdarg.h>
+#ifdef _WIN32
+#include <sec_api/stdlib_s.h> /* errno_t, size_t */
+errno_t getenv_s(
+    size_t     *ret_required_buf_size,
+    char       *buf,
+    size_t      buf_size_in_bytes,
+    const char *name
+);
+errno_t _putenv_s(
+   const char *varname,
+   const char *value_string
+);
+
+/* XX: needed to get _putenv_s, getenv_s from stdlib.h with MinGW,
+ * but only works on newer versions.
+ * https://stackoverflow.com/a/51977723
+ */
+/* #define MINGW_HAS_SECURE_API 1 */
+#endif
 #include <stdlib.h>
 #include <errno.h>
 #include <ctype.h>
@@ -196,6 +215,18 @@ int openconnect__inet_aton(const char *cp, struct in_addr *addr)
 #endif
 
 #ifdef _WIN32
+int openconnect__win32_setenv(const char *name, const char *value, int overwrite)
+{
+	/* https://stackoverflow.com/a/23616164 */
+	int errcode = 0;
+	if(!overwrite) {
+		size_t envsize = 0;
+		errcode = getenv_s(&envsize, NULL, 0, name);
+		if(errcode || envsize) return errcode;
+	}
+	return _putenv_s(name, value);
+}
+
 char *openconnect__win32_strerror(DWORD err)
 {
 	wchar_t *msgw;
