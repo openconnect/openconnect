@@ -1699,14 +1699,16 @@ int openconnect_open_https(struct openconnect_info *vpninfo)
 #endif
 
 #if OPENSSL_VERSION_NUMBER >= 0x010100000L
-		/* OpenSSL versions after 1.1.0 added the notion of a "security level"
-		 * that enforces checks on certificates and ciphers.
-		 * These security levels overlap in functionality with the ciphersuite
-		 * priority/allow-strings.
-		 *
-		 * For now we will set the security level to 0, thus reverting
-		 * to the functionality seen in versions before 1.1.0. */
-		SSL_CTX_set_security_level(vpninfo->https_ctx, 0);
+		if (vpninfo->allow_insecure_crypto) {
+			/* OpenSSL versions after 1.1.0 added the notion of a "security level"
+			 * that enforces checks on certificates and ciphers.
+			 * These security levels overlap in functionality with the ciphersuite
+			 * priority/allow-strings.
+			 *
+			 * For now we will set the security level to 0, thus reverting
+			 * to the functionality seen in versions before 1.1.0. */
+			SSL_CTX_set_security_level(vpninfo->https_ctx, 0);
+		}
 #endif
 
 		if (vpninfo->cert) {
