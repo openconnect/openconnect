@@ -63,10 +63,23 @@ const char *openconnect_get_tls_library_version()
 
 int can_enable_insecure_crypto()
 {
+	int ret = 0;
+
+	if (setenv("OPENSSL_CONF", DEVNULL, 1) < 0)
+		return -errno;
+
+	/* FIXME: deinitialize and reinitialize library, as is done for GnuTLS,
+	 * to ensure that updated value is used.
+	 *
+	 * Cleaning up and reinitalizing OpenSSL appears to be complex:
+	 *   https://wiki.openssl.org/index.php/Library_Initialization#Cleanup
+	 */
+
 	if (EVP_des_ede3_cbc() == NULL ||
 	    EVP_rc4() == NULL)
-		return -ENOENT;
-	return 0;
+		ret = -ENOENT;
+
+	return ret;
 }
 
 int openconnect_sha1(unsigned char *result, void *data, int len)
