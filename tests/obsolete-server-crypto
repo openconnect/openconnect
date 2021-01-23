@@ -26,13 +26,6 @@ top_builddir=${top_builddir:-..}
 . `dirname $0`/common.sh
 
 ########################################
-# Need to override mandatory system-wide crypto policy on Fedora 31+,
-# for both ocserv and openconnect.
-########################################
-
-export GNUTLS_SYSTEM_PRIORITY_FILE=/dev/null
-
-########################################
 # Verify that we cannot connect to a server offering only obsolete, insecure
 # crypto UNLESS --allow-insecure-crypto is specified.
 ########################################
@@ -43,7 +36,16 @@ echo "Testing against server with insecure crypto (3DES and RC4 only)... "
 PORT=4568
 TLS_PRIORITIES="LEGACY:%SERVER_PRECEDENCE:%COMPAT:-VERS-TLS-ALL:+VERS-TLS1.0:-CIPHER-ALL:+3DES-CBC:+ARCFOUR-128:+MD5:+SHA1"
 update_config test-obsolete-server-crypto.config
-launch_simple_sr_server -d 1 -f -c $CONFIG
+
+########################################
+# Need to override mandatory system-wide crypto policy on Fedora 31+, in
+# order for ocserv to offer 3DES and RC4.
+#
+# However, we want to leave this policy in place for openconnect,
+# in order to verify the client's ability to disable it on its own.
+########################################
+GNUTLS_SYSTEM_PRIORITY_FILE=/dev/null launch_simple_sr_server -d 1 -f -c $CONFIG
+
 PID=$!
 wait_server $PID
 
