@@ -469,8 +469,11 @@ The ancient, broken 3DES and RC4 ciphers are insecure; we explicitly
 disable them by default. However, some still-in-use VPN servers can't do
 any better.
 
-This option enables use of these insecure ciphers, as well as the use
-of SHA1 for server certificate validation.
+This option
+.B attempts
+to enable use of these insecure ciphers, as well as
+the use of SHA1 for server certificate validation, and to override any
+other system policies regarding minimum crypto requirements.
 .TP
 .B \-\-non\-inter
 Do not expect user input; exit if it is required.

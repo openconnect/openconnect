@@ -928,6 +928,7 @@ static void usage(void)
 	printf("      --no-http-keepalive         %s\n", _("Disable HTTP connection re-use"));
 	printf("      --no-xmlpost                %s\n", _("Do not attempt XML POST authentication"));
 	printf("      --allow-insecure-crypto     %s\n", _("Allow use of the ancient, insecure 3DES and RC4 ciphers"));
+	printf("  				  %s\n", _("(and attempt to override OS crypto policies)"));
 
 	printf("\n");
 
@@ -1685,9 +1686,12 @@ int main(int argc, char **argv)
 			openconnect_set_pfs(vpninfo, 1);
 			break;
 		case OPT_ALLOW_INSECURE_CRYPTO:
-			if (openconnect_set_allow_insecure_crypto(vpninfo, 1)) {
-				fprintf(stderr, _("Cannot enable insecure 3DES or RC4 ciphers, because the library\n"
+			ret = openconnect_set_allow_insecure_crypto(vpninfo, 1);
+			if (ret == -ENOENT)
+				fprintf(stderr, _("WARNING: cannot enable insecure 3DES and/or RC4 ciphers, because the library\n"
 						  "%s no longer supports them.\n"), openconnect_get_tls_library_version());
+			else if (ret < 0) {
+				fprintf(stderr, _("Unknown error while enabling insecure crypto.\n"));
 				exit(1);
 			}
 			break;

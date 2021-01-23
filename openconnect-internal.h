@@ -41,6 +41,15 @@
 
 #include "openconnect.h"
 
+/* Equivalent of "/dev/null" on Windows.
+ * See https://stackoverflow.com/a/44163934
+ */
+#ifdef _WIN32
+#define DEVNULL "NUL"
+#else
+#define DEVNULL "/dev/null"
+#endif
+
 #if defined(OPENCONNECT_OPENSSL)
 #include <openssl/ssl.h>
 #include <openssl/err.h>
@@ -825,6 +834,9 @@ static inline int tun_is_up(struct openconnect_info *vpninfo)
 #define pipe(fds) _pipe(fds, 4096, O_BINARY)
 int openconnect__win32_sock_init();
 char *openconnect__win32_strerror(DWORD err);
+#undef setenv
+#define setenv openconnect__win32_setenv
+int openconnect__win32_setenv(const char *name, const char *value, int overwrite);
 #undef inet_pton
 #define inet_pton openconnect__win32_inet_pton
 int openconnect__win32_inet_pton(int af, const char *src, void *dst);
@@ -1066,7 +1078,7 @@ int do_gen_hotp_code(struct openconnect_info *vpninfo,
 		     struct oc_auth_form *form,
 		     struct oc_form_opt *opt);
 
-int set_oidc_token(struct openconnect_info *vpninfo, 
+int set_oidc_token(struct openconnect_info *vpninfo,
 		     const char *token_str);
 
 /* stoken.c */

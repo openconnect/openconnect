@@ -63,10 +63,23 @@ const char *openconnect_get_tls_library_version()
 
 int can_enable_insecure_crypto()
 {
+	int ret = 0;
+
+	if (setenv("OPENSSL_CONF", DEVNULL, 1) < 0)
+		return -errno;
+
+	/* FIXME: deinitialize and reinitialize library, as is done for GnuTLS,
+	 * to ensure that updated value is used.
+	 *
+	 * Cleaning up and reinitalizing OpenSSL appears to be complex:
+	 *   https://wiki.openssl.org/index.php/Library_Initialization#Cleanup
+	 */
+
 	if (EVP_des_ede3_cbc() == NULL ||
 	    EVP_rc4() == NULL)
-		return -ENOENT;
-	return 0;
+		ret = -ENOENT;
+
+	return ret;
 }
 
 int openconnect_sha1(unsigned char *result, void *data, int len)
@@ -1696,6 +1709,19 @@ int openconnect_open_https(struct openconnect_info *vpninfo)
 		SSL_CTX_set_options(vpninfo->https_ctx, SSL_OP_TLSEXT_PADDING);
 #elif defined(SSL_OP_NO_TICKET)
 		SSL_CTX_set_options(vpninfo->https_ctx, SSL_OP_NO_TICKET);
+#endif
+
+#if OPENSSL_VERSION_NUMBER >= 0x010100000L
+		if (vpninfo->allow_insecure_crypto) {
+			/* OpenSSL versions after 1.1.0 added the notion of a "security level"
+			 * that enforces checks on certificates and ciphers.
+			 * These security levels overlap in functionality with the ciphersuite
+			 * priority/allow-strings.
+			 *
+			 * For now we will set the security level to 0, thus reverting
+			 * to the functionality seen in versions before 1.1.0. */
+			SSL_CTX_set_security_level(vpninfo->https_ctx, 0);
+		}
 #endif
 
 		if (vpninfo->cert) {
