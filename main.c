@@ -92,7 +92,14 @@ static int cookieonly;
 static int allow_stdin_read;
 
 static char *token_filename;
-static char *server_cert = NULL;
+static int allowed_fingerprints;
+
+struct accepted_cert {
+	struct accepted_cert *next;
+	char *fingerprint;
+	char *host;
+	int port;
+} *accepted_certs;
 
 static char *username;
 static char *password;
@@ -849,7 +856,7 @@ static void usage(void)
 #endif
 
 	printf("\n%s:\n", _("Server validation"));
-	printf("      --servercert=FINGERPRINT    %s\n", _("Server's certificate SHA1 fingerprint"));
+	printf("      --servercert=FINGERPRINT    %s\n", _("Accept only server certificate with this fingerprint"));
 	printf("      --no-system-trust           %s\n", _("Disable default system certificate authorities"));
 	printf("      --cafile=FILE               %s\n", _("Cert file for server verification"));
 
@@ -1526,6 +1533,7 @@ int main(int argc, char **argv)
 	struct openconnect_info *vpninfo;
 	char *urlpath = NULL;
 	struct oc_vpn_option *gai;
+	struct accepted_cert *newcert;
 	char *ip;
 	char *proxy = getenv("https_proxy");
 	char *vpnc_script = NULL;
@@ -1696,8 +1704,19 @@ int main(int argc, char **argv)
 			}
 			break;
 		case OPT_SERVERCERT:
-			server_cert = keep_config_arg();
+			newcert = malloc(sizeof(*newcert));
+			if (!newcert) {
+				fprintf(stderr, _("Failed to allocate memory\n"));
+				exit(1);
+			}
+			newcert->next = accepted_certs;
+			accepted_certs = newcert;
+			newcert->fingerprint = keep_config_arg();
+			newcert->host = NULL;
+			newcert->port = 0;
+
 			openconnect_set_system_trust(vpninfo, 0);
+			allowed_fingerprints++;
 			break;
 		case OPT_RESOLVE:
 			ip = strchr(config_arg, ':');
@@ -2207,47 +2226,41 @@ static void __attribute__ ((format(printf, 3, 4)))
 	}
 }
 
-struct accepted_cert {
-	struct accepted_cert *next;
-	char *fingerprint;
-	char *host;
-	int port;
-} *accepted_certs;
-
 static int validate_peer_cert(void *_vpninfo, const char *reason)
 {
 	struct openconnect_info *vpninfo = _vpninfo;
 	const char *fingerprint;
 	struct accepted_cert *this;
 
-#ifdef INSECURE_DEBUGGING
-	if (server_cert && strcasecmp(server_cert, "ACCEPT")) {
-#else
-	if (server_cert) {
-#endif
-		int err = openconnect_check_peer_cert_hash(vpninfo, server_cert);
-
-		if (!err)
-			return 0;
-
-		if (err < 0)
-			vpn_progress(vpninfo, PRG_ERR,
-				     _("Could not calculate hash of server's certificate\n"));
-		else
-			vpn_progress(vpninfo, PRG_ERR,
-				     _("Server SSL certificate didn't match: %s\n"),
-				     openconnect_get_peer_cert_hash(vpninfo));
-
-		return -EINVAL;
-	}
-
 	fingerprint = openconnect_get_peer_cert_hash(vpninfo);
 
 	for (this = accepted_certs; this; this = this->next) {
-		if (!strcasecmp(this->host, vpninfo->hostname) &&
-		    this->port == vpninfo->port &&
-		    !openconnect_check_peer_cert_hash(vpninfo, this->fingerprint))
+#ifdef INSECURE_DEBUGGING
+		if (this->port == 0 && this->host == NULL && !strcasecmp(this->fingerprint, "ACCEPT")) {
+			fprintf(stderr, _("Insecurely accepting certificate from VPN server \"%s\" because you ran with --servercert=ACCEPT.\n"),
+			        vpninfo->hostname);
 			return 0;
+		} else
+#endif
+		/* XX: if set by --servercert argument (port 0 and host NULL), accept for any host/port */
+		if ((this->host == NULL || !strcasecmp(this->host, vpninfo->hostname)) &&
+		    (this->port == 0 || this->port == vpninfo->port)) {
+			int err = openconnect_check_peer_cert_hash(vpninfo, this->fingerprint);
+			if (!err)
+				return 0;
+			else if (err < 0) {
+				 vpn_progress(vpninfo, PRG_ERR,
+					      _("Could not check server's certificate against %s\n"),
+					      this->fingerprint);
+			}
+		}
+	}
+
+	if (allowed_fingerprints) {
+		vpn_progress(vpninfo, PRG_ERR,
+			     _("None of the %d fingerprint(s) specified via --servercert match server's certificate: %s\n"),
+			     allowed_fingerprints, fingerprint);
+		return -EINVAL;
 	}
 
 	while (1) {
@@ -2263,12 +2276,6 @@ static int validate_peer_cert(void *_vpninfo, const char *reason)
 		if (non_inter)
 			return -EINVAL;
 
-#ifdef INSECURE_DEBUGGING
-		if (!strcasecmp(server_cert, "ACCEPT")) {
-			fprintf(stderr, _("Insecurely accepting because you ran with --servertcert=ACCEPT.\n"));
-			goto accepted;
-		}
-#endif
 		fprintf(stderr, _("Enter '%s' to accept, '%s' to abort; anything else to view: "),
 		       _("yes"), _("no"));
 
@@ -2278,9 +2285,6 @@ static int validate_peer_cert(void *_vpninfo, const char *reason)
 
 		if (!strcasecmp(response, _("yes"))) {
 			struct accepted_cert *newcert;
-#ifdef INSECURE_DEBUGGING
-		accepted:
-#endif
 			newcert = malloc(sizeof(*newcert));
 			if (newcert) {
 				newcert->next = accepted_certs;
