@@ -1710,6 +1710,9 @@ static int pulse_authenticate(struct openconnect_info *vpninfo, int connecting)
 			if (failcode == 0x0d) {
 				vpn_progress(vpninfo, PRG_ERR,
 					     _("Authentication failure: Account locked out\n"));
+			} else if (failcode == 0x0e) {
+				vpn_progress(vpninfo, PRG_ERR,
+					     _("Authentication failure: Client certificate required\n"));
 			} else {
 				vpn_progress(vpninfo, PRG_ERR,
 					     _("Authentication failure: Code 0x%02x\n"),
