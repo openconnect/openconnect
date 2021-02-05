@@ -554,7 +554,10 @@ to
 instead of using the normal resolver to look it up.
 .TP
 .B \-\-servercert=HASH
-Accept server's SSL certificate only if the provided fingerprint matches.
+Accept server's SSL certificate only if it matches the provided fingerprint.
+This option implies \-\-no\-system\-trust, and may be specified multiple
+times in order to accept multiple possible fingerprints.
+
 The allowed fingerprint types are
 .IR SHA1 ,
 .IR SHA256 ,
