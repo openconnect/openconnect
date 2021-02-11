@@ -386,6 +386,29 @@ static int xmlnode_get_text(xmlNode *xml_node, const char *name, char **var)
  * 2) The new <form> tag tends to omit the method/action properties.
  */
 
+/* Translate platform names (derived from AnyConnect) into the relevant
+ * CSD tag names
+ */
+static inline const char *csd_tag_name(struct openconnect_info *vpninfo)
+{
+	if (!strcmp(vpninfo->platname, "mac-intel"))
+		return "csdMac";
+	else if (!strcmp(vpninfo->platname, "win"))
+		return "csd";
+	else
+		/* linux, linux-64, android, apple-ios */
+		return "csdLinux";
+}
+
+/* Ignore stubs on mobile platforms */
+static inline int csd_use_stub(struct openconnect_info *vpninfo)
+{
+	if (!strcmp(vpninfo->platname, "android") || !strcmp(vpninfo->platname, "apple-ios"))
+		return 0;
+	else
+		return 1;
+}
+
 static int parse_auth_node(struct openconnect_info *vpninfo, xmlNode *xml_node,
 			   struct oc_auth_form *form)
 {
@@ -434,9 +457,9 @@ static int parse_auth_node(struct openconnect_info *vpninfo, xmlNode *xml_node,
 		   nodes; one with token/ticket and one with the URLs. Process them both
 		   the same and rely on the fact that xmlnode_get_prop() will not *clear*
 		   the variable if no such property is found. */
-		if (!vpninfo->csd_scriptname && xmlnode_is_named(xml_node, vpninfo->csd_xmltag)) {
+		if (!vpninfo->csd_scriptname && xmlnode_is_named(xml_node, csd_tag_name(vpninfo))) {
 			/* ignore the CSD trojan binary on mobile platforms */
-			if (!vpninfo->csd_nostub)
+			if (csd_use_stub(vpninfo))
 				xmlnode_get_prop(xml_node, "stuburl", &vpninfo->csd_stuburl);
 			xmlnode_get_prop(xml_node, "starturl", &vpninfo->csd_starturl);
 			xmlnode_get_prop(xml_node, "waiturl", &vpninfo->csd_waiturl);

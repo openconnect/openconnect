@@ -402,8 +402,6 @@ struct openconnect_info {
 	uint32_t esp_magic;  /* GlobalProtect magic ping address (network-endian) */
 
 	int tncc_fd; /* For Juniper TNCC */
-	const char *csd_xmltag;
-	int csd_nostub;
 	char *platname;
 	char *mobile_platform_version;
 	char *mobile_device_type;
