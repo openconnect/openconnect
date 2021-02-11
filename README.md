@@ -7,6 +7,9 @@ and the [Palo Alto Networks GlobalProtect SSL VPN](https://www.paloaltonetworks.
 An openconnect VPN server (ocserv), which implements an improved version of the Cisco AnyConnect protocol, has also been written.
 You can find it on Gitlab at [https://gitlab.com/openconnect/ocserv](https://gitlab.com/openconnect/ocserv).
 
+If you're looking for the standard `vpnc-script`, which is invoked by OpenConnect for routing and DNS setup,
+you can find it on Gitlab at [https://gitlab.com/openconnect/vpnc-script](https://gitlab.com/openconnect/vpnc-script).
+
 ## Licence
 
 OpenConnect is released under the [GNU Lesser Public License, version 2.1](https://www.infradead.org/openconnect/licence.html).
