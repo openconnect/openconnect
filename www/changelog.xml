@@ -25,6 +25,11 @@
        <li>Incomplete, speculative support for GlobalProtect IPv6 (<a href="https://gitlab.com/openconnect/openconnect/-/merge_requests/155">!155</a>; previous work in <a href="https://gitlab.com/openconnect/openconnect/commit/d6db0ec03394234d41fbec7ffc794ceeb486a8f0">d6db0ec</a>)</li>
        <li>SIGUSR1 causes OpenConnect to log detailed connection information and statistics (<a href="https://gitlab.com/openconnect/openconnect/-/merge_requests/154">!154</a>)</li>
        <li>Allow <tt>--servercert</tt> to be specified multiple times in order to accept server certificates matching more than one possible fingerprint (<a href="https://gitlab.com/openconnect/openconnect/-/merge_requests/162">!162</a>, <a href="https://gitlab.com/openconnect/openconnect/-/issues/25">#25</a>)</li>
+       <li>Add insecure debugging build mode for developers (<a href="https://gitlab.com/openconnect/openconnect/-/merge_requests/112">!112</a>)</li>
+       <li>Demangle default routes sent as split routes by GlobalProtect (<a href="https://gitlab.com/openconnect/openconnect/-/merge_requests/118">!118</a>)</li>
+       <li>Improve GlobalProtect login argument decoding (<a href="https://gitlab.com/openconnect/openconnect/-/merge_requests/143">!143</a>)</li>)
+       <li>Add detection of authentication expiration date, intended to allow front-ends to cache and reuse authentication cookies/sessions (<a href="https://gitlab.com/openconnect/openconnect/-/merge_requests/156">!156</a>)</li>
+       <li>Small bug fixes and clarification of many logging messages.</li>
      </ul><br/>
   </li>
   <li><b><a href="ftp://ftp.infradead.org/pub/openconnect/openconnect-8.10.tar.gz">OpenConnect v8.10</a></b>
