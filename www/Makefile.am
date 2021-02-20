@@ -4,7 +4,7 @@ SUBDIRS = styles inc images
 CONV 	= "$(srcdir)/html.py"
 
 FTR_PAGES = csd.html charset.html token.html pkcs11.html tpm.html features.html gui.html nonroot.html hip.html tncc.html
-START_PAGES = building.html connecting.html manual.html vpnc-script.html 
+START_PAGES = building.html connecting.html manual.html vpnc-script.html
 INDEX_PAGES = changelog.html download.html index.html packages.html platforms.html licence.html
 PROTO_PAGES = anyconnect.html juniper.html globalprotect.html pulse.html
 TOPLEVEL_PAGES = contribute.html mail.html
@@ -12,6 +12,10 @@ TOPLEVEL_PAGES = contribute.html mail.html
 ALL_PAGES = $(FTR_PAGES) $(START_PAGES) $(INDEX_PAGES) $(TOPLEVEL_PAGES) $(PROTO_PAGES)
 
 html_DATA = $(ALL_PAGES)
+
+update: $(ALL_PAGES)
+	mkdir -p $(top_builddir)/public
+	rsync -av ./ --exclude ocserv-git/ --exclude html.py --exclude 'Makefi*' --exclude '*~' --exclude '.git*' --exclude '*.xml' $(top_builddir)/public/
 
 .xml.html:
 	$(PYTHON) $(CONV) -d $(srcdir) $< > $@ || (rm $@; exit 1)

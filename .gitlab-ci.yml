@@ -486,12 +486,12 @@ pages:
   script:
     - ./autogen.sh
     - ./configure
-    - make -j4 -C www
-    - mv www public
-  dependencies:
-    - "Fedora/GnuTLS"
+    - make -C www update
+  dependencies: []
   artifacts:
     paths:
       - public
+  only:
+    - master
   only:
     - master@openconnect/openconnect
