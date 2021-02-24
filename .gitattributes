@@ -1,0 +1,10 @@
+# images and icons
+*.ico -text
+*.png -text
+
+# certificates and keys under tests/
+*.p12 -text
+*.der -text
+
+# SoftHSM objects
+*.object -text
