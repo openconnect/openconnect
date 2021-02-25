@@ -191,8 +191,8 @@ char *openconnect__strndup(const char *s, size_t n)
 {
 	char *r;
 
-	if (n > strlen(s))
-		n = strlen(s);
+	if ((r = memchr(s, '\0', n)) != NULL)
+		n = r - s;
 
 	r = malloc(n + 1);
 	if (r) {
@@ -316,17 +316,17 @@ int openconnect__win32_inet_pton(int af, const char *src, void *dst)
 /* https://github.com/ncm/selectable-socketpair
 
 Copyright 2007, 2010 by Nathan C. Myers <ncm@cantrip.org>
-Redistribution and use in source and binary forms, with or without modification, 
+Redistribution and use in source and binary forms, with or without modification,
 are permitted provided that the following conditions are met:
 
     Redistributions of source code must retain the above copyright notice, this
     list of conditions and the following disclaimer.
-    
+
     Redistributions in binary form must reproduce the above copyright notice,
     this list of conditions and the following disclaimer in the documentation
     and/or other materials provided with the distribution.
 
-    The name of the author must not be used to endorse or promote products derived 
+    The name of the author must not be used to endorse or promote products derived
     from this software without specific prior written permission.
 
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
@@ -346,8 +346,8 @@ WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH 
  *   set addr to 127.0.0.1 because win32 getsockname does not always set it.
  * 2010-02-25:
  *   set SO_REUSEADDR option to avoid leaking some windows resource.
- *   Windows System Error 10049, "Event ID 4226 TCP/IP has reached 
- *   the security limit imposed on the number of concurrent TCP connect 
+ *   Windows System Error 10049, "Event ID 4226 TCP/IP has reached
+ *   the security limit imposed on the number of concurrent TCP connect
  *   attempts."  Bleah.
  * 2007-04-25:
  *   preserve value of WSAGetLastError() on all error returns.
@@ -367,7 +367,7 @@ WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH 
 /* dumb_socketpair:
  *   If make_overlapped is nonzero, both sockets created will be usable for
  *   "overlapped" operations via WSASend etc.  If make_overlapped is zero,
- *   socks[0] (only) will be usable with regular ReadFile etc., and thus 
+ *   socks[0] (only) will be usable with regular ReadFile etc., and thus
  *   suitable for use as stdin or stdout of a child process.  Note that the
  *   sockets must be closed with closesocket() regardless.
  */
@@ -390,17 +390,17 @@ OPENCONNECT_CMD_SOCKET dumb_socketpair(OPENCONNECT_CMD_SOCKET socks[2], int make
     }
 
     listener = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
-    if (listener == INVALID_SOCKET) 
+    if (listener == INVALID_SOCKET)
         return SOCKET_ERROR;
 
     memset(&a, 0, sizeof(a));
     a.inaddr.sin_family = AF_INET;
     a.inaddr.sin_addr.s_addr = htonl(INADDR_LOOPBACK);
-    a.inaddr.sin_port = 0; 
+    a.inaddr.sin_port = 0;
 
     socks[0] = socks[1] = -1;
     do {
-        if (setsockopt(listener, SOL_SOCKET, SO_REUSEADDR, 
+        if (setsockopt(listener, SOL_SOCKET, SO_REUSEADDR,
                (char*) &reuse, (socklen_t) sizeof(reuse)) == -1)
             break;
         if  (bind(listener, &a.addr, sizeof(a.inaddr)) == SOCKET_ERROR)
