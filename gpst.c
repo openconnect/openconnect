@@ -1331,6 +1331,7 @@ int gpst_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable)
 			vpninfo->quit_reason = "HIP check or report failed";
 			return ret;
 		}
+		/* XX: no need to do_reconnect, since ESP doesn't need reconnection */
 		if (gpst_connect(vpninfo))
 			vpninfo->quit_reason = "GPST connect failed";
 		return 1;
@@ -1349,7 +1350,7 @@ int gpst_mainloop(struct openconnect_info *vpninfo, int *timeout, int readable)
 		ret = ssl_reconnect(vpninfo);
 		if (ret) {
 			vpn_progress(vpninfo, PRG_ERR, _("Reconnect failed\n"));
-			vpninfo->quit_reason = "GPST reconnect failed";
+			vpninfo->quit_reason = "GPST connect failed";
 			return ret;
 		}
 		if (vpninfo->proto->udp_setup)

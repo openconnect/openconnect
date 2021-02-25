@@ -151,6 +151,8 @@ public abstract class LibOpenConnect {
 	public synchronized native int setAllowInsecureCrypto(boolean isEnabled);
 	public synchronized native void setSystemTrust(boolean isEnabled);
 	public synchronized native int setProtocol(String protocol);
+	public synchronized native int disableDTLS();
+	public synchronized native int disableIPv6();
 
 	/* connection info */
 

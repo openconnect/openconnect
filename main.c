@@ -1737,7 +1737,7 @@ int main(int argc, char **argv)
 			gai->value = gai->option + (ip - config_arg) + 1;
 			break;
 		case OPT_NO_DTLS:
-			vpninfo->dtls_state = DTLS_DISABLED;
+			openconnect_disable_dtls(vpninfo);
 			break;
 		case OPT_COOKIEONLY:
 			cookieonly = 1;
@@ -1867,7 +1867,7 @@ int main(int argc, char **argv)
 			username = dup_config_arg();
 			break;
 		case OPT_DISABLE_IPV6:
-			vpninfo->disable_ipv6 = 1;
+			openconnect_disable_ipv6(vpninfo);
 			break;
 		case 'Q':
 			vpninfo->max_qlen = atol(config_arg);
