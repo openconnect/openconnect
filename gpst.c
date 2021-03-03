@@ -601,7 +601,7 @@ static int gpst_parse_config_xml(struct openconnect_info *vpninfo, xmlNode *xml_
 					else if (!xmlnode_get_val(member, "ipsec-mode", &s) && strcmp(s, "esp-tunnel"))
 						vpn_progress(vpninfo, PRG_ERR, _("GlobalProtect config sent ipsec-mode=%s (expected esp-tunnel)\n"), s);
 				}
-				if (vpninfo->esp_enc > 0 && vpninfo->esp_hmac > 0 && vpninfo->enc_key_len > 0 && vpninfo->hmac_key_len > 0)
+				if (vpninfo->esp_enc <= 0 && vpninfo->esp_hmac <= 0 && vpninfo->enc_key_len <= 0 && vpninfo->hmac_key_len <= 0)
 					vpn_progress(vpninfo, PRG_ERR, "Server's ESP configuration is incomplete or uses unknown algorithms.\n");
 				else if (openconnect_setup_esp_keys(vpninfo, 0))
 					vpn_progress(vpninfo, PRG_ERR, "Failed to setup ESP keys.\n");
