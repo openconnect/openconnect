@@ -35,7 +35,6 @@ BINS=("cscan" "cstub" "cnotify")
 # parsing command line
 shift
 
-URL=
 TICKET=
 STUB=
 GROUP=
