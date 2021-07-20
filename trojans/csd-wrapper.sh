@@ -18,7 +18,7 @@ BIN_DIR="$HOSTSCAN_DIR/bin"
 
 # cURL 7.39 (https://bugzilla.redhat.com/show_bug.cgi?id=1195771)
 # is required to support pin-based certificate validation. Must set this
-# to false if using an older version of cURL.
+# to true if using an older version of cURL.
 
 INSECURE=false
 if [[ "$INSECURE" == "true" ]]; then
