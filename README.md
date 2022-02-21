@@ -8,7 +8,7 @@ An openconnect VPN server (ocserv), which implements an improved version of the 
 You can find it on Gitlab at [https://gitlab.com/openconnect/ocserv](https://gitlab.com/openconnect/ocserv).
 
 If you're looking for the standard `vpnc-script`, which is invoked by OpenConnect for routing and DNS setup,
-you can find it on Gitlab at [https://gitlab.com/openconnect/vpnc-script](https://gitlab.com/openconnect/vpnc-script).
+you can find it on Gitlab at [https://gitlab.com/openconnect/vpnc-scripts](https://gitlab.com/openconnect/vpnc-scripts).
 
 ## Licence
 
